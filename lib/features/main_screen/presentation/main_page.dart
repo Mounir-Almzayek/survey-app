@@ -1,0 +1,20 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/main_navigation/main_navigation_bloc.dart';
+import '../../profile/bloc/profile/profile_bloc.dart';
+import 'main_screen.dart';
+
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => MainNavigationBloc()),
+        BlocProvider(create: (_) => ProfileBloc()),
+      ],
+      child: const MainScreen(),
+    );
+  }
+}
