@@ -7,11 +7,12 @@ import 'core/routes/app_pages.dart';
 import 'core/services/hive_service.dart';
 import 'core/services/storage_service.dart';
 import 'core/services/app_info_service.dart';
-// import 'core/services/firebase_service.dart';
+import 'core/services/firebase_service.dart';
 import 'core/queue/services/request_queue_manager.dart';
 import 'core/queue/presentation/queue_status_listener.dart';
 import 'core/styles/app_theme.dart';
 import 'features/language/bloc/language/language_bloc.dart';
+import 'features/profile/bloc/profile/profile_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,7 @@ void main() async {
   await StorageService.init();
   await HiveService.init();
   await AppInfoService.instance.initialize();
-  // await FirebaseService.init();
+  await FirebaseService.init();
   await RequestQueueManager().init();
 
   runApp(const MyApp());
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => LanguageBloc()..add(const LoadLanguage())),
+        BlocProvider(create: (_) => ProfileBloc()),
       ],
       child: BlocBuilder<LanguageBloc, LanguageState>(
         builder: (context, state) {

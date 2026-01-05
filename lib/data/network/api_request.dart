@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../features/auth/repository/auth_local_repository.dart';
+import '../../features/device_registration/repository/device_cookie_repository.dart';
 import '../../features/splash/repositories/settings_local_repository.dart';
 import '../../core/services/app_info_service.dart';
 import 'api_config.dart';
@@ -141,8 +142,13 @@ class APIRequest {
       headers.remove('Authorization');
     }
 
-    // Ensure no malformed cookies are sent
-    headers.remove('Cookie');
+    // Add device cookie if available
+    final deviceCookie = DeviceCookieRepository.getDeviceCookie();
+    if (deviceCookie != null && deviceCookie.isNotEmpty) {
+      headers['Cookie'] = 'device_token=$deviceCookie';
+    } else {
+      headers.remove('Cookie');
+    }
 
     if (requestType == RequestType.request) {
       return DioProvider.instance.request(this, cancelToken: cancelToken);

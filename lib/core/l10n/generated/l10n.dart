@@ -170,6 +170,26 @@ class S {
     );
   }
 
+  /// `Surveys`
+  String get surveys {
+    return Intl.message(
+      'Surveys',
+      name: 'surveys',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custody`
+  String get custody {
+    return Intl.message(
+      'Custody',
+      name: 'custody',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Profile`
   String get profile {
     return Intl.message(
@@ -755,6 +775,296 @@ class S {
     return Intl.message(
       'or',
       name: 'or',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan QR Code`
+  String get scan_qr_code {
+    return Intl.message(
+      'Scan QR Code',
+      name: 'scan_qr_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Point camera at QR code`
+  String get point_camera_at_qr_code {
+    return Intl.message(
+      'Point camera at QR code',
+      name: 'point_camera_at_qr_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Position the QR code within the frame to scan`
+  String get scan_qr_code_instruction {
+    return Intl.message(
+      'Position the QR code within the frame to scan',
+      name: 'scan_qr_code_instruction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid QR code. Please try again.`
+  String get invalid_qr_code {
+    return Intl.message(
+      'Invalid QR code. Please try again.',
+      name: 'invalid_qr_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Processing...`
+  String get processing {
+    return Intl.message(
+      'Processing...',
+      name: 'processing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Device registered successfully`
+  String get device_registered_successfully {
+    return Intl.message(
+      'Device registered successfully',
+      name: 'device_registered_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Register Device`
+  String get register_device {
+    return Intl.message(
+      'Register Device',
+      name: 'register_device',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Receive Custody`
+  String get receive_custody {
+    return Intl.message(
+      'Receive Custody',
+      name: 'receive_custody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Complete the device registration process in the system`
+  String get complete_device_registration {
+    return Intl.message(
+      'Complete the device registration process in the system',
+      name: 'complete_device_registration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Device Name`
+  String get device_name {
+    return Intl.message(
+      'Device Name',
+      name: 'device_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Device Type`
+  String get device_type {
+    return Intl.message(
+      'Device Type',
+      name: 'device_type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Zone`
+  String get zone {
+    return Intl.message(
+      'Zone',
+      name: 'zone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Information Extracted from the Device`
+  String get device_information {
+    return Intl.message(
+      'Information Extracted from the Device',
+      name: 'device_information',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Browser`
+  String get browser {
+    return Intl.message(
+      'Browser',
+      name: 'browser',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Operating System`
+  String get operating_system {
+    return Intl.message(
+      'Operating System',
+      name: 'operating_system',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Screen Resolution`
+  String get screen_resolution {
+    return Intl.message(
+      'Screen Resolution',
+      name: 'screen_resolution',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `RAM`
+  String get ram {
+    return Intl.message(
+      'RAM',
+      name: 'ram',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `GB`
+  String get gb {
+    return Intl.message(
+      'GB',
+      name: 'gb',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Processor Cores`
+  String get processor_cores {
+    return Intl.message(
+      'Processor Cores',
+      name: 'processor_cores',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maximum Touch Points`
+  String get max_touch_points {
+    return Intl.message(
+      'Maximum Touch Points',
+      name: 'max_touch_points',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not Available`
+  String get not_available {
+    return Intl.message(
+      'Not Available',
+      name: 'not_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Passkey Supported`
+  String get passkey_supported {
+    return Intl.message(
+      'Passkey Supported',
+      name: 'passkey_supported',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The most secure Passkey method will be used to complete the registration process`
+  String get passkey_method_description {
+    return Intl.message(
+      'The most secure Passkey method will be used to complete the registration process',
+      name: 'passkey_method_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cookie-based method will be used for device registration`
+  String get cookie_based_method_description {
+    return Intl.message(
+      'Cookie-based method will be used for device registration',
+      name: 'cookie_based_method_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Link Device`
+  String get link_device {
+    return Intl.message(
+      'Link Device',
+      name: 'link_device',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `QR Scanner`
+  String get qr_scanner {
+    return Intl.message(
+      'QR Scanner',
+      name: 'qr_scanner',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Camera permission is required to scan QR codes`
+  String get camera_permission_required {
+    return Intl.message(
+      'Camera permission is required to scan QR codes',
+      name: 'camera_permission_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grant Permission`
+  String get grant_permission {
+    return Intl.message(
+      'Grant Permission',
+      name: 'grant_permission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Place the QR code within the frame to scan`
+  String get place_qr_code {
+    return Intl.message(
+      'Place the QR code within the frame to scan',
+      name: 'place_qr_code',
       desc: '',
       args: [],
     );

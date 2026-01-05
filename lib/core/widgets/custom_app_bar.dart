@@ -1,112 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../features/language/widgets/language_toggle.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../styles/app_colors.dart';
 import 'logo_rectangle.dart';
 
-class CustomAppBar extends StatelessWidget {
-  final bool big;
-  final VoidCallback? onBackPressed;
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
-  final Color? iconsColor;
-  final bool showLanguageToggle;
   final bool showDrawerButton;
+  final bool showBackButton;
+  final List<Widget>? actions;
+  final bool centerTitle;
 
   const CustomAppBar({
     super.key,
-    this.big = false,
-    this.onBackPressed,
     this.title,
-    this.iconsColor,
-    this.showLanguageToggle = false,
     this.showDrawerButton = false,
+    this.showBackButton = false,
+    this.actions,
+    this.centerTitle = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: AppColors.primaryGradient,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: big ? _buildBigAppBar(context) : _buildSmallAppBar(context),
-      ),
-    );
-  }
-
-  List<Widget> _buildBigAppBar(BuildContext context) {
-    return [
-      SizedBox(height: MediaQuery.of(context).padding.top),
-      if (showLanguageToggle || showDrawerButton)
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (showDrawerButton)
-                IconButton(
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  icon: Icon(Icons.menu, color: iconsColor ?? Colors.white),
-                )
-              else
-                const SizedBox.shrink(),
-              if (showLanguageToggle) const LanguageToggle(),
-            ],
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.border.withValues(alpha: 0.5),
+            width: 1,
           ),
         ),
-      if (onBackPressed != null) _buildBackButton(),
-      SizedBox(height: 4.h),
-      if (title != null) _buildTitle(context, isBig: true),
-      SizedBox(height: 8.h),
-      const Center(child: LogoRectangle(big: true, heroTag: 'app_logo_big')),
-      SizedBox(height: 30.h),
-    ];
-  }
-
-  List<Widget> _buildSmallAppBar(BuildContext context) {
-    return [
-      SizedBox(height: MediaQuery.of(context).padding.top),
-      Row(
-        children: [
-          if (showDrawerButton)
-            IconButton(
-              onPressed: () => Scaffold.of(context).openDrawer(),
-              icon: Icon(Icons.menu, color: iconsColor ?? Colors.white),
-            ),
-          if (onBackPressed != null) _buildBackButton(),
-          if (title != null)
-            Expanded(child: _buildTitle(context, isBig: false)),
-          if (showDrawerButton || onBackPressed != null)
-            const SizedBox(width: 48), // Spacer to center the title if there's a leading icon
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
-      SizedBox(height: 8.h),
-      const Center(child: LogoRectangle(big: false, heroTag: 'app_logo_small')),
-      SizedBox(height: 8.h),
-    ];
-  }
-
-  Widget _buildBackButton() {
-    return IconButton(
-      onPressed: onBackPressed,
-      icon: Icon(Icons.arrow_back, color: iconsColor ?? Colors.white),
-    );
-  }
-
-  Widget _buildTitle(BuildContext context, {required bool isBig}) {
-    return Center(
-      child: Text(
-        title ?? '',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: isBig ? 20.sp : 14.sp,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
+      child: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: centerTitle,
+        leading: _buildLeading(context),
+        title: title != null
+            ? Text(
+                title!,
+                style: GoogleFonts.cairo(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryText,
+                ),
+              )
+            : const LogoRectangle(big: false, isFlat: true),
+        actions: actions ??
+            [
+              IconButton(
+                icon: const Icon(Icons.notifications_none_rounded,
+                    color: AppColors.secondaryText),
+                onPressed: () {},
+              ),
+              SizedBox(width: 8.w),
+              Padding(
+                padding: EdgeInsets.only(right: 16.w),
+                child: CircleAvatar(
+                  radius: 16.r,
+                  backgroundColor: AppColors.muted,
+                  child: Icon(Icons.person_outline,
+                      color: AppColors.primary, size: 20.sp),
+                ),
+              ),
+            ],
       ),
     );
   }
+
+  Widget? _buildLeading(BuildContext context) {
+    if (showDrawerButton) {
+      return IconButton(
+        icon: const Icon(Icons.menu_rounded, color: AppColors.primary),
+        onPressed: () => Scaffold.of(context).openDrawer(),
+      );
+    }
+    if (showBackButton) {
+      return IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new_rounded,
+            color: AppColors.primary),
+        onPressed: () => Navigator.of(context).pop(),
+      );
+    }
+    return null;
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(56.h);
 }

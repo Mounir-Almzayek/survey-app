@@ -1,17 +1,19 @@
-import 'researcher_login_fingerprint.dart';
+import '../../../../core/models/fingerprint.dart';
 
 abstract class ResearcherLoginBaseRequest {
   final String email;
   final String password;
   final String os;
   final String browser;
-  final ResearcherLoginFingerprint fingerprint;
+  final String deviceToken;
+  final Fingerprint fingerprint;
 
   ResearcherLoginBaseRequest({
     required this.email,
     required this.password,
     required this.os,
     required this.browser,
+    required this.deviceToken,
     required this.fingerprint,
   });
 
@@ -20,6 +22,7 @@ abstract class ResearcherLoginBaseRequest {
     'password': password,
     'os': os,
     'browser': browser,
+    'device_token': deviceToken,
     'fingerprint': fingerprint.toJson(),
   };
 }

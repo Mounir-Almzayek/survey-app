@@ -19,7 +19,7 @@ class SplashRoutingBloc extends Bloc<SplashRoutingEvent, SplashRoutingState> {
     final isFirstTime = SettingsLocalRepository.isAppOpenedForFirstTime();
     final token = await AuthLocalRepository.retrieveToken();
 
-    SplashDestination dest;
+    SplashDestination dest = SplashDestination.appReady;
     if (isFirstTime) {
       dest = SplashDestination.welcome;
       SettingsLocalRepository.markAppAsOpened();

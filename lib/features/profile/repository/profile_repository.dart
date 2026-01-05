@@ -20,4 +20,15 @@ class ProfileRepository {
     await ProfileLocalRepository.saveUser(onlineUser);
     return onlineUser;
   }
+
+  /// Perform logout (online and local)
+  static Future<void> logout() async {
+    try {
+      await ProfileOnlineRepository.logout();
+    } catch (_) {
+      // Even if online logout fails, we clear local data
+    } finally {
+      await ProfileLocalRepository.clearProfileData();
+    }
+  }
 }

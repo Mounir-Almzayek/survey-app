@@ -4,6 +4,8 @@ import '../../../core/l10n/generated/l10n.dart';
 /// Main navigation tabs for the app
 enum MainNavTab {
   home,
+  surveys,
+  custody,
   profile,
 }
 
@@ -11,7 +13,11 @@ extension MainNavTabX on MainNavTab {
   IconData get icon {
     switch (this) {
       case MainNavTab.home:
-        return Icons.bar_chart_rounded;
+        return Icons.dashboard_outlined;
+      case MainNavTab.surveys:
+        return Icons.assignment_outlined;
+      case MainNavTab.custody:
+        return Icons.vibration_outlined;
       case MainNavTab.profile:
         return Icons.person_outline_rounded;
     }
@@ -20,7 +26,11 @@ extension MainNavTabX on MainNavTab {
   String label(S locale) {
     switch (this) {
       case MainNavTab.home:
-        return locale.statistics;
+        return locale.home;
+      case MainNavTab.surveys:
+        return locale.surveys;
+      case MainNavTab.custody:
+        return locale.custody;
       case MainNavTab.profile:
         return locale.profile;
     }
@@ -28,8 +38,5 @@ extension MainNavTabX on MainNavTab {
 }
 
 /// Tabs to show in the bottom navigation bar
-List<MainNavTab> get bottomNavTabs => [
-      MainNavTab.home,
-      MainNavTab.profile,
-    ];
+List<MainNavTab> get bottomNavTabs => MainNavTab.values;
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/logo_rectangle.dart';
 import '../../../core/enums/app_language.dart';
 import '../../language/bloc/language/language_bloc.dart';
-import '../../profile/bloc/profile/profile_bloc.dart';
 import '../../profile/widgets/profile_logout_dialog.dart';
 import '../../../core/queue/services/request_queue_service.dart';
 import '../../../core/queue/presentation/queue_session/queue_session_bloc.dart';
@@ -33,19 +33,24 @@ class MainDrawer extends StatelessWidget {
               children: [
                 // Header
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 40.h),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 20.h,
+                    horizontal: 50.w,
+                  ),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppColors.primary,
-                        AppColors.primary.withValues(alpha: 0.8),
-                      ],
+                    color: Colors.white,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: AppColors.border.withValues(alpha: 0.5),
+                        width: 1,
+                      ),
                     ),
                   ),
-                  child: const Center(
-                    child: LogoRectangle(big: false, heroTag: 'drawer_logo'),
+                  child: LogoRectangle(
+                    big: false,
+                    isFlat: true,
+                    width: 130.w,
+                    height: 80.h,
                   ),
                 ),
                 // Menu Items
@@ -120,9 +125,7 @@ class MainDrawer extends StatelessWidget {
                           isSelected: false,
                           onPressed: () {
                             Navigator.pop(context);
-                            ProfileLogoutDialog.show(context, () {
-                              context.read<ProfileBloc>().add(const Logout());
-                            });
+                            ProfileLogoutDialog.show(context);
                           },
                         ),
                       ],
@@ -227,13 +230,14 @@ class _DrawerItem extends StatelessWidget {
         ),
         leading: Icon(
           icon,
-          color: isSelected ? AppColors.primary : AppColors.textGrey,
+          color: isSelected ? AppColors.primary : AppColors.secondaryText,
         ),
         title: Text(
           title,
-          style: TextStyle(
+          style: GoogleFonts.cairo(
             color: isSelected ? AppColors.primary : AppColors.primaryText,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            fontSize: 14.sp,
           ),
         ),
         trailing: trailingText != null

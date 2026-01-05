@@ -48,8 +48,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future<void> _onLogout(Logout event, Emitter<ProfileState> emit) async {
     emit(ProfileLoading());
     await _logoutRunner.run(
-      onlineTask: (_) async => await ProfileLocalRepository.clearProfileData(),
-      offlineTask: (_) async => await ProfileLocalRepository.clearProfileData(),
+      onlineTask: (_) async => await ProfileRepository.logout(),
+      offlineTask: (_) async => await ProfileRepository.logout(),
       checkConnectivity: false,
       onSuccess: (_) {
         if (!emit.isDone) emit(ProfileLogoutSuccess());

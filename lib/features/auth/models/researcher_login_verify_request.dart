@@ -1,7 +1,6 @@
 import 'researcher_login_base_request.dart';
 
 class ResearcherLoginVerifyRequest extends ResearcherLoginBaseRequest {
-  final String deviceToken;
   final String timezone;
   final dynamic credentials; // Changed from String to dynamic
 
@@ -11,7 +10,7 @@ class ResearcherLoginVerifyRequest extends ResearcherLoginBaseRequest {
     required super.os,
     required super.browser,
     required super.fingerprint,
-    required this.deviceToken,
+    required super.deviceToken,
     required this.timezone,
     required this.credentials,
   });
@@ -19,11 +18,7 @@ class ResearcherLoginVerifyRequest extends ResearcherLoginBaseRequest {
   @override
   Map<String, dynamic> toJson() {
     final map = super.toJson();
-    map.addAll({
-      'device_token': deviceToken,
-      'timezone': timezone,
-      'credentials': credentials,
-    });
+    map.addAll({'timezone': timezone, 'credentials': credentials});
     return map;
   }
 }

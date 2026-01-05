@@ -14,6 +14,8 @@ class Routes {
   // Feature routes
   static const String profilePath = '/profile';
   static const String notificationsPath = '/notifications';
+  static const String qrScannerPath = '/qr-scanner';
+  static const String deviceRegistrationPath = '/device-registration';
 
   // Route names
   static const String notifications = 'notifications';

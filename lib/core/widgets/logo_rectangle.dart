@@ -5,7 +5,18 @@ import '../assets/assets.dart';
 class LogoRectangle extends StatelessWidget {
   final bool big;
   final String? heroTag;
-  const LogoRectangle({super.key, this.big = true, this.heroTag});
+  final bool isFlat;
+  final double? width;
+  final double? height;
+
+  const LogoRectangle({
+    super.key,
+    this.big = true,
+    this.heroTag,
+    this.isFlat = false,
+    this.width,
+    this.height,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,20 +27,22 @@ class LogoRectangle extends StatelessWidget {
     return Hero(
       tag: tag,
       child: Container(
-        width: big ? 260.w : 130.w,
-        height: big ? 100.h : 60.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        padding: EdgeInsets.all(big ? 16.w : 8.w),
+        width: width ?? (big ? 260.w : 100.w),
+        height: height ?? (big ? 100.h : 50.h),
+        decoration: isFlat
+            ? null
+            : BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 15,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+        padding: EdgeInsets.all(isFlat ? 0 : (big ? 16.w : 8.w)),
         child: Center(
           child: Image.asset(
             big ? Assets.logo1 : Assets.logo,

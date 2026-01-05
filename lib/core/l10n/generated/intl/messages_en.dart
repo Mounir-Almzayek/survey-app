@@ -23,14 +23,28 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
+        "browser": MessageLookupByLibrary.simpleMessage("Browser"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
+        "camera_permission_required": MessageLookupByLibrary.simpleMessage(
+            "Camera permission is required to scan QR codes"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cancel_download":
             MessageLookupByLibrary.simpleMessage("Cancel Download"),
         "code": MessageLookupByLibrary.simpleMessage("Code"),
         "company": MessageLookupByLibrary.simpleMessage("Company"),
+        "complete_device_registration": MessageLookupByLibrary.simpleMessage(
+            "Complete the device registration process in the system"),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+        "cookie_based_method_description": MessageLookupByLibrary.simpleMessage(
+            "Cookie-based method will be used for device registration"),
+        "custody": MessageLookupByLibrary.simpleMessage("Custody"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "device_information": MessageLookupByLibrary.simpleMessage(
+            "Information Extracted from the Device"),
+        "device_name": MessageLookupByLibrary.simpleMessage("Device Name"),
+        "device_registered_successfully": MessageLookupByLibrary.simpleMessage(
+            "Device registered successfully"),
+        "device_type": MessageLookupByLibrary.simpleMessage("Device Type"),
         "download_file": MessageLookupByLibrary.simpleMessage("Download File"),
         "downloading": MessageLookupByLibrary.simpleMessage("Downloading..."),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
@@ -53,11 +67,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Forgot your password?"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
+        "gb": MessageLookupByLibrary.simpleMessage("GB"),
         "get_started": MessageLookupByLibrary.simpleMessage("Get Started"),
+        "grant_permission":
+            MessageLookupByLibrary.simpleMessage("Grant Permission"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "id_number": MessageLookupByLibrary.simpleMessage("ID Number"),
         "image_saved_successfully": MessageLookupByLibrary.simpleMessage(
             "Image saved successfully to gallery"),
+        "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
+            "Invalid QR code. Please try again."),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
         "language_dialog_cancel":
             MessageLookupByLibrary.simpleMessage("Cancel"),
@@ -65,6 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Confirm"),
         "language_dialog_title":
             MessageLookupByLibrary.simpleMessage("Select Language"),
+        "link_device": MessageLookupByLibrary.simpleMessage("Link Device"),
         "log_out": MessageLookupByLibrary.simpleMessage("Log Out"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "login_as_admin":
@@ -76,6 +96,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to log out?"),
         "logout_title": MessageLookupByLibrary.simpleMessage("Log Out"),
         "main_menu": MessageLookupByLibrary.simpleMessage("Main Menu"),
+        "max_touch_points":
+            MessageLookupByLibrary.simpleMessage("Maximum Touch Points"),
         "nationality": MessageLookupByLibrary.simpleMessage("Nationality"),
         "no_data": MessageLookupByLibrary.simpleMessage("No data"),
         "no_password":
@@ -84,16 +106,31 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No user data found"),
         "no_user_name":
             MessageLookupByLibrary.simpleMessage("Please enter your email"),
+        "not_available": MessageLookupByLibrary.simpleMessage("Not Available"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
         "offline_mode":
             MessageLookupByLibrary.simpleMessage("Viewing offline data"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "operating_system":
+            MessageLookupByLibrary.simpleMessage("Operating System"),
         "or": MessageLookupByLibrary.simpleMessage("or"),
+        "passkey_method_description": MessageLookupByLibrary.simpleMessage(
+            "The most secure Passkey method will be used to complete the registration process"),
+        "passkey_supported":
+            MessageLookupByLibrary.simpleMessage("Passkey Supported"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
+        "place_qr_code": MessageLookupByLibrary.simpleMessage(
+            "Place the QR code within the frame to scan"),
         "please_select": MessageLookupByLibrary.simpleMessage("Please select"),
+        "point_camera_at_qr_code":
+            MessageLookupByLibrary.simpleMessage("Point camera at QR code"),
         "position": MessageLookupByLibrary.simpleMessage("Position"),
+        "processing": MessageLookupByLibrary.simpleMessage("Processing..."),
+        "processor_cores":
+            MessageLookupByLibrary.simpleMessage("Processor Cores"),
         "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+        "qr_scanner": MessageLookupByLibrary.simpleMessage("QR Scanner"),
         "queue_detail_body": MessageLookupByLibrary.simpleMessage("Body"),
         "queue_detail_error": MessageLookupByLibrary.simpleMessage("Error"),
         "queue_status_completed":
@@ -103,10 +140,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Processing"),
         "queue_summary_title":
             MessageLookupByLibrary.simpleMessage("Queued requests"),
+        "ram": MessageLookupByLibrary.simpleMessage("RAM"),
+        "receive_custody":
+            MessageLookupByLibrary.simpleMessage("Receive Custody"),
+        "register_device":
+            MessageLookupByLibrary.simpleMessage("Register Device"),
         "remember_me": MessageLookupByLibrary.simpleMessage("Remember me"),
         "researcher_login":
             MessageLookupByLibrary.simpleMessage("Researcher Login"),
         "retry": MessageLookupByLibrary.simpleMessage("Retry"),
+        "scan_qr_code": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
+        "scan_qr_code_instruction": MessageLookupByLibrary.simpleMessage(
+            "Position the QR code within the frame to scan"),
+        "screen_resolution":
+            MessageLookupByLibrary.simpleMessage("Screen Resolution"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "select_date": MessageLookupByLibrary.simpleMessage("Select Date"),
         "select_language":
@@ -115,10 +162,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "statistics": MessageLookupByLibrary.simpleMessage("Statistics"),
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("Storage permission denied"),
+        "surveys": MessageLookupByLibrary.simpleMessage("Surveys"),
         "upload_image": MessageLookupByLibrary.simpleMessage("Upload Image"),
         "welcome": MessageLookupByLibrary.simpleMessage(
             "Welcome to the Survey Platform"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(
-            "Your voice matters.. Share your feedback to contribute to continuous development and improvement")
+            "Your voice matters.. Share your feedback to contribute to continuous development and improvement"),
+        "zone": MessageLookupByLibrary.simpleMessage("Zone")
       };
 }
