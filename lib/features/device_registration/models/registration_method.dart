@@ -1,6 +1,7 @@
 enum RegistrationMethod {
   webauthn,
   cookieBased,
+  deviceBoundKey,
 }
 
 extension RegistrationMethodX on RegistrationMethod {
@@ -10,6 +11,8 @@ extension RegistrationMethodX on RegistrationMethod {
         return 'WebAuthn';
       case RegistrationMethod.cookieBased:
         return 'Cookie-based';
+      case RegistrationMethod.deviceBoundKey:
+        return 'Device-Bound Key';
     }
   }
 }

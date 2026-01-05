@@ -4,6 +4,7 @@ import '../../../../core/services/firebase_service.dart';
 import '../../../../core/utils/device_info_util.dart';
 import '../../../../core/utils/async_runner.dart';
 import '../../../../core/services/passkey_service.dart';
+import '../../../../core/services/device_bound_key_service.dart';
 import '../../../device_registration/repository/device_cookie_repository.dart';
 import '../../../profile/models/user.dart';
 import '../../models/researcher_login_initiate_request.dart';
@@ -17,6 +18,7 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final PasskeyService _passkeyService = PasskeyService();
+  final DeviceBoundKeyService _deviceBoundKeyService = DeviceBoundKeyService();
   final AsyncRunner<ResearcherLoginInitiateResponse> _initiateRunner =
       AsyncRunner<ResearcherLoginInitiateResponse>();
   final AsyncRunner<ResearcherLoginVerifyResponse> _verifyRunner =
@@ -110,24 +112,37 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     Emitter<LoginState> emit,
   ) async {
     final currentState = state;
-    dynamic passkeyCredentials;
+    dynamic credentials;
 
-    // If we just had a successful initiate and the method is webauthn
-    if (currentState is LoginInitiateSuccess &&
-        currentState.response.method == 'webauthn') {
+    // Handle different authentication methods
+    if (currentState is LoginInitiateSuccess) {
       emit(LoginLoading(email: state.email, password: state.password));
+
+      final loginMethod = currentState.response.loginMethod;
+
       try {
-        final options = currentState.response.options;
-        if (options != null) {
-          passkeyCredentials = await _passkeyService.authenticate(
-            options.toWebAuthnOptions(),
-            allowCredentials: options.allowCredentialsList,
-          );
+        switch (loginMethod) {
+          case LoginMethod.webauthn:
+            // Case 1: WebAuthn/Passkey authentication
+            credentials = await _handleWebAuthnLogin(currentState.response);
+            break;
+
+          case LoginMethod.deviceBoundKey:
+            // Case 2: Device-Bound Key authentication
+            credentials = await _handleDeviceBoundKeyLogin(
+              currentState.response,
+            );
+            break;
+
+          case LoginMethod.cookieBased:
+            // Case 3: Cookie-based authentication (no credentials needed)
+            credentials = null;
+            break;
         }
       } catch (e) {
         emit(
           LoginFailure(
-            error: "Biometric authentication failed: $e",
+            error: "Authentication failed: $e",
             email: state.email,
             password: state.password,
           ),
@@ -151,7 +166,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             finalCredentials = event.credentials;
           }
         } else {
-          finalCredentials = passkeyCredentials;
+          finalCredentials = credentials;
         }
 
         final request = ResearcherLoginVerifyRequest(
@@ -197,5 +212,38 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         }
       },
     );
+  }
+
+  /// Handle WebAuthn/Passkey login
+  Future<Map<String, dynamic>> _handleWebAuthnLogin(
+    ResearcherLoginInitiateResponse response,
+  ) async {
+    final options = response.webauthnOptions;
+    if (options == null) {
+      throw Exception('WebAuthn options not found');
+    }
+
+    return await _passkeyService.authenticate(
+      options.toWebAuthnOptions(),
+      allowCredentials: options.allowCredentialsList,
+    );
+  }
+
+  /// Handle Device-Bound Key login
+  Future<String> _handleDeviceBoundKeyLogin(
+    ResearcherLoginInitiateResponse response,
+  ) async {
+    final options = response.deviceBoundKeyOptions;
+    if (options == null) {
+      throw Exception('Device-Bound Key options not found');
+    }
+
+    // Sign the challenge using device-bound key
+    final signature = await _deviceBoundKeyService.signChallenge(
+      options.challenge,
+    );
+
+    // Return signature as JSON string (will be parsed in verify request)
+    return signature;
   }
 }

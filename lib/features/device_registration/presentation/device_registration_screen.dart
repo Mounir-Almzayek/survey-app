@@ -33,29 +33,35 @@ class DeviceRegistrationScreen extends StatefulWidget {
 
 class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
   bool? _passkeySupported;
-  bool _isCheckingPasskey = true;
+  bool? _deviceBoundKeySupported;
+  bool _isCheckingSupport = true;
 
   @override
   void initState() {
     super.initState();
-    _checkPasskeySupport();
+    _checkSupport();
     _startValidation();
   }
 
-  Future<void> _checkPasskeySupport() async {
+  Future<void> _checkSupport() async {
     try {
-      final supported = await PasskeyService.isSupportedStatic();
+      // Check Passkey support
+      final passkeySupported = await PasskeyService.isSupportedStatic();
+
       if (mounted) {
         setState(() {
-          _passkeySupported = supported;
-          _isCheckingPasskey = false;
+          _passkeySupported = passkeySupported;
+          _deviceBoundKeySupported =
+              true; // Always supported, but prefer Passkey if available
+          _isCheckingSupport = false;
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           _passkeySupported = false;
-          _isCheckingPasskey = false;
+          _deviceBoundKeySupported = true; // Fallback to Device-Bound Key
+          _isCheckingSupport = false;
         });
       }
     }
@@ -77,8 +83,12 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
   }
 
   RegistrationMethod _getRegistrationMethod() {
+    // Priority: Passkey > Device-Bound Key > Cookie-based
+    return RegistrationMethod.deviceBoundKey;
     if (_passkeySupported == true) {
       return RegistrationMethod.webauthn;
+    } else if (_deviceBoundKeySupported == true) {
+      return RegistrationMethod.deviceBoundKey;
     }
     return RegistrationMethod.cookieBased;
   }
@@ -186,8 +196,8 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
             }
 
             if (deviceInfoState is DeviceInfoLoaded) {
-              // Show loading while checking Passkey support
-              if (_isCheckingPasskey) {
+              // Show loading while checking support
+              if (_isCheckingSupport) {
                 return const LoadingWidget();
               }
 
@@ -307,40 +317,58 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
   Widget _buildRegistrationMethodIndicator(BuildContext context) {
     final method = _getRegistrationMethod();
 
+    // Determine colors and icons based on method
+    Color backgroundColor;
+    Color borderColor;
+    Color iconColor;
+    IconData icon;
+    String title;
+    String description;
+
+    switch (method) {
+      case RegistrationMethod.webauthn:
+        backgroundColor = AppColors.primary.withValues(alpha: 0.1);
+        borderColor = AppColors.primary.withValues(alpha: 0.3);
+        iconColor = AppColors.primary;
+        icon = Icons.security_rounded;
+        title = 'Secure Registration (Passkey)';
+        description = 'Using Face ID / Touch ID for enhanced security';
+        break;
+      case RegistrationMethod.deviceBoundKey:
+        backgroundColor = Colors.blue.withValues(alpha: 0.1);
+        borderColor = Colors.blue.withValues(alpha: 0.3);
+        iconColor = Colors.blue;
+        icon = Icons.vpn_key_rounded;
+        title = 'Device-Bound Key Registration';
+        description = 'Using device-specific key (no cloud sync)';
+        break;
+      case RegistrationMethod.cookieBased:
+        backgroundColor = AppColors.brightWhite;
+        borderColor = AppColors.border.withValues(alpha: 0.3);
+        iconColor = AppColors.secondaryText;
+        icon = Icons.fingerprint_rounded;
+        title = 'Standard Registration (Cookie-based)';
+        description = 'Using device fingerprint for authentication';
+        break;
+    }
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: method == RegistrationMethod.webauthn
-            ? AppColors.primary.withValues(alpha: 0.1)
-            : AppColors.brightWhite,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: method == RegistrationMethod.webauthn
-              ? AppColors.primary.withValues(alpha: 0.3)
-              : AppColors.border.withValues(alpha: 0.3),
-          width: 1.5,
-        ),
+        border: Border.all(color: borderColor, width: 1.5),
       ),
       child: Row(
         children: [
-          Icon(
-            method == RegistrationMethod.webauthn
-                ? Icons.security_rounded
-                : Icons.fingerprint_rounded,
-            color: method == RegistrationMethod.webauthn
-                ? AppColors.primary
-                : AppColors.secondaryText,
-            size: 24.sp,
-          ),
+          Icon(icon, color: iconColor, size: 24.sp),
           SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  method == RegistrationMethod.webauthn
-                      ? 'Secure Registration (Passkey)'
-                      : 'Standard Registration (Cookie-based)',
+                  title,
                   style: GoogleFonts.cairo(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
@@ -349,9 +377,7 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  method == RegistrationMethod.webauthn
-                      ? 'Using Face ID / Touch ID for enhanced security'
-                      : 'Using device fingerprint for authentication',
+                  description,
                   style: GoogleFonts.cairo(
                     fontSize: 12.sp,
                     color: AppColors.secondaryText,

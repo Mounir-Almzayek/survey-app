@@ -143,7 +143,7 @@ class APIRequest {
     }
 
     // Add device cookie if available
-    final deviceCookie = DeviceCookieRepository.getDeviceCookie();
+    final deviceCookie = await DeviceCookieRepository.getDeviceCookie();
     if (deviceCookie != null && deviceCookie.isNotEmpty) {
       headers['Cookie'] = 'device_token=$deviceCookie';
     } else {

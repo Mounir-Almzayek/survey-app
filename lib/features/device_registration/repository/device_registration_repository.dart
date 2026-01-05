@@ -6,6 +6,9 @@ import '../models/webauthn_challenge_response.dart';
 import '../models/webauthn_complete_request.dart';
 import '../models/cookie_based_complete_request.dart';
 import '../models/complete_registration_response.dart';
+import '../models/device_bound_key_challenge_request.dart';
+import '../models/device_bound_key_challenge_response.dart';
+import '../models/device_bound_key_complete_request.dart';
 
 class DeviceRegistrationRepository {
   /// Validate device registration token
@@ -60,6 +63,39 @@ class DeviceRegistrationRepository {
     final apiRequest = APIRequest(
       path:
           '/device-registration/register/cookie-based/complete/${request.token}',
+      method: HTTPMethod.post,
+      body: request.toJson(),
+      authorizationOption: AuthorizationOption.unauthorized,
+    );
+    final response = await apiRequest.send();
+    return CompleteRegistrationResponse.fromJson(response.data);
+  }
+
+  /// Get Device-Bound Key challenge
+  static Future<DeviceBoundKeyChallengeResponse> getDeviceBoundKeyChallenge({
+    required DeviceBoundKeyChallengeRequest request,
+  }) async {
+    final apiRequest = APIRequest(
+      path:
+          '/device-registration/register/device-bound-key/challenge/${request.token}',
+      method: HTTPMethod.post,
+      body: request.toJson(),
+      authorizationOption: AuthorizationOption.unauthorized,
+    );
+    final response = await apiRequest.send();
+    return DeviceBoundKeyChallengeResponse.fromJson(
+      response.data['data'] ?? response.data,
+    );
+  }
+
+  /// Complete Device-Bound Key registration
+  static Future<CompleteRegistrationResponse>
+  completeDeviceBoundKeyRegistration({
+    required DeviceBoundKeyCompleteRequest request,
+  }) async {
+    final apiRequest = APIRequest(
+      path:
+          '/device-registration/register/device-bound-key/complete/${request.token}',
       method: HTTPMethod.post,
       body: request.toJson(),
       authorizationOption: AuthorizationOption.unauthorized,
