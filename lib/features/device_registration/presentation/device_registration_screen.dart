@@ -8,6 +8,7 @@ import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
+import '../../../../core/services/device_storage_service.dart';
 import '../bloc/device_info/device_info_bloc.dart';
 import '../bloc/device_info/device_info_state.dart';
 import '../bloc/validate_token/validate_token_bloc.dart';
@@ -19,7 +20,7 @@ import '../bloc/complete_registration/complete_registration_state.dart';
 import '../models/registration_method.dart';
 import 'widgets/device_info_section.dart';
 import 'widgets/device_registration_header.dart';
-import '../../../../core/services/passkey_service.dart';
+import 'widgets/registration_method_indicator.dart';
 
 class DeviceRegistrationScreen extends StatefulWidget {
   final String token;
@@ -32,39 +33,22 @@ class DeviceRegistrationScreen extends StatefulWidget {
 }
 
 class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
-  bool? _passkeySupported;
-  bool? _deviceBoundKeySupported;
-  bool _isCheckingSupport = true;
+  /// Priority list for registration methods.
+  ///
+  /// Order matters: the first "available" method will be used.
+  /// Currently:
+  /// - Device-Bound Key is the primary method.
+  /// - Cookie-based is a safe fallback.
+  /// - Passkey (WebAuthn) is intentionally disabled for now.
+  static const List<RegistrationMethod> _registrationMethodPriority = [
+    RegistrationMethod.deviceBoundKey,
+    RegistrationMethod.cookieBased,
+  ];
 
   @override
   void initState() {
     super.initState();
-    _checkSupport();
     _startValidation();
-  }
-
-  Future<void> _checkSupport() async {
-    try {
-      // Check Passkey support
-      final passkeySupported = await PasskeyService.isSupportedStatic();
-
-      if (mounted) {
-        setState(() {
-          _passkeySupported = passkeySupported;
-          _deviceBoundKeySupported =
-              true; // Always supported, but prefer Passkey if available
-          _isCheckingSupport = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _passkeySupported = false;
-          _deviceBoundKeySupported = true; // Fallback to Device-Bound Key
-          _isCheckingSupport = false;
-        });
-      }
-    }
   }
 
   void _startValidation() {
@@ -82,15 +66,35 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
     });
   }
 
+  /// Returns the best registration method based on the configured priority
+  /// and current runtime availability of each method.
   RegistrationMethod _getRegistrationMethod() {
-    // Priority: Passkey > Device-Bound Key > Cookie-based
-    return RegistrationMethod.deviceBoundKey;
-    if (_passkeySupported == true) {
-      return RegistrationMethod.webauthn;
-    } else if (_deviceBoundKeySupported == true) {
-      return RegistrationMethod.deviceBoundKey;
+    for (final method in _registrationMethodPriority) {
+      if (_isMethodAvailable(method)) {
+        return method;
+      }
     }
+
+    // Absolute fallback – should normally never be hit.
     return RegistrationMethod.cookieBased;
+  }
+
+  /// Encapsulates the logic that decides if a method is available
+  /// on the current device / build.
+  bool _isMethodAvailable(RegistrationMethod method) {
+    switch (method) {
+      case RegistrationMethod.deviceBoundKey:
+        // For now, we consider device-bound key always available on supported
+        // platforms. If you need to check hardware / biometrics later,
+        // add that logic here.
+        return true;
+      case RegistrationMethod.cookieBased:
+        // Always available as a fallback.
+        return true;
+      case RegistrationMethod.webauthn:
+        // Passkey is explicitly disabled in this project for now.
+        return false;
+    }
   }
 
   @override
@@ -116,7 +120,12 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
         ),
         BlocListener<ValidateTokenBloc, ValidateTokenState>(
           listener: (context, state) {
-            if (state is ValidateTokenFailure) {
+            if (state is ValidateTokenSuccess) {
+              // Save device ID for location tracking
+              DeviceStorageService.saveDeviceId(
+                state.response.physicalDeviceId,
+              );
+            } else if (state is ValidateTokenFailure) {
               UnifiedSnackbar.error(context, message: state.message);
               Future.delayed(const Duration(seconds: 1), () {
                 if (context.mounted) {
@@ -196,11 +205,6 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
             }
 
             if (deviceInfoState is DeviceInfoLoaded) {
-              // Show loading while checking support
-              if (_isCheckingSupport) {
-                return const LoadingWidget();
-              }
-
               return BlocBuilder<ValidateTokenBloc, ValidateTokenState>(
                 builder: (context, tokenState) {
                   if (tokenState is ValidateTokenLoading) {
@@ -276,7 +280,7 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
           DeviceInfoSection(fingerprint: tokenState.fingerprint),
           SizedBox(height: 24.h),
           // Show registration method indicator
-          _buildRegistrationMethodIndicator(context),
+          RegistrationMethodIndicator(method: _getRegistrationMethod()),
           SizedBox(height: 32.h),
           BlocBuilder<CompleteRegistrationBloc, CompleteRegistrationState>(
             builder: (context, registrationState) {
@@ -308,83 +312,6 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
                 width: double.infinity,
               );
             },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRegistrationMethodIndicator(BuildContext context) {
-    final method = _getRegistrationMethod();
-
-    // Determine colors and icons based on method
-    Color backgroundColor;
-    Color borderColor;
-    Color iconColor;
-    IconData icon;
-    String title;
-    String description;
-
-    switch (method) {
-      case RegistrationMethod.webauthn:
-        backgroundColor = AppColors.primary.withValues(alpha: 0.1);
-        borderColor = AppColors.primary.withValues(alpha: 0.3);
-        iconColor = AppColors.primary;
-        icon = Icons.security_rounded;
-        title = 'Secure Registration (Passkey)';
-        description = 'Using Face ID / Touch ID for enhanced security';
-        break;
-      case RegistrationMethod.deviceBoundKey:
-        backgroundColor = Colors.blue.withValues(alpha: 0.1);
-        borderColor = Colors.blue.withValues(alpha: 0.3);
-        iconColor = Colors.blue;
-        icon = Icons.vpn_key_rounded;
-        title = 'Device-Bound Key Registration';
-        description = 'Using device-specific key (no cloud sync)';
-        break;
-      case RegistrationMethod.cookieBased:
-        backgroundColor = AppColors.brightWhite;
-        borderColor = AppColors.border.withValues(alpha: 0.3);
-        iconColor = AppColors.secondaryText;
-        icon = Icons.fingerprint_rounded;
-        title = 'Standard Registration (Cookie-based)';
-        description = 'Using device fingerprint for authentication';
-        break;
-    }
-
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: borderColor, width: 1.5),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: iconColor, size: 24.sp),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.cairo(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryText,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  description,
-                  style: GoogleFonts.cairo(
-                    fontSize: 12.sp,
-                    color: AppColors.secondaryText,
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
       ),

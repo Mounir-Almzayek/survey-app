@@ -97,9 +97,51 @@
   "passkey_supported": "Passkey Supported",
   "passkey_method_description": "The most secure Passkey method will be used to complete the registration process",
   "cookie_based_method_description": "Cookie-based method will be used for device registration",
+  "registration_method_device_bound_key_title": "Secure registration (device-bound key)",
+  "registration_method_device_bound_key_description": "Using a device-specific cryptographic key stored only on this device",
+  "registration_method_cookie_based_title": "Standard registration (cookie-based)",
+  "registration_method_cookie_based_description": "Using a secure cookie stored in the app's secure storage for this device",
   "link_device": "Link Device",
   "qr_scanner": "QR Scanner",
   "camera_permission_required": "Camera permission is required to scan QR codes",
   "grant_permission": "Grant Permission",
-  "place_qr_code": "Place the QR code within the frame to scan"
+  "place_qr_code": "Place the QR code within the frame to scan",
+  "select_file": "Select File",
+  "upload_file": "Upload File",
+  "upload_files": "Upload Files",
+  "uploading": "Uploading...",
+  "uploaded": "Uploaded",
+  "upload_failed": "Upload failed",
+  "upload_success": "File uploaded successfully",
+  "file_selected": "File selected",
+  "remove_file": "Remove File",
+  "retry_upload": "Retry Upload",
+  "cancel_upload": "Cancel Upload",
+  "location_permission_denied": "Location permission denied",
+  "location_tracking_started": "Location tracking started",
+  "location_tracking_stopped": "Location tracking stopped",
+  "location_updated": "Location updated",
+  "location_update_failed": "Location update failed",
+  "location_warning_logout": "Warning: You are outside the allowed zone. Logging out...",
+  "request_location_permission": "Request Location Permission",
+  "start_location_tracking": "Start Location Tracking",
+  "stop_location_tracking": "Stop Location Tracking",
+  "public_links": "Public Links",
+  "no_public_links": "No Public Links",
+  "no_public_links_description": "You don't have any public links assigned yet",
+  "copy_link": "Copy Link",
+  "link_copied": "Link copied to clipboard",
+  "share_link": "Share",
+  "share_link_subject": "Survey Link: {title}",
+  "@share_link_subject": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "show_qr_code": "Show QR Code",
+  "qr_code": "QR Code",
+  "close": "Close",
+  "location_required": "Location Required"
 }

@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(title) => "Survey Link: ${title}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
@@ -30,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cancel_download":
             MessageLookupByLibrary.simpleMessage("Cancel Download"),
+        "cancel_upload": MessageLookupByLibrary.simpleMessage("Cancel Upload"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
         "code": MessageLookupByLibrary.simpleMessage("Code"),
         "company": MessageLookupByLibrary.simpleMessage("Company"),
         "complete_device_registration": MessageLookupByLibrary.simpleMessage(
@@ -37,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "cookie_based_method_description": MessageLookupByLibrary.simpleMessage(
             "Cookie-based method will be used for device registration"),
+        "copy_link": MessageLookupByLibrary.simpleMessage("Copy Link"),
         "custody": MessageLookupByLibrary.simpleMessage("Custody"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "device_information": MessageLookupByLibrary.simpleMessage(
@@ -64,6 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "file_downloaded_successfully": MessageLookupByLibrary.simpleMessage(
             "File downloaded successfully"),
         "file_ready": MessageLookupByLibrary.simpleMessage("File is ready"),
+        "file_selected": MessageLookupByLibrary.simpleMessage("File selected"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Forgot your password?"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
@@ -84,7 +90,23 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Confirm"),
         "language_dialog_title":
             MessageLookupByLibrary.simpleMessage("Select Language"),
+        "link_copied":
+            MessageLookupByLibrary.simpleMessage("Link copied to clipboard"),
         "link_device": MessageLookupByLibrary.simpleMessage("Link Device"),
+        "location_permission_denied":
+            MessageLookupByLibrary.simpleMessage("Location permission denied"),
+        "location_required":
+            MessageLookupByLibrary.simpleMessage("Location Required"),
+        "location_tracking_started":
+            MessageLookupByLibrary.simpleMessage("Location tracking started"),
+        "location_tracking_stopped":
+            MessageLookupByLibrary.simpleMessage("Location tracking stopped"),
+        "location_update_failed":
+            MessageLookupByLibrary.simpleMessage("Location update failed"),
+        "location_updated":
+            MessageLookupByLibrary.simpleMessage("Location updated"),
+        "location_warning_logout": MessageLookupByLibrary.simpleMessage(
+            "Warning: You are outside the allowed zone. Logging out..."),
         "log_out": MessageLookupByLibrary.simpleMessage("Log Out"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "login_as_admin":
@@ -102,6 +124,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_data": MessageLookupByLibrary.simpleMessage("No data"),
         "no_password":
             MessageLookupByLibrary.simpleMessage("Please enter your password"),
+        "no_public_links":
+            MessageLookupByLibrary.simpleMessage("No Public Links"),
+        "no_public_links_description": MessageLookupByLibrary.simpleMessage(
+            "You don\'t have any public links assigned yet"),
         "no_user_data":
             MessageLookupByLibrary.simpleMessage("No user data found"),
         "no_user_name":
@@ -130,6 +156,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "processor_cores":
             MessageLookupByLibrary.simpleMessage("Processor Cores"),
         "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+        "public_links": MessageLookupByLibrary.simpleMessage("Public Links"),
+        "qr_code": MessageLookupByLibrary.simpleMessage("QR Code"),
         "qr_scanner": MessageLookupByLibrary.simpleMessage("QR Scanner"),
         "queue_detail_body": MessageLookupByLibrary.simpleMessage("Body"),
         "queue_detail_error": MessageLookupByLibrary.simpleMessage("Error"),
@@ -145,10 +173,26 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Receive Custody"),
         "register_device":
             MessageLookupByLibrary.simpleMessage("Register Device"),
+        "registration_method_cookie_based_description":
+            MessageLookupByLibrary.simpleMessage(
+                "Using a secure cookie stored in the app\'s secure storage for this device"),
+        "registration_method_cookie_based_title":
+            MessageLookupByLibrary.simpleMessage(
+                "Standard registration (cookie-based)"),
+        "registration_method_device_bound_key_description":
+            MessageLookupByLibrary.simpleMessage(
+                "Using a device-specific cryptographic key stored only on this device"),
+        "registration_method_device_bound_key_title":
+            MessageLookupByLibrary.simpleMessage(
+                "Secure registration (device-bound key)"),
         "remember_me": MessageLookupByLibrary.simpleMessage("Remember me"),
+        "remove_file": MessageLookupByLibrary.simpleMessage("Remove File"),
+        "request_location_permission":
+            MessageLookupByLibrary.simpleMessage("Request Location Permission"),
         "researcher_login":
             MessageLookupByLibrary.simpleMessage("Researcher Login"),
         "retry": MessageLookupByLibrary.simpleMessage("Retry"),
+        "retry_upload": MessageLookupByLibrary.simpleMessage("Retry Upload"),
         "scan_qr_code": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
         "scan_qr_code_instruction": MessageLookupByLibrary.simpleMessage(
             "Position the QR code within the frame to scan"),
@@ -156,14 +200,29 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Screen Resolution"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "select_date": MessageLookupByLibrary.simpleMessage("Select Date"),
+        "select_file": MessageLookupByLibrary.simpleMessage("Select File"),
         "select_language":
             MessageLookupByLibrary.simpleMessage("Select Language"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "share_link": MessageLookupByLibrary.simpleMessage("Share"),
+        "share_link_subject": m0,
+        "show_qr_code": MessageLookupByLibrary.simpleMessage("Show QR Code"),
+        "start_location_tracking":
+            MessageLookupByLibrary.simpleMessage("Start Location Tracking"),
         "statistics": MessageLookupByLibrary.simpleMessage("Statistics"),
+        "stop_location_tracking":
+            MessageLookupByLibrary.simpleMessage("Stop Location Tracking"),
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("Storage permission denied"),
         "surveys": MessageLookupByLibrary.simpleMessage("Surveys"),
+        "upload_failed": MessageLookupByLibrary.simpleMessage("Upload failed"),
+        "upload_file": MessageLookupByLibrary.simpleMessage("Upload File"),
+        "upload_files": MessageLookupByLibrary.simpleMessage("Upload Files"),
         "upload_image": MessageLookupByLibrary.simpleMessage("Upload Image"),
+        "upload_success":
+            MessageLookupByLibrary.simpleMessage("File uploaded successfully"),
+        "uploaded": MessageLookupByLibrary.simpleMessage("Uploaded"),
+        "uploading": MessageLookupByLibrary.simpleMessage("Uploading..."),
         "welcome": MessageLookupByLibrary.simpleMessage(
             "Welcome to the Survey Platform"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(

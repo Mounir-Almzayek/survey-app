@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
+  static String m0(title) => "رابط الاستطلاع: ${title}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
@@ -30,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
         "cancel_download":
             MessageLookupByLibrary.simpleMessage("إلغاء التحميل"),
+        "cancel_upload": MessageLookupByLibrary.simpleMessage("إلغاء الرفع"),
+        "close": MessageLookupByLibrary.simpleMessage("إغلاق"),
         "code": MessageLookupByLibrary.simpleMessage("الكود"),
         "company": MessageLookupByLibrary.simpleMessage("الشركة"),
         "complete_device_registration": MessageLookupByLibrary.simpleMessage(
@@ -37,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "confirm": MessageLookupByLibrary.simpleMessage("تأكيد"),
         "cookie_based_method_description": MessageLookupByLibrary.simpleMessage(
             "سيتم استخدام طريقة قائمة على الكوكيز لتسجيل الجهاز"),
+        "copy_link": MessageLookupByLibrary.simpleMessage("نسخ الرابط"),
         "custody": MessageLookupByLibrary.simpleMessage("العهدة"),
         "delete": MessageLookupByLibrary.simpleMessage("حذف"),
         "device_information": MessageLookupByLibrary.simpleMessage(
@@ -63,6 +68,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "file_downloaded_successfully":
             MessageLookupByLibrary.simpleMessage("تم تحميل الملف بنجاح"),
         "file_ready": MessageLookupByLibrary.simpleMessage("الملف جاهز"),
+        "file_selected":
+            MessageLookupByLibrary.simpleMessage("تم اختيار الملف"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("نسيت كلمة المرور؟"),
         "gallery": MessageLookupByLibrary.simpleMessage("المعرض"),
@@ -81,7 +88,23 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تأكيد"),
         "language_dialog_title":
             MessageLookupByLibrary.simpleMessage("اختر اللغة"),
+        "link_copied":
+            MessageLookupByLibrary.simpleMessage("تم نسخ الرابط إلى الحافظة"),
         "link_device": MessageLookupByLibrary.simpleMessage("ربط الجهاز"),
+        "location_permission_denied":
+            MessageLookupByLibrary.simpleMessage("تم رفض إذن الموقع"),
+        "location_required":
+            MessageLookupByLibrary.simpleMessage("الموقع مطلوب"),
+        "location_tracking_started":
+            MessageLookupByLibrary.simpleMessage("تم بدء تتبع الموقع"),
+        "location_tracking_stopped":
+            MessageLookupByLibrary.simpleMessage("تم إيقاف تتبع الموقع"),
+        "location_update_failed":
+            MessageLookupByLibrary.simpleMessage("فشل تحديث الموقع"),
+        "location_updated":
+            MessageLookupByLibrary.simpleMessage("تم تحديث الموقع"),
+        "location_warning_logout": MessageLookupByLibrary.simpleMessage(
+            "تحذير: أنت خارج المنطقة المسموح بها. جاري تسجيل الخروج..."),
         "log_out": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
         "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
         "login_as_admin": MessageLookupByLibrary.simpleMessage("الدخول كمسؤول"),
@@ -99,6 +122,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_data": MessageLookupByLibrary.simpleMessage("لا توجد بيانات"),
         "no_password":
             MessageLookupByLibrary.simpleMessage("يرجى إدخال كلمة المرور"),
+        "no_public_links":
+            MessageLookupByLibrary.simpleMessage("لا توجد روابط عامة"),
+        "no_public_links_description": MessageLookupByLibrary.simpleMessage(
+            "ليس لديك أي روابط عامة معينة بعد"),
         "no_user_data": MessageLookupByLibrary.simpleMessage(
             "لم يتم العثور على بيانات المستخدم"),
         "no_user_name": MessageLookupByLibrary.simpleMessage(
@@ -127,6 +154,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "processor_cores":
             MessageLookupByLibrary.simpleMessage("أنوية المعالج"),
         "profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
+        "public_links": MessageLookupByLibrary.simpleMessage("الروابط العامة"),
+        "qr_code": MessageLookupByLibrary.simpleMessage("رمز QR"),
         "qr_scanner": MessageLookupByLibrary.simpleMessage("قارئ رمز QR"),
         "queue_detail_body":
             MessageLookupByLibrary.simpleMessage("البيانات المرسلة"),
@@ -143,23 +172,55 @@ class MessageLookup extends MessageLookupByLibrary {
         "receive_custody":
             MessageLookupByLibrary.simpleMessage("استلام العهدة"),
         "register_device": MessageLookupByLibrary.simpleMessage("تسجيل الجهاز"),
+        "registration_method_cookie_based_description":
+            MessageLookupByLibrary.simpleMessage(
+                "استخدام كوكيز آمنة مخزنة في خدمة التخزين الآمن في التطبيق لهذا الجهاز"),
+        "registration_method_cookie_based_title":
+            MessageLookupByLibrary.simpleMessage(
+                "تسجيل قياسي (معتمد على الكوكيز)"),
+        "registration_method_device_bound_key_description":
+            MessageLookupByLibrary.simpleMessage(
+                "استخدام مفتاح تشفير خاص بالجهاز يتم تخزينه بشكل آمن على هذا الجهاز فقط"),
+        "registration_method_device_bound_key_title":
+            MessageLookupByLibrary.simpleMessage(
+                "تسجيل آمن (مفتاح مرتبط بالجهاز)"),
         "remember_me": MessageLookupByLibrary.simpleMessage("تذكرني"),
+        "remove_file": MessageLookupByLibrary.simpleMessage("إزالة الملف"),
+        "request_location_permission":
+            MessageLookupByLibrary.simpleMessage("طلب إذن الموقع"),
         "researcher_login":
             MessageLookupByLibrary.simpleMessage("دخول الباحثين"),
         "retry": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
+        "retry_upload":
+            MessageLookupByLibrary.simpleMessage("إعادة محاولة الرفع"),
         "scan_qr_code": MessageLookupByLibrary.simpleMessage("مسح رمز QR"),
         "scan_qr_code_instruction":
             MessageLookupByLibrary.simpleMessage("ضع رمز QR داخل الإطار للمسح"),
         "screen_resolution": MessageLookupByLibrary.simpleMessage("دقة الشاشة"),
         "search": MessageLookupByLibrary.simpleMessage("بحث"),
         "select_date": MessageLookupByLibrary.simpleMessage("اختر التاريخ"),
+        "select_file": MessageLookupByLibrary.simpleMessage("اختر ملف"),
         "select_language": MessageLookupByLibrary.simpleMessage("اختر اللغة"),
         "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
+        "share_link": MessageLookupByLibrary.simpleMessage("مشاركة"),
+        "share_link_subject": m0,
+        "show_qr_code": MessageLookupByLibrary.simpleMessage("عرض رمز QR"),
+        "start_location_tracking":
+            MessageLookupByLibrary.simpleMessage("بدء تتبع الموقع"),
         "statistics": MessageLookupByLibrary.simpleMessage("الإحصائيات"),
+        "stop_location_tracking":
+            MessageLookupByLibrary.simpleMessage("إيقاف تتبع الموقع"),
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("تم رفض إذن التخزين"),
         "surveys": MessageLookupByLibrary.simpleMessage("الاستطلاعات"),
+        "upload_failed": MessageLookupByLibrary.simpleMessage("فشل الرفع"),
+        "upload_file": MessageLookupByLibrary.simpleMessage("رفع ملف"),
+        "upload_files": MessageLookupByLibrary.simpleMessage("رفع ملفات"),
         "upload_image": MessageLookupByLibrary.simpleMessage("رفع صورة"),
+        "upload_success":
+            MessageLookupByLibrary.simpleMessage("تم رفع الملف بنجاح"),
+        "uploaded": MessageLookupByLibrary.simpleMessage("تم الرفع"),
+        "uploading": MessageLookupByLibrary.simpleMessage("جاري الرفع..."),
         "welcome": MessageLookupByLibrary.simpleMessage(
             "مرحباً بكم في منصة الاستطلاعات"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(

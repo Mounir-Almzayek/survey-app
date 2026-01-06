@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/l10n/generated/l10n.dart';
 
 /// Main navigation tabs for the app
-enum MainNavTab {
-  home,
-  surveys,
-  custody,
-  profile,
-}
+enum MainNavTab { home, surveys, profile }
 
 extension MainNavTabX on MainNavTab {
   IconData get icon {
@@ -16,8 +11,6 @@ extension MainNavTabX on MainNavTab {
         return Icons.dashboard_outlined;
       case MainNavTab.surveys:
         return Icons.assignment_outlined;
-      case MainNavTab.custody:
-        return Icons.vibration_outlined;
       case MainNavTab.profile:
         return Icons.person_outline_rounded;
     }
@@ -29,8 +22,6 @@ extension MainNavTabX on MainNavTab {
         return locale.home;
       case MainNavTab.surveys:
         return locale.surveys;
-      case MainNavTab.custody:
-        return locale.custody;
       case MainNavTab.profile:
         return locale.profile;
     }
@@ -39,4 +30,3 @@ extension MainNavTabX on MainNavTab {
 
 /// Tabs to show in the bottom navigation bar
 List<MainNavTab> get bottomNavTabs => MainNavTab.values;
-

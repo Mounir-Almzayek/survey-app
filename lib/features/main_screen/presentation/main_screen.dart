@@ -6,26 +6,81 @@ import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/custom_app_bar.dart';
 import '../../../core/utils/responsive_layout.dart';
+import '../../../core/services/device_storage_service.dart';
 import '../../home/presentation/home_page.dart';
 import '../../profile/presentation/profile_page.dart';
-import '../../custody/presentation/custody_page.dart';
+import '../../device_location/bloc/device_location/device_location_bloc.dart';
+import '../../device_location/bloc/device_location/device_location_event.dart';
+import '../../device_location/bloc/device_location/device_location_state.dart';
 import '../bloc/main_navigation/main_navigation_bloc.dart';
 import '../models/main_nav_tab.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/main_sidebar.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _startLocationTracking();
+  }
+
+  Future<void> _startLocationTracking() async {
+    // Get device ID and assignment ID
+    final deviceId = await DeviceStorageService.getDeviceId();
+    if (deviceId == null) {
+      return; // No device ID, skip location tracking
+    }
+
+    final assignmentId = await DeviceStorageService.getAssignmentId();
+
+    // Start location tracking
+    if (mounted) {
+      context.read<DeviceLocationBloc>().add(
+        StartLocationTrackingEvent(
+          deviceId: deviceId,
+          assignmentId: assignmentId,
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MainNavigationBloc, MainNavigationState>(
-      builder: (context, state) {
-        return ResponsiveLayout.isMobile(context)
-            ? _MobileLayout(currentTab: state.currentTab)
-            : _WebLayout(currentTab: state.currentTab);
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<DeviceLocationBloc, DeviceLocationState>(
+          listener: (context, state) {
+            if (state is DeviceLocationWarningLogout) {
+              // Force logout when warning or outside zone
+              // This will be handled by the background service
+            } else if (state is DeviceLocationError) {
+              // Log error but don't stop tracking
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<MainNavigationBloc, MainNavigationState>(
+        builder: (context, state) {
+          return ResponsiveLayout.isMobile(context)
+              ? _MobileLayout(currentTab: state.currentTab)
+              : _WebLayout(currentTab: state.currentTab);
+        },
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Stop location tracking when screen is disposed
+    context.read<DeviceLocationBloc>().add(const StopLocationTrackingEvent());
+    super.dispose();
   }
 }
 
@@ -211,8 +266,6 @@ Widget _buildPage(MainNavTab tab) {
       return const HomePage();
     case MainNavTab.surveys:
       return const Center(child: Text("Assigned Surveys")); // Placeholder
-    case MainNavTab.custody:
-      return const CustodyPage();
     case MainNavTab.profile:
       return const ProfilePage();
   }

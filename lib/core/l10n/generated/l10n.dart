@@ -1020,6 +1020,46 @@ class S {
     );
   }
 
+  /// `Secure registration (device-bound key)`
+  String get registration_method_device_bound_key_title {
+    return Intl.message(
+      'Secure registration (device-bound key)',
+      name: 'registration_method_device_bound_key_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Using a device-specific cryptographic key stored only on this device`
+  String get registration_method_device_bound_key_description {
+    return Intl.message(
+      'Using a device-specific cryptographic key stored only on this device',
+      name: 'registration_method_device_bound_key_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Standard registration (cookie-based)`
+  String get registration_method_cookie_based_title {
+    return Intl.message(
+      'Standard registration (cookie-based)',
+      name: 'registration_method_cookie_based_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Using a secure cookie stored in the app's secure storage for this device`
+  String get registration_method_cookie_based_description {
+    return Intl.message(
+      'Using a secure cookie stored in the app\'s secure storage for this device',
+      name: 'registration_method_cookie_based_description',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Link Device`
   String get link_device {
     return Intl.message(
@@ -1065,6 +1105,316 @@ class S {
     return Intl.message(
       'Place the QR code within the frame to scan',
       name: 'place_qr_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select File`
+  String get select_file {
+    return Intl.message(
+      'Select File',
+      name: 'select_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload File`
+  String get upload_file {
+    return Intl.message(
+      'Upload File',
+      name: 'upload_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload Files`
+  String get upload_files {
+    return Intl.message(
+      'Upload Files',
+      name: 'upload_files',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Uploading...`
+  String get uploading {
+    return Intl.message(
+      'Uploading...',
+      name: 'uploading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Uploaded`
+  String get uploaded {
+    return Intl.message(
+      'Uploaded',
+      name: 'uploaded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload failed`
+  String get upload_failed {
+    return Intl.message(
+      'Upload failed',
+      name: 'upload_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `File uploaded successfully`
+  String get upload_success {
+    return Intl.message(
+      'File uploaded successfully',
+      name: 'upload_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `File selected`
+  String get file_selected {
+    return Intl.message(
+      'File selected',
+      name: 'file_selected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove File`
+  String get remove_file {
+    return Intl.message(
+      'Remove File',
+      name: 'remove_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry Upload`
+  String get retry_upload {
+    return Intl.message(
+      'Retry Upload',
+      name: 'retry_upload',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel Upload`
+  String get cancel_upload {
+    return Intl.message(
+      'Cancel Upload',
+      name: 'cancel_upload',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permission denied`
+  String get location_permission_denied {
+    return Intl.message(
+      'Location permission denied',
+      name: 'location_permission_denied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location tracking started`
+  String get location_tracking_started {
+    return Intl.message(
+      'Location tracking started',
+      name: 'location_tracking_started',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location tracking stopped`
+  String get location_tracking_stopped {
+    return Intl.message(
+      'Location tracking stopped',
+      name: 'location_tracking_stopped',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location updated`
+  String get location_updated {
+    return Intl.message(
+      'Location updated',
+      name: 'location_updated',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location update failed`
+  String get location_update_failed {
+    return Intl.message(
+      'Location update failed',
+      name: 'location_update_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Warning: You are outside the allowed zone. Logging out...`
+  String get location_warning_logout {
+    return Intl.message(
+      'Warning: You are outside the allowed zone. Logging out...',
+      name: 'location_warning_logout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Request Location Permission`
+  String get request_location_permission {
+    return Intl.message(
+      'Request Location Permission',
+      name: 'request_location_permission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start Location Tracking`
+  String get start_location_tracking {
+    return Intl.message(
+      'Start Location Tracking',
+      name: 'start_location_tracking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stop Location Tracking`
+  String get stop_location_tracking {
+    return Intl.message(
+      'Stop Location Tracking',
+      name: 'stop_location_tracking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Public Links`
+  String get public_links {
+    return Intl.message(
+      'Public Links',
+      name: 'public_links',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Public Links`
+  String get no_public_links {
+    return Intl.message(
+      'No Public Links',
+      name: 'no_public_links',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You don't have any public links assigned yet`
+  String get no_public_links_description {
+    return Intl.message(
+      'You don\'t have any public links assigned yet',
+      name: 'no_public_links_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Copy Link`
+  String get copy_link {
+    return Intl.message(
+      'Copy Link',
+      name: 'copy_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Link copied to clipboard`
+  String get link_copied {
+    return Intl.message(
+      'Link copied to clipboard',
+      name: 'link_copied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Share`
+  String get share_link {
+    return Intl.message(
+      'Share',
+      name: 'share_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Survey Link: {title}`
+  String share_link_subject(String title) {
+    return Intl.message(
+      'Survey Link: $title',
+      name: 'share_link_subject',
+      desc: '',
+      args: [title],
+    );
+  }
+
+  /// `Show QR Code`
+  String get show_qr_code {
+    return Intl.message(
+      'Show QR Code',
+      name: 'show_qr_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `QR Code`
+  String get qr_code {
+    return Intl.message(
+      'QR Code',
+      name: 'qr_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close`
+  String get close {
+    return Intl.message(
+      'Close',
+      name: 'close',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location Required`
+  String get location_required {
+    return Intl.message(
+      'Location Required',
+      name: 'location_required',
       desc: '',
       args: [],
     );

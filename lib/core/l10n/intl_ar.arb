@@ -97,9 +97,51 @@
   "passkey_supported": "مفتاح المرور مدعوم",
   "passkey_method_description": "سيتم استخدام طريقة مفتاح المرور الأكثر أماناً لإكمال عملية التسجيل",
   "cookie_based_method_description": "سيتم استخدام طريقة قائمة على الكوكيز لتسجيل الجهاز",
+  "registration_method_device_bound_key_title": "تسجيل آمن (مفتاح مرتبط بالجهاز)",
+  "registration_method_device_bound_key_description": "استخدام مفتاح تشفير خاص بالجهاز يتم تخزينه بشكل آمن على هذا الجهاز فقط",
+  "registration_method_cookie_based_title": "تسجيل قياسي (معتمد على الكوكيز)",
+  "registration_method_cookie_based_description": "استخدام كوكيز آمنة مخزنة في خدمة التخزين الآمن في التطبيق لهذا الجهاز",
   "link_device": "ربط الجهاز",
   "qr_scanner": "قارئ رمز QR",
   "camera_permission_required": "إذن الكاميرا مطلوب لمسح رموز QR",
   "grant_permission": "منح الإذن",
-  "place_qr_code": "ضع رمز QR داخل الإطار للمسح"
+  "place_qr_code": "ضع رمز QR داخل الإطار للمسح",
+  "select_file": "اختر ملف",
+  "upload_file": "رفع ملف",
+  "upload_files": "رفع ملفات",
+  "uploading": "جاري الرفع...",
+  "uploaded": "تم الرفع",
+  "upload_failed": "فشل الرفع",
+  "upload_success": "تم رفع الملف بنجاح",
+  "file_selected": "تم اختيار الملف",
+  "remove_file": "إزالة الملف",
+  "retry_upload": "إعادة محاولة الرفع",
+  "cancel_upload": "إلغاء الرفع",
+  "location_permission_denied": "تم رفض إذن الموقع",
+  "location_tracking_started": "تم بدء تتبع الموقع",
+  "location_tracking_stopped": "تم إيقاف تتبع الموقع",
+  "location_updated": "تم تحديث الموقع",
+  "location_update_failed": "فشل تحديث الموقع",
+  "location_warning_logout": "تحذير: أنت خارج المنطقة المسموح بها. جاري تسجيل الخروج...",
+  "request_location_permission": "طلب إذن الموقع",
+  "start_location_tracking": "بدء تتبع الموقع",
+  "stop_location_tracking": "إيقاف تتبع الموقع",
+  "public_links": "الروابط العامة",
+  "no_public_links": "لا توجد روابط عامة",
+  "no_public_links_description": "ليس لديك أي روابط عامة معينة بعد",
+  "copy_link": "نسخ الرابط",
+  "link_copied": "تم نسخ الرابط إلى الحافظة",
+  "share_link": "مشاركة",
+  "share_link_subject": "رابط الاستطلاع: {title}",
+  "@share_link_subject": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "show_qr_code": "عرض رمز QR",
+  "qr_code": "رمز QR",
+  "close": "إغلاق",
+  "location_required": "الموقع مطلوب"
 }
