@@ -59,7 +59,6 @@ dependencies:
   google_fonts: ^6.3.3
   device_info_plus: ^12.3.0
   uuid: ^4.5.2
-  passkeys: ^2.8.2
   system_info_plus: ^0.0.6
   flutter_timezone: ^5.0.1
   mobile_scanner: ^5.2.3

@@ -15,6 +15,12 @@ class ProfileInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = S.of(context);
+
+    // Derive role/roles text similar to web user-nav (join user_types names)
+    final rolesText = user.userTypes.isNotEmpty
+        ? user.userTypes.map((t) => t.name).join(', ')
+        : null;
+
     final imageUrl = user.image != null && user.image!.isNotEmpty
         ? APIConfig.getFullImageUrl(user.image!)
         : null;
@@ -56,6 +62,17 @@ class ProfileInfoCard extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
+          if (rolesText != null && rolesText.isNotEmpty) ...[
+            SizedBox(height: 4.h),
+            Text(
+              rolesText,
+              style: GoogleFonts.cairo(
+                fontSize: 12.sp,
+                color: AppColors.secondaryText.withValues(alpha: 0.9),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
           SizedBox(height: 24.h),
           const Divider(height: 1),
           SizedBox(height: 20.h),

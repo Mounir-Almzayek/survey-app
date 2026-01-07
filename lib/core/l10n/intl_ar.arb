@@ -94,8 +94,6 @@
   "processor_cores": "أنوية المعالج",
   "max_touch_points": "نقاط اللمس القصوى",
   "not_available": "غير متاح",
-  "passkey_supported": "مفتاح المرور مدعوم",
-  "passkey_method_description": "سيتم استخدام طريقة مفتاح المرور الأكثر أماناً لإكمال عملية التسجيل",
   "cookie_based_method_description": "سيتم استخدام طريقة قائمة على الكوكيز لتسجيل الجهاز",
   "registration_method_device_bound_key_title": "تسجيل آمن (مفتاح مرتبط بالجهاز)",
   "registration_method_device_bound_key_description": "استخدام مفتاح تشفير خاص بالجهاز يتم تخزينه بشكل آمن على هذا الجهاز فقط",

@@ -39,7 +39,6 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
   /// Currently:
   /// - Device-Bound Key is the primary method.
   /// - Cookie-based is a safe fallback.
-  /// - Passkey (WebAuthn) is intentionally disabled for now.
   static const List<RegistrationMethod> _registrationMethodPriority = [
     RegistrationMethod.deviceBoundKey,
     RegistrationMethod.cookieBased,
@@ -91,9 +90,6 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
       case RegistrationMethod.cookieBased:
         // Always available as a fallback.
         return true;
-      case RegistrationMethod.webauthn:
-        // Passkey is explicitly disabled in this project for now.
-        return false;
     }
   }
 
@@ -288,12 +284,7 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
                   registrationState is CompleteRegistrationLoading;
 
               final method = _getRegistrationMethod();
-              String buttonText;
-              if (method == RegistrationMethod.webauthn) {
-                buttonText = locale.link_device;
-              } else {
-                buttonText = locale.link_device;
-              }
+              final buttonText = locale.link_device;
 
               return CustomElevatedButton(
                 onPressed: isLoading

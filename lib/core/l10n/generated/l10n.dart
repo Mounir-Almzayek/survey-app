@@ -990,26 +990,6 @@ class S {
     );
   }
 
-  /// `Passkey Supported`
-  String get passkey_supported {
-    return Intl.message(
-      'Passkey Supported',
-      name: 'passkey_supported',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `The most secure Passkey method will be used to complete the registration process`
-  String get passkey_method_description {
-    return Intl.message(
-      'The most secure Passkey method will be used to complete the registration process',
-      name: 'passkey_method_description',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Cookie-based method will be used for device registration`
   String get cookie_based_method_description {
     return Intl.message(

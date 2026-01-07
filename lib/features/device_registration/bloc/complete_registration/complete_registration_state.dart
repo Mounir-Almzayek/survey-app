@@ -20,18 +20,6 @@ class CompleteRegistrationLoading extends CompleteRegistrationState {
   List<Object?> get props => [method];
 }
 
-class WebAuthnChallengeLoading extends CompleteRegistrationState {
-  const WebAuthnChallengeLoading();
-}
-
-class WebAuthnSigning extends CompleteRegistrationState {
-  const WebAuthnSigning();
-}
-
-class WebAuthnFallbackToCookie extends CompleteRegistrationState {
-  const WebAuthnFallbackToCookie();
-}
-
 class CompleteRegistrationSuccess extends CompleteRegistrationState {
   final CompleteRegistrationResponse response;
 

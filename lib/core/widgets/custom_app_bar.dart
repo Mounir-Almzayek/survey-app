@@ -48,17 +48,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ? Text(
                 title!,
                 style: GoogleFonts.cairo(
-                  fontSize: 18.sp,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryText,
                 ),
               )
             : const LogoRectangle(big: false, isFlat: true),
-        actions: actions ??
+        actions:
+            actions ??
             [
               IconButton(
-                icon: const Icon(Icons.notifications_none_rounded,
-                    color: AppColors.secondaryText),
+                icon: const Icon(
+                  Icons.notifications_none_rounded,
+                  color: AppColors.secondaryText,
+                ),
                 onPressed: () {},
               ),
               SizedBox(width: 8.w),
@@ -67,8 +70,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: CircleAvatar(
                   radius: 16.r,
                   backgroundColor: AppColors.muted,
-                  child: Icon(Icons.person_outline,
-                      color: AppColors.primary, size: 20.sp),
+                  child: Icon(
+                    Icons.person_outline,
+                    color: AppColors.primary,
+                    size: 20.sp,
+                  ),
                 ),
               ),
             ],
@@ -85,8 +91,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
     if (showBackButton) {
       return IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded,
-            color: AppColors.primary),
+        icon: const Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: AppColors.primary,
+        ),
         onPressed: () => Navigator.of(context).pop(),
       );
     }

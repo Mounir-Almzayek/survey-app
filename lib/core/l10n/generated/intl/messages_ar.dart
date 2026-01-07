@@ -162,10 +162,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "operating_system":
             MessageLookupByLibrary.simpleMessage("نظام التشغيل"),
         "or": MessageLookupByLibrary.simpleMessage("أو"),
-        "passkey_method_description": MessageLookupByLibrary.simpleMessage(
-            "سيتم استخدام طريقة مفتاح المرور الأكثر أماناً لإكمال عملية التسجيل"),
-        "passkey_supported":
-            MessageLookupByLibrary.simpleMessage("مفتاح المرور مدعوم"),
         "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "phone": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
         "place_qr_code":

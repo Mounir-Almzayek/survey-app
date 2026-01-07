@@ -165,10 +165,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "operating_system":
             MessageLookupByLibrary.simpleMessage("Operating System"),
         "or": MessageLookupByLibrary.simpleMessage("or"),
-        "passkey_method_description": MessageLookupByLibrary.simpleMessage(
-            "The most secure Passkey method will be used to complete the registration process"),
-        "passkey_supported":
-            MessageLookupByLibrary.simpleMessage("Passkey Supported"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
         "place_qr_code": MessageLookupByLibrary.simpleMessage(

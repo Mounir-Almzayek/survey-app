@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/services/firebase_service.dart';
 import '../../../../core/utils/device_info_util.dart';
 import '../../../../core/utils/async_runner.dart';
-import '../../../../core/services/passkey_service.dart';
 import '../../../../core/services/device_bound_key_service.dart';
 import '../../../device_registration/repository/device_cookie_repository.dart';
 import '../../../profile/models/user.dart';
@@ -17,7 +16,6 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final PasskeyService _passkeyService = PasskeyService();
   final DeviceBoundKeyService _deviceBoundKeyService = DeviceBoundKeyService();
   final AsyncRunner<ResearcherLoginInitiateResponse> _initiateRunner =
       AsyncRunner<ResearcherLoginInitiateResponse>();
@@ -127,20 +125,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       try {
         switch (loginMethod) {
-          case LoginMethod.webauthn:
-            // Case 1: WebAuthn/Passkey authentication
-            credentials = await _handleWebAuthnLogin(currentState.response);
-            break;
-
           case LoginMethod.deviceBoundKey:
-            // Case 2: Device-Bound Key authentication
+            // Device-Bound Key authentication
             credentials = await _handleDeviceBoundKeyLogin(
               currentState.response,
             );
             break;
 
           case LoginMethod.cookieBased:
-            // Case 3: Cookie-based authentication (no credentials needed)
+            // Cookie-based authentication (no credentials needed)
             credentials = null;
             break;
         }
@@ -216,21 +209,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           );
         }
       },
-    );
-  }
-
-  /// Handle WebAuthn/Passkey login
-  Future<Map<String, dynamic>> _handleWebAuthnLogin(
-    ResearcherLoginInitiateResponse response,
-  ) async {
-    final options = response.webauthnOptions;
-    if (options == null) {
-      throw Exception('WebAuthn options not found');
-    }
-
-    return await _passkeyService.authenticate(
-      options.toWebAuthnOptions(),
-      allowCredentials: options.allowCredentialsList,
     );
   }
 

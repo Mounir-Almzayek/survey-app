@@ -1,5 +1,33 @@
+/// User type as returned from /auth/me (UserType model in survey-system).
+class UserType {
+  final int id;
+  final String name;
+  final String enName;
+  final String arName;
+
+  const UserType({
+    required this.id,
+    required this.name,
+    required this.enName,
+    required this.arName,
+  });
+
+  factory UserType.fromJson(Map<String, dynamic> json) {
+    return UserType(
+      id: json['id'] as int? ?? 0,
+      name: User._parseString(json['name']) ?? '',
+      enName: User._parseString(json['en_name']) ?? '',
+      arName: User._parseString(json['ar_name']) ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name, 'en_name': enName, 'ar_name': arName};
+  }
+}
+
 /// User Model
-/// Represents a user in the system
+/// Represents a user in the system (compatible with survey-system `/auth/me`).
 class User {
   final int id;
   final String name;
@@ -59,6 +87,9 @@ class User {
   final String? vehiclePlateNumber;
   final String? idPhoto;
 
+  /// User types / roles (from survey-system `user_types` relation).
+  final List<UserType> userTypes;
+
   const User({
     required this.id,
     required this.name,
@@ -117,6 +148,7 @@ class User {
     this.idNumber,
     this.vehiclePlateNumber,
     this.idPhoto,
+    this.userTypes = const [],
   });
 
   /// Helper method to safely convert dynamic value to int?
@@ -198,6 +230,11 @@ class User {
       idNumber: _parseString(json['id_number']),
       vehiclePlateNumber: _parseString(json['vehicle_plate_number']),
       idPhoto: _parseString(json['id_photo']),
+      userTypes:
+          (json['user_types'] as List<dynamic>?)
+              ?.map((e) => UserType.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
   }
 
@@ -260,6 +297,7 @@ class User {
       'id_number': idNumber,
       'vehicle_plate_number': vehiclePlateNumber,
       'id_photo': idPhoto,
+      'user_types': userTypes.map((t) => t.toJson()).toList(),
     };
   }
 
@@ -330,6 +368,7 @@ class User {
     String? idNumber,
     String? vehiclePlateNumber,
     String? idPhoto,
+    List<UserType>? userTypes,
   }) {
     return User(
       id: id ?? this.id,
@@ -389,6 +428,7 @@ class User {
       idNumber: idNumber ?? this.idNumber,
       vehiclePlateNumber: vehiclePlateNumber ?? this.vehiclePlateNumber,
       idPhoto: idPhoto ?? this.idPhoto,
+      userTypes: userTypes ?? this.userTypes,
     );
   }
 }

@@ -27,14 +27,6 @@ class RegistrationMethodIndicator extends StatelessWidget {
     String description;
 
     switch (method) {
-      case RegistrationMethod.webauthn:
-        backgroundColor = AppColors.primary.withValues(alpha: 0.1);
-        borderColor = AppColors.primary.withValues(alpha: 0.3);
-        iconColor = AppColors.primary;
-        icon = Icons.security_rounded;
-        title = locale.passkey_supported;
-        description = locale.passkey_method_description;
-        break;
       case RegistrationMethod.deviceBoundKey:
         backgroundColor = Colors.blue.withValues(alpha: 0.1);
         borderColor = Colors.blue.withValues(alpha: 0.3);

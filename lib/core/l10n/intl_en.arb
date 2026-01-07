@@ -94,8 +94,6 @@
   "processor_cores": "Processor Cores",
   "max_touch_points": "Maximum Touch Points",
   "not_available": "Not Available",
-  "passkey_supported": "Passkey Supported",
-  "passkey_method_description": "The most secure Passkey method will be used to complete the registration process",
   "cookie_based_method_description": "Cookie-based method will be used for device registration",
   "registration_method_device_bound_key_title": "Secure registration (device-bound key)",
   "registration_method_device_bound_key_description": "Using a device-specific cryptographic key stored only on this device",

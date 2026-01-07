@@ -24,12 +24,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
-  void initState() {
-    super.initState();
-    context.read<ProfileBloc>().add(const LoadProfile());
-  }
-
-  @override
   Widget build(BuildContext context) {
     final locale = S.of(context);
     final isMobile = ResponsiveLayout.isMobile(context);
