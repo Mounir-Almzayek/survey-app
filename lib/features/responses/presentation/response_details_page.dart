@@ -31,36 +31,35 @@ class ResponseDetailsPage extends StatelessWidget {
 
               if (state is ResponseDetailsLoaded) {
                 final d = state.details;
-                return ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    Text(
-                      d.survey.title,
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      d.survey.description,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 16),
-                    for (final answer in d.answers) ...[
-                      Text(
-                        'Q ${answer.questionId}',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        answer.value,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const Divider(height: 24),
-                    ],
-                  ],
-                );
+                 return ListView(
+                   padding: const EdgeInsets.all(16),
+                   children: [
+                     if (d.surveyTitle != null)
+                       Text(
+                         d.surveyTitle!,
+                         style: Theme.of(context)
+                             .textTheme
+                             .headlineSmall
+                             ?.copyWith(fontWeight: FontWeight.bold),
+                       ),
+                     const SizedBox(height: 16),
+                     for (final answer in d.answers) ...[
+                       Text(
+                         answer.questionLabel,
+                         style: Theme.of(context)
+                             .textTheme
+                             .bodyMedium
+                             ?.copyWith(fontWeight: FontWeight.bold),
+                       ),
+                       const SizedBox(height: 4),
+                       Text(
+                         answer.value,
+                         style: Theme.of(context).textTheme.bodySmall,
+                       ),
+                       const Divider(height: 24),
+                     ],
+                   ],
+                 );
               }
 
               return const SizedBox.shrink();
