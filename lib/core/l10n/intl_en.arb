@@ -163,4 +163,15 @@
   "enter_verification_code": "Enter Verification Code",
   "verify": "Verify",
   "resend_code": "Resend Code"
+  ,
+  "location_permission_required_title": "Location permission required",
+  "location_permission_required_message": "To use this app, you must allow access to your device location.",
+  "allow_location_access": "Allow location access",
+  "responses_title": "Responses",
+  "response_details_title": "Response details",
+  "no_responses_found": "No responses found",
+  "response_status_synced": "Synced",
+  "response_status_pending": "Pending",
+  "response_status_flagged": "Flagged",
+  "response_status_rejected": "Rejected"
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/generated/l10n.dart';
 import '../../models/response_status.dart';
 
 class SyncStatusBadge extends StatelessWidget {
@@ -12,21 +13,23 @@ class SyncStatusBadge extends StatelessWidget {
     String label;
     Color color;
 
+    final locale = S.of(context);
+
     switch (status) {
       case ResponseStatus.submitted:
-        label = 'Synced';
+        label = locale.response_status_synced;
         color = Colors.green;
         break;
       case ResponseStatus.draft:
-        label = 'Pending';
+        label = locale.response_status_pending;
         color = Colors.orange;
         break;
       case ResponseStatus.flagged:
-        label = 'Flagged';
+        label = locale.response_status_flagged;
         color = Colors.yellow.shade800;
         break;
       case ResponseStatus.rejected:
-        label = 'Rejected';
+        label = locale.response_status_rejected;
         color = Colors.red;
         break;
     }

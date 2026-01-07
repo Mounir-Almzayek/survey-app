@@ -1609,6 +1609,106 @@ class S {
       args: [],
     );
   }
+
+  /// `Location permission required`
+  String get location_permission_required_title {
+    return Intl.message(
+      'Location permission required',
+      name: 'location_permission_required_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To use this app, you must allow access to your device location.`
+  String get location_permission_required_message {
+    return Intl.message(
+      'To use this app, you must allow access to your device location.',
+      name: 'location_permission_required_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allow location access`
+  String get allow_location_access {
+    return Intl.message(
+      'Allow location access',
+      name: 'allow_location_access',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Responses`
+  String get responses_title {
+    return Intl.message(
+      'Responses',
+      name: 'responses_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Response details`
+  String get response_details_title {
+    return Intl.message(
+      'Response details',
+      name: 'response_details_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No responses found`
+  String get no_responses_found {
+    return Intl.message(
+      'No responses found',
+      name: 'no_responses_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Synced`
+  String get response_status_synced {
+    return Intl.message(
+      'Synced',
+      name: 'response_status_synced',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending`
+  String get response_status_pending {
+    return Intl.message(
+      'Pending',
+      name: 'response_status_pending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Flagged`
+  String get response_status_flagged {
+    return Intl.message(
+      'Flagged',
+      name: 'response_status_flagged',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rejected`
+  String get response_status_rejected {
+    return Intl.message(
+      'Rejected',
+      name: 'response_status_rejected',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

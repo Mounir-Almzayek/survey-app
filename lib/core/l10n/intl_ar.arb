@@ -162,5 +162,15 @@
   "verification_info_message": "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني لإكمال عملية نقل العهدة.",
   "enter_verification_code": "أدخل رمز التحقق",
   "verify": "تحقق",
-  "resend_code": "إعادة إرسال الرمز"
+  "resend_code": "إعادة إرسال الرمز",
+  "location_permission_required_title": "إذن الموقع مطلوب",
+  "location_permission_required_message": "لاستخدام هذا التطبيق، يجب السماح بالوصول إلى موقع جهازك.",
+  "allow_location_access": "السماح بالوصول إلى الموقع",
+  "responses_title": "الاستجابات",
+  "response_details_title": "تفاصيل الاستجابة",
+  "no_responses_found": "لا توجد استجابات",
+  "response_status_synced": "متزامنة",
+  "response_status_pending": "قيد الانتظار",
+  "response_status_flagged": "معلَّمة",
+  "response_status_rejected": "مرفوضة"
 }

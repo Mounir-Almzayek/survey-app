@@ -24,6 +24,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "allow_location_access":
+            MessageLookupByLibrary.simpleMessage("السماح بالوصول إلى الموقع"),
         "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
         "browser": MessageLookupByLibrary.simpleMessage("المتصفح"),
         "camera": MessageLookupByLibrary.simpleMessage("الكاميرا"),
@@ -103,6 +105,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "link_device": MessageLookupByLibrary.simpleMessage("ربط الجهاز"),
         "location_permission_denied":
             MessageLookupByLibrary.simpleMessage("تم رفض إذن الموقع"),
+        "location_permission_required_message":
+            MessageLookupByLibrary.simpleMessage(
+                "لاستخدام هذا التطبيق، يجب السماح بالوصول إلى موقع جهازك."),
+        "location_permission_required_title":
+            MessageLookupByLibrary.simpleMessage("إذن الموقع مطلوب"),
         "location_required":
             MessageLookupByLibrary.simpleMessage("الموقع مطلوب"),
         "location_tracking_started":
@@ -140,6 +147,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("لا توجد روابط عامة"),
         "no_public_links_description": MessageLookupByLibrary.simpleMessage(
             "ليس لديك أي روابط عامة معينة بعد"),
+        "no_responses_found":
+            MessageLookupByLibrary.simpleMessage("لا توجد استجابات"),
         "no_user_data": MessageLookupByLibrary.simpleMessage(
             "لم يتم العثور على بيانات المستخدم"),
         "no_user_name": MessageLookupByLibrary.simpleMessage(
@@ -211,6 +220,17 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("دخول الباحثين"),
         "resend_code":
             MessageLookupByLibrary.simpleMessage("إعادة إرسال الرمز"),
+        "response_details_title":
+            MessageLookupByLibrary.simpleMessage("تفاصيل الاستجابة"),
+        "response_status_flagged":
+            MessageLookupByLibrary.simpleMessage("معلَّمة"),
+        "response_status_pending":
+            MessageLookupByLibrary.simpleMessage("قيد الانتظار"),
+        "response_status_rejected":
+            MessageLookupByLibrary.simpleMessage("مرفوضة"),
+        "response_status_synced":
+            MessageLookupByLibrary.simpleMessage("متزامنة"),
+        "responses_title": MessageLookupByLibrary.simpleMessage("الاستجابات"),
         "retry": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
         "retry_upload":
             MessageLookupByLibrary.simpleMessage("إعادة محاولة الرفع"),

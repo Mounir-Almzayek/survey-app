@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/l10n/generated/l10n.dart';
 import '../bloc/response_details/response_details_bloc.dart';
 
 class ResponseDetailsPage extends StatelessWidget {
@@ -10,12 +11,13 @@ class ResponseDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = S.of(context);
     return BlocProvider(
       create: (_) =>
           ResponseDetailsBloc()
             ..add(LoadResponseDetails(responseId: responseId)),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Response details')),
+        appBar: AppBar(title: Text(locale.response_details_title)),
         body: SafeArea(
           child: BlocBuilder<ResponseDetailsBloc, ResponseDetailsState>(
             builder: (context, state) {

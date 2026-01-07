@@ -13,6 +13,7 @@ import 'core/queue/presentation/queue_status_listener.dart';
 import 'core/styles/app_theme.dart';
 import 'features/language/bloc/language/language_bloc.dart';
 import 'features/profile/bloc/profile/profile_bloc.dart';
+import 'features/device_location/presentation/location_permission_gate.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,9 +59,10 @@ class MyApp extends StatelessWidget {
                 supportedLocales: S.delegate.supportedLocales,
                 routerConfig: appPages,
                 builder: (context, child) {
-                  return QueueStatusListener(
+                  final content = QueueStatusListener(
                     child: child ?? const SizedBox.shrink(),
                   );
+                  return LocationPermissionGate(child: content);
                 },
               );
             },

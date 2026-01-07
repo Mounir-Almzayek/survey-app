@@ -24,6 +24,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "allow_location_access":
+            MessageLookupByLibrary.simpleMessage("Allow location access"),
         "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
         "browser": MessageLookupByLibrary.simpleMessage("Browser"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
@@ -105,6 +107,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "link_device": MessageLookupByLibrary.simpleMessage("Link Device"),
         "location_permission_denied":
             MessageLookupByLibrary.simpleMessage("Location permission denied"),
+        "location_permission_required_message":
+            MessageLookupByLibrary.simpleMessage(
+                "To use this app, you must allow access to your device location."),
+        "location_permission_required_title":
+            MessageLookupByLibrary.simpleMessage(
+                "Location permission required"),
         "location_required":
             MessageLookupByLibrary.simpleMessage("Location Required"),
         "location_tracking_started":
@@ -142,6 +150,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No Public Links"),
         "no_public_links_description": MessageLookupByLibrary.simpleMessage(
             "You don\'t have any public links assigned yet"),
+        "no_responses_found":
+            MessageLookupByLibrary.simpleMessage("No responses found"),
         "no_user_data":
             MessageLookupByLibrary.simpleMessage("No user data found"),
         "no_user_name":
@@ -211,6 +221,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "researcher_login":
             MessageLookupByLibrary.simpleMessage("Researcher Login"),
         "resend_code": MessageLookupByLibrary.simpleMessage("Resend Code"),
+        "response_details_title":
+            MessageLookupByLibrary.simpleMessage("Response details"),
+        "response_status_flagged":
+            MessageLookupByLibrary.simpleMessage("Flagged"),
+        "response_status_pending":
+            MessageLookupByLibrary.simpleMessage("Pending"),
+        "response_status_rejected":
+            MessageLookupByLibrary.simpleMessage("Rejected"),
+        "response_status_synced":
+            MessageLookupByLibrary.simpleMessage("Synced"),
+        "responses_title": MessageLookupByLibrary.simpleMessage("Responses"),
         "retry": MessageLookupByLibrary.simpleMessage("Retry"),
         "retry_upload": MessageLookupByLibrary.simpleMessage("Retry Upload"),
         "scan_qr_code": MessageLookupByLibrary.simpleMessage("Scan QR Code"),

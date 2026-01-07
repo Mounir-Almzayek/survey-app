@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/l10n/generated/l10n.dart';
 import '../bloc/responses_list/responses_list_bloc.dart';
 import '../models/response.dart';
 import '../models/response_status.dart';
@@ -65,7 +66,9 @@ class _ResponsesListScreenState extends State<ResponsesListScreen> {
               if (state is ResponsesListLoaded) {
                 final responses = _applyFilters(state.responses);
                 if (responses.isEmpty) {
-                  return const Center(child: Text('No responses found'));
+                  return Center(
+                    child: Text(S.of(context).no_responses_found),
+                  );
                 }
                 return ListView.separated(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
