@@ -1419,6 +1419,196 @@ class S {
       args: [],
     );
   }
+
+  /// `Verify Custody`
+  String get verify_custody {
+    return Intl.message(
+      'Verify Custody',
+      name: 'verify_custody',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To User Email`
+  String get to_user_email {
+    return Intl.message(
+      'To User Email',
+      name: 'to_user_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter email address`
+  String get enter_email {
+    return Intl.message(
+      'Enter email address',
+      name: 'enter_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter email address`
+  String get please_enter_email {
+    return Intl.message(
+      'Please enter email address',
+      name: 'please_enter_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid email address`
+  String get invalid_email {
+    return Intl.message(
+      'Invalid email address',
+      name: 'invalid_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Notes`
+  String get notes {
+    return Intl.message(
+      'Notes',
+      name: 'notes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter notes (optional)`
+  String get enter_notes_optional {
+    return Intl.message(
+      'Enter notes (optional)',
+      name: 'enter_notes_optional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start Transfer`
+  String get start_transfer {
+    return Intl.message(
+      'Start Transfer',
+      name: 'start_transfer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No Custody Records`
+  String get no_custody_records {
+    return Intl.message(
+      'No Custody Records',
+      name: 'no_custody_records',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You don't have any custody records yet`
+  String get no_custody_records_description {
+    return Intl.message(
+      'You don\'t have any custody records yet',
+      name: 'no_custody_records_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transfer initiated successfully`
+  String get transfer_initiated_successfully {
+    return Intl.message(
+      'Transfer initiated successfully',
+      name: 'transfer_initiated_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the email of the researcher who will receive the device. A verification code will be sent to both users.`
+  String get transfer_info_message {
+    return Intl.message(
+      'Enter the email of the researcher who will receive the device. A verification code will be sent to both users.',
+      name: 'transfer_info_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter the 6-digit verification code`
+  String get please_enter_verification_code {
+    return Intl.message(
+      'Please enter the 6-digit verification code',
+      name: 'please_enter_verification_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Custody verified successfully`
+  String get custody_verified_successfully {
+    return Intl.message(
+      'Custody verified successfully',
+      name: 'custody_verified_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification code resent successfully`
+  String get verification_code_resent {
+    return Intl.message(
+      'Verification code resent successfully',
+      name: 'verification_code_resent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the verification code sent to your email to complete the custody transfer.`
+  String get verification_info_message {
+    return Intl.message(
+      'Enter the verification code sent to your email to complete the custody transfer.',
+      name: 'verification_info_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Verification Code`
+  String get enter_verification_code {
+    return Intl.message(
+      'Enter Verification Code',
+      name: 'enter_verification_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify`
+  String get verify {
+    return Intl.message(
+      'Verify',
+      name: 'verify',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resend Code`
+  String get resend_code {
+    return Intl.message(
+      'Resend Code',
+      name: 'resend_code',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

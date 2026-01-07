@@ -43,6 +43,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "سيتم استخدام طريقة قائمة على الكوكيز لتسجيل الجهاز"),
         "copy_link": MessageLookupByLibrary.simpleMessage("نسخ الرابط"),
         "custody": MessageLookupByLibrary.simpleMessage("العهدة"),
+        "custody_verified_successfully":
+            MessageLookupByLibrary.simpleMessage("تم التحقق من العهدة بنجاح"),
         "delete": MessageLookupByLibrary.simpleMessage("حذف"),
         "device_information": MessageLookupByLibrary.simpleMessage(
             "المعلومات المستخرجة من الجهاز"),
@@ -57,6 +59,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "enter_details": MessageLookupByLibrary.simpleMessage(
             "أدخل بيانات تسجيل الدخول الخاصة بك"),
+        "enter_email": MessageLookupByLibrary.simpleMessage(
+            "أدخل عنوان البريد الإلكتروني"),
+        "enter_notes_optional":
+            MessageLookupByLibrary.simpleMessage("أدخل ملاحظات (اختياري)"),
+        "enter_verification_code":
+            MessageLookupByLibrary.simpleMessage("أدخل رمز التحقق"),
         "entity": MessageLookupByLibrary.simpleMessage("الجهة"),
         "error_occurred": MessageLookupByLibrary.simpleMessage("حدث خطأ ما"),
         "failed_pick_image": MessageLookupByLibrary.simpleMessage(
@@ -80,6 +88,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "id_number": MessageLookupByLibrary.simpleMessage("رقم الهوية"),
         "image_saved_successfully": MessageLookupByLibrary.simpleMessage(
             "تم حفظ الصورة بنجاح في المعرض"),
+        "invalid_email": MessageLookupByLibrary.simpleMessage(
+            "عنوان بريد إلكتروني غير صحيح"),
         "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
             "رمز QR غير صالح. يرجى المحاولة مرة أخرى."),
         "language": MessageLookupByLibrary.simpleMessage("اللغة"),
@@ -119,6 +129,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "max_touch_points":
             MessageLookupByLibrary.simpleMessage("نقاط اللمس القصوى"),
         "nationality": MessageLookupByLibrary.simpleMessage("الجنسية"),
+        "no_custody_records":
+            MessageLookupByLibrary.simpleMessage("لا توجد سجلات عهدة"),
+        "no_custody_records_description":
+            MessageLookupByLibrary.simpleMessage("ليس لديك أي سجلات عهدة بعد"),
         "no_data": MessageLookupByLibrary.simpleMessage("لا توجد بيانات"),
         "no_password":
             MessageLookupByLibrary.simpleMessage("يرجى إدخال كلمة المرور"),
@@ -131,6 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_user_name": MessageLookupByLibrary.simpleMessage(
             "يرجى إدخال البريد الإلكتروني"),
         "not_available": MessageLookupByLibrary.simpleMessage("غير متاح"),
+        "notes": MessageLookupByLibrary.simpleMessage("ملاحظات"),
         "notifications": MessageLookupByLibrary.simpleMessage("التنبيهات"),
         "offline_mode": MessageLookupByLibrary.simpleMessage(
             "عرض البيانات المحفوظة (أوفلاين)"),
@@ -146,6 +161,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "phone": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
         "place_qr_code":
             MessageLookupByLibrary.simpleMessage("ضع رمز QR داخل الإطار للمسح"),
+        "please_enter_email": MessageLookupByLibrary.simpleMessage(
+            "يرجى إدخال عنوان البريد الإلكتروني"),
+        "please_enter_verification_code": MessageLookupByLibrary.simpleMessage(
+            "يرجى إدخال رمز التحقق المكون من 6 أرقام"),
         "please_select": MessageLookupByLibrary.simpleMessage("يرجى الاختيار"),
         "point_camera_at_qr_code":
             MessageLookupByLibrary.simpleMessage("وجّه الكاميرا نحو رمز QR"),
@@ -190,6 +209,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("طلب إذن الموقع"),
         "researcher_login":
             MessageLookupByLibrary.simpleMessage("دخول الباحثين"),
+        "resend_code":
+            MessageLookupByLibrary.simpleMessage("إعادة إرسال الرمز"),
         "retry": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
         "retry_upload":
             MessageLookupByLibrary.simpleMessage("إعادة محاولة الرفع"),
@@ -207,12 +228,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "show_qr_code": MessageLookupByLibrary.simpleMessage("عرض رمز QR"),
         "start_location_tracking":
             MessageLookupByLibrary.simpleMessage("بدء تتبع الموقع"),
+        "start_transfer": MessageLookupByLibrary.simpleMessage("بدء النقل"),
         "statistics": MessageLookupByLibrary.simpleMessage("الإحصائيات"),
         "stop_location_tracking":
             MessageLookupByLibrary.simpleMessage("إيقاف تتبع الموقع"),
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("تم رفض إذن التخزين"),
         "surveys": MessageLookupByLibrary.simpleMessage("الاستطلاعات"),
+        "to_user_email": MessageLookupByLibrary.simpleMessage(
+            "البريد الإلكتروني للمستخدم المستقبل"),
+        "transfer_info_message": MessageLookupByLibrary.simpleMessage(
+            "أدخل البريد الإلكتروني للباحث الذي سيستلم الجهاز. سيتم إرسال رمز التحقق لكلا المستخدمين."),
+        "transfer_initiated_successfully":
+            MessageLookupByLibrary.simpleMessage("تم بدء عملية النقل بنجاح"),
         "upload_failed": MessageLookupByLibrary.simpleMessage("فشل الرفع"),
         "upload_file": MessageLookupByLibrary.simpleMessage("رفع ملف"),
         "upload_files": MessageLookupByLibrary.simpleMessage("رفع ملفات"),
@@ -221,6 +249,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تم رفع الملف بنجاح"),
         "uploaded": MessageLookupByLibrary.simpleMessage("تم الرفع"),
         "uploading": MessageLookupByLibrary.simpleMessage("جاري الرفع..."),
+        "verification_code_resent": MessageLookupByLibrary.simpleMessage(
+            "تم إعادة إرسال رمز التحقق بنجاح"),
+        "verification_info_message": MessageLookupByLibrary.simpleMessage(
+            "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني لإكمال عملية نقل العهدة."),
+        "verify": MessageLookupByLibrary.simpleMessage("تحقق"),
+        "verify_custody":
+            MessageLookupByLibrary.simpleMessage("التحقق من العهدة"),
         "welcome": MessageLookupByLibrary.simpleMessage(
             "مرحباً بكم في منصة الاستطلاعات"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(

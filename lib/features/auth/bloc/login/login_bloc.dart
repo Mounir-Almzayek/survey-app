@@ -64,6 +64,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     await _initiateRunner.run(
       onlineTask: (_) async {
         final fingerprint = await DeviceInfoUtil.getFingerprint();
+        final hasDeviceKey = await _deviceBoundKeyService.hasKey();
+        final deviceKeyId = hasDeviceKey
+            ? await _deviceBoundKeyService.getKeyId()
+            : null;
 
         final request = ResearcherLoginInitiateRequest(
           email: state.email,
@@ -72,6 +76,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           browser: DeviceInfoUtil.getBrowser(),
           fingerprint: fingerprint,
           deviceToken: FirebaseService.fcmToken ?? '',
+          deviceKeyId: deviceKeyId,
         );
 
         return await AuthRepository.initiateResearcherLogin(request: request);
@@ -230,7 +235,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   /// Handle Device-Bound Key login
-  Future<String> _handleDeviceBoundKeyLogin(
+  Future<Map<String, dynamic>> _handleDeviceBoundKeyLogin(
     ResearcherLoginInitiateResponse response,
   ) async {
     final options = response.deviceBoundKeyOptions;
@@ -238,12 +243,30 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       throw Exception('Device-Bound Key options not found');
     }
 
-    // Sign the challenge using device-bound key
-    final signature = await _deviceBoundKeyService.signChallenge(
-      options.challenge,
+    // Get stored keyId for this device
+    final keyId = await _deviceBoundKeyService.getKeyId();
+    if (keyId == null || keyId.isEmpty) {
+      throw Exception('Device key ID not found. Please register device first.');
+    }
+
+    // Timestamp for replay protection (must match backend expectation)
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    // Backend builds payload as: `${challenge}|${keyId}|${timestamp}`
+    final payload = '${options.challenge}|$keyId|$timestamp';
+
+    // Sign the payload using device-bound key (require biometric for login)
+    final signature = await _deviceBoundKeyService.signPayload(
+      payload,
+      requireBiometric: true,
     );
 
-    // Return signature as JSON string (will be parsed in verify request)
-    return signature;
+    // Credentials object expected by backend
+    return {
+      'signature': signature,
+      'keyId': keyId,
+      'timestamp': timestamp,
+      'challenge': options.challenge,
+    };
   }
 }

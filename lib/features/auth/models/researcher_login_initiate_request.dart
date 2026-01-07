@@ -8,5 +8,6 @@ class ResearcherLoginInitiateRequest extends ResearcherLoginBaseRequest {
     required super.browser,
     required super.fingerprint,
     required super.deviceToken,
+    super.deviceKeyId,
   });
 }

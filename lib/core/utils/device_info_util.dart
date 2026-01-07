@@ -137,6 +137,8 @@ class DeviceInfoUtil {
     final ramGB = await _getRamGB();
     final maxTouchPoints = await _getMaxTouchPoints();
     final userAgent = await _buildUserAgent(packageInfo);
+    final deviceModel = await _getDeviceModel();
+    final osVersion = await _getOSVersion();
 
     return Fingerprint(
       user_agent: userAgent,
@@ -147,6 +149,8 @@ class DeviceInfoUtil {
       ram: ramGB,
       hardware_concurrency: hardwareConcurrency,
       max_touch_points: maxTouchPoints,
+      device_model: deviceModel,
+      os_version: osVersion,
       browser: getBrowser(),
       os: getOS(),
       deviceType: Platform.isAndroid
@@ -323,6 +327,38 @@ class DeviceInfoUtil {
       return 'SurveySystemApp/${packageInfo.version}';
     } catch (_) {
       return 'SurveySystemApp/${packageInfo.version}';
+    }
+  }
+
+  /// Get device model (e.g., "SM-A165F", "iPhone 14 Pro")
+  static Future<String> _getDeviceModel() async {
+    try {
+      if (Platform.isAndroid) {
+        final androidInfo = await _deviceInfoPlugin.androidInfo;
+        return '${androidInfo.brand} ${androidInfo.model}';
+      } else if (Platform.isIOS) {
+        final iosInfo = await _deviceInfoPlugin.iosInfo;
+        return iosInfo.model;
+      }
+      return 'Unknown';
+    } catch (_) {
+      return 'Unknown';
+    }
+  }
+
+  /// Get OS version (e.g., "15", "17.0")
+  static Future<String> _getOSVersion() async {
+    try {
+      if (Platform.isAndroid) {
+        final androidInfo = await _deviceInfoPlugin.androidInfo;
+        return androidInfo.version.release;
+      } else if (Platform.isIOS) {
+        final iosInfo = await _deviceInfoPlugin.iosInfo;
+        return iosInfo.systemVersion;
+      }
+      return 'Unknown';
+    } catch (_) {
+      return 'Unknown';
     }
   }
 }

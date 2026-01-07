@@ -46,4 +46,5 @@ app.*.map.json
 
 # Exclude specific project folders as requested
 /survey-system/
+/survey-system-doc/
 /survey-system-frontend-new/

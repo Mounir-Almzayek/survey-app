@@ -43,6 +43,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Cookie-based method will be used for device registration"),
         "copy_link": MessageLookupByLibrary.simpleMessage("Copy Link"),
         "custody": MessageLookupByLibrary.simpleMessage("Custody"),
+        "custody_verified_successfully": MessageLookupByLibrary.simpleMessage(
+            "Custody verified successfully"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "device_information": MessageLookupByLibrary.simpleMessage(
             "Information Extracted from the Device"),
@@ -57,6 +59,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "english": MessageLookupByLibrary.simpleMessage("English"),
         "enter_details":
             MessageLookupByLibrary.simpleMessage("Enter your login details"),
+        "enter_email":
+            MessageLookupByLibrary.simpleMessage("Enter email address"),
+        "enter_notes_optional":
+            MessageLookupByLibrary.simpleMessage("Enter notes (optional)"),
+        "enter_verification_code":
+            MessageLookupByLibrary.simpleMessage("Enter Verification Code"),
         "entity": MessageLookupByLibrary.simpleMessage("Entity"),
         "error_occurred":
             MessageLookupByLibrary.simpleMessage("An error occurred"),
@@ -81,6 +89,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "id_number": MessageLookupByLibrary.simpleMessage("ID Number"),
         "image_saved_successfully": MessageLookupByLibrary.simpleMessage(
             "Image saved successfully to gallery"),
+        "invalid_email":
+            MessageLookupByLibrary.simpleMessage("Invalid email address"),
         "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
             "Invalid QR code. Please try again."),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
@@ -121,6 +131,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "max_touch_points":
             MessageLookupByLibrary.simpleMessage("Maximum Touch Points"),
         "nationality": MessageLookupByLibrary.simpleMessage("Nationality"),
+        "no_custody_records":
+            MessageLookupByLibrary.simpleMessage("No Custody Records"),
+        "no_custody_records_description": MessageLookupByLibrary.simpleMessage(
+            "You don\'t have any custody records yet"),
         "no_data": MessageLookupByLibrary.simpleMessage("No data"),
         "no_password":
             MessageLookupByLibrary.simpleMessage("Please enter your password"),
@@ -133,6 +147,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_user_name":
             MessageLookupByLibrary.simpleMessage("Please enter your email"),
         "not_available": MessageLookupByLibrary.simpleMessage("Not Available"),
+        "notes": MessageLookupByLibrary.simpleMessage("Notes"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
         "offline_mode":
             MessageLookupByLibrary.simpleMessage("Viewing offline data"),
@@ -148,6 +163,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
         "place_qr_code": MessageLookupByLibrary.simpleMessage(
             "Place the QR code within the frame to scan"),
+        "please_enter_email":
+            MessageLookupByLibrary.simpleMessage("Please enter email address"),
+        "please_enter_verification_code": MessageLookupByLibrary.simpleMessage(
+            "Please enter the 6-digit verification code"),
         "please_select": MessageLookupByLibrary.simpleMessage("Please select"),
         "point_camera_at_qr_code":
             MessageLookupByLibrary.simpleMessage("Point camera at QR code"),
@@ -191,6 +210,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Request Location Permission"),
         "researcher_login":
             MessageLookupByLibrary.simpleMessage("Researcher Login"),
+        "resend_code": MessageLookupByLibrary.simpleMessage("Resend Code"),
         "retry": MessageLookupByLibrary.simpleMessage("Retry"),
         "retry_upload": MessageLookupByLibrary.simpleMessage("Retry Upload"),
         "scan_qr_code": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
@@ -209,12 +229,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "show_qr_code": MessageLookupByLibrary.simpleMessage("Show QR Code"),
         "start_location_tracking":
             MessageLookupByLibrary.simpleMessage("Start Location Tracking"),
+        "start_transfer":
+            MessageLookupByLibrary.simpleMessage("Start Transfer"),
         "statistics": MessageLookupByLibrary.simpleMessage("Statistics"),
         "stop_location_tracking":
             MessageLookupByLibrary.simpleMessage("Stop Location Tracking"),
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("Storage permission denied"),
         "surveys": MessageLookupByLibrary.simpleMessage("Surveys"),
+        "to_user_email": MessageLookupByLibrary.simpleMessage("To User Email"),
+        "transfer_info_message": MessageLookupByLibrary.simpleMessage(
+            "Enter the email of the researcher who will receive the device. A verification code will be sent to both users."),
+        "transfer_initiated_successfully": MessageLookupByLibrary.simpleMessage(
+            "Transfer initiated successfully"),
         "upload_failed": MessageLookupByLibrary.simpleMessage("Upload failed"),
         "upload_file": MessageLookupByLibrary.simpleMessage("Upload File"),
         "upload_files": MessageLookupByLibrary.simpleMessage("Upload Files"),
@@ -223,6 +250,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("File uploaded successfully"),
         "uploaded": MessageLookupByLibrary.simpleMessage("Uploaded"),
         "uploading": MessageLookupByLibrary.simpleMessage("Uploading..."),
+        "verification_code_resent": MessageLookupByLibrary.simpleMessage(
+            "Verification code resent successfully"),
+        "verification_info_message": MessageLookupByLibrary.simpleMessage(
+            "Enter the verification code sent to your email to complete the custody transfer."),
+        "verify": MessageLookupByLibrary.simpleMessage("Verify"),
+        "verify_custody":
+            MessageLookupByLibrary.simpleMessage("Verify Custody"),
         "welcome": MessageLookupByLibrary.simpleMessage(
             "Welcome to the Survey Platform"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(

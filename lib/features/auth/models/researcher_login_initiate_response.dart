@@ -44,9 +44,9 @@ class ResearcherLoginInitiateResponse {
   }
 
   factory ResearcherLoginInitiateResponse.fromJson(Map<String, dynamic> json) {
-    final data = json['data'] as Map<String, dynamic>?;
-    final method = json['method'] ?? data?['method'] ?? '';
-    final optionsData = json['options'] ?? data?['options'];
+    final data = json['data'] as Map<String, dynamic>? ?? json;
+    String method = json['method'] ?? data['method'] ?? '';
+    final optionsData = json['options'] ?? data['options'];
 
     WebAuthnLoginOptions? webauthnOptions;
     DeviceBoundKeyLoginOptions? deviceBoundKeyOptions;
@@ -73,11 +73,25 @@ class ResearcherLoginInitiateResponse {
       }
     }
 
+    // Fallback for researcher-login device-bound-key flow:
+    // Backend returns only { success, data: { challenge: "..." } }
+    // In this case, treat it as device-bound-key login with simple options.
+    if ((method.isEmpty) && deviceBoundKeyOptions == null) {
+      final challenge = data['challenge'];
+      if (challenge is String && challenge.isNotEmpty) {
+        method = 'device-bound-key';
+        deviceBoundKeyOptions = DeviceBoundKeyLoginOptions(
+          challenge: challenge,
+          keyId: null,
+        );
+      }
+    }
+
     return ResearcherLoginInitiateResponse(
       method: method,
       webauthnOptions: webauthnOptions,
       deviceBoundKeyOptions: deviceBoundKeyOptions,
-      cookie: json['cookie'] ?? data?['cookie'],
+      cookie: json['cookie'] ?? data['cookie'],
     );
   }
 }

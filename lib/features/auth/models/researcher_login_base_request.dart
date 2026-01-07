@@ -6,6 +6,7 @@ abstract class ResearcherLoginBaseRequest {
   final String os;
   final String browser;
   final String deviceToken;
+  final String? deviceKeyId;
   final Fingerprint fingerprint;
 
   ResearcherLoginBaseRequest({
@@ -14,6 +15,7 @@ abstract class ResearcherLoginBaseRequest {
     required this.os,
     required this.browser,
     required this.deviceToken,
+    this.deviceKeyId,
     required this.fingerprint,
   });
 
@@ -23,6 +25,7 @@ abstract class ResearcherLoginBaseRequest {
     'os': os,
     'browser': browser,
     'device_token': deviceToken,
+    if (deviceKeyId != null) 'deviceKeyId': deviceKeyId,
     'fingerprint': fingerprint.toJson(),
   };
 }

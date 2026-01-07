@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/utils/async_runner.dart';
@@ -197,7 +196,6 @@ class CompleteRegistrationBloc
 
     final challengeRequest = DeviceBoundKeyChallengeRequest(
       token: event.token,
-      browser: event.fingerprint.browser,
       os: event.fingerprint.os,
       fingerprint: event.fingerprint,
     );
@@ -239,9 +237,10 @@ class CompleteRegistrationBloc
       // Generate device-bound key pair
       keyPair = await deviceBoundKeyService.generateKeyPair();
 
-      // Sign the challenge
+      // Sign the challenge (no biometric required for registration)
       signature = await deviceBoundKeyService.signChallenge(
         challengeResponse!.challenge,
+        requireBiometric: true,
       );
     } catch (e, stackTrace) {
       if (kDebugMode) {
@@ -255,9 +254,8 @@ class CompleteRegistrationBloc
       return;
     }
 
-    // Parse signature JSON to extract signature string
-    final signatureData = jsonDecode(signature) as Map<String, dynamic>;
-    final signatureString = signatureData['signature'] as String;
+    // Signature is already a base64 string (not JSON)
+    final signatureString = signature;
 
     // Complete Registration
     await _registrationRunner.run(
@@ -266,8 +264,9 @@ class CompleteRegistrationBloc
           token: event.token,
           publicKey: keyPair['publicKey']!,
           keyId: keyPair['keyId']!,
-          deviceId: keyPair['deviceId']!,
           signature: signatureString,
+          algorithm: 'ES256',
+          // attestation is optional, can be null for now
         );
 
         return await DeviceRegistrationRepository.completeDeviceBoundKeyRegistration(

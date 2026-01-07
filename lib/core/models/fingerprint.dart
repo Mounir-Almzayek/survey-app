@@ -9,6 +9,8 @@ class Fingerprint {
   final int ram;
   final int hardware_concurrency;
   final int max_touch_points;
+  final String device_model;
+  final String os_version;
 
   // Additional fields for UI and device registration
   final String browser;
@@ -21,6 +23,8 @@ class Fingerprint {
     this.ram = 0,
     this.hardware_concurrency = 0,
     this.max_touch_points = 0,
+    this.device_model = '',
+    this.os_version = '',
     this.browser = '',
     this.os = '',
     this.deviceType = '',
@@ -33,6 +37,8 @@ class Fingerprint {
     'ram': ram,
     'hardware_concurrency': hardware_concurrency,
     'max_touch_points': max_touch_points,
+    'device_model': device_model,
+    'os_version': os_version,
   };
 
   /// Get screen width
