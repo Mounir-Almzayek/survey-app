@@ -171,5 +171,7 @@
   "response_status_synced": "Synced",
   "response_status_pending": "Pending",
   "response_status_flagged": "Flagged",
-  "response_status_rejected": "Rejected"
+  "response_status_rejected": "Rejected",
+  "device_already_registered": "This device is already registered",
+  "verifying_device_key": "Verifying device key..."
 }

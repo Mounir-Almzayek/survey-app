@@ -48,6 +48,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "custody_verified_successfully":
             MessageLookupByLibrary.simpleMessage("تم التحقق من العهدة بنجاح"),
         "delete": MessageLookupByLibrary.simpleMessage("حذف"),
+        "device_already_registered":
+            MessageLookupByLibrary.simpleMessage("هذا الجهاز مسجل مسبقاً"),
         "device_information": MessageLookupByLibrary.simpleMessage(
             "المعلومات المستخرجة من الجهاز"),
         "device_name": MessageLookupByLibrary.simpleMessage("اسم الجهاز"),
@@ -272,6 +274,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "verify": MessageLookupByLibrary.simpleMessage("تحقق"),
         "verify_custody":
             MessageLookupByLibrary.simpleMessage("التحقق من العهدة"),
+        "verifying_device_key": MessageLookupByLibrary.simpleMessage(
+            "جارٍ التحقق من مفتاح الجهاز..."),
         "welcome": MessageLookupByLibrary.simpleMessage(
             "مرحباً بكم في منصة الاستطلاعات"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(

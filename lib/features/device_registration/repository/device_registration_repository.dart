@@ -6,6 +6,7 @@ import '../models/complete_registration_response.dart';
 import '../models/device_bound_key_challenge_request.dart';
 import '../models/device_bound_key_challenge_response.dart';
 import '../models/device_bound_key_complete_request.dart';
+import '../models/verify_key_response.dart';
 
 class DeviceRegistrationRepository {
   /// Validate device registration token
@@ -69,5 +70,16 @@ class DeviceRegistrationRepository {
     );
     final response = await apiRequest.send();
     return CompleteRegistrationResponse.fromJson(response.data);
+  }
+
+  /// Verify if a device key is still valid
+  static Future<VerifyKeyResponse> verifyKey({required String keyId}) async {
+    final apiRequest = APIRequest(
+      path: '/device-registration/verify-key/$keyId',
+      method: HTTPMethod.get,
+      authorizationOption: AuthorizationOption.unauthorized,
+    );
+    final response = await apiRequest.send();
+    return VerifyKeyResponse.fromJson(response.data);
   }
 }

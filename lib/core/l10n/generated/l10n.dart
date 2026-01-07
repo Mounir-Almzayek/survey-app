@@ -1689,6 +1689,26 @@ class S {
       args: [],
     );
   }
+
+  /// `This device is already registered`
+  String get device_already_registered {
+    return Intl.message(
+      'This device is already registered',
+      name: 'device_already_registered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verifying device key...`
+  String get verifying_device_key {
+    return Intl.message(
+      'Verifying device key...',
+      name: 'verifying_device_key',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -234,10 +234,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final payload = '${options.challenge}|$keyId|$timestamp';
 
     // Sign the payload using device-bound key (require biometric for login)
-    final signature = await _deviceBoundKeyService.signPayload(
-      payload,
-      requireBiometric: true,
-    );
+    final signature = await _deviceBoundKeyService.signPayload(payload);
 
     // Credentials object expected by backend
     return {

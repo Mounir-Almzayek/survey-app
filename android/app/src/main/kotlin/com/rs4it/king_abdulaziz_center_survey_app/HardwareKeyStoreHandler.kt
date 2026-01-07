@@ -4,6 +4,8 @@ import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.security.KeyPair
@@ -26,10 +28,119 @@ class HardwareKeyStoreHandler(private val context: Context) : MethodChannel.Meth
         private const val KEY_ALGORITHM = "EC"
         private const val CURVE_NAME = "secp256r1" // P-256 curve for ES256
         private const val SIGNATURE_ALGORITHM = "SHA256withECDSA"
+        
+        // Device ID storage constants
+        private const val DEVICE_ID_PREFS_NAME = "hardware_device_id_prefs"
+        private const val DEVICE_ID_KEY = "device_id"
+        
+        // Key ID storage constants
+        private const val KEY_ID_KEY = "device_bound_key_id"
     }
     
     private val keyStore: KeyStore = KeyStore.getInstance(KEYSTORE_PROVIDER).apply {
         load(null)
+    }
+    
+    /**
+     * Get EncryptedSharedPreferences instance for storing device ID in hardware-backed storage
+     * Uses Android Keystore to encrypt the SharedPreferences data
+     */
+    private fun getEncryptedPrefs(): android.content.SharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+        
+        return EncryptedSharedPreferences.create(
+            context,
+            DEVICE_ID_PREFS_NAME,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
+    
+    /**
+     * Save device ID to hardware-backed encrypted storage
+     * Uses Android Keystore to encrypt the data
+     */
+    private fun saveDeviceId(deviceId: Int) {
+        try {
+            val prefs = getEncryptedPrefs()
+            prefs.edit()
+                .putString(DEVICE_ID_KEY, deviceId.toString())
+                .apply()
+        } catch (e: Exception) {
+            throw Exception("Failed to save device ID to hardware storage: ${e.message}")
+        }
+    }
+    
+    /**
+     * Get device ID from hardware-backed encrypted storage
+     * Returns null if device ID is not found
+     */
+    private fun getDeviceId(): String? {
+        return try {
+            val prefs = getEncryptedPrefs()
+            prefs.getString(DEVICE_ID_KEY, null)
+        } catch (e: Exception) {
+            null
+        }
+    }
+    
+    /**
+     * Delete device ID from hardware-backed encrypted storage
+     */
+    private fun deleteDeviceId() {
+        try {
+            val prefs = getEncryptedPrefs()
+            prefs.edit()
+                .remove(DEVICE_ID_KEY)
+                .apply()
+        } catch (e: Exception) {
+            // Ignore errors when deleting
+        }
+    }
+    
+    /**
+     * Save key ID to hardware-backed encrypted storage
+     * Uses Android Keystore to encrypt the data
+     */
+    private fun saveKeyId(keyId: String) {
+        try {
+            val prefs = getEncryptedPrefs()
+            prefs.edit()
+                .putString(KEY_ID_KEY, keyId)
+                .apply()
+        } catch (e: Exception) {
+            throw Exception("Failed to save key ID to hardware storage: ${e.message}")
+        }
+    }
+    
+    /**
+     * Get key ID from hardware-backed encrypted storage
+     * Returns null if key ID is not found
+     */
+    private fun getKeyId(): String? {
+        return try {
+            val prefs = getEncryptedPrefs()
+            prefs.getString(KEY_ID_KEY, null)
+        } catch (e: Exception) {
+            null
+        }
+    }
+    
+    /**
+     * Delete key ID from hardware-backed encrypted storage
+     */
+    private fun deleteKeyId() {
+        try {
+            val prefs = getEncryptedPrefs()
+            prefs.edit()
+                .remove(KEY_ID_KEY)
+                .apply()
+        } catch (e: Exception) {
+            // Ignore errors when deleting
+        }
     }
     
     /**
@@ -258,6 +369,48 @@ class HardwareKeyStoreHandler(private val context: Context) : MethodChannel.Meth
                 }
                 "deleteKey" -> {
                     deleteKey()
+                    result.success(null)
+                }
+                "saveDeviceId" -> {
+                    val deviceId = call.argument<Int>("deviceId")
+                    if (deviceId == null) {
+                        result.error("INVALID_ARGUMENT", "DeviceId parameter is required", null)
+                        return
+                    }
+                    try {
+                        saveDeviceId(deviceId)
+                        result.success(null)
+                    } catch (e: Exception) {
+                        result.error("KEYSTORE_ERROR", e.message, e.stackTraceToString())
+                    }
+                }
+                "getDeviceId" -> {
+                    val deviceId = getDeviceId()
+                    result.success(deviceId)
+                }
+                "deleteDeviceId" -> {
+                    deleteDeviceId()
+                    result.success(null)
+                }
+                "saveKeyId" -> {
+                    val keyId = call.argument<String>("keyId")
+                    if (keyId == null) {
+                        result.error("INVALID_ARGUMENT", "KeyId parameter is required", null)
+                        return
+                    }
+                    try {
+                        saveKeyId(keyId)
+                        result.success(null)
+                    } catch (e: Exception) {
+                        result.error("KEYSTORE_ERROR", e.message, e.stackTraceToString())
+                    }
+                }
+                "getKeyId" -> {
+                    val keyId = getKeyId()
+                    result.success(keyId)
+                }
+                "deleteKeyId" -> {
+                    deleteKeyId()
                     result.success(null)
                 }
                 else -> {

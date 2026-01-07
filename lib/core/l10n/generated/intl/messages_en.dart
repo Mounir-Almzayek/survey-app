@@ -48,6 +48,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "custody_verified_successfully": MessageLookupByLibrary.simpleMessage(
             "Custody verified successfully"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "device_already_registered": MessageLookupByLibrary.simpleMessage(
+            "This device is already registered"),
         "device_information": MessageLookupByLibrary.simpleMessage(
             "Information Extracted from the Device"),
         "device_name": MessageLookupByLibrary.simpleMessage("Device Name"),
@@ -274,6 +276,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "verify": MessageLookupByLibrary.simpleMessage("Verify"),
         "verify_custody":
             MessageLookupByLibrary.simpleMessage("Verify Custody"),
+        "verifying_device_key":
+            MessageLookupByLibrary.simpleMessage("Verifying device key..."),
         "welcome": MessageLookupByLibrary.simpleMessage(
             "Welcome to the Survey Platform"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(

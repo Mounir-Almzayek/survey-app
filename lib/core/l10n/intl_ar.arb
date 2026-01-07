@@ -170,5 +170,7 @@
   "response_status_synced": "متزامنة",
   "response_status_pending": "قيد الانتظار",
   "response_status_flagged": "معلَّمة",
-  "response_status_rejected": "مرفوضة"
+  "response_status_rejected": "مرفوضة",
+  "device_already_registered": "هذا الجهاز مسجل مسبقاً",
+  "verifying_device_key": "جارٍ التحقق من مفتاح الجهاز..."
 }

@@ -46,4 +46,5 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }
