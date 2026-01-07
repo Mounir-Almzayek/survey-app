@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import '../../models/public_link.dart';
+
+import '../../models/validated_public_link.dart';
 
 /// States for Validate Public Link Bloc
 abstract class ValidatePublicLinkState extends Equatable {
@@ -21,7 +22,7 @@ class ValidatePublicLinkLoading extends ValidatePublicLinkState {
 
 /// Validated state
 class ValidatePublicLinkSuccess extends ValidatePublicLinkState {
-  final PublicLink link;
+  final ValidatedPublicLink link;
 
   const ValidatePublicLinkSuccess(this.link);
 
@@ -38,4 +39,3 @@ class ValidatePublicLinkError extends ValidatePublicLinkState {
   @override
   List<Object?> get props => [message];
 }
-

@@ -1,14 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../../core/utils/async_runner.dart';
-import '../../models/public_link.dart';
+import '../../models/validated_public_link.dart';
 import '../../repository/public_links_online_repository.dart';
 import 'validate_public_link_event.dart';
 import 'validate_public_link_state.dart';
 
 /// Bloc for validating public links
 /// Uses AsyncRunner for all operations
-class ValidatePublicLinkBloc extends Bloc<ValidatePublicLinkEvent, ValidatePublicLinkState> {
-  final AsyncRunner<PublicLink> _validateLinkRunner = AsyncRunner<PublicLink>();
+class ValidatePublicLinkBloc
+    extends Bloc<ValidatePublicLinkEvent, ValidatePublicLinkState> {
+  final AsyncRunner<ValidatedPublicLink> _validateLinkRunner =
+      AsyncRunner<ValidatedPublicLink>();
 
   ValidatePublicLinkBloc() : super(const ValidatePublicLinkInitial()) {
     on<ValidatePublicLink>(_onValidatePublicLink);
@@ -22,7 +25,9 @@ class ValidatePublicLinkBloc extends Bloc<ValidatePublicLinkEvent, ValidatePubli
 
     await _validateLinkRunner.run(
       onlineTask: (_) async {
-        return await PublicLinksOnlineRepository.validatePublicLink(event.shortCode);
+        return await PublicLinksOnlineRepository.validatePublicLink(
+          event.shortCode,
+        );
       },
       checkConnectivity: true,
       onSuccess: (link) {
@@ -38,4 +43,3 @@ class ValidatePublicLinkBloc extends Bloc<ValidatePublicLinkEvent, ValidatePubli
     );
   }
 }
-
