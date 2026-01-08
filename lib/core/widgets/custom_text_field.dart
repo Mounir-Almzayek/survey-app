@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../styles/app_colors.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -54,7 +54,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             padding: EdgeInsets.symmetric(horizontal: 4.w),
             child: Text(
               widget.label!,
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.primaryText,
@@ -70,7 +70,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           enabled: widget.enabled,
           obscureText: widget.isPassword ? _currentObscure : false,
           onChanged: widget.onChanged,
-          style: GoogleFonts.cairo(
+          style: TextStyle(
             fontSize: 15.sp,
             color: AppColors.primaryText,
             fontWeight: FontWeight.w500,

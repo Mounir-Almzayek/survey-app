@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../styles/app_colors.dart';
 
 /// Unified Snackbar Types
@@ -42,7 +42,8 @@ class UnifiedSnackbar {
     required SnackbarType type,
     SnackbarConfig? config,
   }) {
-    final snackbarConfig = config ??
+    final snackbarConfig =
+        config ??
         const SnackbarConfig(
           duration: Duration(seconds: 2),
           showCloseButton: false,
@@ -106,12 +107,14 @@ class UnifiedSnackbar {
     if (messenger == null) return;
     messenger.showSnackBar(
       SnackBar(
-        content: Text(message, style: GoogleFonts.cairo()),
+        content: Text(message, style: const TextStyle()),
         behavior: snackbarConfig.behavior,
         duration: snackbarConfig.duration,
         margin: snackbarConfig.margin,
         width: snackbarConfig.width,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
       ),
     );
   }
@@ -198,7 +201,7 @@ class _SnackbarContent extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
                 color: _getTextColor(),
@@ -241,7 +244,7 @@ class _SnackbarContent extends StatelessWidget {
         ),
         child: Text(
           actionLabel!,
-          style: GoogleFonts.cairo(
+          style: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -253,7 +256,8 @@ class _SnackbarContent extends StatelessWidget {
 
   Widget _buildCloseButton(BuildContext context) {
     return GestureDetector(
-      onTap: onClose ?? () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+      onTap:
+          onClose ?? () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
       child: Container(
         width: 20.w,
         height: 20.w,
@@ -272,46 +276,66 @@ class _SnackbarContent extends StatelessWidget {
 
   Color _getBackgroundColor() {
     switch (type) {
-      case SnackbarType.success: return const Color(0xFFF0F9F4);
-      case SnackbarType.error: return const Color(0xFFFEF2F2);
-      case SnackbarType.warning: return const Color(0xFFFEFBF0);
-      case SnackbarType.info: return const Color(0xFFF0F8FF);
+      case SnackbarType.success:
+        return const Color(0xFFF0F9F4);
+      case SnackbarType.error:
+        return const Color(0xFFFEF2F2);
+      case SnackbarType.warning:
+        return const Color(0xFFFEFBF0);
+      case SnackbarType.info:
+        return const Color(0xFFF0F8FF);
     }
   }
 
   Color _getBorderColor() {
     switch (type) {
-      case SnackbarType.success: return const Color(0xFFD1FAE5);
-      case SnackbarType.error: return const Color(0xFFFECACA);
-      case SnackbarType.warning: return const Color(0xFFFDE68A);
-      case SnackbarType.info: return const Color(0xFFBFDBFE);
+      case SnackbarType.success:
+        return const Color(0xFFD1FAE5);
+      case SnackbarType.error:
+        return const Color(0xFFFECACA);
+      case SnackbarType.warning:
+        return const Color(0xFFFDE68A);
+      case SnackbarType.info:
+        return const Color(0xFFBFDBFE);
     }
   }
 
   Color _getTextColor() {
     switch (type) {
-      case SnackbarType.success: return const Color(0xFF065F46);
-      case SnackbarType.error: return const Color(0xFF991B1B);
-      case SnackbarType.warning: return const Color(0xFF92400E);
-      case SnackbarType.info: return const Color(0xFF1E40AF);
+      case SnackbarType.success:
+        return const Color(0xFF065F46);
+      case SnackbarType.error:
+        return const Color(0xFF991B1B);
+      case SnackbarType.warning:
+        return const Color(0xFF92400E);
+      case SnackbarType.info:
+        return const Color(0xFF1E40AF);
     }
   }
 
   Color _getIconBackgroundColor() {
     switch (type) {
-      case SnackbarType.success: return AppColors.success;
-      case SnackbarType.error: return AppColors.error;
-      case SnackbarType.warning: return AppColors.warning;
-      case SnackbarType.info: return AppColors.primary;
+      case SnackbarType.success:
+        return AppColors.success;
+      case SnackbarType.error:
+        return AppColors.error;
+      case SnackbarType.warning:
+        return AppColors.warning;
+      case SnackbarType.info:
+        return AppColors.primary;
     }
   }
 
   IconData _getIcon() {
     switch (type) {
-      case SnackbarType.success: return Icons.check_rounded;
-      case SnackbarType.error: return Icons.error_outline_rounded;
-      case SnackbarType.warning: return Icons.warning_amber_rounded;
-      case SnackbarType.info: return Icons.info_outline_rounded;
+      case SnackbarType.success:
+        return Icons.check_rounded;
+      case SnackbarType.error:
+        return Icons.error_outline_rounded;
+      case SnackbarType.warning:
+        return Icons.warning_amber_rounded;
+      case SnackbarType.info:
+        return Icons.info_outline_rounded;
     }
   }
 
@@ -356,10 +380,12 @@ class _OverlaySnackbarWidgetState extends State<_OverlaySnackbarWidget>
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: const Interval(0.0, 0.5, curve: Curves.easeIn)));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
+      ),
+    );
 
     _controller.forward();
   }

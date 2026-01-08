@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/custom_app_bar.dart';
@@ -16,18 +16,14 @@ import 'widgets/verification_code_input.dart';
 class CustodyVerificationScreen extends StatefulWidget {
   final int custodyId;
 
-  const CustodyVerificationScreen({
-    super.key,
-    required this.custodyId,
-  });
+  const CustodyVerificationScreen({super.key, required this.custodyId});
 
   @override
   State<CustodyVerificationScreen> createState() =>
       _CustodyVerificationScreenState();
 }
 
-class _CustodyVerificationScreenState
-    extends State<CustodyVerificationScreen> {
+class _CustodyVerificationScreenState extends State<CustodyVerificationScreen> {
   final _verificationCodeController = TextEditingController();
   final _notesController = TextEditingController();
   String _verificationCode = '';
@@ -50,14 +46,14 @@ class _CustodyVerificationScreenState
     }
 
     context.read<CustodyVerificationBloc>().add(
-          VerifyCustody(
-            custodyId: widget.custodyId,
-            verificationCode: _verificationCode,
-            notes: _notesController.text.trim().isEmpty
-                ? null
-                : _notesController.text.trim(),
-          ),
-        );
+      VerifyCustody(
+        custodyId: widget.custodyId,
+        verificationCode: _verificationCode,
+        notes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
+      ),
+    );
   }
 
   void _handleResend() {
@@ -66,8 +62,8 @@ class _CustodyVerificationScreenState
     });
 
     context.read<CustodyVerificationBloc>().add(
-          ResendVerificationCode(widget.custodyId),
-        );
+      ResendVerificationCode(widget.custodyId),
+    );
   }
 
   @override
@@ -153,7 +149,7 @@ class _CustodyVerificationScreenState
                   Text(
                     locale.enter_verification_code,
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.cairo(
+                    style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.primaryText,
@@ -206,7 +202,7 @@ class _CustodyVerificationScreenState
                         : _handleResend,
                     child: Text(
                       locale.resend_code,
-                      style: GoogleFonts.cairo(
+                      style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: (isVerifying || isResending || _isResending)
@@ -224,4 +220,3 @@ class _CustodyVerificationScreenState
     );
   }
 }
-

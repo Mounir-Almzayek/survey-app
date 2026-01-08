@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/styles/app_colors.dart';
 
 class VerificationCodeInput extends StatefulWidget {
@@ -77,7 +77,6 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -93,10 +92,7 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
           SizedBox(height: 8.h),
           Text(
             widget.errorText!,
-            style: GoogleFonts.cairo(
-              fontSize: 12.sp,
-              color: AppColors.error,
-            ),
+            style: TextStyle(fontSize: 12.sp, color: AppColors.error),
           ),
         ],
       ],
@@ -120,7 +116,7 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(1),
         ],
-        style: GoogleFonts.cairo(
+        style: TextStyle(
           fontSize: 24.sp,
           fontWeight: FontWeight.bold,
           color: AppColors.primaryText,
@@ -159,10 +155,7 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(
-              color: AppColors.error,
-              width: 2,
-            ),
+            borderSide: BorderSide(color: AppColors.error, width: 2),
           ),
           contentPadding: EdgeInsets.zero,
         ),
@@ -186,4 +179,3 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
     );
   }
 }
-

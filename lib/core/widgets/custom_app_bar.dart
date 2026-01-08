@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../styles/app_colors.dart';
 import 'logo_rectangle.dart';
 
@@ -10,6 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final List<Widget>? actions;
   final bool centerTitle;
+  final VoidCallback? onDrawerPressed;
 
   const CustomAppBar({
     super.key,
@@ -18,6 +19,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showBackButton = false,
     this.actions,
     this.centerTitle = true,
+    this.onDrawerPressed,
   });
 
   @override
@@ -47,37 +49,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title: title != null
             ? Text(
                 title!,
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryText,
                 ),
               )
             : const LogoRectangle(big: false, isFlat: true),
-        actions:
-            actions ??
-            [
-              IconButton(
-                icon: const Icon(
-                  Icons.notifications_none_rounded,
-                  color: AppColors.secondaryText,
-                ),
-                onPressed: () {},
-              ),
-              SizedBox(width: 8.w),
-              Padding(
-                padding: EdgeInsets.only(right: 16.w),
-                child: CircleAvatar(
-                  radius: 16.r,
-                  backgroundColor: AppColors.muted,
-                  child: Icon(
-                    Icons.person_outline,
-                    color: AppColors.primary,
-                    size: 20.sp,
-                  ),
-                ),
-              ),
-            ],
+        actions: actions ?? [],
       ),
     );
   }
@@ -86,7 +65,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     if (showDrawerButton) {
       return IconButton(
         icon: const Icon(Icons.menu_rounded, color: AppColors.primary),
-        onPressed: () => Scaffold.of(context).openDrawer(),
+        onPressed: onDrawerPressed ?? () => Scaffold.of(context).openDrawer(),
       );
     }
     if (showBackButton) {

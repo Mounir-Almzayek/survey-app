@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:go_router/go_router.dart';
 import '../../../core/assets/assets.dart';
 import '../../../core/l10n/generated/l10n.dart';
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             // 🔹 Form Title
                             Text(
                               locale.researcher_login,
-                              style: GoogleFonts.cairo(
+                              style: TextStyle(
                                 fontSize: 24.sp,
                                 fontWeight: FontWeight.w900,
                                 color: AppColors.primary,
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(height: 8.h),
                             Text(
                               locale.enter_details,
-                              style: GoogleFonts.cairo(
+                              style: TextStyle(
                                 fontSize: 14.sp,
                                 color: AppColors.secondaryText,
                               ),

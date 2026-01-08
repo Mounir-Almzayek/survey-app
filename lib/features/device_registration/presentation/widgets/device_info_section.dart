@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/models/fingerprint.dart';
@@ -42,7 +42,7 @@ class DeviceInfoSection extends StatelessWidget {
               Expanded(
                 child: Text(
                   locale.device_information,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryText,
@@ -130,7 +130,7 @@ class _InfoItem extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.primaryText,
@@ -138,7 +138,7 @@ class _InfoItem extends StatelessWidget {
               ),
               Text(
                 value,
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   fontSize: 14.sp,
                   color: AppColors.secondaryText,
                 ),
@@ -150,4 +150,3 @@ class _InfoItem extends StatelessWidget {
     );
   }
 }
-

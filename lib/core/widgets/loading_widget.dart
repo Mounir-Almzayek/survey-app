@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../styles/app_colors.dart';
 
 class LoadingWidget extends StatelessWidget {
@@ -53,7 +53,7 @@ class LoadingWidget extends StatelessWidget {
               SizedBox(height: 16.h),
               Text(
                 message!,
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   fontSize: 14.sp,
                   color: AppColors.secondaryText,
                   fontWeight: FontWeight.w500,

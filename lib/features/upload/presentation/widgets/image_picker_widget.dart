@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
@@ -58,7 +58,7 @@ class ImagePickerWidget extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 4.w),
                   child: Text(
                     title!,
-                    style: GoogleFonts.cairo(
+                    style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.primaryText,
@@ -126,7 +126,7 @@ class ImagePickerWidget extends StatelessWidget {
             SizedBox(height: 16.h),
             Text(
               locale.upload_image,
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 14.sp,
                 color: AppColors.primaryText,
                 fontWeight: FontWeight.w600,
@@ -135,10 +135,7 @@ class ImagePickerWidget extends StatelessWidget {
             SizedBox(height: 4.h),
             Text(
               '${locale.camera} ${locale.or} ${locale.gallery}',
-              style: GoogleFonts.cairo(
-                fontSize: 12.sp,
-                color: AppColors.secondaryText,
-              ),
+              style: TextStyle(fontSize: 12.sp, color: AppColors.secondaryText),
             ),
           ],
         ),
@@ -187,7 +184,7 @@ class ImagePickerWidget extends StatelessWidget {
                     SizedBox(height: 12.h),
                     Text(
                       locale.uploading,
-                      style: GoogleFonts.cairo(
+                      style: TextStyle(
                         fontSize: 14.sp,
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -258,7 +255,7 @@ class ImagePickerWidget extends StatelessWidget {
           SizedBox(height: 20.h),
           Text(
             '${(progressValue * 100).toInt()}%',
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.primary,
@@ -267,7 +264,7 @@ class ImagePickerWidget extends StatelessWidget {
           SizedBox(height: 8.h),
           Text(
             locale.uploading,
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 14.sp,
               color: AppColors.secondaryText,
               fontWeight: FontWeight.w500,
@@ -340,7 +337,7 @@ class ImagePickerWidget extends StatelessWidget {
               ),
               child: Text(
                 locale.uploaded,
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   fontSize: 12.sp,
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
@@ -384,7 +381,7 @@ class ImagePickerWidget extends StatelessWidget {
                 ),
                 title: Text(
                   locale.gallery,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 16.sp,
                     color: AppColors.primaryText,
                     fontWeight: FontWeight.w600,
@@ -428,7 +425,7 @@ class ImagePickerWidget extends StatelessWidget {
                 ),
                 title: Text(
                   locale.camera,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 16.sp,
                     color: AppColors.primaryText,
                     fontWeight: FontWeight.w600,

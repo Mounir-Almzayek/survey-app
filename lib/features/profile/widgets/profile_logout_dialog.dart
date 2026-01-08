@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_colors.dart';
@@ -39,23 +39,21 @@ class ProfileLogoutDialog extends StatelessWidget {
           ),
           title: Text(
             locale.log_out,
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontWeight: FontWeight.bold,
               color: AppColors.primaryText,
             ),
           ),
           content: Text(
             locale.logout_message, // Make sure this exists in arb
-            style: GoogleFonts.cairo(
-              color: AppColors.secondaryText,
-            ),
+            style: TextStyle(color: AppColors.secondaryText),
           ),
           actions: [
             TextButton(
               onPressed: isLoading ? null : () => Navigator.pop(context),
               child: Text(
                 locale.cancel,
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   color: AppColors.secondaryText,
                   fontWeight: FontWeight.w600,
                 ),
@@ -84,14 +82,14 @@ class ProfileLogoutDialog extends StatelessWidget {
                         height: 20.w,
                         child: const CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
                     : Text(
                         locale.confirm,
-                        style: GoogleFonts.cairo(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
               ),
             ),

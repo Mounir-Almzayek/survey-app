@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:async';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/logo_rectangle.dart';
@@ -118,7 +118,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     duration: const Duration(milliseconds: 1000),
                     child: Text(
                       "Survey System",
-                      style: GoogleFonts.cairo(
+                      style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,

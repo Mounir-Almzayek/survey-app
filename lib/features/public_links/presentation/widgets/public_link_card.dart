@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:flutter/services.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
@@ -44,7 +44,7 @@ class PublicLinkCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   link.surveyTitle,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryText,
@@ -55,16 +55,20 @@ class PublicLinkCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12.h),
-          
+
           // Short code
           Row(
             children: [
-              Icon(Icons.link_rounded, size: 16.sp, color: AppColors.secondaryText),
+              Icon(
+                Icons.link_rounded,
+                size: 16.sp,
+                color: AppColors.secondaryText,
+              ),
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
                   link.shortCode,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 14.sp,
                     color: AppColors.secondaryText,
                   ),
@@ -79,7 +83,7 @@ class PublicLinkCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.h),
-          
+
           // Full URL
           GestureDetector(
             onTap: () => _copyLink(context, locale),
@@ -94,7 +98,7 @@ class PublicLinkCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       link.fullUrl,
-                      style: GoogleFonts.cairo(
+                      style: TextStyle(
                         fontSize: 12.sp,
                         color: AppColors.primaryText,
                       ),
@@ -102,13 +106,17 @@ class PublicLinkCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Icon(Icons.copy_rounded, size: 14.sp, color: AppColors.secondaryText),
+                  Icon(
+                    Icons.copy_rounded,
+                    size: 14.sp,
+                    color: AppColors.secondaryText,
+                  ),
                 ],
               ),
             ),
           ),
           SizedBox(height: 12.h),
-          
+
           // Stats
           Row(
             children: [
@@ -138,13 +146,11 @@ class PublicLinkCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12.h),
-          
+
           // Actions
           Row(
             children: [
-              Expanded(
-                child: ShareButton(link: link),
-              ),
+              Expanded(child: ShareButton(link: link)),
               SizedBox(width: 8.w),
               IconButton(
                 icon: Icon(Icons.qr_code_rounded, size: 20.sp),
@@ -172,7 +178,7 @@ class PublicLinkCard extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: GoogleFonts.cairo(
+        style: TextStyle(
           fontSize: 10.sp,
           fontWeight: FontWeight.w600,
           color: color,
@@ -188,10 +194,7 @@ class PublicLinkCard extends StatelessWidget {
         SizedBox(width: 4.w),
         Text(
           text,
-          style: GoogleFonts.cairo(
-            fontSize: 12.sp,
-            color: AppColors.secondaryText,
-          ),
+          style: TextStyle(fontSize: 12.sp, color: AppColors.secondaryText),
         ),
       ],
     );
@@ -218,7 +221,7 @@ class PublicLinkCard extends StatelessWidget {
   String _formatExpiryDate(DateTime date) {
     final now = DateTime.now();
     final difference = date.difference(now);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}d left';
     } else if (difference.inHours > 0) {
@@ -230,10 +233,7 @@ class PublicLinkCard extends StatelessWidget {
 
   void _copyLink(BuildContext context, S locale) {
     Clipboard.setData(ClipboardData(text: link.fullUrl));
-    UnifiedSnackbar.success(
-      context,
-      message: locale.link_copied,
-    );
+    UnifiedSnackbar.success(context, message: locale.link_copied);
   }
 
   void _showQRCode(BuildContext context) {
@@ -243,4 +243,3 @@ class PublicLinkCard extends StatelessWidget {
     );
   }
 }
-

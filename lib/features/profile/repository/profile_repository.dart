@@ -11,11 +11,6 @@ class ProfileRepository {
       return user;
     }
 
-    final localUser = await ProfileLocalRepository.getUser();
-    if (localUser != null) {
-      return localUser;
-    }
-
     final onlineUser = await ProfileOnlineRepository.getProfile();
     await ProfileLocalRepository.saveUser(onlineUser);
     return onlineUser;

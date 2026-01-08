@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 
@@ -61,7 +61,7 @@ class DeviceRegistrationHeader extends StatelessWidget {
                   children: [
                     Text(
                       locale.register_device,
-                      style: GoogleFonts.cairo(
+                      style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,
@@ -70,7 +70,7 @@ class DeviceRegistrationHeader extends StatelessWidget {
                     SizedBox(height: 4.h),
                     Text(
                       locale.complete_device_registration,
-                      style: GoogleFonts.cairo(
+                      style: TextStyle(
                         fontSize: 13.sp,
                         color: AppColors.secondaryText,
                       ),
@@ -132,7 +132,7 @@ class _InfoRow extends StatelessWidget {
         SizedBox(width: 12.w),
         Text(
           '$label: ',
-          style: GoogleFonts.cairo(
+          style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
             color: AppColors.primaryText,
@@ -140,13 +140,9 @@ class _InfoRow extends StatelessWidget {
         ),
         Text(
           value,
-          style: GoogleFonts.cairo(
-            fontSize: 14.sp,
-            color: AppColors.secondaryText,
-          ),
+          style: TextStyle(fontSize: 14.sp, color: AppColors.secondaryText),
         ),
       ],
     );
   }
 }
-

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
@@ -16,9 +16,7 @@ class QRCodeGenerator extends StatelessWidget {
     final locale = S.of(context);
 
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       child: Container(
         padding: EdgeInsets.all(24.w),
         child: Column(
@@ -26,7 +24,7 @@ class QRCodeGenerator extends StatelessWidget {
           children: [
             Text(
               locale.qr_code,
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primaryText,
@@ -50,7 +48,7 @@ class QRCodeGenerator extends StatelessWidget {
             SizedBox(height: 16.h),
             Text(
               link.surveyTitle,
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.primaryText,
@@ -60,10 +58,7 @@ class QRCodeGenerator extends StatelessWidget {
             SizedBox(height: 8.h),
             Text(
               link.shortCode,
-              style: GoogleFonts.cairo(
-                fontSize: 12.sp,
-                color: AppColors.secondaryText,
-              ),
+              style: TextStyle(fontSize: 12.sp, color: AppColors.secondaryText),
             ),
             SizedBox(height: 24.h),
             SizedBox(
@@ -79,7 +74,7 @@ class QRCodeGenerator extends StatelessWidget {
                 ),
                 child: Text(
                   locale.close,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
@@ -93,4 +88,3 @@ class QRCodeGenerator extends StatelessWidget {
     );
   }
 }
-

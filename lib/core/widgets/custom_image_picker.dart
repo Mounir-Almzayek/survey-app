@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import '../l10n/generated/l10n.dart';
@@ -39,7 +39,7 @@ class CustomImagePicker extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 4.w),
           child: Text(
             title,
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryText,
@@ -134,7 +134,7 @@ class CustomImagePicker extends StatelessWidget {
         SizedBox(height: 8.h),
         Text(
           locale.upload_image,
-          style: GoogleFonts.cairo(
+          style: TextStyle(
             fontSize: 14.sp,
             color: AppColors.mutedForeground,
             fontWeight: FontWeight.w500,
@@ -167,12 +167,14 @@ class CustomImagePicker extends StatelessWidget {
                     color: AppColors.primary.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.photo_library_rounded,
-                      color: AppColors.primary),
+                  child: const Icon(
+                    Icons.photo_library_rounded,
+                    color: AppColors.primary,
+                  ),
                 ),
                 title: Text(
                   locale.gallery,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 16.sp,
                     color: AppColors.primaryText,
                     fontWeight: FontWeight.w600,
@@ -190,12 +192,14 @@ class CustomImagePicker extends StatelessWidget {
                     color: AppColors.primary.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.photo_camera_rounded,
-                      color: AppColors.primary),
+                  child: const Icon(
+                    Icons.photo_camera_rounded,
+                    color: AppColors.primary,
+                  ),
                 ),
                 title: Text(
                   locale.camera,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 16.sp,
                     color: AppColors.primaryText,
                     fontWeight: FontWeight.w600,
@@ -214,12 +218,14 @@ class CustomImagePicker extends StatelessWidget {
                       color: AppColors.error.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child:
-                        const Icon(Icons.delete_rounded, color: AppColors.error),
+                    child: const Icon(
+                      Icons.delete_rounded,
+                      color: AppColors.error,
+                    ),
                   ),
                   title: Text(
                     locale.delete,
-                    style: GoogleFonts.cairo(
+                    style: TextStyle(
                       fontSize: 16.sp,
                       color: AppColors.error,
                       fontWeight: FontWeight.w600,

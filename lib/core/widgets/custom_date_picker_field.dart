@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../styles/app_colors.dart';
 import '../l10n/generated/l10n.dart';
 
@@ -33,7 +33,7 @@ class CustomDatePickerField extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 4.w),
           child: Text(
             label,
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryText,
@@ -58,7 +58,7 @@ class CustomDatePickerField extends StatelessWidget {
                     selectedDate?.isNotEmpty == true
                         ? selectedDate!
                         : S.of(context).select_date,
-                    style: GoogleFonts.cairo(
+                    style: TextStyle(
                       fontSize: 14.sp,
                       color: selectedDate?.isNotEmpty == true
                           ? AppColors.primaryText
@@ -124,7 +124,7 @@ class CustomDatePickerField extends StatelessWidget {
               surface: AppColors.brightWhite,
               onSurface: AppColors.primaryText,
             ),
-            textTheme: GoogleFonts.cairoTextTheme(Theme.of(context).textTheme),
+            textTheme: Theme.of(context).textTheme,
           ),
           child: child!,
         );
@@ -147,7 +147,7 @@ class CustomDatePickerField extends StatelessWidget {
                   surface: AppColors.brightWhite,
                   onSurface: AppColors.primaryText,
                 ),
-                textTheme: GoogleFonts.cairoTextTheme(Theme.of(context).textTheme),
+                textTheme: Theme.of(context).textTheme,
               ),
               child: child!,
             );

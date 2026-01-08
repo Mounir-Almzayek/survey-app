@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -232,7 +232,7 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
             ),
             title: Text(
               locale.register_device,
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 color: AppColors.primaryText,
                 fontWeight: FontWeight.bold,
               ),
@@ -259,7 +259,7 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
                         SizedBox(height: 16.h),
                         Text(
                           deviceInfoState.message,
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             color: AppColors.error,
                             fontSize: 16.sp,
                           ),
@@ -293,7 +293,7 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
                               SizedBox(height: 16.h),
                               Text(
                                 tokenState.message,
-                                style: GoogleFonts.cairo(
+                                style: TextStyle(
                                   color: AppColors.error,
                                   fontSize: 16.sp,
                                 ),
@@ -393,7 +393,7 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
                               Expanded(
                                 child: Text(
                                   locale.device_already_registered,
-                                  style: GoogleFonts.cairo(
+                                  style: TextStyle(
                                     color: AppColors.error,
                                     fontSize: 14.sp,
                                   ),

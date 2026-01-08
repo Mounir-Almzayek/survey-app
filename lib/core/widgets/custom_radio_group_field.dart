@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../styles/app_colors.dart';
 
 class CustomRadioGroupField<T> extends StatelessWidget {
@@ -32,7 +32,7 @@ class CustomRadioGroupField<T> extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 4.w),
           child: Text(
             effectiveLabel,
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryText,
@@ -57,9 +57,7 @@ class CustomRadioGroupField<T> extends StatelessWidget {
               ),
               child: Theme(
                 data: Theme.of(context).copyWith(
-                  listTileTheme: const ListTileThemeData(
-                    horizontalTitleGap: 0,
-                  ),
+                  listTileTheme: const ListTileThemeData(horizontalTitleGap: 0),
                 ),
                 child: RadioListTile<T>(
                   value: item,
@@ -75,13 +73,14 @@ class CustomRadioGroupField<T> extends StatelessWidget {
                   ),
                   title: Text(
                     getLabel(item),
-                    style: GoogleFonts.cairo(
+                    style: TextStyle(
                       fontSize: 14.sp,
                       color: isSelected
                           ? AppColors.primary
                           : AppColors.primaryText,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   ),
                   onChanged: onChanged,

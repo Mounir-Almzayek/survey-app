@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/logo_rectangle.dart';
@@ -13,130 +13,217 @@ import '../../../core/queue/presentation/queue_session/queue_session_bloc.dart';
 import '../../../core/queue/presentation/queue_summary_dialog.dart';
 import '../bloc/main_navigation/main_navigation_bloc.dart';
 import '../models/main_nav_tab.dart';
+import '../presentation/widgets/zoom_drawer.dart';
 
-class MainDrawer extends StatelessWidget {
+class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});
+
+  @override
+  State<MainDrawer> createState() => _MainDrawerState();
+}
+
+class _MainDrawerState extends State<MainDrawer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _staggerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _staggerController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reset and forward animation when drawer opens could be handled here
+    // But since this is in the background, we might want to trigger it when ZoomDrawer opens
+    // We can listen to the controller
+    final zoomController = ZoomDrawer.of(context);
+    zoomController?.addListener(_onDrawerStateChanged);
+  }
+
+  void _onDrawerStateChanged() {
+    final zoomController = ZoomDrawer.of(context);
+    if (zoomController != null && zoomController.isOpen) {
+      _staggerController.forward(from: 0.0);
+    } else {
+      _staggerController.reverse();
+    }
+  }
+
+  @override
+  void dispose() {
+    _staggerController.dispose();
+    final zoomController = ZoomDrawer.of(context);
+    zoomController?.removeListener(_onDrawerStateChanged);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final locale = S.of(context);
 
-    return SafeArea(
-      child: Drawer(
-        width: 0.75.sw,
-        child: BlocBuilder<MainNavigationBloc, MainNavigationState>(
-          builder: (context, navState) {
-            final selectedTab = navState.currentTab;
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Scaffold(
+      backgroundColor: AppColors.primary,
+      body: Container(
+        decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 20.h,
-                    horizontal: 50.w,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      bottom: BorderSide(
-                        color: AppColors.border.withValues(alpha: 0.5),
-                        width: 1,
-                      ),
-                    ),
-                  ),
+                // Logo or Header
+                Padding(
+                  padding: EdgeInsets.only(left: 16.w, bottom: 40.h),
                   child: LogoRectangle(
                     big: false,
                     isFlat: true,
-                    width: 130.w,
-                    height: 80.h,
+                    width: 120.w,
+                    height: 60.h,
                   ),
                 ),
+
                 // Menu Items
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 20.h,
-                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _SectionHeader(title: locale.main_menu),
+                        _buildAnimatedItem(
+                          0,
+                          _SectionHeader(
+                            title: locale.main_menu,
+                            isLight: true,
+                          ),
+                        ),
                         SizedBox(height: 10.h),
-                        ...MainNavTab.values.map(
-                          (tab) => _DrawerItem(
-                            icon: tab.icon,
-                            title: tab.label(locale),
-                            isSelected: selectedTab == tab,
-                            onPressed: () {
-                              Navigator.pop(context);
-                              context.read<MainNavigationBloc>().add(
-                                ChangeTab(tab),
-                              );
+                        ...MainNavTab.values.asMap().entries.map(
+                          (entry) => _buildAnimatedItem(
+                            entry.key + 1,
+                            _DrawerItem(
+                              icon: entry.value.icon,
+                              title: entry.value.label(locale),
+                              isSelected: false,
+                              isLight: true,
+                              onPressed: () {
+                                ZoomDrawer.of(context)?.close();
+                                context.read<MainNavigationBloc>().add(
+                                  ChangeTab(entry.value),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          child: const Divider(color: Colors.white24),
+                        ),
+                        _buildAnimatedItem(
+                          MainNavTab.values.length + 2,
+                          _DrawerItem(
+                            icon: Icons.cloud_queue_rounded,
+                            title: locale.queue_summary_title,
+                            isSelected: false,
+                            isLight: true,
+                            onPressed: () async {
+                              ZoomDrawer.of(context)?.close();
+                              final all =
+                                  await RequestQueueService.getAllRequests();
+                              if (all.isEmpty) return;
+
+                              final initialMap = {
+                                for (final item in all) item.id: item,
+                              };
+                              if (context.mounted) {
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) => BlocProvider(
+                                    create: (_) => QueueSessionBloc(
+                                      initialItems: initialMap,
+                                    ),
+                                    child: const QueueSummaryDialog(),
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ),
-                        const Divider(),
-                        _DrawerItem(
-                          icon: Icons.cloud_queue_rounded,
-                          title: locale.queue_summary_title,
-                          isSelected: false,
-                          onPressed: () async {
-                            Navigator.pop(context);
-                            final all =
-                                await RequestQueueService.getAllRequests();
-                            if (all.isEmpty) return;
-
-                            final initialMap = {
-                              for (final item in all) item.id: item,
-                            };
-                            if (context.mounted) {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) => BlocProvider(
-                                  create: (_) => QueueSessionBloc(
-                                    initialItems: initialMap,
-                                  ),
-                                  child: const QueueSummaryDialog(),
-                                ),
-                              );
-                            }
-                          },
+                        _buildAnimatedItem(
+                          MainNavTab.values.length + 3,
+                          _DrawerItem(
+                            icon: Icons.language_rounded,
+                            title: locale.language,
+                            isSelected: false,
+                            isLight: true,
+                            trailingText:
+                                Localizations.localeOf(context).languageCode ==
+                                    'ar'
+                                ? locale.arabic
+                                : locale.english,
+                            onPressed: () {
+                              ZoomDrawer.of(context)?.close();
+                              _showLanguageSelection(context);
+                            },
+                          ),
                         ),
-                        _DrawerItem(
-                          icon: Icons.language_rounded,
-                          title: locale.language,
-                          isSelected: false,
-                          trailingText:
-                              Localizations.localeOf(context).languageCode ==
-                                  'ar'
-                              ? locale.arabic
-                              : locale.english,
-                          onPressed: () {
-                            Navigator.pop(context);
-                            _showLanguageSelection(context);
-                          },
-                        ),
-                        _DrawerItem(
-                          icon: Icons.logout_rounded,
-                          title: locale.log_out,
-                          isSelected: false,
-                          onPressed: () {
-                            Navigator.pop(context);
-                            ProfileLogoutDialog.show(context);
-                          },
+                        _buildAnimatedItem(
+                          MainNavTab.values.length + 4,
+                          _DrawerItem(
+                            icon: Icons.logout_rounded,
+                            title: locale.log_out,
+                            isSelected: false,
+                            isLight: true,
+                            onPressed: () {
+                              ZoomDrawer.of(context)?.close();
+                              ProfileLogoutDialog.show(context);
+                            },
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
+
+                Padding(
+                  padding: EdgeInsets.only(left: 16.w, bottom: 20.h),
+                  child: Text(
+                    "v1.0.0",
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                ),
               ],
-            );
-          },
+            ),
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildAnimatedItem(int index, Widget child) {
+    return AnimatedBuilder(
+      animation: _staggerController,
+      builder: (context, child) {
+        final animationPercent = _staggerController.value;
+        final start = index * 0.1;
+        final end = start + 0.4;
+        final opacity = (animationPercent - start) / (end - start);
+
+        return Opacity(
+          opacity: opacity.clamp(0.0, 1.0),
+          child: Transform.translate(
+            offset: Offset((1.0 - opacity.clamp(0.0, 1.0)) * 50, 0),
+            child: child,
+          ),
+        );
+      },
+      child: child,
     );
   }
 
@@ -180,7 +267,8 @@ class MainDrawer extends StatelessWidget {
 
 class _SectionHeader extends StatelessWidget {
   final String title;
-  const _SectionHeader({required this.title});
+  final bool isLight;
+  const _SectionHeader({required this.title, this.isLight = false});
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +279,7 @@ class _SectionHeader extends StatelessWidget {
         style: TextStyle(
           fontSize: 14.sp,
           fontWeight: FontWeight.bold,
-          color: AppColors.primary,
+          color: isLight ? Colors.white70 : AppColors.primary,
         ),
       ),
     );
@@ -202,6 +290,7 @@ class _DrawerItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final bool isSelected;
+  final bool isLight;
   final VoidCallback onPressed;
   final String? trailingText;
 
@@ -210,16 +299,26 @@ class _DrawerItem extends StatelessWidget {
     required this.title,
     required this.isSelected,
     required this.onPressed,
+    this.isLight = false,
     this.trailingText,
   });
 
   @override
   Widget build(BuildContext context) {
+    final color = isLight
+        ? Colors.white
+        : (isSelected ? AppColors.primary : AppColors.primaryText);
+    final iconColor = isLight
+        ? Colors.white70
+        : (isSelected ? AppColors.primary : AppColors.secondaryText);
+
     return Container(
       margin: EdgeInsets.only(bottom: 8.h),
       decoration: BoxDecoration(
         color: isSelected
-            ? AppColors.primary.withValues(alpha: 0.1)
+            ? (isLight
+                  ? Colors.white.withOpacity(0.2)
+                  : AppColors.primary.withValues(alpha: 0.1))
             : Colors.transparent,
         borderRadius: BorderRadius.circular(12.r),
       ),
@@ -228,14 +327,11 @@ class _DrawerItem extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
-        leading: Icon(
-          icon,
-          color: isSelected ? AppColors.primary : AppColors.secondaryText,
-        ),
+        leading: Icon(icon, color: iconColor),
         title: Text(
           title,
-          style: GoogleFonts.cairo(
-            color: isSelected ? AppColors.primary : AppColors.primaryText,
+          style: TextStyle(
+            color: color,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
             fontSize: 14.sp,
           ),
@@ -244,12 +340,15 @@ class _DrawerItem extends StatelessWidget {
             ? Text(
                 trailingText!,
                 style: TextStyle(
-                  color: AppColors.primary,
+                  color: isLight ? Colors.white : AppColors.primary,
                   fontWeight: FontWeight.bold,
                 ),
               )
             : isSelected
-            ? Icon(Icons.chevron_right, color: AppColors.primary)
+            ? Icon(
+                Icons.chevron_right,
+                color: isLight ? Colors.white : AppColors.primary,
+              )
             : null,
       ),
     );

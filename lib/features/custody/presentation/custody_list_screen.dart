@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
-import '../../../core/widgets/custom_app_bar.dart';
 import '../../../core/widgets/loading_widget.dart';
 import '../../../core/widgets/error_state_widget.dart';
 import '../../../core/widgets/empty_widget.dart';
@@ -24,10 +23,6 @@ class CustodyListScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CustomAppBar(
-        title: locale.custody,
-        showDrawerButton: false,
-      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
@@ -59,9 +54,9 @@ class CustodyListScreen extends StatelessWidget {
             return ErrorStateWidget(
               message: state.message,
               onRetry: () {
-                context
-                    .read<CustodyListBloc>()
-                    .add(const LoadCustodyRecords(forceRefresh: true));
+                context.read<CustodyListBloc>().add(
+                  const LoadCustodyRecords(forceRefresh: true),
+                );
               },
             );
           }
@@ -77,9 +72,9 @@ class CustodyListScreen extends StatelessWidget {
 
             return RefreshIndicator(
               onRefresh: () async {
-                context
-                    .read<CustodyListBloc>()
-                    .add(const RefreshCustodyRecords());
+                context.read<CustodyListBloc>().add(
+                  const RefreshCustodyRecords(),
+                );
               },
               child: ListView.builder(
                 padding: EdgeInsets.all(16.w),
@@ -95,9 +90,10 @@ class CustodyListScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CustodyVerificationScreen(
-                                    custodyId: record.id,
-                                  ),
+                                  builder: (context) =>
+                                      CustodyVerificationScreen(
+                                        custodyId: record.id,
+                                      ),
                                 ),
                               );
                             }
@@ -115,4 +111,3 @@ class CustodyListScreen extends StatelessWidget {
     );
   }
 }
-

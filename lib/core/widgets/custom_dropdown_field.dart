@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../styles/app_colors.dart';
 import '../l10n/generated/l10n.dart';
 
@@ -35,7 +35,7 @@ class CustomDropdownField<T> extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 4.w),
           child: Text(
             label,
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryText,
@@ -60,7 +60,7 @@ class CustomDropdownField<T> extends StatelessWidget {
                           selectedValue != null
                               ? getLabel(selectedValue as T)
                               : S.of(context).please_select,
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 14.sp,
                             color: selectedValue != null
                                 ? AppColors.primaryText
@@ -87,7 +87,7 @@ class CustomDropdownField<T> extends StatelessWidget {
                       ),
                       hint: Text(
                         S.of(context).please_select,
-                        style: GoogleFonts.cairo(
+                        style: TextStyle(
                           fontSize: 14.sp,
                           color: AppColors.mutedForeground,
                         ),
@@ -97,7 +97,7 @@ class CustomDropdownField<T> extends StatelessWidget {
                           value: item,
                           child: Text(
                             getLabel(item),
-                            style: GoogleFonts.cairo(
+                            style: TextStyle(
                               fontSize: 14.sp,
                               color: AppColors.primaryText,
                             ),
@@ -217,7 +217,7 @@ class _SearchableDropdownDialogState<T>
                       Expanded(
                         child: Text(
                           S.of(widget.parentContext).please_select,
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -234,7 +234,7 @@ class _SearchableDropdownDialogState<T>
                   SizedBox(height: 12.h),
                   TextField(
                     controller: _searchController,
-                    style: GoogleFonts.cairo(fontSize: 14.sp),
+                    style: TextStyle(fontSize: 14.sp),
                     decoration: InputDecoration(
                       hintText: S.of(widget.parentContext).search,
                       prefixIcon: const Icon(Icons.search_rounded),
@@ -254,7 +254,7 @@ class _SearchableDropdownDialogState<T>
                   ? Center(
                       child: Text(
                         S.of(widget.parentContext).no_data,
-                        style: GoogleFonts.cairo(
+                        style: TextStyle(
                           fontSize: 14.sp,
                           color: AppColors.mutedForeground,
                         ),
@@ -288,7 +288,7 @@ class _SearchableDropdownDialogState<T>
                             selected: isSelected,
                             title: Text(
                               widget.getLabel(item),
-                              style: GoogleFonts.cairo(
+                              style: TextStyle(
                                 fontSize: 14.sp,
                                 color: isSelected
                                     ? AppColors.primary

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../styles/app_colors.dart';
 
 class SaudiCountryKey extends StatelessWidget {
@@ -20,7 +20,7 @@ class SaudiCountryKey extends StatelessWidget {
         children: [
           Text(
             '+966',
-            style: GoogleFonts.cairo(
+            style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryText,
@@ -28,10 +28,7 @@ class SaudiCountryKey extends StatelessWidget {
             textDirection: TextDirection.ltr,
           ),
           SizedBox(width: 8.w),
-          Text(
-            '🇸🇦',
-            style: TextStyle(fontSize: 18.sp),
-          ),
+          Text('🇸🇦', style: TextStyle(fontSize: 18.sp)),
         ],
       ),
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
@@ -9,10 +8,7 @@ import '../../models/registration_method.dart';
 class RegistrationMethodIndicator extends StatelessWidget {
   final RegistrationMethod method;
 
-  const RegistrationMethodIndicator({
-    super.key,
-    required this.method,
-  });
+  const RegistrationMethodIndicator({super.key, required this.method});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +58,7 @@ class RegistrationMethodIndicator extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryText,
@@ -71,7 +67,7 @@ class RegistrationMethodIndicator extends StatelessWidget {
                 SizedBox(height: 4.h),
                 Text(
                   description,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 12.sp,
                     color: AppColors.secondaryText,
                   ),
@@ -84,5 +80,3 @@ class RegistrationMethodIndicator extends StatelessWidget {
     );
   }
 }
-
-

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../l10n/generated/l10n.dart';
 import '../styles/app_colors.dart';
 import 'custom_elevated_button.dart';
@@ -36,7 +36,7 @@ class ErrorStateWidget extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 16.sp,
                 color: AppColors.primaryText,
                 fontWeight: FontWeight.w500,

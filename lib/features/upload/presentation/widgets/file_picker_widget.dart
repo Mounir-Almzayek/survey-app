@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
@@ -53,7 +53,7 @@ class FilePickerWidget extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 4.w),
                   child: Text(
                     title!,
-                    style: GoogleFonts.cairo(
+                    style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.primaryText,
@@ -134,7 +134,7 @@ class FilePickerWidget extends StatelessWidget {
             SizedBox(height: 16.h),
             Text(
               locale.select_file,
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 14.sp,
                 color: AppColors.primaryText,
                 fontWeight: FontWeight.w600,
@@ -143,10 +143,7 @@ class FilePickerWidget extends StatelessWidget {
             SizedBox(height: 4.h),
             Text(
               locale.upload_file,
-              style: GoogleFonts.cairo(
-                fontSize: 12.sp,
-                color: AppColors.secondaryText,
-              ),
+              style: TextStyle(fontSize: 12.sp, color: AppColors.secondaryText),
             ),
           ],
         ),
@@ -190,7 +187,7 @@ class FilePickerWidget extends StatelessWidget {
               children: [
                 Text(
                   file.fileName ?? file.file.name,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primaryText,
@@ -201,7 +198,7 @@ class FilePickerWidget extends StatelessWidget {
                 SizedBox(height: 4.h),
                 Text(
                   _getFileSize(file),
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 12.sp,
                     color: AppColors.secondaryText,
                   ),
@@ -277,7 +274,7 @@ class FilePickerWidget extends StatelessWidget {
                   children: [
                     Text(
                       progress.file.fileName ?? progress.file.file.name,
-                      style: GoogleFonts.cairo(
+                      style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.primaryText,
@@ -301,7 +298,7 @@ class FilePickerWidget extends StatelessWidget {
                       children: [
                         Text(
                           locale.uploading,
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 12.sp,
                             color: AppColors.secondaryText,
                             fontWeight: FontWeight.w500,
@@ -309,7 +306,7 @@ class FilePickerWidget extends StatelessWidget {
                         ),
                         Text(
                           '${(progressValue * 100).toInt()}%',
-                          style: GoogleFonts.cairo(
+                          style: TextStyle(
                             fontSize: 12.sp,
                             color: AppColors.primary,
                             fontWeight: FontWeight.w600,
@@ -366,7 +363,7 @@ class FilePickerWidget extends StatelessWidget {
               children: [
                 Text(
                   locale.uploaded,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.success,
@@ -375,7 +372,7 @@ class FilePickerWidget extends StatelessWidget {
                 SizedBox(height: 2.h),
                 Text(
                   locale.upload_success,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 12.sp,
                     color: AppColors.secondaryText,
                   ),

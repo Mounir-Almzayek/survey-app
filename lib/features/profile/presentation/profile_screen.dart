@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/loading_widget.dart';
@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColors.background,
         body: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
-            if (state is ProfileLoading) {
+            if (state is ProfileLoading || state is ProfileInitial) {
               return const LoadingWidget();
             }
 
@@ -59,22 +59,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     if (!isMobile)
                       Text(
                         locale.profile,
-                        style: GoogleFonts.cairo(
+                        style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primaryText,
                         ),
                       ),
                     if (!isMobile) SizedBox(height: 24.h),
-                    
-                    if (state.isOffline)
-                      _buildOfflineWarning(context),
+
+                    if (state.isOffline) _buildOfflineWarning(context),
 
                     // Main Content Grid for Web/Tablet
                     isMobile
                         ? _buildMobileProfile(context, state.user, locale)
                         : _buildWebProfile(context, state.user, locale),
-                    
+
                     SizedBox(height: 80.h), // Space for floating bottom bar
                   ],
                 ),
@@ -105,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Expanded(
               child: Text(
                 S.of(context).offline_mode,
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   color: AppColors.warning,
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w500,
@@ -132,15 +131,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 2,
-          child: ProfileInfoCard(user: user),
-        ),
+        Expanded(flex: 2, child: ProfileInfoCard(user: user)),
         SizedBox(width: 24.w),
-        Expanded(
-          flex: 3,
-          child: _buildMenuSection(context, locale),
-        ),
+        Expanded(flex: 3, child: _buildMenuSection(context, locale)),
       ],
     );
   }
@@ -215,7 +208,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: 20.h),
               Text(
                 S.of(context).language,
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryText,
@@ -223,23 +216,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: 20.h),
               ListTile(
-                leading: const Icon(Icons.language_rounded, color: AppColors.primary),
-                title: Text(S.of(context).arabic, style: GoogleFonts.cairo()),
+                leading: const Icon(
+                  Icons.language_rounded,
+                  color: AppColors.primary,
+                ),
+                title: Text(S.of(context).arabic, style: const TextStyle()),
                 onTap: () {
                   Navigator.pop(ctx);
                   context.read<LanguageBloc>().add(
-                        const ChangeLanguage(AppLanguage.arabic),
-                      );
+                    const ChangeLanguage(AppLanguage.arabic),
+                  );
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.language_rounded, color: AppColors.primary),
-                title: Text(S.of(context).english, style: GoogleFonts.cairo()),
+                leading: const Icon(
+                  Icons.language_rounded,
+                  color: AppColors.primary,
+                ),
+                title: Text(S.of(context).english, style: const TextStyle()),
                 onTap: () {
                   Navigator.pop(ctx);
                   context.read<LanguageBloc>().add(
-                        const ChangeLanguage(AppLanguage.english),
-                      );
+                    const ChangeLanguage(AppLanguage.english),
+                  );
                 },
               ),
               SizedBox(height: 20.h),
@@ -269,9 +268,7 @@ class _ProfileMenuTile extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       leading: Container(
         padding: EdgeInsets.all(8.r),
         decoration: BoxDecoration(
@@ -288,7 +285,7 @@ class _ProfileMenuTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: GoogleFonts.cairo(
+        style: TextStyle(
           fontSize: 15.sp,
           fontWeight: FontWeight.w500,
           color: isDestructive ? AppColors.error : AppColors.primaryText,

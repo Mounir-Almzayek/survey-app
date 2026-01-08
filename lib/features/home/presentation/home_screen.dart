@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../../core/styles/app_colors.dart';
 import '../../../core/utils/responsive_layout.dart';
 
@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Text(
               "Welcome back, Researcher",
-              style: GoogleFonts.cairo(
+              style: TextStyle(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primaryText,
@@ -29,10 +29,7 @@ class HomeScreen extends StatelessWidget {
             SizedBox(height: 8.h),
             Text(
               "Here is what's happening with your surveys today.",
-              style: GoogleFonts.cairo(
-                fontSize: 14.sp,
-                color: AppColors.secondaryText,
-              ),
+              style: TextStyle(fontSize: 14.sp, color: AppColors.secondaryText),
             ),
             SizedBox(height: 24.h),
 
@@ -107,7 +104,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               Text(
                 "Recent Activity",
-                style: GoogleFonts.cairo(
+                style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryText,
@@ -117,7 +114,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {},
                 child: Text(
                   "View All",
-                  style: GoogleFonts.cairo(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -197,14 +194,14 @@ class _MetricCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 14.sp,
                     color: AppColors.secondaryText,
                   ),
                 ),
                 Text(
                   value,
-                  style: GoogleFonts.cairo(
+                  style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryText,

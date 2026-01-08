@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:go_router/go_router.dart';
 import '../../../core/assets/assets.dart';
 import '../../../core/l10n/generated/l10n.dart';
@@ -112,7 +112,7 @@ class WelcomeScreen extends StatelessWidget {
                         children: [
                           Text(
                             locale.welcome,
-                            style: GoogleFonts.cairo(
+                            style: TextStyle(
                               fontSize: 28.sp,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primary,
@@ -133,7 +133,7 @@ class WelcomeScreen extends StatelessWidget {
                           SizedBox(height: 20.h),
                           Text(
                             locale.welcome_subtitle,
-                            style: GoogleFonts.cairo(
+                            style: TextStyle(
                               fontSize: 14.sp,
                               color: AppColors.secondaryText.withOpacity(0.8),
                               height: 1.6,

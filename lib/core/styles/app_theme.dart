@@ -1,52 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'app_colors.dart';
 
 ThemeData appThemeData() {
   const double globalRadius = 14.0;
 
-  // 🔹 Use GoogleFonts for Cairo with new Researcher Colors
-  final textTheme = GoogleFonts.cairoTextTheme(
-    const TextTheme(
-      displayLarge: TextStyle(color: AppColors.primaryText),
-      displayMedium: TextStyle(color: AppColors.primaryText),
-      displaySmall: TextStyle(color: AppColors.primaryText),
-      headlineLarge: TextStyle(
-        color: AppColors.primaryText,
-        fontWeight: FontWeight.bold,
-      ),
-      headlineMedium: TextStyle(
-        color: AppColors.primaryText,
-        fontWeight: FontWeight.bold,
-      ),
-      headlineSmall: TextStyle(
-        color: AppColors.primaryText,
-        fontWeight: FontWeight.bold,
-      ),
-      titleLarge: TextStyle(
-        color: AppColors.primaryText,
-        fontWeight: FontWeight.w600,
-      ),
-      titleMedium: TextStyle(
-        color: AppColors.primaryText,
-        fontWeight: FontWeight.w600,
-      ),
-      titleSmall: TextStyle(
-        color: AppColors.primaryText,
-        fontWeight: FontWeight.w600,
-      ),
-      bodyLarge: TextStyle(color: AppColors.primaryText),
-      bodyMedium: TextStyle(color: AppColors.primaryText),
-      bodySmall: TextStyle(color: AppColors.secondaryText),
-      labelLarge: TextStyle(color: AppColors.primaryText),
-      labelMedium: TextStyle(color: AppColors.secondaryText),
-      labelSmall: TextStyle(color: AppColors.secondaryText),
+  // 🔹 Standard TextTheme with Cairo
+  const textTheme = TextTheme(
+    displayLarge: TextStyle(color: AppColors.primaryText),
+    displayMedium: TextStyle(color: AppColors.primaryText),
+    displaySmall: TextStyle(color: AppColors.primaryText),
+    headlineLarge: TextStyle(
+      color: AppColors.primaryText,
+      fontWeight: FontWeight.bold,
     ),
+    headlineMedium: TextStyle(
+      color: AppColors.primaryText,
+      fontWeight: FontWeight.bold,
+    ),
+    headlineSmall: TextStyle(
+      color: AppColors.primaryText,
+      fontWeight: FontWeight.bold,
+    ),
+    titleLarge: TextStyle(
+      color: AppColors.primaryText,
+      fontWeight: FontWeight.w600,
+    ),
+    titleMedium: TextStyle(
+      color: AppColors.primaryText,
+      fontWeight: FontWeight.w600,
+    ),
+    titleSmall: TextStyle(
+      color: AppColors.primaryText,
+      fontWeight: FontWeight.w600,
+    ),
+    bodyLarge: TextStyle(color: AppColors.primaryText),
+    bodyMedium: TextStyle(color: AppColors.primaryText),
+    bodySmall: TextStyle(color: AppColors.secondaryText),
+    labelLarge: TextStyle(color: AppColors.primaryText),
+    labelMedium: TextStyle(color: AppColors.secondaryText),
+    labelSmall: TextStyle(color: AppColors.secondaryText),
   );
 
   return ThemeData(
     useMaterial3: true,
+    fontFamily: 'Cairo', // Set globally
     primaryColor: AppColors.primary,
     scaffoldBackgroundColor: AppColors.background,
 
@@ -119,7 +118,11 @@ ThemeData appThemeData() {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(globalRadius),
         ),
-        textStyle: GoogleFonts.cairo(fontSize: 16, fontWeight: FontWeight.bold),
+        textStyle: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Cairo',
+        ),
       ),
     ),
 
@@ -144,11 +147,16 @@ ThemeData appThemeData() {
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: AppColors.error),
       ),
-      hintStyle: GoogleFonts.cairo(color: Colors.grey.shade400, fontSize: 14),
-      labelStyle: GoogleFonts.cairo(
+      hintStyle: TextStyle(
+        color: Colors.grey.shade400,
+        fontSize: 14,
+        fontFamily: 'Cairo',
+      ),
+      labelStyle: const TextStyle(
         color: AppColors.secondaryText,
         fontSize: 14,
         fontWeight: FontWeight.w600,
+        fontFamily: 'Cairo',
       ),
     ),
 
