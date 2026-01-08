@@ -63,7 +63,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       onlineTask: (_) async {
         final fingerprint = await DeviceInfoUtil.getFingerprint();
         // Always get keyId - it will be generated deterministically if not exists
-        final deviceKeyId = await _deviceBoundKeyService.getOrCreateKeyId();
+        final deviceKeyId = await _deviceBoundKeyService.getKeyId();
 
         final request = ResearcherLoginInitiateRequest(
           email: state.email,

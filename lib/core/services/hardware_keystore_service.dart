@@ -74,9 +74,14 @@ class HardwareKeystoreService {
     return await invokeMethod<String>('signPayload', {'payload': payload});
   }
 
-  /// Get native device ID
+  /// Get native device ID (can be backend-assigned ID or fallback to hardware ID)
   Future<String?> getNativeDeviceId() async {
     return await invokeMethod<String>('getDeviceId');
+  }
+
+  /// Get permanent hardware ID (Android ID / identifierForVendor)
+  Future<String?> getHardwareId() async {
+    return await invokeMethod<String>('getHardwareId');
   }
 
   /// Delete native device ID

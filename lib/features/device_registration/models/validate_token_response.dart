@@ -48,7 +48,7 @@ class ValidateTokenResponse {
 class PhysicalDevice {
   final int id;
   final String name;
-  final int zoneId;
+  final int? zoneId;
   final String type;
   final String status;
   final DateTime? lastSeenAt;
@@ -59,7 +59,7 @@ class PhysicalDevice {
   const PhysicalDevice({
     required this.id,
     required this.name,
-    required this.zoneId,
+    this.zoneId,
     required this.type,
     required this.status,
     this.lastSeenAt,
@@ -72,7 +72,7 @@ class PhysicalDevice {
     return PhysicalDevice(
       id: json['id'] as int,
       name: json['name'] as String,
-      zoneId: json['zone_id'] as int,
+      zoneId: json['zone_id'] as int?,
       type: json['type'] as String,
       status: json['status'] as String,
       lastSeenAt: json['last_seen_at'] != null

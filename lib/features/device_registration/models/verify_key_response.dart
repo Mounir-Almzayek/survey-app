@@ -13,7 +13,7 @@ class VerifyKeyResponse {
 
   factory VerifyKeyResponse.fromJson(Map<String, dynamic> json) {
     final data = json['data'] as Map<String, dynamic>?;
-    
+
     return VerifyKeyResponse(
       valid: json['valid'] as bool? ?? false,
       physicalDeviceId: data?['physicalDeviceId'] as int?,
@@ -25,7 +25,7 @@ class VerifyKeyResponse {
           : null,
     );
   }
-  
+
   Map<String, dynamic> toJson() {
     return {
       'valid': valid,
@@ -35,4 +35,3 @@ class VerifyKeyResponse {
     };
   }
 }
-
