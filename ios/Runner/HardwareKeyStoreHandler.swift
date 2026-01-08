@@ -1,6 +1,7 @@
 import Foundation
 import Flutter
 import Security
+import UIKit
 
 /**
  * Hardware-backed Key Store Handler for iOS
@@ -13,6 +14,27 @@ import Security
     private static let KEY_TAG = "com.rs4it.king_abdulaziz_center_survey_app.device_bound_key"
     private static let DEVICE_ID_KEY = "com.rs4it.king_abdulaziz_center_survey_app.device_id"
     private static let KEY_ID_KEY = "com.rs4it.king_abdulaziz_center_survey_app.device_bound_key_id"
+    private static let ASSIGNMENT_ID_KEY = "com.rs4it.king_abdulaziz_center_survey_app.assignment_id"
+    
+    /**
+     * Get identifierForVendor (persists across app uninstalls for same vendor)
+     * This is a unique identifier that remains constant even after app uninstall/reinstall
+     * as long as at least one app from the same vendor is installed
+     */
+    private static func getIdentifierForVendor() -> String {
+        return UIDevice.current.identifierForVendor?.uuidString ?? "unknown_vendor_id"
+    }
+    
+    /**
+     * Get Keychain service name that persists across uninstalls
+     * Uses a fixed service name (not dependent on identifierForVendor) to ensure
+     * the device ID remains constant even if identifierForVendor changes
+     */
+    private static func getPersistentKeychainService() -> String {
+        // Use fixed service name to ensure device ID remains constant
+        // This service name persists across app uninstalls and iOS updates
+        return "\(Bundle.main.bundleIdentifier ?? "com.rs4it.king_abdulaziz_center_survey_app")_persistent_device_id"
+    }
     
     static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(
@@ -83,6 +105,21 @@ import Security
             getKeyId(result: result)
         case "deleteKeyId":
             deleteKeyId(result: result)
+        case "saveAssignmentId":
+            if let args = call.arguments as? [String: Any],
+               let assignmentId = args["assignmentId"] as? Int {
+                saveAssignmentId(assignmentId: assignmentId, result: result)
+            } else {
+                result(FlutterError(
+                    code: "INVALID_ARGUMENT",
+                    message: "AssignmentId parameter is required",
+                    details: nil
+                ))
+            }
+        case "getAssignmentId":
+            getAssignmentId(result: result)
+        case "deleteAssignmentId":
+            deleteAssignmentId(result: result)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -398,11 +435,11 @@ import Security
         deleteDeviceIdInternal()
         
         // Create access control for Keychain item
-        // kSecAttrAccessibleWhenUnlockedThisDeviceOnly ensures data is only accessible
-        // when device is unlocked and only on this device (not synced to iCloud)
+        // kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly ensures data persists
+        // after first unlock and only on this device (not synced to iCloud)
         let accessControl = SecAccessControlCreateWithFlags(
             kCFAllocatorDefault,
-            kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
+            kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
             [],
             nil
         )
@@ -416,14 +453,18 @@ import Security
             return
         }
         
+        // Use persistent Keychain service with fixed name
+        // This ensures device ID remains constant even if identifierForVendor changes
+        let service = Self.getPersistentKeychainService()
+        
         // Keychain query for saving device ID
+        // Note: Don't use kSecAttrAccessible when using kSecAttrAccessControl
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: Self.DEVICE_ID_KEY,
-            kSecAttrService as String: Bundle.main.bundleIdentifier ?? "com.rs4it.king_abdulaziz_center_survey_app",
+            kSecAttrService as String: service,
             kSecValueData as String: deviceIdData,
             kSecAttrAccessControl as String: accessControl,
-            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
         ]
         
         let status = SecItemAdd(query as CFDictionary, nil)
@@ -441,13 +482,29 @@ import Security
     
     /**
      * Get device ID from iOS Keychain (hardware-backed secure storage)
-     * Returns null if device ID is not found
+     * 
+     * This method ensures the device ID remains constant forever:
+     * 1. First, tries to get saved device ID from Keychain
+     * 2. If found, returns it (this ensures consistency even if identifierForVendor changes)
+     * 3. If not found, gets identifierForVendor, saves it to Keychain, and returns it
+     * 
+     * Once saved, the device ID will never change, even if:
+     * - identifierForVendor changes
+     * - App is uninstalled and reinstalled
+     * - iOS is updated
+     * 
+     * The device ID only changes if:
+     * - Device is factory reset
+     * - Keychain is cleared manually
      */
     private func getDeviceId(result: @escaping FlutterResult) {
+        // Use persistent Keychain service with fixed name
+        let service = Self.getPersistentKeychainService()
+        
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: Self.DEVICE_ID_KEY,
-            kSecAttrService as String: Bundle.main.bundleIdentifier ?? "com.rs4it.king_abdulaziz_center_survey_app",
+            kSecAttrService as String: service,
             kSecReturnData as String: true,
             kSecMatchLimit as String: kSecMatchLimitOne,
         ]
@@ -455,14 +512,90 @@ import Security
         var item: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &item)
         
-        guard status == errSecSuccess,
-              let data = item as? Data,
-              let deviceIdString = String(data: data, encoding: .utf8) else {
-            result(nil)
+        // If device ID exists in Keychain, return it (this is the permanent ID)
+        if status == errSecSuccess,
+           let data = item as? Data,
+           let deviceIdString = String(data: data, encoding: .utf8),
+           !deviceIdString.isEmpty {
+            result(deviceIdString)
             return
         }
         
-        result(deviceIdString)
+        // If no saved device ID exists, get identifierForVendor and save it permanently
+        // This ensures the device ID is set once and never changes
+        let vendorId = Self.getIdentifierForVendor()
+        
+        // Save it to Keychain so it becomes permanent
+        // Use a separate method to save without requiring the Int parameter
+        self.saveDeviceIdInternal(deviceId: vendorId, result: { saveResult in
+            // Return the vendor ID regardless of save result
+            // If save fails, we still return the vendor ID (it will be saved next time)
+            result(vendorId)
+        })
+    }
+    
+    /**
+     * Internal method to save device ID to Keychain
+     * Used by getDeviceId() to save identifierForVendor when first accessed
+     */
+    private func saveDeviceIdInternal(deviceId: String, result: @escaping FlutterResult) {
+        guard let deviceIdData = deviceId.data(using: .utf8) else {
+            result(FlutterError(
+                code: "KEYSTORE_ERROR",
+                message: "Failed to encode device ID",
+                details: nil
+            ))
+            return
+        }
+        
+        // Delete existing device ID if present
+        deleteDeviceIdInternal()
+        
+        // Create access control for Keychain item
+        // kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly ensures data persists
+        // after first unlock and only on this device (not synced to iCloud)
+        let accessControl = SecAccessControlCreateWithFlags(
+            kCFAllocatorDefault,
+            kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+            [],
+            nil
+        )
+        
+        guard let accessControl = accessControl else {
+            result(FlutterError(
+                code: "KEYSTORE_ERROR",
+                message: "Failed to create access control",
+                details: nil
+            ))
+            return
+        }
+        
+        // Use persistent Keychain service with fixed name
+        let service = Self.getPersistentKeychainService()
+        
+        // Keychain query for saving device ID
+        // Note: Don't use kSecAttrAccessible when using kSecAttrAccessControl
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: Self.DEVICE_ID_KEY,
+            kSecAttrService as String: service,
+            kSecValueData as String: deviceIdData,
+            kSecAttrAccessControl as String: accessControl,
+        ]
+        
+        let status = SecItemAdd(query as CFDictionary, nil)
+        
+        if status == errSecSuccess {
+            result(nil)
+        } else {
+            // Don't fail - just log the error
+            // The device ID will still be returned to the caller
+            result(FlutterError(
+                code: "KEYSTORE_ERROR",
+                message: "Failed to save device ID to Keychain: \(status)",
+                details: nil
+            ))
+        }
     }
     
     /**
@@ -474,10 +607,13 @@ import Security
     }
     
     private func deleteDeviceIdInternal() {
+        // Use persistent Keychain service
+        let service = Self.getPersistentKeychainService()
+        
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: Self.DEVICE_ID_KEY,
-            kSecAttrService as String: Bundle.main.bundleIdentifier ?? "com.rs4it.king_abdulaziz_center_survey_app",
+            kSecAttrService as String: service,
         ]
         SecItemDelete(query as CFDictionary)
     }
@@ -500,11 +636,11 @@ import Security
         deleteKeyIdInternal()
         
         // Create access control for Keychain item
-        // kSecAttrAccessibleWhenUnlockedThisDeviceOnly ensures data is only accessible
-        // when device is unlocked and only on this device (not synced to iCloud)
+        // kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly ensures data persists
+        // after first unlock and only on this device (not synced to iCloud)
         let accessControl = SecAccessControlCreateWithFlags(
             kCFAllocatorDefault,
-            kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
+            kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
             [],
             nil
         )
@@ -518,14 +654,17 @@ import Security
             return
         }
         
+        // Use persistent Keychain service that survives app uninstall
+        let service = Self.getPersistentKeychainService()
+        
         // Keychain query for saving key ID
+        // Note: Don't use kSecAttrAccessible when using kSecAttrAccessControl
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: Self.KEY_ID_KEY,
-            kSecAttrService as String: Bundle.main.bundleIdentifier ?? "com.rs4it.king_abdulaziz_center_survey_app",
+            kSecAttrService as String: service,
             kSecValueData as String: keyIdData,
             kSecAttrAccessControl as String: accessControl,
-            kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
         ]
         
         let status = SecItemAdd(query as CFDictionary, nil)
@@ -546,10 +685,13 @@ import Security
      * Returns null if key ID is not found
      */
     private func getKeyId(result: @escaping FlutterResult) {
+        // Use persistent Keychain service that survives app uninstall
+        let service = Self.getPersistentKeychainService()
+        
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: Self.KEY_ID_KEY,
-            kSecAttrService as String: Bundle.main.bundleIdentifier ?? "com.rs4it.king_abdulaziz_center_survey_app",
+            kSecAttrService as String: service,
             kSecReturnData as String: true,
             kSecMatchLimit as String: kSecMatchLimitOne,
         ]
@@ -576,10 +718,97 @@ import Security
     }
     
     private func deleteKeyIdInternal() {
+        // Use persistent Keychain service
+        let service = Self.getPersistentKeychainService()
+        
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: Self.KEY_ID_KEY,
-            kSecAttrService as String: Bundle.main.bundleIdentifier ?? "com.rs4it.king_abdulaziz_center_survey_app",
+            kSecAttrService as String: service,
+        ]
+        SecItemDelete(query as CFDictionary)
+    }
+
+    /**
+     * Save assignment ID to iOS Keychain
+     */
+    private func saveAssignmentId(assignmentId: Int, result: @escaping FlutterResult) {
+        let idString = String(assignmentId)
+        guard let idData = idString.data(using: .utf8) else {
+            result(FlutterError(code: "KEYSTORE_ERROR", message: "Failed to encode assignment ID", details: nil))
+            return
+        }
+        
+        deleteAssignmentIdInternal()
+        
+        let accessControl = SecAccessControlCreateWithFlags(
+            kCFAllocatorDefault,
+            kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+            [],
+            nil
+        )
+        
+        guard let accessControl = accessControl else {
+            result(FlutterError(code: "KEYSTORE_ERROR", message: "Failed to create access control", details: nil))
+            return
+        }
+        
+        let service = Self.getPersistentKeychainService()
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: Self.ASSIGNMENT_ID_KEY,
+            kSecAttrService as String: service,
+            kSecValueData as String: idData,
+            kSecAttrAccessControl as String: accessControl,
+        ]
+        
+        let status = SecItemAdd(query as CFDictionary, nil)
+        if status == errSecSuccess {
+            result(nil)
+        } else {
+            result(FlutterError(code: "KEYSTORE_ERROR", message: "Failed to save assignment ID: \(status)", details: nil))
+        }
+    }
+
+    /**
+     * Get assignment ID from iOS Keychain
+     */
+    private func getAssignmentId(result: @escaping FlutterResult) {
+        let service = Self.getPersistentKeychainService()
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: Self.ASSIGNMENT_ID_KEY,
+            kSecAttrService as String: service,
+            kSecReturnData as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne,
+        ]
+        
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
+        
+        if status == errSecSuccess,
+           let data = item as? Data,
+           let idString = String(data: data, encoding: .utf8) {
+            result(idString)
+        } else {
+            result(nil)
+        }
+    }
+
+    /**
+     * Delete assignment ID from iOS Keychain
+     */
+    private func deleteAssignmentId(result: @escaping FlutterResult) {
+        deleteAssignmentIdInternal()
+        result(nil)
+    }
+
+    private func deleteAssignmentIdInternal() {
+        let service = Self.getPersistentKeychainService()
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: Self.ASSIGNMENT_ID_KEY,
+            kSecAttrService as String: service,
         ]
         SecItemDelete(query as CFDictionary)
     }

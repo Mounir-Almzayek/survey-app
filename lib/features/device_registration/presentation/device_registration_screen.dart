@@ -9,7 +9,6 @@ import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
-import '../../../../core/services/device_storage_service.dart';
 import '../bloc/device_info/device_info_bloc.dart';
 import '../bloc/device_info/device_info_state.dart';
 import '../bloc/validate_token/validate_token_bloc.dart';
@@ -22,6 +21,7 @@ import '../bloc/verify_key/verify_key_bloc.dart';
 import '../bloc/verify_key/verify_key_event.dart';
 import '../bloc/verify_key/verify_key_state.dart';
 import '../../../../core/services/device_bound_key_service.dart';
+import '../../../../core/services/device_local_metadata_service.dart';
 import '../models/registration_method.dart';
 import 'widgets/device_info_section.dart';
 import 'widgets/device_registration_header.dart';
@@ -159,7 +159,7 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
             listener: (context, state) {
               if (state is ValidateTokenSuccess) {
                 // Save device ID for location tracking
-                DeviceStorageService.saveDeviceId(
+                DeviceLocalMetadataService().savePhysicalDeviceId(
                   state.response.physicalDeviceId,
                 );
 

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/services/firebase_service.dart';
+// import '../../../../core/services/firebase_service.dart';
 import '../../../../core/utils/device_info_util.dart';
 import '../../../../core/utils/async_runner.dart';
 import '../../../../core/services/device_bound_key_service.dart';
@@ -62,10 +62,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     await _initiateRunner.run(
       onlineTask: (_) async {
         final fingerprint = await DeviceInfoUtil.getFingerprint();
-        final hasDeviceKey = await _deviceBoundKeyService.hasKey();
-        final deviceKeyId = hasDeviceKey
-            ? await _deviceBoundKeyService.getKeyId()
-            : null;
+        // Always get keyId - it will be generated deterministically if not exists
+        final deviceKeyId = await _deviceBoundKeyService.getOrCreateKeyId();
 
         final request = ResearcherLoginInitiateRequest(
           email: state.email,
@@ -73,7 +71,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           os: DeviceInfoUtil.getOS(),
           browser: DeviceInfoUtil.getBrowser(),
           fingerprint: fingerprint,
-          deviceToken: FirebaseService.fcmToken ?? '',
+          deviceToken: '1592', //FirebaseService.fcmToken ?? '',
           deviceKeyId: deviceKeyId,
         );
 

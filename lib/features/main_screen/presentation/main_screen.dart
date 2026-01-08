@@ -6,7 +6,7 @@ import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/custom_app_bar.dart';
 import '../../../core/utils/responsive_layout.dart';
-import '../../../core/services/device_storage_service.dart';
+import '../../../core/services/device_local_metadata_service.dart';
 import '../../home/presentation/home_page.dart';
 import '../../profile/presentation/profile_page.dart';
 import '../../device_location/bloc/device_location/device_location_bloc.dart';
@@ -32,13 +32,14 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _startLocationTracking() async {
-    // Get device ID and assignment ID
-    final deviceId = await DeviceStorageService.getDeviceId();
+    // Get device ID and assignment ID from DeviceLocalMetadataService
+    final metadataService = DeviceLocalMetadataService();
+    final deviceId = await metadataService.getPhysicalDeviceId();
     if (deviceId == null) {
       return; // No device ID, skip location tracking
     }
 
-    final assignmentId = await DeviceStorageService.getAssignmentId();
+    final assignmentId = await metadataService.getAssignmentId();
 
     // Start location tracking
     if (mounted) {

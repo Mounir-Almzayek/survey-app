@@ -1,4 +1,3 @@
-import '../../../core/services/device_storage_service.dart';
 import 'profile_local_repository.dart';
 import 'profile_online_repository.dart';
 import '../models/user.dart';
@@ -30,8 +29,6 @@ class ProfileRepository {
       // Even if online logout fails, we clear local data
     } finally {
       await ProfileLocalRepository.clearProfileData();
-      // Clear device data on logout
-      await DeviceStorageService.clearDeviceData();
     }
   }
 }

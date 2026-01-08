@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "222223158660",
+    "project_id": "swimmer-aa2dc",
+    "storage_bucket": "swimmer-aa2dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222223158660:android:70558a80f169332284a1d1",
+        "android_client_info": {
+          "package_name": "com.rs4it.king_abdulaziz_center_survey_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtKnKOF04YQug5gLUHo0p96sJY0nn_yCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

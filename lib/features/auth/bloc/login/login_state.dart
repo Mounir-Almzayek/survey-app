@@ -18,11 +18,7 @@ class LoginLoading extends LoginState {
 class LoginInitiateSuccess extends LoginState {
   final ResearcherLoginInitiateResponse response;
 
-  LoginInitiateSuccess({
-    required this.response,
-    super.email,
-    super.password,
-  });
+  LoginInitiateSuccess({required this.response, super.email, super.password});
 }
 
 class LoginSuccess extends LoginState {
@@ -40,9 +36,5 @@ class LoginSuccess extends LoginState {
 class LoginFailure extends LoginState {
   final String error;
 
-  LoginFailure({
-    required this.error,
-    super.email,
-    super.password,
-  });
+  LoginFailure({required this.error, super.email, super.password});
 }
