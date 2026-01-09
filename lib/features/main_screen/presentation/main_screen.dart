@@ -17,6 +17,7 @@ import '../bloc/main_navigation/main_navigation_bloc.dart';
 import '../models/main_nav_tab.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/main_sidebar.dart';
+import '../../surveys/presentation/surveys_page.dart';
 import 'widgets/floating_bottom_bar.dart';
 import 'widgets/zoom_drawer.dart';
 
@@ -93,8 +94,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     _drawerController.dispose();
-    // Stop location tracking when screen is disposed
-    context.read<DeviceLocationBloc>().add(const StopLocationTrackingEvent());
     super.dispose();
   }
 }
@@ -285,7 +284,7 @@ Widget _buildPage(MainNavTab tab) {
     case MainNavTab.home:
       return const HomePage();
     case MainNavTab.surveys:
-      return const Center(child: Text("Assigned Surveys")); // Placeholder
+      return const SurveysPage();
     case MainNavTab.custody:
       return const CustodyPage();
     case MainNavTab.profile:

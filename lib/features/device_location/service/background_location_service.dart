@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../../../../features/auth/repository/auth_local_repository.dart';
 import '../../../../features/profile/repository/profile_repository.dart';
+import '../../../../core/utils/app_exception.dart';
 import '../models/device_location.dart';
 import '../models/location_update_request.dart';
 import '../repository/device_location_online_repository.dart';
@@ -13,8 +14,13 @@ import 'location_service.dart';
 /// Automatically logs out if warning or outside zone
 class BackgroundLocationService {
   static BackgroundLocationService? _instance;
-  factory BackgroundLocationService() => _instance ??= BackgroundLocationService._internal();
+  factory BackgroundLocationService() =>
+      _instance ??= BackgroundLocationService._internal();
   BackgroundLocationService._internal();
+
+  final StreamController<String> _zoneViolationController =
+      StreamController<String>.broadcast();
+  Stream<String> get onZoneViolation => _zoneViolationController.stream;
 
   StreamSubscription<DeviceLocation>? _locationSubscription;
   Timer? _updateTimer;
@@ -23,14 +29,11 @@ class BackgroundLocationService {
   int? _assignmentId;
 
   /// Start background location tracking
-  /// 
+  ///
   /// Parameters:
   /// - [deviceId]: The device ID to update location for
   /// - [assignmentId]: Optional assignment ID
-  Future<void> start({
-    required int deviceId,
-    int? assignmentId,
-  }) async {
+  Future<void> start({required int deviceId, int? assignmentId}) async {
     if (_isRunning) {
       return;
     }
@@ -96,27 +99,41 @@ class BackgroundLocationService {
       // Remove from pending if it was there
       await DeviceLocationLocalRepository.removePendingLocation(location);
     } catch (e) {
-      // Save to pending for retry later
-      await DeviceLocationLocalRepository.savePendingLocation(location);
-
       // Check if error indicates warning or outside zone
+      bool isZoneViolation = false;
+
+      if (e is AppException) {
+        if (e.statusCode == 403) {
+          isZoneViolation = true;
+        }
+      }
+
       final errorMessage = e.toString().toLowerCase();
-      if (errorMessage.contains('warning') ||
+      if (isZoneViolation ||
+          errorMessage.contains('warning') ||
           errorMessage.contains('outside') ||
           errorMessage.contains('zone') ||
-          errorMessage.contains('unauthorized') ||
-          errorMessage.contains('forbidden')) {
-        // Logout immediately
+          errorMessage.contains('forbidden') ||
+          errorMessage.contains('ممنوع') ||
+          errorMessage.contains('محظور')) {
         if (kDebugMode) {
-          print('Warning or outside zone detected, logging out...');
+          print('Warning or outside zone detected: $errorMessage');
         }
-        await _forceLogout();
+
+        // Stop tracking immediately
+        await stop();
+
+        // Notify UI
+        _zoneViolationController.add(e.toString());
+      } else {
+        // Save to pending for retry later only for non-zone errors
+        await DeviceLocationLocalRepository.savePendingLocation(location);
       }
     }
   }
 
-  /// Force logout
-  Future<void> _forceLogout() async {
+  /// Force logout (Internal version if needed, but UI is preferred)
+  Future<void> forceLogout() async {
     try {
       await stop();
       await ProfileRepository.logout();
@@ -132,6 +149,10 @@ class BackgroundLocationService {
 
   /// Check if service is running
   bool get isRunning => _isRunning;
+
+  void dispose() {
+    _zoneViolationController.close();
+  }
 }
 
 /// Extension to convert DeviceLocation to LocationUpdateRequest
@@ -144,4 +165,3 @@ extension DeviceLocationExtension on DeviceLocation {
     );
   }
 }
-

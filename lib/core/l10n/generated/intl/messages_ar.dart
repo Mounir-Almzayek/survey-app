@@ -20,10 +20,15 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
-  static String m0(title) => "رابط الاستطلاع: ${title}";
+  static String m0(email) => "أدخل الرمز المرسل إلى ${email}";
+
+  static String m1(title) => "رابط الاستطلاع: ${title}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "activate": MessageLookupByLibrary.simpleMessage("تفعيل"),
+        "activate_account":
+            MessageLookupByLibrary.simpleMessage("تفعيل الحساب"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("السماح بالوصول إلى الموقع"),
         "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
@@ -40,6 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "company": MessageLookupByLibrary.simpleMessage("الشركة"),
         "complete_device_registration": MessageLookupByLibrary.simpleMessage(
             "إكمال عملية تسجيل الجهاز في النظام"),
+        "complete_registration_tap_notice": MessageLookupByLibrary.simpleMessage(
+            "بالضغط على \'ربط الجهاز\'، سيصبح هذا الجهاز مخصصاً لملفك التعريفي كباحث."),
         "confirm": MessageLookupByLibrary.simpleMessage("تأكيد"),
         "cookie_based_method_description": MessageLookupByLibrary.simpleMessage(
             "سيتم استخدام طريقة قائمة على الكوكيز لتسجيل الجهاز"),
@@ -50,9 +57,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("حذف"),
         "device_already_registered":
             MessageLookupByLibrary.simpleMessage("هذا الجهاز مسجل مسبقاً"),
+        "device_already_registered_desc": MessageLookupByLibrary.simpleMessage(
+            "معرف هذا الجهاز مرتبط بالفعل بملف تعريف آخر أو سبق ربطه مسبقاً."),
         "device_information": MessageLookupByLibrary.simpleMessage(
             "المعلومات المستخرجة من الجهاز"),
         "device_name": MessageLookupByLibrary.simpleMessage("اسم الجهاز"),
+        "device_registered_success":
+            MessageLookupByLibrary.simpleMessage("تم ربط الجهاز بحسابك بنجاح"),
         "device_registered_successfully":
             MessageLookupByLibrary.simpleMessage("تم تسجيل الجهاز بنجاح"),
         "device_type": MessageLookupByLibrary.simpleMessage("نوع الجهاز"),
@@ -60,15 +71,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "downloading": MessageLookupByLibrary.simpleMessage("جاري التحميل..."),
         "edit": MessageLookupByLibrary.simpleMessage("تعديل"),
         "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
+        "email_verified_success": MessageLookupByLibrary.simpleMessage(
+            "تم التحقق من البريد الإلكتروني بنجاح"),
         "english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
+        "enter_code": MessageLookupByLibrary.simpleMessage("أدخل الرمز"),
+        "enter_code_sent": m0,
         "enter_details": MessageLookupByLibrary.simpleMessage(
             "أدخل بيانات تسجيل الدخول الخاصة بك"),
         "enter_email": MessageLookupByLibrary.simpleMessage(
             "أدخل عنوان البريد الإلكتروني"),
+        "enter_email_reset": MessageLookupByLibrary.simpleMessage(
+            "أدخل بريدك الإلكتروني لاستلام رمز إعادة التعيين"),
         "enter_notes_optional":
             MessageLookupByLibrary.simpleMessage("أدخل ملاحظات (اختياري)"),
         "enter_verification_code":
             MessageLookupByLibrary.simpleMessage("أدخل رمز التحقق"),
+        "enter_verification_code_instruction":
+            MessageLookupByLibrary.simpleMessage(
+                "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني"),
         "entity": MessageLookupByLibrary.simpleMessage("الجهة"),
         "error_occurred": MessageLookupByLibrary.simpleMessage("حدث خطأ ما"),
         "failed_pick_image": MessageLookupByLibrary.simpleMessage(
@@ -138,6 +158,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "max_touch_points":
             MessageLookupByLibrary.simpleMessage("نقاط اللمس القصوى"),
         "nationality": MessageLookupByLibrary.simpleMessage("الجنسية"),
+        "new_password":
+            MessageLookupByLibrary.simpleMessage("كلمة المرور الجديدة"),
+        "no_active_account":
+            MessageLookupByLibrary.simpleMessage("ليس لديك حساب مفعل؟"),
         "no_custody_records":
             MessageLookupByLibrary.simpleMessage("لا توجد سجلات عهدة"),
         "no_custody_records_description":
@@ -165,9 +189,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("نظام التشغيل"),
         "or": MessageLookupByLibrary.simpleMessage("أو"),
         "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
+        "password_reset_success": MessageLookupByLibrary.simpleMessage(
+            "تمت إعادة تعيين كلمة المرور بنجاح"),
+        "password_too_short":
+            MessageLookupByLibrary.simpleMessage("كلمة المرور قصيرة جداً"),
         "phone": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
         "place_qr_code":
             MessageLookupByLibrary.simpleMessage("ضع رمز QR داخل الإطار للمسح"),
+        "please_enter_code":
+            MessageLookupByLibrary.simpleMessage("يرجى إدخال الرمز"),
         "please_enter_email": MessageLookupByLibrary.simpleMessage(
             "يرجى إدخال عنوان البريد الإلكتروني"),
         "please_enter_verification_code": MessageLookupByLibrary.simpleMessage(
@@ -218,6 +248,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("دخول الباحثين"),
         "resend_code":
             MessageLookupByLibrary.simpleMessage("إعادة إرسال الرمز"),
+        "reset_password":
+            MessageLookupByLibrary.simpleMessage("إعادة تعيين كلمة المرور"),
         "response_details_title":
             MessageLookupByLibrary.simpleMessage("تفاصيل الاستجابة"),
         "response_status_flagged":
@@ -240,9 +272,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "select_date": MessageLookupByLibrary.simpleMessage("اختر التاريخ"),
         "select_file": MessageLookupByLibrary.simpleMessage("اختر ملف"),
         "select_language": MessageLookupByLibrary.simpleMessage("اختر اللغة"),
+        "send_code": MessageLookupByLibrary.simpleMessage("إرسال الرمز"),
         "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
         "share_link": MessageLookupByLibrary.simpleMessage("مشاركة"),
-        "share_link_subject": m0,
+        "share_link_subject": m1,
         "show_qr_code": MessageLookupByLibrary.simpleMessage("عرض رمز QR"),
         "start_location_tracking":
             MessageLookupByLibrary.simpleMessage("بدء تتبع الموقع"),
@@ -267,6 +300,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تم رفع الملف بنجاح"),
         "uploaded": MessageLookupByLibrary.simpleMessage("تم الرفع"),
         "uploading": MessageLookupByLibrary.simpleMessage("جاري الرفع..."),
+        "verification_code": MessageLookupByLibrary.simpleMessage("رمز التحقق"),
         "verification_code_resent": MessageLookupByLibrary.simpleMessage(
             "تم إعادة إرسال رمز التحقق بنجاح"),
         "verification_info_message": MessageLookupByLibrary.simpleMessage(
@@ -280,6 +314,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "مرحباً بكم في منصة الاستطلاعات"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(
             "صوتك يهمنا.. شاركنا رأيك للمساهمة في التطوير والتحسين المستمر"),
-        "zone": MessageLookupByLibrary.simpleMessage("المنطقة")
+        "zone": MessageLookupByLibrary.simpleMessage("المنطقة"),
+        "zone_violation_message": MessageLookupByLibrary.simpleMessage(
+            "لقد انتقلت خارج النطاق الجغرافي المصرح به للعمل. سيتم إنهاء جلستك فوراً لضمان أمن البيانات."),
+        "zone_violation_title":
+            MessageLookupByLibrary.simpleMessage("خرق المنطقة الأمنية")
       };
 }

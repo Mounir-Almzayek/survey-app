@@ -172,5 +172,32 @@
   "response_status_flagged": "معلَّمة",
   "response_status_rejected": "مرفوضة",
   "device_already_registered": "هذا الجهاز مسجل مسبقاً",
-  "verifying_device_key": "جارٍ التحقق من مفتاح الجهاز..."
+  "verifying_device_key": "جارٍ التحقق من مفتاح الجهاز...",
+  "no_active_account": "ليس لديك حساب مفعل؟",
+  "activate": "تفعيل",
+  "reset_password": "إعادة تعيين كلمة المرور",
+  "enter_code": "أدخل الرمز",
+  "enter_email_reset": "أدخل بريدك الإلكتروني لاستلام رمز إعادة التعيين",
+  "enter_code_sent": "أدخل الرمز المرسل إلى {email}",
+  "@enter_code_sent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verification_code": "رمز التحقق",
+  "please_enter_code": "يرجى إدخال الرمز",
+  "new_password": "كلمة المرور الجديدة",
+  "password_too_short": "كلمة المرور قصيرة جداً",
+  "send_code": "إرسال الرمز",
+  "password_reset_success": "تمت إعادة تعيين كلمة المرور بنجاح",
+  "activate_account": "تفعيل الحساب",
+  "enter_verification_code_instruction": "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني",
+  "email_verified_success": "تم التحقق من البريد الإلكتروني بنجاح",
+  "device_registered_success": "تم ربط الجهاز بحسابك بنجاح",
+  "complete_registration_tap_notice": "بالضغط على 'ربط الجهاز'، سيصبح هذا الجهاز مخصصاً لملفك التعريفي كباحث.",
+  "device_already_registered_desc": "معرف هذا الجهاز مرتبط بالفعل بملف تعريف آخر أو سبق ربطه مسبقاً.",
+  "zone_violation_title": "خرق المنطقة الأمنية",
+  "zone_violation_message": "لقد انتقلت خارج النطاق الجغرافي المصرح به للعمل. سيتم إنهاء جلستك فوراً لضمان أمن البيانات."
 }

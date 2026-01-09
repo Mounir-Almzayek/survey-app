@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/splash/presentation/splash_page.dart';
 import '../../features/auth/presentation/login_page.dart';
+import '../../features/auth/presentation/forgot_password_page.dart';
+import '../../features/auth/presentation/email_verification_page.dart';
 import '../../features/welcome/presentation/welcome_page.dart';
 import '../../features/main_screen/presentation/main_page.dart';
 import '../../features/device_registration/presentation/device_registration_page.dart';
@@ -29,6 +31,14 @@ final appPages = GoRouter(
     GoRoute(
       path: Routes.loginPath,
       builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: Routes.forgotPasswordPath,
+      builder: (context, state) => const ForgotPasswordPage(),
+    ),
+    GoRoute(
+      path: Routes.verifyEmailPath,
+      builder: (context, state) => const EmailVerificationPage(),
     ),
     GoRoute(
       path: Routes.mainScreenPath,

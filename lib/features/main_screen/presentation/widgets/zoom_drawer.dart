@@ -16,6 +16,20 @@ class ZoomDrawerController extends ChangeNotifier {
   }
 }
 
+class ZoomDrawerScope extends InheritedWidget {
+  final ZoomDrawerController controller;
+
+  const ZoomDrawerScope({
+    super.key,
+    required this.controller,
+    required super.child,
+  });
+
+  @override
+  bool updateShouldNotify(ZoomDrawerScope oldWidget) =>
+      controller != oldWidget.controller;
+}
+
 class ZoomDrawer extends StatefulWidget {
   final Widget menuScreen;
   final Widget mainScreen;
@@ -32,7 +46,9 @@ class ZoomDrawer extends StatefulWidget {
   State<ZoomDrawer> createState() => _ZoomDrawerState();
 
   static ZoomDrawerController? of(BuildContext context) {
-    return context.findAncestorWidgetOfExactType<ZoomDrawer>()?.controller;
+    return context
+        .dependOnInheritedWidgetOfExactType<ZoomDrawerScope>()
+        ?.controller;
   }
 }
 
@@ -87,58 +103,63 @@ class _ZoomDrawerState extends State<ZoomDrawer>
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final maxSlide = screenWidth * 0.7; // Slide 70% of screen width
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
-    return Stack(
-      children: [
-        // Menu (Background)
-        widget.menuScreen,
+    return ZoomDrawerScope(
+      controller: widget.controller,
+      child: Stack(
+        children: [
+          // Menu (Background)
+          widget.menuScreen,
 
-        // Main Screen (Foreground with Transform)
-        AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            double slide = maxSlide * _animationController.value;
-            double scale = _scaleAnimation.value;
-            double rotate = _rotateAnimation.value;
+          // Main Screen (Foreground with Transform)
+          AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              double slide =
+                  (isRtl ? -1 : 1) * maxSlide * _animationController.value;
+              double scale = _scaleAnimation.value;
+              double rotate = (isRtl ? -1 : 1) * _rotateAnimation.value;
 
-            return Transform(
-              transform: Matrix4.identity()
-                ..setEntry(3, 2, 0.001) // Perspective
-                ..translate(slide)
-                ..rotateY(rotate)
-                ..scale(scale),
-              alignment: Alignment.centerLeft,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(
-                  _borderRadiusAnimation.value,
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 30,
-                        offset: const Offset(-20, 20),
-                        spreadRadius: 5,
-                      ),
-                    ],
+              return Transform(
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.001) // Perspective
+                  ..translate(slide)
+                  ..rotateY(rotate)
+                  ..scale(scale),
+                alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                    _borderRadiusAnimation.value,
                   ),
-                  child: Stack(
-                    children: [
-                      widget.mainScreen,
-                      if (_animationController.value > 0)
-                        GestureDetector(
-                          onTap: widget.controller.close,
-                          child: Container(color: Colors.transparent),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 30,
+                          offset: Offset(isRtl ? 20 : -20, 20),
+                          spreadRadius: 5,
                         ),
-                    ],
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        widget.mainScreen,
+                        if (_animationController.value > 0)
+                          GestureDetector(
+                            onTap: widget.controller.close,
+                            child: Container(color: Colors.transparent),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
-        ),
-      ],
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

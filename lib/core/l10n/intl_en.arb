@@ -173,5 +173,32 @@
   "response_status_flagged": "Flagged",
   "response_status_rejected": "Rejected",
   "device_already_registered": "This device is already registered",
-  "verifying_device_key": "Verifying device key..."
+  "verifying_device_key": "Verifying device key...",
+  "no_active_account": "Don't have an active account?",
+  "activate": "Activate",
+  "reset_password": "Reset Password",
+  "enter_code": "Enter Code",
+  "enter_email_reset": "Enter your email to receive a reset code",
+  "enter_code_sent": "Enter the code sent to {email}",
+  "@enter_code_sent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verification_code": "Verification Code",
+  "please_enter_code": "Please enter code",
+  "new_password": "New Password",
+  "password_too_short": "Password too short",
+  "send_code": "Send Code",
+  "password_reset_success": "Password reset successful",
+  "activate_account": "Activate Account",
+  "enter_verification_code_instruction": "Enter the verification code sent to your email",
+  "email_verified_success": "Email verified successfully",
+  "device_registered_success": "Device successfully linked to your account",
+  "complete_registration_tap_notice": "By tapping 'Link Device', this device will be unique to your researcher profile.",
+  "device_already_registered_desc": "This device ID is already associated with another profile or has been previously linked.",
+  "zone_violation_title": "Security Violation",
+  "zone_violation_message": "You have transitioned outside the authorized geographical perimeter. Your session will be terminated for security compliance."
 }

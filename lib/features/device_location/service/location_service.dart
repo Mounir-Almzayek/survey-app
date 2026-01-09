@@ -9,12 +9,17 @@ class LocationService {
   // We used to use a separate Isolate, but plugins like Geolocator don't work
   // from background isolates. We now use a simple Timer on the main isolate.
   static Timer? _timer;
-  static final StreamController<DeviceLocation> _locationController =
-      StreamController<DeviceLocation>.broadcast();
+  static StreamController<DeviceLocation>? _locationController;
+
+  static StreamController<DeviceLocation> get _controller {
+    if (_locationController == null || _locationController!.isClosed) {
+      _locationController = StreamController<DeviceLocation>.broadcast();
+    }
+    return _locationController!;
+  }
 
   /// Stream of location updates
-  static Stream<DeviceLocation> get locationStream =>
-      _locationController.stream;
+  static Stream<DeviceLocation> get locationStream => _controller.stream;
 
   /// Check if location service is running
   static bool get isRunning => _timer != null;
@@ -51,7 +56,7 @@ class LocationService {
         // Double-check permission at runtime
         final hasPermission = await hasPermissions();
         if (!hasPermission) {
-          _locationController.addError(Exception('Location permission denied'));
+          _controller.addError(Exception('Location permission denied'));
           await stopLocationTracking();
           return;
         }
@@ -71,12 +76,16 @@ class LocationService {
           timestamp: position.timestamp,
         );
 
-        _locationController.add(location);
+        if (!_controller.isClosed) {
+          _controller.add(location);
+        }
       } catch (e) {
         // Any failure while reading location will stop tracking to avoid spam
-        _locationController.addError(
-          Exception('Location tracking error: ${e.toString()}'),
-        );
+        if (!_controller.isClosed) {
+          _controller.addError(
+            Exception('Location tracking error: ${e.toString()}'),
+          );
+        }
         await stopLocationTracking();
       }
     });
@@ -121,6 +130,8 @@ class LocationService {
   /// Dispose resources
   static void dispose() {
     stopLocationTracking();
-    _locationController.close();
+    if (_locationController != null && !_locationController!.isClosed) {
+      _locationController!.close();
+    }
   }
 }

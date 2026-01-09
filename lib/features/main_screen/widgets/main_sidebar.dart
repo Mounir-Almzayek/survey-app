@@ -26,8 +26,8 @@ class MainSidebar extends StatelessWidget {
       width: isCollapsed ? 80.w : 260.w,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(
-          right: BorderSide(
+        border: BorderDirectional(
+          end: BorderSide(
             color: AppColors.border.withValues(alpha: 0.5),
             width: 1,
           ),
@@ -39,7 +39,9 @@ class MainSidebar extends StatelessWidget {
           Container(
             height: 100.h,
             padding: EdgeInsets.symmetric(horizontal: 20.w),
-            alignment: isCollapsed ? Alignment.center : Alignment.centerLeft,
+            alignment: isCollapsed
+                ? Alignment.center
+                : AlignmentDirectional.centerStart,
             child: isCollapsed
                 ? const LogoRectangle(big: false)
                 : Row(

@@ -14,6 +14,7 @@ import 'core/styles/app_theme.dart';
 import 'features/language/bloc/language/language_bloc.dart';
 import 'features/profile/bloc/profile/profile_bloc.dart';
 import 'features/device_location/presentation/location_permission_gate.dart';
+import 'features/device_location/presentation/zone_violation_listener.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,7 +63,9 @@ class MyApp extends StatelessWidget {
                   final content = QueueStatusListener(
                     child: child ?? const SizedBox.shrink(),
                   );
-                  return LocationPermissionGate(child: content);
+                  return ZoneViolationListener(
+                    child: LocationPermissionGate(child: content),
+                  );
                 },
               );
             },

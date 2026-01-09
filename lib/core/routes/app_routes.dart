@@ -4,6 +4,8 @@ class Routes {
   // Auth routes
   static const String loginPath = '/login';
   static const String registerPath = '/register';
+  static const String forgotPasswordPath = '/forgot-password';
+  static const String verifyEmailPath = '/verify-email';
 
   // Main routes
   static const String homePath = '/home';
@@ -20,4 +22,3 @@ class Routes {
   // Route names
   static const String notifications = 'notifications';
 }
-

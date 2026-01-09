@@ -20,10 +20,15 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(title) => "Survey Link: ${title}";
+  static String m0(email) => "Enter the code sent to ${email}";
+
+  static String m1(title) => "Survey Link: ${title}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "activate": MessageLookupByLibrary.simpleMessage("Activate"),
+        "activate_account":
+            MessageLookupByLibrary.simpleMessage("Activate Account"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("Allow location access"),
         "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
@@ -40,6 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "company": MessageLookupByLibrary.simpleMessage("Company"),
         "complete_device_registration": MessageLookupByLibrary.simpleMessage(
             "Complete the device registration process in the system"),
+        "complete_registration_tap_notice": MessageLookupByLibrary.simpleMessage(
+            "By tapping \'Link Device\', this device will be unique to your researcher profile."),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "cookie_based_method_description": MessageLookupByLibrary.simpleMessage(
             "Cookie-based method will be used for device registration"),
@@ -50,9 +57,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "device_already_registered": MessageLookupByLibrary.simpleMessage(
             "This device is already registered"),
+        "device_already_registered_desc": MessageLookupByLibrary.simpleMessage(
+            "This device ID is already associated with another profile or has been previously linked."),
         "device_information": MessageLookupByLibrary.simpleMessage(
             "Information Extracted from the Device"),
         "device_name": MessageLookupByLibrary.simpleMessage("Device Name"),
+        "device_registered_success": MessageLookupByLibrary.simpleMessage(
+            "Device successfully linked to your account"),
         "device_registered_successfully": MessageLookupByLibrary.simpleMessage(
             "Device registered successfully"),
         "device_type": MessageLookupByLibrary.simpleMessage("Device Type"),
@@ -60,15 +71,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "downloading": MessageLookupByLibrary.simpleMessage("Downloading..."),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
+        "email_verified_success":
+            MessageLookupByLibrary.simpleMessage("Email verified successfully"),
         "english": MessageLookupByLibrary.simpleMessage("English"),
+        "enter_code": MessageLookupByLibrary.simpleMessage("Enter Code"),
+        "enter_code_sent": m0,
         "enter_details":
             MessageLookupByLibrary.simpleMessage("Enter your login details"),
         "enter_email":
             MessageLookupByLibrary.simpleMessage("Enter email address"),
+        "enter_email_reset": MessageLookupByLibrary.simpleMessage(
+            "Enter your email to receive a reset code"),
         "enter_notes_optional":
             MessageLookupByLibrary.simpleMessage("Enter notes (optional)"),
         "enter_verification_code":
             MessageLookupByLibrary.simpleMessage("Enter Verification Code"),
+        "enter_verification_code_instruction":
+            MessageLookupByLibrary.simpleMessage(
+                "Enter the verification code sent to your email"),
         "entity": MessageLookupByLibrary.simpleMessage("Entity"),
         "error_occurred":
             MessageLookupByLibrary.simpleMessage("An error occurred"),
@@ -141,6 +161,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "max_touch_points":
             MessageLookupByLibrary.simpleMessage("Maximum Touch Points"),
         "nationality": MessageLookupByLibrary.simpleMessage("Nationality"),
+        "new_password": MessageLookupByLibrary.simpleMessage("New Password"),
+        "no_active_account": MessageLookupByLibrary.simpleMessage(
+            "Don\'t have an active account?"),
         "no_custody_records":
             MessageLookupByLibrary.simpleMessage("No Custody Records"),
         "no_custody_records_description": MessageLookupByLibrary.simpleMessage(
@@ -168,9 +191,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Operating System"),
         "or": MessageLookupByLibrary.simpleMessage("or"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
+        "password_reset_success":
+            MessageLookupByLibrary.simpleMessage("Password reset successful"),
+        "password_too_short":
+            MessageLookupByLibrary.simpleMessage("Password too short"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
         "place_qr_code": MessageLookupByLibrary.simpleMessage(
             "Place the QR code within the frame to scan"),
+        "please_enter_code":
+            MessageLookupByLibrary.simpleMessage("Please enter code"),
         "please_enter_email":
             MessageLookupByLibrary.simpleMessage("Please enter email address"),
         "please_enter_verification_code": MessageLookupByLibrary.simpleMessage(
@@ -219,6 +248,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "researcher_login":
             MessageLookupByLibrary.simpleMessage("Researcher Login"),
         "resend_code": MessageLookupByLibrary.simpleMessage("Resend Code"),
+        "reset_password":
+            MessageLookupByLibrary.simpleMessage("Reset Password"),
         "response_details_title":
             MessageLookupByLibrary.simpleMessage("Response details"),
         "response_status_flagged":
@@ -242,9 +273,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "select_file": MessageLookupByLibrary.simpleMessage("Select File"),
         "select_language":
             MessageLookupByLibrary.simpleMessage("Select Language"),
+        "send_code": MessageLookupByLibrary.simpleMessage("Send Code"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share_link": MessageLookupByLibrary.simpleMessage("Share"),
-        "share_link_subject": m0,
+        "share_link_subject": m1,
         "show_qr_code": MessageLookupByLibrary.simpleMessage("Show QR Code"),
         "start_location_tracking":
             MessageLookupByLibrary.simpleMessage("Start Location Tracking"),
@@ -269,6 +301,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("File uploaded successfully"),
         "uploaded": MessageLookupByLibrary.simpleMessage("Uploaded"),
         "uploading": MessageLookupByLibrary.simpleMessage("Uploading..."),
+        "verification_code":
+            MessageLookupByLibrary.simpleMessage("Verification Code"),
         "verification_code_resent": MessageLookupByLibrary.simpleMessage(
             "Verification code resent successfully"),
         "verification_info_message": MessageLookupByLibrary.simpleMessage(
@@ -282,6 +316,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Welcome to the Survey Platform"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(
             "Your voice matters.. Share your feedback to contribute to continuous development and improvement"),
-        "zone": MessageLookupByLibrary.simpleMessage("Zone")
+        "zone": MessageLookupByLibrary.simpleMessage("Zone"),
+        "zone_violation_message": MessageLookupByLibrary.simpleMessage(
+            "You have transitioned outside the authorized geographical perimeter. Your session will be terminated for security compliance."),
+        "zone_violation_title":
+            MessageLookupByLibrary.simpleMessage("Security Violation")
       };
 }

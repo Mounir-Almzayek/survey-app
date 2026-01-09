@@ -14,65 +14,72 @@ class RegistrationMethodIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = S.of(context);
 
-    // Determine colors and icons based on method
-    Color backgroundColor;
-    Color borderColor;
-    Color iconColor;
-    IconData icon;
-    String title;
-    String description;
-
-    switch (method) {
-      case RegistrationMethod.deviceBoundKey:
-        backgroundColor = Colors.blue.withValues(alpha: 0.1);
-        borderColor = Colors.blue.withValues(alpha: 0.3);
-        iconColor = Colors.blue;
-        icon = Icons.vpn_key_rounded;
-        title = locale.registration_method_device_bound_key_title;
-        description = locale.registration_method_device_bound_key_description;
-        break;
-      case RegistrationMethod.cookieBased:
-        backgroundColor = AppColors.brightWhite;
-        borderColor = AppColors.border.withValues(alpha: 0.3);
-        iconColor = AppColors.secondaryText;
-        icon = Icons.fingerprint_rounded;
-        title = locale.registration_method_cookie_based_title;
-        description = locale.registration_method_cookie_based_description;
-        break;
-    }
+    final isDeviceBound = method == RegistrationMethod.deviceBoundKey;
+    final color = isDeviceBound ? AppColors.primary : AppColors.secondaryText;
+    final icon = isDeviceBound ? Icons.security_rounded : Icons.cookie_outlined;
+    final title = isDeviceBound
+        ? locale.registration_method_device_bound_key_title
+        : locale.registration_method_cookie_based_title;
+    final description = isDeviceBound
+        ? locale.registration_method_device_bound_key_description
+        : locale.registration_method_cookie_based_description;
 
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: borderColor, width: 1.5),
+        color: color.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(color: color.withOpacity(0.2), width: 1.5),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: iconColor, size: 24.sp),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.r),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: color, size: 24.sp),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryText,
                   ),
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  description,
+              ),
+              // Status Badge
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Text(
+                  isDeviceBound ? "REC" : "ALT",
                   style: TextStyle(
-                    fontSize: 12.sp,
-                    color: AppColors.secondaryText,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.bold,
+                    color: color,
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            description,
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: AppColors.secondaryText,
+              height: 1.5,
             ),
           ),
         ],

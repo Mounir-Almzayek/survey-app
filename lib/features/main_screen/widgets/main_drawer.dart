@@ -35,19 +35,21 @@ class _MainDrawerState extends State<MainDrawer>
     );
   }
 
+  ZoomDrawerController? _zoomDrawerController;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Reset and forward animation when drawer opens could be handled here
-    // But since this is in the background, we might want to trigger it when ZoomDrawer opens
-    // We can listen to the controller
-    final zoomController = ZoomDrawer.of(context);
-    zoomController?.addListener(_onDrawerStateChanged);
+    final newController = ZoomDrawer.of(context);
+    if (newController != _zoomDrawerController) {
+      _zoomDrawerController?.removeListener(_onDrawerStateChanged);
+      _zoomDrawerController = newController;
+      _zoomDrawerController?.addListener(_onDrawerStateChanged);
+    }
   }
 
   void _onDrawerStateChanged() {
-    final zoomController = ZoomDrawer.of(context);
-    if (zoomController != null && zoomController.isOpen) {
+    if (_zoomDrawerController != null && _zoomDrawerController!.isOpen) {
       _staggerController.forward(from: 0.0);
     } else {
       _staggerController.reverse();
@@ -56,9 +58,8 @@ class _MainDrawerState extends State<MainDrawer>
 
   @override
   void dispose() {
+    _zoomDrawerController?.removeListener(_onDrawerStateChanged);
     _staggerController.dispose();
-    final zoomController = ZoomDrawer.of(context);
-    zoomController?.removeListener(_onDrawerStateChanged);
     super.dispose();
   }
 
@@ -78,7 +79,10 @@ class _MainDrawerState extends State<MainDrawer>
               children: [
                 // Logo or Header
                 Padding(
-                  padding: EdgeInsets.only(left: 16.w, bottom: 40.h),
+                  padding: EdgeInsetsDirectional.only(
+                    start: 16.w,
+                    bottom: 40.h,
+                  ),
                   child: LogoRectangle(
                     big: false,
                     isFlat: true,
@@ -189,7 +193,10 @@ class _MainDrawerState extends State<MainDrawer>
                 ),
 
                 Padding(
-                  padding: EdgeInsets.only(left: 16.w, bottom: 20.h),
+                  padding: EdgeInsetsDirectional.only(
+                    start: 16.w,
+                    bottom: 20.h,
+                  ),
                   child: Text(
                     "v1.0.0",
                     style: TextStyle(
@@ -215,10 +222,14 @@ class _MainDrawerState extends State<MainDrawer>
         final end = start + 0.4;
         final opacity = (animationPercent - start) / (end - start);
 
+        final isRtl = Directionality.of(context) == TextDirection.rtl;
         return Opacity(
           opacity: opacity.clamp(0.0, 1.0),
           child: Transform.translate(
-            offset: Offset((1.0 - opacity.clamp(0.0, 1.0)) * 50, 0),
+            offset: Offset(
+              (isRtl ? -50 : 50) * (1.0 - opacity.clamp(0.0, 1.0)),
+              0,
+            ),
             child: child,
           ),
         );

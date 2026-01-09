@@ -1709,6 +1709,206 @@ class S {
       args: [],
     );
   }
+
+  /// `Don't have an active account?`
+  String get no_active_account {
+    return Intl.message(
+      'Don\'t have an active account?',
+      name: 'no_active_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Activate`
+  String get activate {
+    return Intl.message(
+      'Activate',
+      name: 'activate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reset Password`
+  String get reset_password {
+    return Intl.message(
+      'Reset Password',
+      name: 'reset_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Code`
+  String get enter_code {
+    return Intl.message(
+      'Enter Code',
+      name: 'enter_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter your email to receive a reset code`
+  String get enter_email_reset {
+    return Intl.message(
+      'Enter your email to receive a reset code',
+      name: 'enter_email_reset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the code sent to {email}`
+  String enter_code_sent(String email) {
+    return Intl.message(
+      'Enter the code sent to $email',
+      name: 'enter_code_sent',
+      desc: '',
+      args: [email],
+    );
+  }
+
+  /// `Verification Code`
+  String get verification_code {
+    return Intl.message(
+      'Verification Code',
+      name: 'verification_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter code`
+  String get please_enter_code {
+    return Intl.message(
+      'Please enter code',
+      name: 'please_enter_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New Password`
+  String get new_password {
+    return Intl.message(
+      'New Password',
+      name: 'new_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password too short`
+  String get password_too_short {
+    return Intl.message(
+      'Password too short',
+      name: 'password_too_short',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send Code`
+  String get send_code {
+    return Intl.message(
+      'Send Code',
+      name: 'send_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password reset successful`
+  String get password_reset_success {
+    return Intl.message(
+      'Password reset successful',
+      name: 'password_reset_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Activate Account`
+  String get activate_account {
+    return Intl.message(
+      'Activate Account',
+      name: 'activate_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter the verification code sent to your email`
+  String get enter_verification_code_instruction {
+    return Intl.message(
+      'Enter the verification code sent to your email',
+      name: 'enter_verification_code_instruction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email verified successfully`
+  String get email_verified_success {
+    return Intl.message(
+      'Email verified successfully',
+      name: 'email_verified_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Device successfully linked to your account`
+  String get device_registered_success {
+    return Intl.message(
+      'Device successfully linked to your account',
+      name: 'device_registered_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `By tapping 'Link Device', this device will be unique to your researcher profile.`
+  String get complete_registration_tap_notice {
+    return Intl.message(
+      'By tapping \'Link Device\', this device will be unique to your researcher profile.',
+      name: 'complete_registration_tap_notice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This device ID is already associated with another profile or has been previously linked.`
+  String get device_already_registered_desc {
+    return Intl.message(
+      'This device ID is already associated with another profile or has been previously linked.',
+      name: 'device_already_registered_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Security Violation`
+  String get zone_violation_title {
+    return Intl.message(
+      'Security Violation',
+      name: 'zone_violation_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have transitioned outside the authorized geographical perimeter. Your session will be terminated for security compliance.`
+  String get zone_violation_message {
+    return Intl.message(
+      'You have transitioned outside the authorized geographical perimeter. Your session will be terminated for security compliance.',
+      name: 'zone_violation_message',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -17,6 +17,24 @@ class SurveysOnlineRepository {
 
     return Survey.fromJson(data as Map<String, dynamic>);
   }
+
+  /// Get list of surveys assigned to the current user (Researcher).
+  /// Endpoint: /my-surveys (Assumed standard for researcher context)
+  static Future<List<Survey>> getAssignedSurveys() async {
+    final apiRequest = APIRequest(
+      path: '/my-surveys',
+      method: HTTPMethod.get,
+      authorizationOption: AuthorizationOption.authorized,
+    );
+
+    final response = await apiRequest.send();
+    final data = response.data['data'] ?? response.data;
+
+    if (data is List) {
+      return data
+          .map((e) => Survey.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+    return [];
+  }
 }
-
-
