@@ -77,7 +77,7 @@
   "point_camera_at_qr_code": "وجّه الكاميرا نحو رمز QR",
   "scan_qr_code_instruction": "ضع رمز QR داخل الإطار للمسح",
   "invalid_qr_code": "رمز QR غير صالح. يرجى المحاولة مرة أخرى.",
-  "processing": "جاري المعالجة...",
+  "processing": "جاري المعالجة...", 
   "device_registered_successfully": "تم تسجيل الجهاز بنجاح",
   "register_device": "تسجيل الجهاز",
   "receive_custody": "استلام العهدة",
@@ -161,6 +161,74 @@
   "enter_verification_code": "أدخل رمز التحقق",
   "verify": "تحقق",
   "resend_code": "إعادة إرسال الرمز",
+  "active_links_count": "{count} روابط نشطة",
+  "@active_links_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tap_to_view": "اضغط للعرض",
+  "sync": "مزامنة",
+  "public_link_not_found": "الرابط العام غير موجود",
+  "code_colon": "الكود: {code}",
+  "@code_colon": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "created_at_colon": "أنشئ في: {date}",
+  "@created_at_colon": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "sections_count": "{count} أقسام",
+  "@sections_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "view_details": "عرض التفاصيل",
+  "enter_survey_code": "أدخل رمز الاستطلاع",
+  "survey_code_placeholder": "مثال: ABC-123",
+  "scan_qr": "مسح رمز QR",
+  "submit": "إرسال",
+  "active_responses": "الاستجابات النشطة",
+  "in_progress_surveys": "استبيانات قيد التنفيذ",
+  "total_sections_touched": "إجمالي الأقسام المفتوحة",
+  "avg": "المعدل",
+  "drafts_available": "{count} مسودات متاحة",
+  "@drafts_available": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "resume_survey": "استكمال",
+  "no_active_responses": "لا توجد استجابات نشطة",
+  "delete_draft_title": "حذف المسودة",
+  "delete_draft_message": "هل أنت متأكد من رغبتك في حذف مسودة الاستطلاع هذه؟",
+  "hide_details": "إخفاء التفاصيل",
+  "view_survey_drafts": "عرض مسودات الاستطلاع",
+  "last_updated_at": "آخر تحديث: {date}",
+  "@last_updated_at": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "welcome_back_researcher": "مرحباً بك مجدداً، أيها الباحث",
+  "home_survey_status_subtitle": "إليك ما يحدث في استطلاعاتك اليوم.",
   "location_permission_required_title": "إذن الموقع مطلوب",
   "location_permission_required_message": "لاستخدام هذا التطبيق، يجب السماح بالوصول إلى موقع جهازك.",
   "allow_location_access": "السماح بالوصول إلى الموقع",

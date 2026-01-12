@@ -1,52 +1,143 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import '../../../core/models/survey/survey_model.dart';
+import '../../../core/styles/app_colors.dart';
+import '../../profile/models/user.dart';
 
-/// Model representing a public link
+/// Status of a public link
+enum PublicLinkStatus {
+  active,
+  disabled,
+  expired;
+
+  String get label {
+    switch (this) {
+      case PublicLinkStatus.active:
+        return 'Active';
+      case PublicLinkStatus.disabled:
+        return 'Disabled';
+      case PublicLinkStatus.expired:
+        return 'Expired';
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case PublicLinkStatus.active:
+        return AppColors.success;
+      case PublicLinkStatus.disabled:
+        return AppColors.error;
+      case PublicLinkStatus.expired:
+        return AppColors.warning;
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case PublicLinkStatus.active:
+        return Icons.check_circle_outline_rounded;
+      case PublicLinkStatus.disabled:
+        return Icons.block_flipped;
+      case PublicLinkStatus.expired:
+        return Icons.history_rounded;
+    }
+  }
+
+  static PublicLinkStatus fromString(String status, {bool isExpired = false}) {
+    if (isExpired) return PublicLinkStatus.expired;
+    switch (status.toUpperCase()) {
+      case 'ACTIVE':
+        return PublicLinkStatus.active;
+      case 'DISABLED':
+        return PublicLinkStatus.disabled;
+      default:
+        return PublicLinkStatus.disabled;
+    }
+  }
+
+  String toJson() {
+    switch (this) {
+      case PublicLinkStatus.active:
+        return 'ACTIVE';
+      case PublicLinkStatus.disabled:
+        return 'DISABLED';
+      case PublicLinkStatus.expired:
+        return 'ACTIVE'; // On server, it's still ACTIVE but logically expired
+    }
+  }
+}
+
+/// Model representing a public link returned from getAll endpoint
 class PublicLink extends Equatable {
   final int id;
-  final String shortCode;
-  final String fullUrl;
   final int surveyId;
-  final String surveyTitle;
-  final String status; // ACTIVE, INACTIVE, EXPIRED
-  final DateTime? expiresAt;
-  final int? maxResponses;
-  final int? currentResponses;
+  final int ownerUserId;
+  final String shortCode;
+  final PublicLinkStatus status;
+  final int maxResponses;
+  final int maxResponsesPerIp;
   final bool requireLocation;
+  final DateTime? expiresAt;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final Survey? survey;
+  final User? ownerUser;
 
   const PublicLink({
     required this.id,
-    required this.shortCode,
-    required this.fullUrl,
     required this.surveyId,
-    required this.surveyTitle,
+    required this.ownerUserId,
+    required this.shortCode,
     required this.status,
-    this.expiresAt,
-    this.maxResponses,
-    this.currentResponses,
+    required this.maxResponses,
+    required this.maxResponsesPerIp,
     required this.requireLocation,
+    this.expiresAt,
     required this.createdAt,
     required this.updatedAt,
+    this.survey,
+    this.ownerUser,
   });
+
+  /// Get survey title (convenience getter)
+  String get surveyTitle => survey?.title ?? '';
+
+  /// Get full URL (computed from shortCode)
+  String get fullUrl => 'https://survey.example.com/s/$shortCode';
 
   /// Create PublicLink from JSON
   factory PublicLink.fromJson(Map<String, dynamic> json) {
+    final expiresAtStr = json['expires_at'] as String?;
+    final expiresAt = expiresAtStr != null
+        ? DateTime.parse(expiresAtStr)
+        : null;
+    final isExpired = expiresAt != null && DateTime.now().isAfter(expiresAt);
+
     return PublicLink(
       id: json['id'] as int,
-      shortCode: json['short_code'] as String,
-      fullUrl: json['full_url'] as String? ?? '',
       surveyId: json['survey_id'] as int,
-      surveyTitle: json['survey_title'] as String? ?? json['survey']?['title'] as String? ?? '',
-      status: json['status'] as String,
-      expiresAt: json['expires_at'] != null
-          ? DateTime.parse(json['expires_at'] as String)
-          : null,
-      maxResponses: json['max_responses'] as int?,
-      currentResponses: json['current_responses'] as int?,
+      ownerUserId: json['owner_user_id'] as int,
+      shortCode: json['short_code'] as String? ?? '',
+      status: PublicLinkStatus.fromString(
+        json['status'] as String? ?? 'ACTIVE',
+        isExpired: isExpired,
+      ),
+      maxResponses: json['max_responses'] as int? ?? 0,
+      maxResponsesPerIp: json['max_responses_per_ip'] as int? ?? 1,
       requireLocation: json['require_location'] as bool? ?? false,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      expiresAt: expiresAt,
+      createdAt: DateTime.parse(
+        json['created_at'] as String? ?? DateTime.now().toIso8601String(),
+      ),
+      updatedAt: DateTime.parse(
+        json['updated_at'] as String? ?? DateTime.now().toIso8601String(),
+      ),
+      survey: json['survey'] != null
+          ? Survey.fromJson(json['survey'] as Map<String, dynamic>)
+          : null,
+      ownerUser: json['owner_user'] != null
+          ? User.fromJson(json['owner_user'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -54,53 +145,44 @@ class PublicLink extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'short_code': shortCode,
-      'full_url': fullUrl,
       'survey_id': surveyId,
-      'survey_title': surveyTitle,
-      'status': status,
-      'expires_at': expiresAt?.toIso8601String(),
+      'owner_user_id': ownerUserId,
+      'short_code': shortCode,
+      'status': status.toJson(),
       'max_responses': maxResponses,
-      'current_responses': currentResponses,
+      'max_responses_per_ip': maxResponsesPerIp,
       'require_location': requireLocation,
+      'expires_at': expiresAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'survey': survey?.toJson(),
+      'owner_user': ownerUser?.toJson(),
     };
   }
 
   /// Check if link is active
-  bool get isActive => status == 'ACTIVE';
+  bool get isActive => status == PublicLinkStatus.active;
 
   /// Check if link is expired
-  bool get isExpired {
-    if (expiresAt == null) return false;
-    return DateTime.now().isAfter(expiresAt!);
-  }
+  bool get isExpired => status == PublicLinkStatus.expired;
 
-  /// Check if link has reached max responses
-  bool get hasReachedMaxResponses {
-    if (maxResponses == null) return false;
-    if (currentResponses == null) return false;
-    return currentResponses! >= maxResponses!;
-  }
-
-  /// Check if link is available (active, not expired, not maxed)
-  bool get isAvailable => isActive && !isExpired && !hasReachedMaxResponses;
+  /// Check if link is available (active and not expired)
+  bool get isAvailable => status == PublicLinkStatus.active;
 
   @override
   List<Object?> get props => [
-        id,
-        shortCode,
-        fullUrl,
-        surveyId,
-        surveyTitle,
-        status,
-        expiresAt,
-        maxResponses,
-        currentResponses,
-        requireLocation,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    surveyId,
+    ownerUserId,
+    shortCode,
+    status,
+    maxResponses,
+    maxResponsesPerIp,
+    requireLocation,
+    expiresAt,
+    createdAt,
+    updatedAt,
+    survey,
+    ownerUser,
+  ];
 }
-

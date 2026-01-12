@@ -51,42 +51,44 @@ class Survey extends Equatable {
 
   factory Survey.fromJson(Map<String, dynamic> json) {
     return Survey(
-      id: json['id'],
-      createdByUserId: json['created_by_user_id'],
-      title: json['title'],
-      description: json['description'],
-      status: SurveyStatus.fromJson(json['status']),
+      id: json['id'] as int? ?? 0,
+      createdByUserId: json['created_by_user_id'] as int?,
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      status: json['status'] != null
+          ? SurveyStatus.fromJson(json['status'])
+          : SurveyStatus.draft,
       availabilityStartAt: json['availability_start_at'] != null
-          ? DateTime.parse(json['availability_start_at'])
+          ? DateTime.parse(json['availability_start_at'] as String)
           : null,
       availabilityEndAt: json['availability_end_at'] != null
-          ? DateTime.parse(json['availability_end_at'])
+          ? DateTime.parse(json['availability_end_at'] as String)
           : null,
-      maxResponses: json['max_responses'],
-      gpsRequired: json['gps_required'] ?? false,
-      lang: json['lang'],
-      minimumResponseTimeMinutes: json['minimum_response_time_minutes'],
-      greetingMessage: json['greeting_message'],
+      maxResponses: json['max_responses'] as int?,
+      gpsRequired: json['gps_required'] as bool? ?? false,
+      lang: json['lang'] as String? ?? 'AR',
+      minimumResponseTimeMinutes: json['minimum_response_time_minutes'] as int?,
+      greetingMessage: json['greeting_message'] as String? ?? '',
       goodbyeMessage:
-          json['goodbay_message'], // Fixed typo from Prisma: goodbay_message
-      tagsCsv: json['tags_csv'],
+          (json['goodbay_message'] ?? json['goodbye_message']) as String? ?? '',
+      tagsCsv: json['tags_csv'] as String?,
       willPublishAt: json['will_publish_at'] != null
-          ? DateTime.parse(json['will_publish_at'])
+          ? DateTime.parse(json['will_publish_at'] as String)
           : null,
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.parse(json['created_at'] as String)
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
+          ? DateTime.parse(json['updated_at'] as String)
           : null,
       deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
+          ? DateTime.parse(json['deleted_at'] as String)
           : null,
       sections: (json['sections'] as List?)
-          ?.map((e) => Section.fromJson(e))
+          ?.map((e) => Section.fromJson(e as Map<String, dynamic>))
           .toList(),
       conditionalLogics: (json['conditional_logics'] as List?)
-          ?.map((e) => ConditionalLogic.fromJson(e))
+          ?.map((e) => ConditionalLogic.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }

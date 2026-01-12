@@ -23,6 +23,10 @@ class RequestQueueManager {
   final _responseController = StreamController<QueueResponse>.broadcast();
   Stream<QueueResponse> get responseStream => _responseController.stream;
 
+  // In-memory success callbacks
+  final Map<String, FutureOr<void> Function(dynamic response)>
+  _successCallbacks = {};
+
   Future<void> init() async {
     await RequestQueueService.init();
 
@@ -55,18 +59,38 @@ class RequestQueueManager {
     }
   }
 
-  Future<bool> queueRequest(APIRequest request) async {
+  Future<bool> queueRequest(
+    APIRequest request, {
+    FutureOr<void> Function(dynamic response)? onSuccess,
+  }) async {
+    final requestId = DateTime.now().millisecondsSinceEpoch.toString();
+
+    if (onSuccess != null) {
+      _successCallbacks[requestId] = onSuccess;
+    }
+
     if (request.method == HTTPMethod.get) {
       try {
         final response = await request.send();
+        await onSuccess?.call(response);
         _responseController.add(
-          QueueResponse(requestId: '', success: true, response: response),
+          QueueResponse(
+            requestId: requestId,
+            success: true,
+            response: response,
+          ),
         );
+        _successCallbacks.remove(requestId);
         return false;
       } catch (e) {
         _responseController.add(
-          QueueResponse(requestId: '', success: false, error: e.toString()),
+          QueueResponse(
+            requestId: requestId,
+            success: false,
+            error: e.toString(),
+          ),
         );
+        _successCallbacks.remove(requestId);
         return false;
       }
     }
@@ -74,15 +98,21 @@ class RequestQueueManager {
     if (_isOnline && !_isProcessing) {
       try {
         final response = await request.send();
+        await onSuccess?.call(response);
         _responseController.add(
-          QueueResponse(requestId: '', success: true, response: response),
+          QueueResponse(
+            requestId: requestId,
+            success: true,
+            response: response,
+          ),
         );
+        _successCallbacks.remove(requestId);
         return false;
       } catch (e) {}
     }
 
     final item = RequestQueueItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: requestId,
       request: request,
       queuedAt: DateTime.now(),
     );
@@ -126,6 +156,12 @@ class RequestQueueManager {
           await RequestQueueService.updateRequest(
             item.copyWith(status: QueueItemStatus.completed),
           );
+
+          // Trigger success callback if it exists in memory
+          if (_successCallbacks.containsKey(item.id)) {
+            await _successCallbacks[item.id]!(response);
+            _successCallbacks.remove(item.id);
+          }
 
           _responseController.add(
             QueueResponse(

@@ -7,6 +7,7 @@ import '../../features/auth/presentation/email_verification_page.dart';
 import '../../features/welcome/presentation/welcome_page.dart';
 import '../../features/main_screen/presentation/main_page.dart';
 import '../../features/device_registration/presentation/device_registration_page.dart';
+import '../../features/qr_scanner/presentation/qr_scanner_page.dart';
 import 'app_routes.dart';
 
 /// App Pages
@@ -63,7 +64,11 @@ final appPages = GoRouter(
     ),
     GoRoute(
       path: Routes.qrScannerPath,
-      builder: (context, state) => const DeviceRegistrationPage(),
+      builder: (context, state) {
+        final returnCodeOnly =
+            state.uri.queryParameters['returnCodeOnly'] == 'true';
+        return QrScannerPage(returnCodeOnly: returnCodeOnly);
+      },
     ),
   ],
 );

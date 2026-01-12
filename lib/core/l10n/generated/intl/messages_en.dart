@@ -20,18 +20,34 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(email) => "Enter the code sent to ${email}";
+  static String m0(count) => "${count} Active Links";
 
-  static String m1(title) => "Survey Link: ${title}";
+  static String m1(code) => "Code: ${code}";
+
+  static String m2(date) => "Created: ${date}";
+
+  static String m3(count) => "${count} Drafts Available";
+
+  static String m4(email) => "Enter the code sent to ${email}";
+
+  static String m5(date) => "Last updated: ${date}";
+
+  static String m6(count) => "${count} Sections";
+
+  static String m7(title) => "Survey Link: ${title}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activate": MessageLookupByLibrary.simpleMessage("Activate"),
         "activate_account":
             MessageLookupByLibrary.simpleMessage("Activate Account"),
+        "active_links_count": m0,
+        "active_responses":
+            MessageLookupByLibrary.simpleMessage("Active Responses"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("Allow location access"),
         "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
+        "avg": MessageLookupByLibrary.simpleMessage("Avg."),
         "browser": MessageLookupByLibrary.simpleMessage("Browser"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "camera_permission_required": MessageLookupByLibrary.simpleMessage(
@@ -42,6 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel_upload": MessageLookupByLibrary.simpleMessage("Cancel Upload"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "code": MessageLookupByLibrary.simpleMessage("Code"),
+        "code_colon": m1,
         "company": MessageLookupByLibrary.simpleMessage("Company"),
         "complete_device_registration": MessageLookupByLibrary.simpleMessage(
             "Complete the device registration process in the system"),
@@ -51,10 +68,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "cookie_based_method_description": MessageLookupByLibrary.simpleMessage(
             "Cookie-based method will be used for device registration"),
         "copy_link": MessageLookupByLibrary.simpleMessage("Copy Link"),
+        "created_at_colon": m2,
         "custody": MessageLookupByLibrary.simpleMessage("Custody"),
         "custody_verified_successfully": MessageLookupByLibrary.simpleMessage(
             "Custody verified successfully"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "delete_draft_message": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to delete this survey draft?"),
+        "delete_draft_title":
+            MessageLookupByLibrary.simpleMessage("Delete Draft"),
         "device_already_registered": MessageLookupByLibrary.simpleMessage(
             "This device is already registered"),
         "device_already_registered_desc": MessageLookupByLibrary.simpleMessage(
@@ -69,13 +91,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "device_type": MessageLookupByLibrary.simpleMessage("Device Type"),
         "download_file": MessageLookupByLibrary.simpleMessage("Download File"),
         "downloading": MessageLookupByLibrary.simpleMessage("Downloading..."),
+        "drafts_available": m3,
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "email_verified_success":
             MessageLookupByLibrary.simpleMessage("Email verified successfully"),
         "english": MessageLookupByLibrary.simpleMessage("English"),
         "enter_code": MessageLookupByLibrary.simpleMessage("Enter Code"),
-        "enter_code_sent": m0,
+        "enter_code_sent": m4,
         "enter_details":
             MessageLookupByLibrary.simpleMessage("Enter your login details"),
         "enter_email":
@@ -84,6 +107,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Enter your email to receive a reset code"),
         "enter_notes_optional":
             MessageLookupByLibrary.simpleMessage("Enter notes (optional)"),
+        "enter_survey_code":
+            MessageLookupByLibrary.simpleMessage("Enter Survey Code"),
         "enter_verification_code":
             MessageLookupByLibrary.simpleMessage("Enter Verification Code"),
         "enter_verification_code_instruction":
@@ -109,10 +134,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "get_started": MessageLookupByLibrary.simpleMessage("Get Started"),
         "grant_permission":
             MessageLookupByLibrary.simpleMessage("Grant Permission"),
+        "hide_details": MessageLookupByLibrary.simpleMessage("Hide Details"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "home_survey_status_subtitle": MessageLookupByLibrary.simpleMessage(
+            "Here is what\'s happening with your surveys today."),
         "id_number": MessageLookupByLibrary.simpleMessage("ID Number"),
         "image_saved_successfully": MessageLookupByLibrary.simpleMessage(
             "Image saved successfully to gallery"),
+        "in_progress_surveys":
+            MessageLookupByLibrary.simpleMessage("In-Progress Surveys"),
         "invalid_email":
             MessageLookupByLibrary.simpleMessage("Invalid email address"),
         "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
@@ -124,6 +154,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Confirm"),
         "language_dialog_title":
             MessageLookupByLibrary.simpleMessage("Select Language"),
+        "last_updated_at": m5,
         "link_copied":
             MessageLookupByLibrary.simpleMessage("Link copied to clipboard"),
         "link_device": MessageLookupByLibrary.simpleMessage("Link Device"),
@@ -164,6 +195,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "new_password": MessageLookupByLibrary.simpleMessage("New Password"),
         "no_active_account": MessageLookupByLibrary.simpleMessage(
             "Don\'t have an active account?"),
+        "no_active_responses":
+            MessageLookupByLibrary.simpleMessage("No active responses found"),
         "no_custody_records":
             MessageLookupByLibrary.simpleMessage("No Custody Records"),
         "no_custody_records_description": MessageLookupByLibrary.simpleMessage(
@@ -212,6 +245,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "processor_cores":
             MessageLookupByLibrary.simpleMessage("Processor Cores"),
         "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+        "public_link_not_found":
+            MessageLookupByLibrary.simpleMessage("Public link not found"),
         "public_links": MessageLookupByLibrary.simpleMessage("Public Links"),
         "qr_code": MessageLookupByLibrary.simpleMessage("QR Code"),
         "qr_scanner": MessageLookupByLibrary.simpleMessage("QR Scanner"),
@@ -261,14 +296,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "response_status_synced":
             MessageLookupByLibrary.simpleMessage("Synced"),
         "responses_title": MessageLookupByLibrary.simpleMessage("Responses"),
+        "resume_survey": MessageLookupByLibrary.simpleMessage("Resume"),
         "retry": MessageLookupByLibrary.simpleMessage("Retry"),
         "retry_upload": MessageLookupByLibrary.simpleMessage("Retry Upload"),
+        "scan_qr": MessageLookupByLibrary.simpleMessage("Scan QR"),
         "scan_qr_code": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
         "scan_qr_code_instruction": MessageLookupByLibrary.simpleMessage(
             "Position the QR code within the frame to scan"),
         "screen_resolution":
             MessageLookupByLibrary.simpleMessage("Screen Resolution"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "sections_count": m6,
         "select_date": MessageLookupByLibrary.simpleMessage("Select Date"),
         "select_file": MessageLookupByLibrary.simpleMessage("Select File"),
         "select_language":
@@ -276,7 +314,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "send_code": MessageLookupByLibrary.simpleMessage("Send Code"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share_link": MessageLookupByLibrary.simpleMessage("Share"),
-        "share_link_subject": m1,
+        "share_link_subject": m7,
         "show_qr_code": MessageLookupByLibrary.simpleMessage("Show QR Code"),
         "start_location_tracking":
             MessageLookupByLibrary.simpleMessage("Start Location Tracking"),
@@ -287,8 +325,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Stop Location Tracking"),
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("Storage permission denied"),
+        "submit": MessageLookupByLibrary.simpleMessage("Submit"),
+        "survey_code_placeholder":
+            MessageLookupByLibrary.simpleMessage("e.g. ABC-123"),
         "surveys": MessageLookupByLibrary.simpleMessage("Surveys"),
+        "sync": MessageLookupByLibrary.simpleMessage("Sync"),
+        "tap_to_view": MessageLookupByLibrary.simpleMessage("Tap to view"),
         "to_user_email": MessageLookupByLibrary.simpleMessage("To User Email"),
+        "total_sections_touched":
+            MessageLookupByLibrary.simpleMessage("Total Sections Touched"),
         "transfer_info_message": MessageLookupByLibrary.simpleMessage(
             "Enter the email of the researcher who will receive the device. A verification code will be sent to both users."),
         "transfer_initiated_successfully": MessageLookupByLibrary.simpleMessage(
@@ -312,8 +357,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Verify Custody"),
         "verifying_device_key":
             MessageLookupByLibrary.simpleMessage("Verifying device key..."),
+        "view_details": MessageLookupByLibrary.simpleMessage("View Details"),
+        "view_survey_drafts":
+            MessageLookupByLibrary.simpleMessage("View Survey Drafts"),
         "welcome": MessageLookupByLibrary.simpleMessage(
             "Welcome to the Survey Platform"),
+        "welcome_back_researcher":
+            MessageLookupByLibrary.simpleMessage("Welcome back, Researcher"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(
             "Your voice matters.. Share your feedback to contribute to continuous development and improvement"),
         "zone": MessageLookupByLibrary.simpleMessage("Zone"),

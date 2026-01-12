@@ -1590,6 +1590,266 @@ class S {
     );
   }
 
+  /// `{count} Active Links`
+  String active_links_count(int count) {
+    return Intl.message(
+      '$count Active Links',
+      name: 'active_links_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Tap to view`
+  String get tap_to_view {
+    return Intl.message(
+      'Tap to view',
+      name: 'tap_to_view',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sync`
+  String get sync {
+    return Intl.message(
+      'Sync',
+      name: 'sync',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Public link not found`
+  String get public_link_not_found {
+    return Intl.message(
+      'Public link not found',
+      name: 'public_link_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Code: {code}`
+  String code_colon(String code) {
+    return Intl.message(
+      'Code: $code',
+      name: 'code_colon',
+      desc: '',
+      args: [code],
+    );
+  }
+
+  /// `Created: {date}`
+  String created_at_colon(String date) {
+    return Intl.message(
+      'Created: $date',
+      name: 'created_at_colon',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `{count} Sections`
+  String sections_count(int count) {
+    return Intl.message(
+      '$count Sections',
+      name: 'sections_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `View Details`
+  String get view_details {
+    return Intl.message(
+      'View Details',
+      name: 'view_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter Survey Code`
+  String get enter_survey_code {
+    return Intl.message(
+      'Enter Survey Code',
+      name: 'enter_survey_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `e.g. ABC-123`
+  String get survey_code_placeholder {
+    return Intl.message(
+      'e.g. ABC-123',
+      name: 'survey_code_placeholder',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scan QR`
+  String get scan_qr {
+    return Intl.message(
+      'Scan QR',
+      name: 'scan_qr',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Submit`
+  String get submit {
+    return Intl.message(
+      'Submit',
+      name: 'submit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active Responses`
+  String get active_responses {
+    return Intl.message(
+      'Active Responses',
+      name: 'active_responses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In-Progress Surveys`
+  String get in_progress_surveys {
+    return Intl.message(
+      'In-Progress Surveys',
+      name: 'in_progress_surveys',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Sections Touched`
+  String get total_sections_touched {
+    return Intl.message(
+      'Total Sections Touched',
+      name: 'total_sections_touched',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Avg.`
+  String get avg {
+    return Intl.message(
+      'Avg.',
+      name: 'avg',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} Drafts Available`
+  String drafts_available(int count) {
+    return Intl.message(
+      '$count Drafts Available',
+      name: 'drafts_available',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Resume`
+  String get resume_survey {
+    return Intl.message(
+      'Resume',
+      name: 'resume_survey',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No active responses found`
+  String get no_active_responses {
+    return Intl.message(
+      'No active responses found',
+      name: 'no_active_responses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete Draft`
+  String get delete_draft_title {
+    return Intl.message(
+      'Delete Draft',
+      name: 'delete_draft_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete this survey draft?`
+  String get delete_draft_message {
+    return Intl.message(
+      'Are you sure you want to delete this survey draft?',
+      name: 'delete_draft_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hide Details`
+  String get hide_details {
+    return Intl.message(
+      'Hide Details',
+      name: 'hide_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View Survey Drafts`
+  String get view_survey_drafts {
+    return Intl.message(
+      'View Survey Drafts',
+      name: 'view_survey_drafts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last updated: {date}`
+  String last_updated_at(String date) {
+    return Intl.message(
+      'Last updated: $date',
+      name: 'last_updated_at',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `Welcome back, Researcher`
+  String get welcome_back_researcher {
+    return Intl.message(
+      'Welcome back, Researcher',
+      name: 'welcome_back_researcher',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Here is what's happening with your surveys today.`
+  String get home_survey_status_subtitle {
+    return Intl.message(
+      'Here is what\'s happening with your surveys today.',
+      name: 'home_survey_status_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Location permission required`
   String get location_permission_required_title {
     return Intl.message(

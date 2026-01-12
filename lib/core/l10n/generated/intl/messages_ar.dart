@@ -20,18 +20,34 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
-  static String m0(email) => "أدخل الرمز المرسل إلى ${email}";
+  static String m0(count) => "${count} روابط نشطة";
 
-  static String m1(title) => "رابط الاستطلاع: ${title}";
+  static String m1(code) => "الكود: ${code}";
+
+  static String m2(date) => "أنشئ في: ${date}";
+
+  static String m3(count) => "${count} مسودات متاحة";
+
+  static String m4(email) => "أدخل الرمز المرسل إلى ${email}";
+
+  static String m5(date) => "آخر تحديث: ${date}";
+
+  static String m6(count) => "${count} أقسام";
+
+  static String m7(title) => "رابط الاستطلاع: ${title}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activate": MessageLookupByLibrary.simpleMessage("تفعيل"),
         "activate_account":
             MessageLookupByLibrary.simpleMessage("تفعيل الحساب"),
+        "active_links_count": m0,
+        "active_responses":
+            MessageLookupByLibrary.simpleMessage("الاستجابات النشطة"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("السماح بالوصول إلى الموقع"),
         "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
+        "avg": MessageLookupByLibrary.simpleMessage("المعدل"),
         "browser": MessageLookupByLibrary.simpleMessage("المتصفح"),
         "camera": MessageLookupByLibrary.simpleMessage("الكاميرا"),
         "camera_permission_required": MessageLookupByLibrary.simpleMessage(
@@ -42,6 +58,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel_upload": MessageLookupByLibrary.simpleMessage("إلغاء الرفع"),
         "close": MessageLookupByLibrary.simpleMessage("إغلاق"),
         "code": MessageLookupByLibrary.simpleMessage("الكود"),
+        "code_colon": m1,
         "company": MessageLookupByLibrary.simpleMessage("الشركة"),
         "complete_device_registration": MessageLookupByLibrary.simpleMessage(
             "إكمال عملية تسجيل الجهاز في النظام"),
@@ -51,10 +68,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "cookie_based_method_description": MessageLookupByLibrary.simpleMessage(
             "سيتم استخدام طريقة قائمة على الكوكيز لتسجيل الجهاز"),
         "copy_link": MessageLookupByLibrary.simpleMessage("نسخ الرابط"),
+        "created_at_colon": m2,
         "custody": MessageLookupByLibrary.simpleMessage("العهدة"),
         "custody_verified_successfully":
             MessageLookupByLibrary.simpleMessage("تم التحقق من العهدة بنجاح"),
         "delete": MessageLookupByLibrary.simpleMessage("حذف"),
+        "delete_draft_message": MessageLookupByLibrary.simpleMessage(
+            "هل أنت متأكد من رغبتك في حذف مسودة الاستطلاع هذه؟"),
+        "delete_draft_title":
+            MessageLookupByLibrary.simpleMessage("حذف المسودة"),
         "device_already_registered":
             MessageLookupByLibrary.simpleMessage("هذا الجهاز مسجل مسبقاً"),
         "device_already_registered_desc": MessageLookupByLibrary.simpleMessage(
@@ -69,13 +91,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "device_type": MessageLookupByLibrary.simpleMessage("نوع الجهاز"),
         "download_file": MessageLookupByLibrary.simpleMessage("تحميل الملف"),
         "downloading": MessageLookupByLibrary.simpleMessage("جاري التحميل..."),
+        "drafts_available": m3,
         "edit": MessageLookupByLibrary.simpleMessage("تعديل"),
         "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
         "email_verified_success": MessageLookupByLibrary.simpleMessage(
             "تم التحقق من البريد الإلكتروني بنجاح"),
         "english": MessageLookupByLibrary.simpleMessage("الإنجليزية"),
         "enter_code": MessageLookupByLibrary.simpleMessage("أدخل الرمز"),
-        "enter_code_sent": m0,
+        "enter_code_sent": m4,
         "enter_details": MessageLookupByLibrary.simpleMessage(
             "أدخل بيانات تسجيل الدخول الخاصة بك"),
         "enter_email": MessageLookupByLibrary.simpleMessage(
@@ -84,6 +107,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "أدخل بريدك الإلكتروني لاستلام رمز إعادة التعيين"),
         "enter_notes_optional":
             MessageLookupByLibrary.simpleMessage("أدخل ملاحظات (اختياري)"),
+        "enter_survey_code":
+            MessageLookupByLibrary.simpleMessage("أدخل رمز الاستطلاع"),
         "enter_verification_code":
             MessageLookupByLibrary.simpleMessage("أدخل رمز التحقق"),
         "enter_verification_code_instruction":
@@ -108,10 +133,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "gb": MessageLookupByLibrary.simpleMessage("جيجابايت"),
         "get_started": MessageLookupByLibrary.simpleMessage("ابدأ الآن"),
         "grant_permission": MessageLookupByLibrary.simpleMessage("منح الإذن"),
+        "hide_details": MessageLookupByLibrary.simpleMessage("إخفاء التفاصيل"),
         "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
+        "home_survey_status_subtitle": MessageLookupByLibrary.simpleMessage(
+            "إليك ما يحدث في استطلاعاتك اليوم."),
         "id_number": MessageLookupByLibrary.simpleMessage("رقم الهوية"),
         "image_saved_successfully": MessageLookupByLibrary.simpleMessage(
             "تم حفظ الصورة بنجاح في المعرض"),
+        "in_progress_surveys":
+            MessageLookupByLibrary.simpleMessage("استبيانات قيد التنفيذ"),
         "invalid_email": MessageLookupByLibrary.simpleMessage(
             "عنوان بريد إلكتروني غير صحيح"),
         "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
@@ -122,6 +152,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تأكيد"),
         "language_dialog_title":
             MessageLookupByLibrary.simpleMessage("اختر اللغة"),
+        "last_updated_at": m5,
         "link_copied":
             MessageLookupByLibrary.simpleMessage("تم نسخ الرابط إلى الحافظة"),
         "link_device": MessageLookupByLibrary.simpleMessage("ربط الجهاز"),
@@ -162,6 +193,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("كلمة المرور الجديدة"),
         "no_active_account":
             MessageLookupByLibrary.simpleMessage("ليس لديك حساب مفعل؟"),
+        "no_active_responses":
+            MessageLookupByLibrary.simpleMessage("لا توجد استجابات نشطة"),
         "no_custody_records":
             MessageLookupByLibrary.simpleMessage("لا توجد سجلات عهدة"),
         "no_custody_records_description":
@@ -210,6 +243,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "processor_cores":
             MessageLookupByLibrary.simpleMessage("أنوية المعالج"),
         "profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
+        "public_link_not_found":
+            MessageLookupByLibrary.simpleMessage("الرابط العام غير موجود"),
         "public_links": MessageLookupByLibrary.simpleMessage("الروابط العامة"),
         "qr_code": MessageLookupByLibrary.simpleMessage("رمز QR"),
         "qr_scanner": MessageLookupByLibrary.simpleMessage("قارئ رمز QR"),
@@ -261,21 +296,24 @@ class MessageLookup extends MessageLookupByLibrary {
         "response_status_synced":
             MessageLookupByLibrary.simpleMessage("متزامنة"),
         "responses_title": MessageLookupByLibrary.simpleMessage("الاستجابات"),
+        "resume_survey": MessageLookupByLibrary.simpleMessage("استكمال"),
         "retry": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
         "retry_upload":
             MessageLookupByLibrary.simpleMessage("إعادة محاولة الرفع"),
+        "scan_qr": MessageLookupByLibrary.simpleMessage("مسح رمز QR"),
         "scan_qr_code": MessageLookupByLibrary.simpleMessage("مسح رمز QR"),
         "scan_qr_code_instruction":
             MessageLookupByLibrary.simpleMessage("ضع رمز QR داخل الإطار للمسح"),
         "screen_resolution": MessageLookupByLibrary.simpleMessage("دقة الشاشة"),
         "search": MessageLookupByLibrary.simpleMessage("بحث"),
+        "sections_count": m6,
         "select_date": MessageLookupByLibrary.simpleMessage("اختر التاريخ"),
         "select_file": MessageLookupByLibrary.simpleMessage("اختر ملف"),
         "select_language": MessageLookupByLibrary.simpleMessage("اختر اللغة"),
         "send_code": MessageLookupByLibrary.simpleMessage("إرسال الرمز"),
         "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
         "share_link": MessageLookupByLibrary.simpleMessage("مشاركة"),
-        "share_link_subject": m1,
+        "share_link_subject": m7,
         "show_qr_code": MessageLookupByLibrary.simpleMessage("عرض رمز QR"),
         "start_location_tracking":
             MessageLookupByLibrary.simpleMessage("بدء تتبع الموقع"),
@@ -285,9 +323,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("إيقاف تتبع الموقع"),
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("تم رفض إذن التخزين"),
+        "submit": MessageLookupByLibrary.simpleMessage("إرسال"),
+        "survey_code_placeholder":
+            MessageLookupByLibrary.simpleMessage("مثال: ABC-123"),
         "surveys": MessageLookupByLibrary.simpleMessage("الاستطلاعات"),
+        "sync": MessageLookupByLibrary.simpleMessage("مزامنة"),
+        "tap_to_view": MessageLookupByLibrary.simpleMessage("اضغط للعرض"),
         "to_user_email": MessageLookupByLibrary.simpleMessage(
             "البريد الإلكتروني للمستخدم المستقبل"),
+        "total_sections_touched":
+            MessageLookupByLibrary.simpleMessage("إجمالي الأقسام المفتوحة"),
         "transfer_info_message": MessageLookupByLibrary.simpleMessage(
             "أدخل البريد الإلكتروني للباحث الذي سيستلم الجهاز. سيتم إرسال رمز التحقق لكلا المستخدمين."),
         "transfer_initiated_successfully":
@@ -310,8 +355,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("التحقق من العهدة"),
         "verifying_device_key": MessageLookupByLibrary.simpleMessage(
             "جارٍ التحقق من مفتاح الجهاز..."),
+        "view_details": MessageLookupByLibrary.simpleMessage("عرض التفاصيل"),
+        "view_survey_drafts":
+            MessageLookupByLibrary.simpleMessage("عرض مسودات الاستطلاع"),
         "welcome": MessageLookupByLibrary.simpleMessage(
             "مرحباً بكم في منصة الاستطلاعات"),
+        "welcome_back_researcher": MessageLookupByLibrary.simpleMessage(
+            "مرحباً بك مجدداً، أيها الباحث"),
         "welcome_subtitle": MessageLookupByLibrary.simpleMessage(
             "صوتك يهمنا.. شاركنا رأيك للمساهمة في التطوير والتحسين المستمر"),
         "zone": MessageLookupByLibrary.simpleMessage("المنطقة"),

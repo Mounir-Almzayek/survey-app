@@ -4,38 +4,40 @@ import '../../models/validated_public_link.dart';
 
 /// States for Validate Public Link Bloc
 abstract class ValidatePublicLinkState extends Equatable {
-  const ValidatePublicLinkState();
+  final String shortCode;
+
+  const ValidatePublicLinkState({this.shortCode = ''});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [shortCode];
 }
 
 /// Initial state
 class ValidatePublicLinkInitial extends ValidatePublicLinkState {
-  const ValidatePublicLinkInitial();
+  const ValidatePublicLinkInitial({super.shortCode});
 }
 
 /// Loading state
 class ValidatePublicLinkLoading extends ValidatePublicLinkState {
-  const ValidatePublicLinkLoading();
+  const ValidatePublicLinkLoading({super.shortCode});
 }
 
 /// Validated state
 class ValidatePublicLinkSuccess extends ValidatePublicLinkState {
   final ValidatedPublicLink link;
 
-  const ValidatePublicLinkSuccess(this.link);
+  const ValidatePublicLinkSuccess(this.link, {super.shortCode});
 
   @override
-  List<Object?> get props => [link];
+  List<Object?> get props => [link, ...super.props];
 }
 
 /// Error state
 class ValidatePublicLinkError extends ValidatePublicLinkState {
   final String message;
 
-  const ValidatePublicLinkError(this.message);
+  const ValidatePublicLinkError(this.message, {super.shortCode});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, ...super.props];
 }

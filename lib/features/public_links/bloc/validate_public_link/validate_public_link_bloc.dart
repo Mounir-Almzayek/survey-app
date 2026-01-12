@@ -21,7 +21,7 @@ class ValidatePublicLinkBloc
     ValidatePublicLink event,
     Emitter<ValidatePublicLinkState> emit,
   ) async {
-    emit(const ValidatePublicLinkLoading());
+    emit(ValidatePublicLinkLoading(shortCode: event.shortCode));
 
     await _validateLinkRunner.run(
       onlineTask: (_) async {
@@ -32,12 +32,12 @@ class ValidatePublicLinkBloc
       checkConnectivity: true,
       onSuccess: (link) {
         if (!emit.isDone) {
-          emit(ValidatePublicLinkSuccess(link));
+          emit(ValidatePublicLinkSuccess(link, shortCode: event.shortCode));
         }
       },
       onError: (error) {
         if (!emit.isDone) {
-          emit(ValidatePublicLinkError(error.toString()));
+          emit(ValidatePublicLinkError(error.toString(), shortCode: event.shortCode));
         }
       },
     );
