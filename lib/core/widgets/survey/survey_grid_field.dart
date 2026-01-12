@@ -7,16 +7,16 @@ import 'survey_question_card.dart';
 
 class SurveyGridField extends StatelessWidget {
   final Question question;
-  final Map<int, List<String>> selectedValues; // rowId -> list of optionValues
-  final Function(int rowId, List<String> optionValues) onSelectionChanged;
+  final Map<int, List<String>>? value; // rowId -> list of optionValues
+  final ValueChanged<Map<int, List<String>>> onChanged;
   final String? errorText;
   final bool isVisible;
 
   const SurveyGridField({
     super.key,
     required this.question,
-    required this.onSelectionChanged,
-    this.selectedValues = const {},
+    required this.onChanged,
+    this.value,
     this.errorText,
     this.isVisible = true,
   });
@@ -24,6 +24,7 @@ class SurveyGridField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMulti = question.type == QuestionType.multiSelectGrid;
+    final selectedValues = value ?? {};
 
     return SurveyQuestionCard(
       label: question.label,
@@ -86,9 +87,14 @@ class SurveyGridField extends StatelessWidget {
                                 alignment: Alignment.center,
                                 child: GestureDetector(
                                   onTap: () {
-                                    final currentSelections = List<String>.from(
-                                      selectedValues[row.id] ?? [],
+                                    final newMap = Map<int, List<String>>.from(
+                                      selectedValues,
                                     );
+                                    final currentSelections =
+                                        List<String>.from(
+                                      newMap[row.id] ?? [],
+                                    );
+
                                     if (isMulti) {
                                       if (isSelected) {
                                         currentSelections.remove(opt.value);
@@ -99,34 +105,33 @@ class SurveyGridField extends StatelessWidget {
                                       currentSelections.clear();
                                       currentSelections.add(opt.value);
                                     }
-                                    onSelectionChanged(
-                                      row.id,
-                                      currentSelections,
-                                    );
+
+                                    newMap[row.id] = currentSelections;
+                                    onChanged(newMap);
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(8.r),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: isSelected
-                                          ? AppColors.primary.withOpacity(0.1)
+                                          ? AppColors.surveyPrimary
+                                              .withOpacity(0.1)
                                           : Colors.transparent,
                                     ),
                                     child: Icon(
                                       isSelected
                                           ? (isMulti
-                                                ? Icons.check_box_rounded
-                                                : Icons
-                                                      .radio_button_checked_rounded)
+                                              ? Icons.check_box_rounded
+                                              : Icons
+                                                  .radio_button_checked_rounded)
                                           : (isMulti
-                                                ? Icons
-                                                      .check_box_outline_blank_rounded
-                                                : Icons
-                                                      .radio_button_off_rounded),
+                                              ? Icons
+                                                  .check_box_outline_blank_rounded
+                                              : Icons.radio_button_off_rounded),
                                       color: isSelected
-                                          ? AppColors.primary
+                                          ? AppColors.surveyPrimary
                                           : AppColors.mutedForeground
-                                                .withOpacity(0.5),
+                                              .withOpacity(0.5),
                                       size: 24.sp,
                                     ),
                                   ),

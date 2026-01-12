@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/survey/question_model.dart';
+import '../../styles/app_colors.dart';
 import '../custom_dropdown_field.dart';
 import 'survey_question_card.dart';
 
@@ -29,6 +30,8 @@ class SurveyDropdownField extends StatelessWidget {
       isVisible: isVisible,
       child: CustomDropdownField<String>(
         label: "", // Handled by SurveyQuestionCard
+        activeColor: AppColors.surveyPrimary,
+        activeGradient: AppColors.surveyGradient,
         items: question.questionOptions?.map((e) => e.value).toList() ?? [],
         getLabel: (val) =>
             question.questionOptions

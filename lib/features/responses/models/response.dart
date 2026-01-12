@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../surveys/models/survey.dart';
+import '../../../core/models/survey/survey_model.dart';
 import 'response_status.dart';
 
 /// Response summary model matching backend GetAllResponsesData item.

@@ -51,12 +51,14 @@ class SurveyCheckboxField extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14.r),
                     border: Border.all(
-                      color: isSelected ? AppColors.primary : AppColors.border,
+                      color: isSelected
+                          ? AppColors.surveyPrimary
+                          : AppColors.border,
                       width: isSelected ? 1.5 : 1,
                     ),
                     color: isSelected
-                        ? AppColors.primary.withOpacity(0.05)
-                        : Colors.white,
+                        ? AppColors.surveyPrimary.withOpacity(0.05)
+                        : AppColors.background.withOpacity(0.5),
                   ),
                   child: Row(
                     children: [
@@ -65,7 +67,7 @@ class SurveyCheckboxField extends StatelessWidget {
                             ? Icons.check_box_rounded
                             : Icons.check_box_outline_blank_rounded,
                         color: isSelected
-                            ? AppColors.primary
+                            ? AppColors.surveyPrimary
                             : AppColors.mutedForeground,
                         size: 24.sp,
                       ),
@@ -76,7 +78,7 @@ class SurveyCheckboxField extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: isSelected
-                                ? AppColors.primary
+                                ? AppColors.surveyPrimary
                                 : AppColors.primaryText,
                             fontWeight: isSelected
                                 ? FontWeight.bold

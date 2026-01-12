@@ -6,9 +6,9 @@ import 'survey_question_card.dart';
 
 class SurveyFileField extends StatelessWidget {
   final Question question;
-  final XFile? selectedFile;
+  final XFile? value;
   final String? existingFileUrl;
-  final Function(XFile?) onFilePicked;
+  final ValueChanged<XFile?> onChanged;
   final String? errorText;
   final bool isVisible;
   final bool isBusy;
@@ -16,8 +16,8 @@ class SurveyFileField extends StatelessWidget {
   const SurveyFileField({
     super.key,
     required this.question,
-    required this.onFilePicked,
-    this.selectedFile,
+    required this.onChanged,
+    this.value,
     this.existingFileUrl,
     this.errorText,
     this.isVisible = true,
@@ -34,8 +34,8 @@ class SurveyFileField extends StatelessWidget {
       isVisible: isVisible,
       child: CustomImagePicker(
         title: "", // Handled by SurveyQuestionCard
-        onImagePicked: onFilePicked,
-        selectedImage: selectedFile,
+        onImagePicked: onChanged,
+        selectedImage: value,
         existingImageUrl: existingFileUrl,
         isBusy: isBusy,
       ),

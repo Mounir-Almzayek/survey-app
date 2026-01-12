@@ -25,55 +25,57 @@ class SurveyQuestionCard extends StatelessWidget {
     if (!isVisible) return const SizedBox.shrink();
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
+      margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: const Offset(0, 2),
           ),
         ],
         border: Border.all(
           color: errorText != null
               ? AppColors.destructive
-              : AppColors.border.withOpacity(0.5),
+              : AppColors.border.withOpacity(0.8),
           width: 1,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  label + (isRequired ? ' *' : ''),
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryText,
-                  ),
-                ),
+          RichText(
+            text: TextSpan(
+              text: label,
+              style: TextStyle(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primaryText,
+                fontFamily: 'Cairo', // Use app font
               ),
-            ],
+              children: [
+                if (isRequired)
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(
+                      color: AppColors.destructive,
+                      fontSize: 15.sp,
+                    ),
+                  ),
+              ],
+            ),
           ),
           if (helpText != null && helpText!.isNotEmpty) ...[
             SizedBox(height: 4.h),
             Text(
               helpText!,
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.mutedForeground,
-                fontStyle: FontStyle.italic,
-              ),
+              style: TextStyle(fontSize: 12.sp, color: AppColors.secondaryText),
             ),
           ],
-          SizedBox(height: 16.h),
+          SizedBox(height: 12.h),
           child,
           if (errorText != null) ...[
             SizedBox(height: 8.h),

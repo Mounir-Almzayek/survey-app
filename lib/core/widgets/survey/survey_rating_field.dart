@@ -6,8 +6,8 @@ import 'survey_question_card.dart';
 
 class SurveyRatingField extends StatelessWidget {
   final Question question;
-  final int? rating;
-  final ValueChanged<int> onRatingChanged;
+  final int? value;
+  final ValueChanged<int> onChanged;
   final String? errorText;
   final bool isVisible;
   final int maxRating;
@@ -15,8 +15,8 @@ class SurveyRatingField extends StatelessWidget {
   const SurveyRatingField({
     super.key,
     required this.question,
-    required this.onRatingChanged,
-    this.rating,
+    required this.onChanged,
+    this.value,
     this.errorText,
     this.isVisible = true,
     this.maxRating = 5,
@@ -34,9 +34,9 @@ class SurveyRatingField extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(maxRating, (index) {
           final starValue = index + 1;
-          final isSelected = rating != null && starValue <= rating!;
+          final isSelected = value != null && starValue <= value!;
           return GestureDetector(
-            onTap: () => onRatingChanged(starValue),
+            onTap: () => onChanged(starValue),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.w),
               child: Icon(

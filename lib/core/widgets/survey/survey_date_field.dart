@@ -6,16 +6,16 @@ import 'survey_question_card.dart';
 
 class SurveyDateField extends StatelessWidget {
   final Question question;
-  final String? selectedDate;
-  final ValueChanged<String> onDateSelected;
+  final String? value;
+  final ValueChanged<String> onChanged;
   final String? errorText;
   final bool isVisible;
 
   const SurveyDateField({
     super.key,
     required this.question,
-    required this.onDateSelected,
-    this.selectedDate,
+    required this.onChanged,
+    this.value,
     this.errorText,
     this.isVisible = true,
   });
@@ -30,10 +30,9 @@ class SurveyDateField extends StatelessWidget {
       isVisible: isVisible,
       child: CustomDatePickerField(
         label: "", // Handled by SurveyQuestionCard
-        selectedDate: selectedDate,
-        onDateSelected: onDateSelected,
-        pickTime:
-            question.type == QuestionType.datetime ||
+        selectedDate: value,
+        onDateSelected: onChanged,
+        pickTime: question.type == QuestionType.datetime ||
             question.type == QuestionType.time,
       ),
     );

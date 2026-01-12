@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import '../../enums/survey_enums.dart';
 import 'answer_item_model.dart';
 import 'response_log_model.dart';
+import 'survey_model.dart';
 
 class Response extends Equatable {
   final int id;
@@ -20,6 +21,7 @@ class Response extends Equatable {
 
   final List<ResponseLog>? responseLogs;
   final List<AnswerItem>? answerItems;
+  final Survey? survey;
 
   const Response({
     required this.id,
@@ -37,6 +39,7 @@ class Response extends Equatable {
     this.deletedAt,
     this.responseLogs,
     this.answerItems,
+    this.survey,
   });
 
   factory Response.fromJson(Map<String, dynamic> json) {
@@ -70,6 +73,9 @@ class Response extends Equatable {
       answerItems: (json['answer_items'] as List?)
           ?.map((e) => AnswerItem.fromJson(e))
           .toList(),
+      survey: json['survey'] != null
+          ? Survey.fromJson(json['survey'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -90,6 +96,7 @@ class Response extends Equatable {
       'deleted_at': deletedAt?.toIso8601String(),
       'response_logs': responseLogs?.map((e) => e.toJson()).toList(),
       'answer_items': answerItems?.map((e) => e.toJson()).toList(),
+      'survey': survey?.toJson(),
     };
   }
 
@@ -110,5 +117,6 @@ class Response extends Equatable {
     deletedAt,
     responseLogs,
     answerItems,
+    survey,
   ];
 }

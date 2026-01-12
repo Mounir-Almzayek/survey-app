@@ -12,6 +12,8 @@ class CustomDropdownField<T> extends StatelessWidget {
   final String Function(T) getLabel;
   final bool isRequired;
   final bool Function(T, String)? filterFunction;
+  final Color? activeColor;
+  final Gradient? activeGradient;
 
   const CustomDropdownField({
     super.key,
@@ -22,27 +24,32 @@ class CustomDropdownField<T> extends StatelessWidget {
     this.selectedValue,
     this.isRequired = false,
     this.filterFunction,
+    this.activeColor,
+    this.activeGradient,
   });
 
   @override
   Widget build(BuildContext context) {
     final useSearch = items.length > 4;
+    final color = activeColor ?? AppColors.primary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryText,
+        if (label.isNotEmpty) ...[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primaryText,
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 8.h),
+          SizedBox(height: 8.h),
+        ],
         GestureDetector(
           onTap: useSearch ? () => _showSearchDialog(context) : null,
           child: Container(
@@ -70,7 +77,7 @@ class CustomDropdownField<T> extends StatelessWidget {
                       ),
                       Icon(
                         Icons.keyboard_arrow_down_rounded,
-                        color: AppColors.primary,
+                        color: color,
                         size: 24.sp,
                       ),
                     ],
@@ -82,7 +89,7 @@ class CustomDropdownField<T> extends StatelessWidget {
                       isDense: true,
                       icon: Icon(
                         Icons.keyboard_arrow_down_rounded,
-                        color: AppColors.primary,
+                        color: color,
                         size: 24.sp,
                       ),
                       hint: Text(
@@ -123,6 +130,8 @@ class CustomDropdownField<T> extends StatelessWidget {
           getLabel: getLabel,
           filterFunction: filterFunction,
           parentContext: context,
+          activeColor: activeColor,
+          activeGradient: activeGradient,
         );
       },
     );
@@ -139,6 +148,8 @@ class _SearchableDropdownDialog<T> extends StatefulWidget {
   final String Function(T) getLabel;
   final bool Function(T, String)? filterFunction;
   final BuildContext parentContext;
+  final Color? activeColor;
+  final Gradient? activeGradient;
 
   const _SearchableDropdownDialog({
     required this.items,
@@ -146,6 +157,8 @@ class _SearchableDropdownDialog<T> extends StatefulWidget {
     required this.getLabel,
     required this.filterFunction,
     required this.parentContext,
+    this.activeColor,
+    this.activeGradient,
   });
 
   @override
@@ -190,6 +203,9 @@ class _SearchableDropdownDialogState<T>
 
   @override
   Widget build(BuildContext context) {
+    final color = widget.activeColor ?? AppColors.primary;
+    final gradient = widget.activeGradient ?? AppColors.primaryGradient;
+
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.r)),
@@ -204,7 +220,7 @@ class _SearchableDropdownDialogState<T>
             Container(
               padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
-                gradient: AppColors.primaryGradient,
+                gradient: gradient,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(14.r),
                   topRight: Radius.circular(14.r),
@@ -275,13 +291,13 @@ class _SearchableDropdownDialogState<T>
                           decoration: BoxDecoration(
                             border: isSelected
                                 ? Border.all(
-                                    color: AppColors.primary,
+                                    color: color,
                                     width: 1.5,
                                   )
                                 : Border.all(color: AppColors.border, width: 1),
                             borderRadius: BorderRadius.circular(12.r),
                             color: isSelected
-                                ? AppColors.primary.withOpacity(0.05)
+                                ? color.withOpacity(0.05)
                                 : Colors.white,
                           ),
                           child: ListTile(
@@ -290,9 +306,7 @@ class _SearchableDropdownDialogState<T>
                               widget.getLabel(item),
                               style: TextStyle(
                                 fontSize: 14.sp,
-                                color: isSelected
-                                    ? AppColors.primary
-                                    : AppColors.primaryText,
+                                color: isSelected ? color : AppColors.primaryText,
                                 fontWeight: isSelected
                                     ? FontWeight.bold
                                     : FontWeight.normal,
@@ -301,7 +315,7 @@ class _SearchableDropdownDialogState<T>
                             trailing: isSelected
                                 ? Icon(
                                     Icons.check_circle_rounded,
-                                    color: AppColors.primary,
+                                    color: color,
                                     size: 22.sp,
                                   )
                                 : null,

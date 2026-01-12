@@ -4,19 +4,19 @@ import '../../models/survey/question_model.dart';
 import '../../styles/app_colors.dart';
 import 'survey_question_card.dart';
 
-class SurveyGPSField extends StatelessWidget {
+class SurveyGpsField extends StatelessWidget {
   final Question question;
-  final String? coordinates; // "lat,lng"
-  final VoidCallback onFetchLocation;
+  final String? value; // "lat,lng"
+  final ValueChanged<String?> onChanged;
   final String? errorText;
   final bool isVisible;
   final bool isFetching;
 
-  const SurveyGPSField({
+  const SurveyGpsField({
     super.key,
     required this.question,
-    required this.onFetchLocation,
-    this.coordinates,
+    required this.onChanged,
+    this.value,
     this.errorText,
     this.isVisible = true,
     this.isFetching = false,
@@ -42,7 +42,7 @@ class SurveyGPSField extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(10.r),
               decoration: const BoxDecoration(
-                color: AppColors.primary,
+                color: AppColors.surveyPrimary,
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -57,13 +57,11 @@ class SurveyGPSField extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    coordinates?.isNotEmpty == true
-                        ? coordinates!
-                        : "Location not set",
+                    value?.isNotEmpty == true ? value! : "Location not set",
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: coordinates?.isNotEmpty == true
+                      color: value?.isNotEmpty == true
                           ? AppColors.primaryText
                           : AppColors.mutedForeground,
                     ),
@@ -75,16 +73,24 @@ class SurveyGPSField extends StatelessWidget {
               SizedBox(
                 width: 20.w,
                 height: 20.w,
-                child: const CircularProgressIndicator(strokeWidth: 2),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(AppColors.surveyPrimary),
+                ),
               )
             else
               TextButton(
-                onPressed: onFetchLocation,
+                onPressed: () {
+                  // In a real scenario, this would trigger geolocator
+                  // For now, it's a placeholder for the UI
+                },
                 child: Text(
-                  coordinates?.isNotEmpty == true ? "Refresh" : "Fetch",
+                  value?.isNotEmpty == true ? "Refresh" : "Fetch",
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.bold,
+                    color: AppColors.surveyPrimary,
                   ),
                 ),
               ),

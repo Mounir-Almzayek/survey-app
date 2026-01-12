@@ -22,6 +22,7 @@ class Survey extends Equatable {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? deletedAt;
+  final List<int>? localResponseIds;
 
   final List<Section>? sections;
   final List<ConditionalLogic>? conditionalLogics;
@@ -45,9 +46,59 @@ class Survey extends Equatable {
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
+    this.localResponseIds,
     this.sections,
     this.conditionalLogics,
   });
+
+  Survey copyWith({
+    int? id,
+    int? createdByUserId,
+    String? title,
+    String? description,
+    SurveyStatus? status,
+    DateTime? availabilityStartAt,
+    DateTime? availabilityEndAt,
+    int? maxResponses,
+    bool? gpsRequired,
+    String? lang,
+    int? minimumResponseTimeMinutes,
+    String? greetingMessage,
+    String? goodbyeMessage,
+    String? tagsCsv,
+    DateTime? willPublishAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+    List<int>? localResponseIds,
+    List<Section>? sections,
+    List<ConditionalLogic>? conditionalLogics,
+  }) {
+    return Survey(
+      id: id ?? this.id,
+      createdByUserId: createdByUserId ?? this.createdByUserId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      status: status ?? this.status,
+      availabilityStartAt: availabilityStartAt ?? this.availabilityStartAt,
+      availabilityEndAt: availabilityEndAt ?? this.availabilityEndAt,
+      maxResponses: maxResponses ?? this.maxResponses,
+      gpsRequired: gpsRequired ?? this.gpsRequired,
+      lang: lang ?? this.lang,
+      minimumResponseTimeMinutes:
+          minimumResponseTimeMinutes ?? this.minimumResponseTimeMinutes,
+      greetingMessage: greetingMessage ?? this.greetingMessage,
+      goodbyeMessage: goodbyeMessage ?? this.goodbyeMessage,
+      tagsCsv: tagsCsv ?? this.tagsCsv,
+      willPublishAt: willPublishAt ?? this.willPublishAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      localResponseIds: localResponseIds ?? this.localResponseIds,
+      sections: sections ?? this.sections,
+      conditionalLogics: conditionalLogics ?? this.conditionalLogics,
+    );
+  }
 
   factory Survey.fromJson(Map<String, dynamic> json) {
     return Survey(
@@ -84,6 +135,9 @@ class Survey extends Equatable {
       deletedAt: json['deleted_at'] != null
           ? DateTime.parse(json['deleted_at'] as String)
           : null,
+      localResponseIds: (json['local_response_ids'] as List?)
+          ?.map((e) => e as int)
+          .toList(),
       sections: (json['sections'] as List?)
           ?.map((e) => Section.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -113,6 +167,7 @@ class Survey extends Equatable {
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'deleted_at': deletedAt?.toIso8601String(),
+      'local_response_ids': localResponseIds,
       'sections': sections?.map((e) => e.toJson()).toList(),
       'conditional_logics': conditionalLogics?.map((e) => e.toJson()).toList(),
     };
@@ -138,6 +193,7 @@ class Survey extends Equatable {
     createdAt,
     updatedAt,
     deletedAt,
+    localResponseIds,
     sections,
     conditionalLogics,
   ];

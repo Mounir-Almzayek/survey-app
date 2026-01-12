@@ -17,7 +17,6 @@ import '../bloc/main_navigation/main_navigation_bloc.dart';
 import '../models/main_nav_tab.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/main_sidebar.dart';
-import '../../surveys/presentation/surveys_page.dart';
 import 'widgets/floating_bottom_bar.dart';
 import 'widgets/zoom_drawer.dart';
 
@@ -284,7 +283,7 @@ Widget _buildPage(MainNavTab tab) {
     case MainNavTab.home:
       return const HomePage();
     case MainNavTab.surveys:
-      return const SurveysPage();
+      return const CustodyPage();
     case MainNavTab.custody:
       return const CustodyPage();
     case MainNavTab.profile:

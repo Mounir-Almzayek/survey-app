@@ -6,7 +6,7 @@ import 'survey_question_card.dart';
 
 class SurveySliderField extends StatelessWidget {
   final Question question;
-  final double value;
+  final double? value;
   final ValueChanged<double> onChanged;
   final String? errorText;
   final bool isVisible;
@@ -17,8 +17,8 @@ class SurveySliderField extends StatelessWidget {
   const SurveySliderField({
     super.key,
     required this.question,
-    required this.value,
     required this.onChanged,
+    this.value,
     this.errorText,
     this.isVisible = true,
     this.min = 0,
@@ -28,6 +28,8 @@ class SurveySliderField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveValue = value ?? min;
+
     return SurveyQuestionCard(
       label: question.label,
       helpText: question.helpText,
@@ -38,19 +40,19 @@ class SurveySliderField extends StatelessWidget {
         children: [
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: AppColors.primary,
+              activeTrackColor: AppColors.surveyPrimary,
               inactiveTrackColor: AppColors.muted,
-              thumbColor: AppColors.primary,
-              overlayColor: AppColors.primary.withAlpha(32),
-              valueIndicatorColor: AppColors.primary,
+              thumbColor: AppColors.surveyPrimary,
+              overlayColor: AppColors.surveyPrimary.withAlpha(32),
+              valueIndicatorColor: AppColors.surveyPrimary,
               valueIndicatorTextStyle: const TextStyle(color: Colors.white),
             ),
             child: Slider(
-              value: value,
+              value: effectiveValue,
               min: min,
               max: max,
               divisions: divisions,
-              label: value.round().toString(),
+              label: effectiveValue.round().toString(),
               onChanged: onChanged,
             ),
           ),

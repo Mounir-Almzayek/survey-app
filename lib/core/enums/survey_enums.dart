@@ -238,3 +238,33 @@ enum ValidationType {
     );
   }
 }
+
+enum AssignmentStatus {
+  pending,
+  inProgress,
+  completed;
+
+  String toJson() {
+    switch (this) {
+      case AssignmentStatus.pending:
+        return 'PENDING';
+      case AssignmentStatus.inProgress:
+        return 'IN_PROGRESS';
+      case AssignmentStatus.completed:
+        return 'COMPLETED';
+    }
+  }
+
+  static AssignmentStatus fromJson(String value) {
+    switch (value.toUpperCase()) {
+      case 'PENDING':
+        return AssignmentStatus.pending;
+      case 'IN_PROGRESS':
+        return AssignmentStatus.inProgress;
+      case 'COMPLETED':
+        return AssignmentStatus.completed;
+      default:
+        return AssignmentStatus.pending;
+    }
+  }
+}

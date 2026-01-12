@@ -10,6 +10,7 @@ class CustomRadioGroupField<T> extends StatelessWidget {
   final String Function(T) getLabel;
   final void Function(T?) onChanged;
   final bool isRequired;
+  final Color? activeColor;
 
   const CustomRadioGroupField({
     super.key,
@@ -19,27 +20,31 @@ class CustomRadioGroupField<T> extends StatelessWidget {
     required this.onChanged,
     this.selectedValue,
     this.isRequired = false,
+    this.activeColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final effectiveLabel = isRequired ? '$label *' : label;
+    final color = activeColor ?? AppColors.primary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w),
-          child: Text(
-            effectiveLabel,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryText,
+        if (label.isNotEmpty) ...[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            child: Text(
+              effectiveLabel,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primaryText,
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 8.h),
+          SizedBox(height: 8.h),
+        ],
         Column(
           children: items.map((item) {
             final isSelected = selectedValue == item;
@@ -48,12 +53,12 @@ class CustomRadioGroupField<T> extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14.r),
                 border: Border.all(
-                  color: isSelected ? AppColors.primary : AppColors.border,
+                  color: isSelected ? color : AppColors.border,
                   width: isSelected ? 1.5 : 1,
                 ),
                 color: isSelected
-                    ? AppColors.primary.withOpacity(0.05)
-                    : Colors.white,
+                    ? color.withOpacity(0.05)
+                    : AppColors.background.withOpacity(0.5),
               ),
               child: Theme(
                 data: Theme.of(context).copyWith(
@@ -62,7 +67,7 @@ class CustomRadioGroupField<T> extends StatelessWidget {
                 child: RadioListTile<T>(
                   value: item,
                   groupValue: selectedValue,
-                  activeColor: AppColors.primary,
+                  activeColor: color,
                   dense: true,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14.r),
@@ -75,12 +80,9 @@ class CustomRadioGroupField<T> extends StatelessWidget {
                     getLabel(item),
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: isSelected
-                          ? AppColors.primary
-                          : AppColors.primaryText,
-                      fontWeight: isSelected
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+                      color: isSelected ? color : AppColors.primaryText,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
                   onChanged: onChanged,

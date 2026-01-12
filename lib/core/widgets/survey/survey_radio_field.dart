@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/survey/question_model.dart';
+import '../../styles/app_colors.dart';
 import '../custom_radio_group_field.dart';
 import 'survey_question_card.dart';
 
@@ -29,6 +30,7 @@ class SurveyRadioField extends StatelessWidget {
       isVisible: isVisible,
       child: CustomRadioGroupField<String>(
         label: "", // Label handled by SurveyQuestionCard
+        activeColor: AppColors.surveyPrimary,
         items: question.questionOptions?.map((e) => e.value).toList() ?? [],
         getLabel: (val) =>
             question.questionOptions
