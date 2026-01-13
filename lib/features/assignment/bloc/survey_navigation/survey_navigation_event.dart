@@ -4,7 +4,23 @@ abstract class SurveyNavigationEvent {}
 
 class SetSurvey extends SurveyNavigationEvent {
   final Survey survey;
-  SetSurvey(this.survey);
+  final int responseId;
+  SetSurvey(this.survey, this.responseId);
+}
+
+class UpdateResponseId extends SurveyNavigationEvent {
+  final int responseId;
+  UpdateResponseId(this.responseId);
+}
+
+class ResumeFromSection extends SurveyNavigationEvent {
+  final int sectionId;
+  ResumeFromSection(this.sectionId);
+}
+
+class RefreshBehavior extends SurveyNavigationEvent {
+  final Map<int, dynamic> answers;
+  RefreshBehavior(this.answers);
 }
 
 class NextSection extends SurveyNavigationEvent {}

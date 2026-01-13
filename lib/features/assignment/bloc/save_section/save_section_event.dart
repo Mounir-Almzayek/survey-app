@@ -7,6 +7,11 @@ class UpdateResponseId extends SaveSectionEvent {
   UpdateResponseId(this.responseId);
 }
 
+class UpdateCurrentSection extends SaveSectionEvent {
+  final int sectionId;
+  UpdateCurrentSection(this.sectionId);
+}
+
 class UpdateSaveSectionRequest extends SaveSectionEvent {
   final SaveSectionRequest saveRequest;
   UpdateSaveSectionRequest(this.saveRequest);

@@ -13,6 +13,7 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
 
   SaveSectionBloc() : super(SaveSectionInitial()) {
     on<UpdateResponseId>(_onUpdateResponseId);
+    on<UpdateCurrentSection>(_onUpdateCurrentSection);
     on<UpdateSaveSectionRequest>(_onUpdateSaveSectionRequest);
     on<UpdateAnswers>(_onUpdateAnswers);
     on<AddAnswer>(_onAddAnswer);
@@ -38,13 +39,37 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
         ),
       );
     } else {
-      // If no draft, create a blank model (sectionId: 0 as placeholder, will be updated)
+      // If no draft, create a blank model
       emit(
         SaveSectionInitial(
           responseId: event.responseId,
-          saveRequest: SaveSectionRequest(sectionId: 0, answers: []),
+          saveRequest: SaveSectionRequest(
+            sectionId: 0,
+            lastReachedSectionId: 0,
+            answers: [],
+          ),
         ),
       );
+    }
+  }
+
+  Future<void> _onUpdateCurrentSection(
+    UpdateCurrentSection event,
+    Emitter<SaveSectionState> emit,
+  ) async {
+    final currentRequest = state.saveRequest;
+    if (currentRequest != null) {
+      final newRequest = currentRequest.copyWith(
+        sectionId: event.sectionId,
+        lastReachedSectionId: event.sectionId,
+      );
+      emit(
+        SaveSectionInitial(
+          responseId: state.responseId,
+          saveRequest: newRequest,
+        ),
+      );
+      await _autoSave();
     }
   }
 

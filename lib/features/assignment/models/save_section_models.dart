@@ -11,6 +11,7 @@ class AnswerRequest {
 
 class SaveSectionRequest {
   final int sectionId;
+  final int? lastReachedSectionId;
   final List<AnswerRequest> answers;
   final double? latitude;
   final double? longitude;
@@ -18,6 +19,7 @@ class SaveSectionRequest {
 
   SaveSectionRequest({
     required this.sectionId,
+    this.lastReachedSectionId,
     required this.answers,
     this.latitude,
     this.longitude,
@@ -26,6 +28,7 @@ class SaveSectionRequest {
 
   SaveSectionRequest copyWith({
     int? sectionId,
+    int? lastReachedSectionId,
     List<AnswerRequest>? answers,
     double? latitude,
     double? longitude,
@@ -33,6 +36,7 @@ class SaveSectionRequest {
   }) {
     return SaveSectionRequest(
       sectionId: sectionId ?? this.sectionId,
+      lastReachedSectionId: lastReachedSectionId ?? this.lastReachedSectionId,
       answers: answers ?? this.answers,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
@@ -43,6 +47,7 @@ class SaveSectionRequest {
   Map<String, dynamic> toJson() {
     return {
       'section_id': sectionId,
+      'last_reached_section_id': lastReachedSectionId,
       'answers': answers.map((e) => e.toJson()).toList(),
       'is_synced': isSynced,
       if (latitude != null && longitude != null)
@@ -53,6 +58,7 @@ class SaveSectionRequest {
   factory SaveSectionRequest.fromJson(Map<String, dynamic> json) {
     return SaveSectionRequest(
       sectionId: json['section_id'] as int? ?? 0,
+      lastReachedSectionId: json['last_reached_section_id'] as int?,
       isSynced: json['is_synced'] as bool? ?? false,
       answers:
           (json['answers'] as List?)
