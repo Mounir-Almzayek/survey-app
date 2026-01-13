@@ -2,19 +2,19 @@ import 'package:equatable/equatable.dart';
 
 class QuestionOption extends Equatable {
   final int id;
-  final int questionId;
-  final String label;
-  final String value;
-  final int order;
-  final bool isDefault;
+  final int? questionId;
+  final String? label;
+  final String? value;
+  final int? order;
+  final bool? isDefault;
 
   const QuestionOption({
     required this.id,
-    required this.questionId,
-    required this.label,
-    required this.value,
-    required this.order,
-    this.isDefault = false,
+    this.questionId,
+    this.label,
+    this.value,
+    this.order,
+    this.isDefault,
   });
 
   factory QuestionOption.fromJson(Map<String, dynamic> json) {
@@ -24,7 +24,7 @@ class QuestionOption extends Equatable {
       label: json['label'],
       value: json['value'],
       order: json['order'],
-      isDefault: json['is_default'] ?? false,
+      isDefault: json['is_default'],
     );
   }
 

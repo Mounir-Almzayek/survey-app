@@ -21,6 +21,7 @@ class AssignmentsListBloc
     Emitter<AssignmentsListState> emit,
   ) async {
     emit(AssignmentsListLoading());
+    await AssignmentRepository.listAssignments();
 
     await _runner.run(
       onlineTask: (_) async => await AssignmentRepository.listAssignments(),
@@ -36,8 +37,17 @@ class AssignmentsListBloc
       checkConnectivity: true,
       onSuccess: (response) async {
         await AssignmentLocalRepository.saveSurveys(response.surveys);
+        final localSurveys = await AssignmentLocalRepository.getSurveys();
         if (!emit.isDone) {
-          emit(AssignmentsListLoaded(response));
+          emit(
+            AssignmentsListLoaded(
+              ListAssignmentsResponse(
+                success: response.success,
+                message: response.message,
+                surveys: localSurveys,
+              ),
+            ),
+          );
         }
       },
       onOffline: (response) {

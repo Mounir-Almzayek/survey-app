@@ -135,6 +135,24 @@ class AssignmentLocalRepository {
     }
   }
 
+  /// Unlink a response ID from a specific survey in the cached list
+  static Future<void> unlinkResponseFromSurvey(
+      int surveyId, int responseId) async {
+    final surveys = await getSurveys();
+    final index = surveys.indexWhere((s) => s.id == surveyId);
+
+    if (index != -1) {
+      final survey = surveys[index];
+      final currentIds = List<int>.from(survey.localResponseIds ?? []);
+
+      if (currentIds.contains(responseId)) {
+        currentIds.remove(responseId);
+        surveys[index] = survey.copyWith(localResponseIds: currentIds);
+        await _saveRawSurveys(surveys);
+      }
+    }
+  }
+
   /// Internal helper to save list exactly as provided (No Merge logic)
   static Future<void> _saveRawSurveys(List<Survey> surveys) async {
     try {

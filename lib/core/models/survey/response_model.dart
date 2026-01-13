@@ -6,15 +6,15 @@ import 'survey_model.dart';
 
 class Response extends Equatable {
   final int id;
-  final int surveyId;
+  final int? surveyId;
   final int? assignmentId;
   final int? publicLinkId;
-  final ResponseStatus status;
+  final ResponseStatus? status;
   final DateTime? startedAt;
   final DateTime? endedAt;
-  final int durationSec;
+  final int? durationSec;
   final String? rejectionReason;
-  final String ipAddress;
+  final String? ipAddress;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? deletedAt;
@@ -25,15 +25,15 @@ class Response extends Equatable {
 
   const Response({
     required this.id,
-    required this.surveyId,
+    this.surveyId,
     this.assignmentId,
     this.publicLinkId,
-    this.status = ResponseStatus.draft,
+    this.status,
     this.startedAt,
     this.endedAt,
-    required this.durationSec,
+    this.durationSec,
     this.rejectionReason,
-    required this.ipAddress,
+    this.ipAddress,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
@@ -48,24 +48,26 @@ class Response extends Equatable {
       surveyId: json['survey_id'],
       assignmentId: json['assignment_id'],
       publicLinkId: json['public_link_id'],
-      status: ResponseStatus.fromJson(json['status']),
+      status: json['status'] != null
+          ? ResponseStatus.fromJson(json['status'])
+          : null,
       startedAt: json['started_at'] != null
-          ? DateTime.parse(json['started_at'])
+          ? DateTime.tryParse(json['started_at'].toString())
           : null,
       endedAt: json['ended_at'] != null
-          ? DateTime.parse(json['ended_at'])
+          ? DateTime.tryParse(json['ended_at'].toString())
           : null,
-      durationSec: json['duration_sec'] ?? 0,
+      durationSec: json['duration_sec'],
       rejectionReason: json['rejection_reason'],
-      ipAddress: json['ip_address'] ?? '',
+      ipAddress: json['ip_address'],
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
+          ? DateTime.tryParse(json['updated_at'].toString())
           : null,
       deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
+          ? DateTime.tryParse(json['deleted_at'].toString())
           : null,
       responseLogs: (json['response_logs'] as List?)
           ?.map((e) => ResponseLog.fromJson(e))
@@ -73,9 +75,7 @@ class Response extends Equatable {
       answerItems: (json['answer_items'] as List?)
           ?.map((e) => AnswerItem.fromJson(e))
           .toList(),
-      survey: json['survey'] != null
-          ? Survey.fromJson(json['survey'] as Map<String, dynamic>)
-          : null,
+      survey: json['survey'] != null ? Survey.fromJson(json['survey']) : null,
     );
   }
 
@@ -85,7 +85,7 @@ class Response extends Equatable {
       'survey_id': surveyId,
       'assignment_id': assignmentId,
       'public_link_id': publicLinkId,
-      'status': status.toJson(),
+      'status': status?.toJson(),
       'started_at': startedAt?.toIso8601String(),
       'ended_at': endedAt?.toIso8601String(),
       'duration_sec': durationSec,

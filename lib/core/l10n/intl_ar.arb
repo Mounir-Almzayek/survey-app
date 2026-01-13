@@ -267,5 +267,74 @@
   "complete_registration_tap_notice": "بالضغط على 'ربط الجهاز'، سيصبح هذا الجهاز مخصصاً لملفك التعريفي كباحث.",
   "device_already_registered_desc": "معرف هذا الجهاز مرتبط بالفعل بملف تعريف آخر أو سبق ربطه مسبقاً.",
   "zone_violation_title": "خرق المنطقة الأمنية",
-  "zone_violation_message": "لقد انتقلت خارج النطاق الجغرافي المصرح به للعمل. سيتم إنهاء جلستك فوراً لضمان أمن البيانات."
+  "zone_violation_message": "لقد انتقلت خارج النطاق الجغرافي المصرح به للعمل. سيتم إنهاء جلستك فوراً لضمان أمن البيانات.",
+  "available_surveys": "الاستبيانات المتاحة",
+  "no_surveys_available": "لا توجد استبيانات متاحة حالياً",
+  "new_response_success": "تم بدء رد جديد بنجاح",
+  "error_with_message": "خطأ: {message}",
+  "@error_with_message": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "local_responses_count": "الردود المحلية ({count})",
+  "@local_responses_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "new_response": "رد جديد",
+  "response_number": "رد رقم: {id}",
+  "@response_number": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "confirm_delete_title": "تأكيد الحذف",
+  "confirm_delete_message": "هل أنت متأكد من رغبتك في حذف هذا الرد (ID: {id})؟ لا يمكن التراجع عن هذا الإجراء.",
+  "@confirm_delete_message": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "custody_status_pending": "قيد الانتظار",
+  "custody_status_verified": "تم التحقق",
+  "custody_status_cancelled": "ملغي",
+  "read_more": "قراءة المزيد",
+  "show_less": "عرض أقل",
+  "availability_period": "فترة الإتاحة: {start} / {end}",
+  "@availability_period": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "publish_date": "موعد النشر: {date}",
+  "@publish_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "last_update": "آخر تحديث: {date}",
+  "@last_update": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

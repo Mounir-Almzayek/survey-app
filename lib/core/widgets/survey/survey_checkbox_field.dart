@@ -37,8 +37,8 @@ class SurveyCheckboxField extends StatelessWidget {
                   final newValues = List<String>.from(selectedValues);
                   if (isSelected) {
                     newValues.remove(option.value);
-                  } else {
-                    newValues.add(option.value);
+                  } else if (option.value != null) {
+                    newValues.add(option.value!);
                   }
                   onChanged(newValues);
                 },
@@ -74,7 +74,7 @@ class SurveyCheckboxField extends StatelessWidget {
                       SizedBox(width: 12.w),
                       Expanded(
                         child: Text(
-                          option.label,
+                          option.label ?? "",
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: isSelected

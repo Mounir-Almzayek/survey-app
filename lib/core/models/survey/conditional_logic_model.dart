@@ -4,10 +4,10 @@ import 'condition_action_model.dart';
 
 class ConditionalLogic extends Equatable {
   final int id;
-  final int surveyId;
-  final String name;
-  final bool enabled;
-  final int order;
+  final int? surveyId;
+  final String? name;
+  final bool? enabled;
+  final int? order;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -16,10 +16,10 @@ class ConditionalLogic extends Equatable {
 
   const ConditionalLogic({
     required this.id,
-    required this.surveyId,
-    required this.name,
-    this.enabled = true,
-    required this.order,
+    this.surveyId,
+    this.name,
+    this.enabled,
+    this.order,
     this.createdAt,
     this.updatedAt,
     this.conditionRules,
@@ -31,13 +31,13 @@ class ConditionalLogic extends Equatable {
       id: json['id'],
       surveyId: json['survey_id'],
       name: json['name'],
-      enabled: json['enabled'] ?? true,
+      enabled: json['enabled'],
       order: json['order'],
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
+          ? DateTime.tryParse(json['updated_at'].toString())
           : null,
       conditionRules: (json['condition_rules'] as List?)
           ?.map((e) => ConditionRule.fromJson(e))

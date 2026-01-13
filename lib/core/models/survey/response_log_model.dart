@@ -3,11 +3,11 @@ import '../../enums/survey_enums.dart';
 
 class ResponseLog extends Equatable {
   final int id;
-  final int responseId;
-  final ResponseLogEventType eventType;
+  final int? responseId;
+  final ResponseLogEventType? eventType;
   final double? latitude;
   final double? longitude;
-  final ResponseStatus status;
+  final ResponseStatus? status;
   final int? surveyPolicyId;
   final String? message;
   final Map<String, dynamic>? meta;
@@ -15,11 +15,11 @@ class ResponseLog extends Equatable {
 
   const ResponseLog({
     required this.id,
-    required this.responseId,
-    required this.eventType,
+    this.responseId,
+    this.eventType,
     this.latitude,
     this.longitude,
-    required this.status,
+    this.status,
     this.surveyPolicyId,
     this.message,
     this.meta,
@@ -30,19 +30,23 @@ class ResponseLog extends Equatable {
     return ResponseLog(
       id: json['id'],
       responseId: json['response_id'],
-      eventType: ResponseLogEventType.fromJson(json['event_type']),
+      eventType: json['event_type'] != null
+          ? ResponseLogEventType.fromJson(json['event_type'])
+          : null,
       latitude: json['latitude'] != null
-          ? double.parse(json['latitude'].toString())
+          ? double.tryParse(json['latitude'].toString())
           : null,
       longitude: json['longitude'] != null
-          ? double.parse(json['longitude'].toString())
+          ? double.tryParse(json['longitude'].toString())
           : null,
-      status: ResponseStatus.fromJson(json['status']),
+      status: json['status'] != null
+          ? ResponseStatus.fromJson(json['status'])
+          : null,
       surveyPolicyId: json['survey_policy_id'],
       message: json['message'],
       meta: json['meta'],
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
     );
   }
@@ -51,10 +55,10 @@ class ResponseLog extends Equatable {
     return {
       'id': id,
       'response_id': responseId,
-      'event_type': eventType.toJson(),
+      'event_type': eventType?.toJson(),
       'latitude': latitude,
       'longitude': longitude,
-      'status': status.toJson(),
+      'status': status?.toJson(),
       'survey_policy_id': surveyPolicyId,
       'message': message,
       'meta': meta,

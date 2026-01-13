@@ -7,11 +7,11 @@ import 'question_validation_model.dart';
 class Question extends Equatable {
   final int id;
   final int? sectionId;
-  final QuestionType type;
-  final String label;
-  final String helpText;
-  final bool isRequired;
-  final int order;
+  final QuestionType? type;
+  final String? label;
+  final String? helpText;
+  final bool? isRequired;
+  final int? order;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? deletedAt;
@@ -23,11 +23,11 @@ class Question extends Equatable {
   const Question({
     required this.id,
     this.sectionId,
-    required this.type,
-    required this.label,
-    required this.helpText,
-    this.isRequired = true,
-    required this.order,
+    this.type,
+    this.label,
+    this.helpText,
+    this.isRequired,
+    this.order,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
@@ -40,19 +40,19 @@ class Question extends Equatable {
     return Question(
       id: json['id'],
       sectionId: json['section_id'],
-      type: QuestionType.fromJson(json['type']),
+      type: json['type'] != null ? QuestionType.fromJson(json['type']) : null,
       label: json['label'],
       helpText: json['help_text'],
-      isRequired: json['is_required'] ?? true,
+      isRequired: json['is_required'],
       order: json['order'],
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
+          ? DateTime.tryParse(json['updated_at'].toString())
           : null,
       deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
+          ? DateTime.tryParse(json['deleted_at'].toString())
           : null,
       questionOptions: (json['question_options'] as List?)
           ?.map((e) => QuestionOption.fromJson(e))
@@ -70,7 +70,7 @@ class Question extends Equatable {
     return {
       'id': id,
       'section_id': sectionId,
-      'type': type.toJson(),
+      'type': type?.toJson(),
       'label': label,
       'help_text': helpText,
       'is_required': isRequired,

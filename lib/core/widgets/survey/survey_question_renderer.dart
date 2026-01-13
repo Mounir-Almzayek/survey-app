@@ -31,9 +31,9 @@ class SurveyQuestionRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!isVisible) return const SizedBox.shrink();
+    if (!isVisible || question.type == null) return const SizedBox.shrink();
 
-    switch (question.type) {
+    switch (question.type!) {
       case QuestionType.textShort:
         return SurveyTextField(
           question: question,

@@ -47,7 +47,7 @@ class SurveyGridField extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 4.w),
                         alignment: Alignment.center,
                         child: Text(
-                          opt.label,
+                          opt.label ?? "",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 12.sp,
@@ -70,7 +70,7 @@ class SurveyGridField extends StatelessWidget {
                         SizedBox(
                           width: 120.w,
                           child: Text(
-                            row.label,
+                            row.label ?? "",
                             style: TextStyle(
                               fontSize: 13.sp,
                               fontWeight: FontWeight.w600,
@@ -90,8 +90,7 @@ class SurveyGridField extends StatelessWidget {
                                     final newMap = Map<int, List<String>>.from(
                                       selectedValues,
                                     );
-                                    final currentSelections =
-                                        List<String>.from(
+                                    final currentSelections = List<String>.from(
                                       newMap[row.id] ?? [],
                                     );
 
@@ -99,11 +98,11 @@ class SurveyGridField extends StatelessWidget {
                                       if (isSelected) {
                                         currentSelections.remove(opt.value);
                                       } else {
-                                        currentSelections.add(opt.value);
+                                        currentSelections.add(opt.value ?? "");
                                       }
                                     } else {
                                       currentSelections.clear();
-                                      currentSelections.add(opt.value);
+                                      currentSelections.add(opt.value ?? "");
                                     }
 
                                     newMap[row.id] = currentSelections;
@@ -114,24 +113,26 @@ class SurveyGridField extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: isSelected
-                                          ? AppColors.surveyPrimary
-                                              .withOpacity(0.1)
+                                          ? AppColors.surveyPrimary.withOpacity(
+                                              0.1,
+                                            )
                                           : Colors.transparent,
                                     ),
                                     child: Icon(
                                       isSelected
                                           ? (isMulti
-                                              ? Icons.check_box_rounded
-                                              : Icons
-                                                  .radio_button_checked_rounded)
+                                                ? Icons.check_box_rounded
+                                                : Icons
+                                                      .radio_button_checked_rounded)
                                           : (isMulti
-                                              ? Icons
-                                                  .check_box_outline_blank_rounded
-                                              : Icons.radio_button_off_rounded),
+                                                ? Icons
+                                                      .check_box_outline_blank_rounded
+                                                : Icons
+                                                      .radio_button_off_rounded),
                                       color: isSelected
                                           ? AppColors.surveyPrimary
                                           : AppColors.mutedForeground
-                                              .withOpacity(0.5),
+                                                .withOpacity(0.5),
                                       size: 24.sp,
                                     ),
                                   ),

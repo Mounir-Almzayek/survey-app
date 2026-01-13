@@ -31,7 +31,8 @@ class SurveyRadioField extends StatelessWidget {
       child: CustomRadioGroupField<String>(
         label: "", // Label handled by SurveyQuestionCard
         activeColor: AppColors.surveyPrimary,
-        items: question.questionOptions?.map((e) => e.value).toList() ?? [],
+        items:
+            question.questionOptions?.map((e) => e.value ?? "").toList() ?? [],
         getLabel: (val) =>
             question.questionOptions
                 ?.firstWhere(

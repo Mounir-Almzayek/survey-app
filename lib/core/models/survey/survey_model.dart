@@ -6,17 +6,17 @@ import 'conditional_logic_model.dart';
 class Survey extends Equatable {
   final int id;
   final int? createdByUserId;
-  final String title;
-  final String description;
-  final SurveyStatus status;
+  final String? title;
+  final String? description;
+  final SurveyStatus? status;
   final DateTime? availabilityStartAt;
   final DateTime? availabilityEndAt;
   final int? maxResponses;
-  final bool gpsRequired;
-  final String lang;
+  final bool? gpsRequired;
+  final String? lang;
   final int? minimumResponseTimeMinutes;
-  final String greetingMessage;
-  final String goodbyeMessage;
+  final String? greetingMessage;
+  final String? goodbyeMessage;
   final String? tagsCsv;
   final DateTime? willPublishAt;
   final DateTime? createdAt;
@@ -30,17 +30,17 @@ class Survey extends Equatable {
   const Survey({
     required this.id,
     this.createdByUserId,
-    required this.title,
-    required this.description,
-    this.status = SurveyStatus.draft,
+    this.title,
+    this.description,
+    this.status,
     this.availabilityStartAt,
     this.availabilityEndAt,
     this.maxResponses,
-    this.gpsRequired = false,
-    required this.lang,
+    this.gpsRequired,
+    this.lang,
     this.minimumResponseTimeMinutes,
-    required this.greetingMessage,
-    required this.goodbyeMessage,
+    this.greetingMessage,
+    this.goodbyeMessage,
     this.tagsCsv,
     this.willPublishAt,
     this.createdAt,
@@ -104,36 +104,36 @@ class Survey extends Equatable {
     return Survey(
       id: json['id'] as int? ?? 0,
       createdByUserId: json['created_by_user_id'] as int?,
-      title: json['title'] as String? ?? '',
-      description: json['description'] as String? ?? '',
+      title: json['title'] as String?,
+      description: json['description'] as String?,
       status: json['status'] != null
           ? SurveyStatus.fromJson(json['status'])
-          : SurveyStatus.draft,
+          : null,
       availabilityStartAt: json['availability_start_at'] != null
-          ? DateTime.parse(json['availability_start_at'] as String)
+          ? DateTime.tryParse(json['availability_start_at'] as String)
           : null,
       availabilityEndAt: json['availability_end_at'] != null
-          ? DateTime.parse(json['availability_end_at'] as String)
+          ? DateTime.tryParse(json['availability_end_at'] as String)
           : null,
       maxResponses: json['max_responses'] as int?,
-      gpsRequired: json['gps_required'] as bool? ?? false,
-      lang: json['lang'] as String? ?? 'AR',
+      gpsRequired: json['gps_required'] as bool?,
+      lang: json['lang'] as String?,
       minimumResponseTimeMinutes: json['minimum_response_time_minutes'] as int?,
-      greetingMessage: json['greeting_message'] as String? ?? '',
+      greetingMessage: json['greeting_message'] as String?,
       goodbyeMessage:
-          (json['goodbay_message'] ?? json['goodbye_message']) as String? ?? '',
+          (json['goodbay_message'] ?? json['goodbye_message']) as String?,
       tagsCsv: json['tags_csv'] as String?,
       willPublishAt: json['will_publish_at'] != null
-          ? DateTime.parse(json['will_publish_at'] as String)
+          ? DateTime.tryParse(json['will_publish_at'] as String)
           : null,
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'] as String)
+          ? DateTime.tryParse(json['created_at'] as String)
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'] as String)
+          ? DateTime.tryParse(json['updated_at'] as String)
           : null,
       deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'] as String)
+          ? DateTime.tryParse(json['deleted_at'] as String)
           : null,
       localResponseIds: (json['local_response_ids'] as List?)
           ?.map((e) => e as int)
@@ -153,7 +153,7 @@ class Survey extends Equatable {
       'created_by_user_id': createdByUserId,
       'title': title,
       'description': description,
-      'status': status.toJson(),
+      'status': status?.toJson(),
       'availability_start_at': availabilityStartAt?.toIso8601String(),
       'availability_end_at': availabilityEndAt?.toIso8601String(),
       'max_responses': maxResponses,

@@ -7,6 +7,7 @@ import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/custom_app_bar.dart';
 import '../../../core/utils/responsive_layout.dart';
 import '../../../core/services/device_local_metadata_service.dart';
+import '../../assignment/presentation/pages/assignments_page.dart';
 import '../../home/presentation/home_page.dart';
 import '../../profile/presentation/profile_page.dart';
 import '../../device_location/bloc/device_location/device_location_bloc.dart';
@@ -283,7 +284,7 @@ Widget _buildPage(MainNavTab tab) {
     case MainNavTab.home:
       return const HomePage();
     case MainNavTab.surveys:
-      return const CustodyPage();
+      return const AssignmentsPage();
     case MainNavTab.custody:
       return const CustodyPage();
     case MainNavTab.profile:

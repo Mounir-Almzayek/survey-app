@@ -16,13 +16,14 @@ class SurveyBehaviorManager {
     final requirementMap = <String, bool>{};
 
     for (final logic in logics) {
-      if (!logic.enabled) continue;
-
+      if (logic.enabled == false) continue;
+      if (logic.conditionRules == null || logic.conditionRules!.isEmpty)
+        continue;
       final ruleResults =
           logic.conditionRules?.map((rule) {
             final answer = answers[rule.questionId];
             return SurveyLogicManager.evaluateRule(
-              rule.operator,
+              rule.operator ?? ConditionOperator.eq,
               rule.value,
               answer,
             );
@@ -41,11 +42,13 @@ class SurveyBehaviorManager {
         joinType,
       );
 
-      if (isLogicTriggered && logic.actions != null) {
-        for (ConditionAction action in logic.actions!) {
-          final targetKey = "${action.targetType.name}_${action.targetId}";
-
-          switch (action.actionType) {
+      if (isLogicTriggered &&
+          logic.actions != null &&
+          logic.actions!.isNotEmpty) {
+        for (ConditionAction action in logic.actions ?? []) {
+          final targetKey = "${action.targetType?.name}_${action.targetId}";
+          if (action.actionType == null) continue;
+          switch (action.actionType!) {
             case ActionType.show:
               visibilityMap[targetKey] = true;
               break;

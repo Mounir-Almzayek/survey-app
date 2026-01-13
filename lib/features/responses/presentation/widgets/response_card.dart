@@ -40,7 +40,10 @@ class ResponseCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             if (response.survey != null)
-              Text(response.survey!.title, style: theme.textTheme.bodyMedium),
+              Text(
+                response.survey!.title ?? "",
+                style: theme.textTheme.bodyMedium,
+              ),
             const SizedBox(height: 8),
             Row(
               children: [

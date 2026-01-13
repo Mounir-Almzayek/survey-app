@@ -32,7 +32,8 @@ class SurveyDropdownField extends StatelessWidget {
         label: "", // Handled by SurveyQuestionCard
         activeColor: AppColors.surveyPrimary,
         activeGradient: AppColors.surveyGradient,
-        items: question.questionOptions?.map((e) => e.value).toList() ?? [],
+        items:
+            question.questionOptions?.map((e) => e.value ?? "").toList() ?? [],
         getLabel: (val) =>
             question.questionOptions
                 ?.firstWhere(

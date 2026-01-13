@@ -3,23 +3,23 @@ import '../../enums/survey_enums.dart';
 
 class ConditionRule extends Equatable {
   final int id;
-  final int conditionalLogicId;
-  final int questionId;
-  final ConditionOperator operator;
+  final int? conditionalLogicId;
+  final int? questionId;
+  final ConditionOperator? operator;
   final dynamic value;
   final ConditionJoinType? joinType;
-  final int order;
+  final int? order;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   const ConditionRule({
     required this.id,
-    required this.conditionalLogicId,
-    required this.questionId,
-    required this.operator,
+    this.conditionalLogicId,
+    this.questionId,
+    this.operator,
     this.value,
     this.joinType,
-    required this.order,
+    this.order,
     this.createdAt,
     this.updatedAt,
   });
@@ -29,17 +29,19 @@ class ConditionRule extends Equatable {
       id: json['id'],
       conditionalLogicId: json['conditional_logic_id'],
       questionId: json['question_id'],
-      operator: ConditionOperator.fromJson(json['operator']),
+      operator: json['operator'] != null
+          ? ConditionOperator.fromJson(json['operator'])
+          : null,
       value: json['value'],
       joinType: json['join_type'] != null
           ? ConditionJoinType.fromJson(json['join_type'])
           : null,
       order: json['order'],
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
+          ? DateTime.tryParse(json['updated_at'].toString())
           : null,
     );
   }
@@ -49,7 +51,7 @@ class ConditionRule extends Equatable {
       'id': id,
       'conditional_logic_id': conditionalLogicId,
       'question_id': questionId,
-      'operator': operator.toJson(),
+      'operator': operator?.toJson(),
       'value': value,
       'join_type': joinType?.toJson(),
       'order': order,

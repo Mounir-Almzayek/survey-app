@@ -23,20 +23,23 @@ class CustodyListScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const CustodyTransferScreen(),
-            ),
-          );
-        },
-        backgroundColor: AppColors.primary,
-        icon: const Icon(Icons.add_rounded, color: Colors.white),
-        label: Text(
-          locale.start_transfer,
-          style: const TextStyle(color: Colors.white),
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: 100.h),
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CustodyTransferScreen(),
+              ),
+            );
+          },
+          backgroundColor: AppColors.primary,
+          icon: const Icon(Icons.add_rounded, color: Colors.white),
+          label: Text(
+            locale.start_transfer,
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: BlocConsumer<CustodyListBloc, CustodyListState>(

@@ -267,5 +267,74 @@
   "complete_registration_tap_notice": "By tapping 'Link Device', this device will be unique to your researcher profile.",
   "device_already_registered_desc": "This device ID is already associated with another profile or has been previously linked.",
   "zone_violation_title": "Security Violation",
-  "zone_violation_message": "You have transitioned outside the authorized geographical perimeter. Your session will be terminated for security compliance."
+  "zone_violation_message": "You have transitioned outside the authorized geographical perimeter. Your session will be terminated for security compliance.",
+  "available_surveys": "Available Surveys",
+  "no_surveys_available": "No surveys available at the moment",
+  "new_response_success": "New response started successfully",
+  "error_with_message": "Error: {message}",
+  "@error_with_message": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "local_responses_count": "Local Responses ({count})",
+  "@local_responses_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "new_response": "New Response",
+  "response_number": "Response ID: {id}",
+  "@response_number": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "confirm_delete_title": "Delete Confirmation",
+  "confirm_delete_message": "Are you sure you want to delete this response (ID: {id})? This action cannot be undone.",
+  "@confirm_delete_message": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "custody_status_pending": "Pending",
+  "custody_status_verified": "Verified",
+  "custody_status_cancelled": "Cancelled",
+  "read_more": "Read more",
+  "show_less": "Show less",
+  "availability_period": "Availability: {start} / {end}",
+  "@availability_period": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "publish_date": "Publish Date: {date}",
+  "@publish_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "last_update": "Last Update: {date}",
+  "@last_update": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -3,16 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../styles/app_colors.dart';
 
 class SurveyQuestionCard extends StatelessWidget {
-  final String label;
+  final String? label;
   final String? helpText;
-  final bool isRequired;
+  final bool? isRequired;
   final Widget child;
   final String? errorText;
   final bool isVisible;
 
   const SurveyQuestionCard({
     super.key,
-    required this.label,
+    this.label,
     this.helpText,
     this.isRequired = false,
     required this.child,
@@ -57,7 +57,7 @@ class SurveyQuestionCard extends StatelessWidget {
                 fontFamily: 'Cairo', // Use app font
               ),
               children: [
-                if (isRequired)
+                if (isRequired != null && isRequired!)
                   TextSpan(
                     text: ' *',
                     style: TextStyle(

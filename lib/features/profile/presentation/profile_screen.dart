@@ -167,12 +167,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const Divider(height: 1),
           _ProfileMenuTile(
-            icon: Icons.security_rounded,
-            title: "Security Settings", // TODO: Add to arb
-            onTap: () {},
-          ),
-          const Divider(height: 1),
-          _ProfileMenuTile(
             icon: Icons.logout_rounded,
             title: locale.log_out,
             isDestructive: true,

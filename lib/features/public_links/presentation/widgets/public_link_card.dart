@@ -53,11 +53,11 @@ class PublicLinkCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       if (publicLink.survey?.description != null &&
-                          publicLink.survey!.description.isNotEmpty)
+                          publicLink.survey!.description?.isNotEmpty == true)
                         Padding(
                           padding: EdgeInsets.only(top: 2.h),
                           child: Text(
-                            publicLink.survey!.description,
+                            publicLink.survey!.description ?? "",
                             style: TextStyle(
                               fontSize: 11.sp,
                               color: AppColors.secondaryText,

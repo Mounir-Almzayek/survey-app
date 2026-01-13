@@ -4,14 +4,14 @@ import '../../enums/survey_enums.dart';
 class Validation extends Equatable {
   final int id;
   final ValidationType type;
-  final String validation;
-  final String enTitle;
-  final String arTitle;
-  final String enContent;
-  final String arContent;
-  final bool needsValue;
+  final String? validation;
+  final String? enTitle;
+  final String? arTitle;
+  final String? enContent;
+  final String? arContent;
+  final bool? needsValue;
   final Map<String, dynamic>? valueFields;
-  final bool isActive;
+  final bool? isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? deletedAt;
@@ -19,14 +19,14 @@ class Validation extends Equatable {
   const Validation({
     required this.id,
     required this.type,
-    required this.validation,
-    required this.enTitle,
-    required this.arTitle,
-    required this.enContent,
-    required this.arContent,
-    this.needsValue = false,
+    this.validation,
+    this.enTitle,
+    this.arTitle,
+    this.enContent,
+    this.arContent,
+    this.needsValue,
     this.valueFields,
-    this.isActive = true,
+    this.isActive,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
@@ -35,23 +35,25 @@ class Validation extends Equatable {
   factory Validation.fromJson(Map<String, dynamic> json) {
     return Validation(
       id: json['id'],
-      type: ValidationType.fromJson(json['type']),
+      type: json['type'] != null
+          ? ValidationType.fromJson(json['type'])
+          : ValidationType.questions,
       validation: json['validation'],
       enTitle: json['en_title'],
       arTitle: json['ar_title'],
       enContent: json['en_content'],
       arContent: json['ar_content'],
-      needsValue: json['needs_value'] ?? false,
+      needsValue: json['needs_value'],
       valueFields: json['value_fields'],
-      isActive: json['is_active'] ?? true,
+      isActive: json['is_active'],
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
+          ? DateTime.tryParse(json['updated_at'].toString())
           : null,
       deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
+          ? DateTime.tryParse(json['deleted_at'].toString())
           : null,
     );
   }

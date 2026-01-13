@@ -10,6 +10,7 @@ class CustomElevatedButton extends StatelessWidget {
   final bool useGradient;
   final double? width;
   final double? height;
+  final double? fontSize;
 
   const CustomElevatedButton({
     super.key,
@@ -20,6 +21,7 @@ class CustomElevatedButton extends StatelessWidget {
     this.useGradient = true,
     this.width,
     this.height,
+    this.fontSize = 16,
   });
 
   @override
@@ -66,7 +68,7 @@ class CustomElevatedButton extends StatelessWidget {
                 : Text(
                     title,
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: fontSize?.sp ?? 16.sp,
                       fontWeight: FontWeight.bold,
                       color: isButtonDisabled
                           ? AppColors.mutedForeground

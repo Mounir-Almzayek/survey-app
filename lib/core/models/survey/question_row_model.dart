@@ -2,20 +2,20 @@ import 'package:equatable/equatable.dart';
 
 class QuestionRow extends Equatable {
   final int id;
-  final int questionId;
-  final String label;
-  final String value;
-  final int order;
+  final int? questionId;
+  final String? label;
+  final String? value;
+  final int? order;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? deletedAt;
 
   const QuestionRow({
     required this.id,
-    required this.questionId,
-    required this.label,
-    required this.value,
-    required this.order,
+    this.questionId,
+    this.label,
+    this.value,
+    this.order,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
@@ -29,13 +29,13 @@ class QuestionRow extends Equatable {
       value: json['value'],
       order: json['order'],
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
+          ? DateTime.tryParse(json['updated_at'].toString())
           : null,
       deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
+          ? DateTime.tryParse(json['deleted_at'].toString())
           : null,
     );
   }

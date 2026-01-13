@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../models/custody_record.dart';
-import '../../models/custody_status.dart';
 
 class CustodyCard extends StatelessWidget {
   final CustodyRecord record;
@@ -30,7 +29,7 @@ class CustodyCard extends StatelessWidget {
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(14.r),
           border: Border.all(
-            color: _getStatusColor().withValues(alpha: 0.3),
+            color: record.status.color.withValues(alpha: 0.3),
             width: 1,
           ),
           boxShadow: [
@@ -218,8 +217,8 @@ class CustodyCard extends StatelessWidget {
   }
 
   Widget _buildStatusBadge(BuildContext context) {
-    final color = _getStatusColor();
-    final text = _getStatusText();
+    final color = record.status.color;
+    final text = record.status.label(context);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
@@ -237,28 +236,6 @@ class CustodyCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _getStatusColor() {
-    switch (record.status) {
-      case CustodyStatus.pending:
-        return AppColors.warning;
-      case CustodyStatus.verified:
-        return AppColors.success;
-      case CustodyStatus.cancelled:
-        return AppColors.error;
-    }
-  }
-
-  String _getStatusText() {
-    switch (record.status) {
-      case CustodyStatus.pending:
-        return 'PENDING';
-      case CustodyStatus.verified:
-        return 'VERIFIED';
-      case CustodyStatus.cancelled:
-        return 'CANCELLED';
-    }
   }
 
   String _formatDate(DateTime date) {

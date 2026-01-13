@@ -3,8 +3,8 @@ import 'validation_model.dart';
 
 class QuestionValidation extends Equatable {
   final int id;
-  final int questionId;
-  final int validationId;
+  final int? questionId;
+  final int? validationId;
   final Map<String, dynamic>? values;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -12,8 +12,8 @@ class QuestionValidation extends Equatable {
 
   const QuestionValidation({
     required this.id,
-    required this.questionId,
-    required this.validationId,
+    this.questionId,
+    this.validationId,
     this.values,
     this.createdAt,
     this.updatedAt,
@@ -27,10 +27,10 @@ class QuestionValidation extends Equatable {
       validationId: json['validation_id'],
       values: json['values'],
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
+          ? DateTime.tryParse(json['updated_at'].toString())
           : null,
       validation: json['validation'] != null
           ? Validation.fromJson(json['validation'])

@@ -5,9 +5,11 @@ enum SurveyStatus {
 
   String toJson() => name.toUpperCase();
 
-  static SurveyStatus fromJson(String value) {
+  static SurveyStatus fromJson(dynamic value) {
+    if (value == null) return SurveyStatus.draft;
+    final String val = value.toString().toUpperCase();
     return SurveyStatus.values.firstWhere(
-      (e) => e.name.toUpperCase() == value.toUpperCase(),
+      (e) => e.name.toUpperCase() == val,
       orElse: () => SurveyStatus.draft,
     );
   }
@@ -32,9 +34,11 @@ enum QuestionType {
 
   String toJson() => name.toUpperCase();
 
-  static QuestionType fromJson(String value) {
+  static QuestionType fromJson(dynamic value) {
+    if (value == null) return QuestionType.textShort;
+    final String val = value.toString().toUpperCase();
     return QuestionType.values.firstWhere(
-      (e) => e.toJson() == value.toUpperCase(),
+      (e) => e.toJson() == val,
       orElse: () => QuestionType.textShort,
     );
   }
@@ -48,9 +52,11 @@ enum ResponseStatus {
 
   String toJson() => name.toUpperCase();
 
-  static ResponseStatus fromJson(String value) {
+  static ResponseStatus fromJson(dynamic value) {
+    if (value == null) return ResponseStatus.draft;
+    final String val = value.toString().toUpperCase();
     return ResponseStatus.values.firstWhere(
-      (e) => e.name.toUpperCase() == value.toUpperCase(),
+      (e) => e.name.toUpperCase() == val,
       orElse: () => ResponseStatus.draft,
     );
   }
@@ -66,9 +72,11 @@ enum ResponseLogEventType {
 
   String toJson() => name.toUpperCase();
 
-  static ResponseLogEventType fromJson(String value) {
+  static ResponseLogEventType fromJson(dynamic value) {
+    if (value == null) return ResponseLogEventType.start;
+    final String val = value.toString().toUpperCase();
     return ResponseLogEventType.values.firstWhere(
-      (e) => e.toJson() == value.toUpperCase(),
+      (e) => e.toJson() == val,
       orElse: () => ResponseLogEventType.start,
     );
   }
@@ -80,9 +88,11 @@ enum AnswerItemStatus {
 
   String toJson() => name.toUpperCase();
 
-  static AnswerItemStatus fromJson(String value) {
+  static AnswerItemStatus fromJson(dynamic value) {
+    if (value == null) return AnswerItemStatus.accepted;
+    final String val = value.toString().toUpperCase();
     return AnswerItemStatus.values.firstWhere(
-      (e) => e.name.toUpperCase() == value.toUpperCase(),
+      (e) => e.name.toUpperCase() == val,
       orElse: () => AnswerItemStatus.accepted,
     );
   }
@@ -128,8 +138,10 @@ enum ConditionOperator {
     }
   }
 
-  static ConditionOperator fromJson(String value) {
-    switch (value.toUpperCase()) {
+  static ConditionOperator fromJson(dynamic value) {
+    if (value == null) return ConditionOperator.eq;
+    final String val = value.toString().toUpperCase();
+    switch (val) {
       case 'EQ':
         return ConditionOperator.eq;
       case 'NEQ':
@@ -164,9 +176,11 @@ enum ConditionJoinType {
 
   String toJson() => name.toUpperCase();
 
-  static ConditionJoinType fromJson(String value) {
+  static ConditionJoinType fromJson(dynamic value) {
+    if (value == null) return ConditionJoinType.and;
+    final String val = value.toString().toUpperCase();
     return ConditionJoinType.values.firstWhere(
-      (e) => e.name.toUpperCase() == value.toUpperCase(),
+      (e) => e.name.toUpperCase() == val,
       orElse: () => ConditionJoinType.and,
     );
   }
@@ -178,9 +192,11 @@ enum ActionTargetType {
 
   String toJson() => name.toUpperCase();
 
-  static ActionTargetType fromJson(String value) {
+  static ActionTargetType fromJson(dynamic value) {
+    if (value == null) return ActionTargetType.question;
+    final String val = value.toString().toUpperCase();
     return ActionTargetType.values.firstWhere(
-      (e) => e.name.toUpperCase() == value.toUpperCase(),
+      (e) => e.name.toUpperCase() == val,
       orElse: () => ActionTargetType.question,
     );
   }
@@ -208,8 +224,10 @@ enum ActionType {
     }
   }
 
-  static ActionType fromJson(String value) {
-    switch (value.toUpperCase()) {
+  static ActionType fromJson(dynamic value) {
+    if (value == null) return ActionType.show;
+    final String val = value.toString().toUpperCase();
+    switch (val) {
       case 'SHOW':
         return ActionType.show;
       case 'HIDE':
@@ -231,9 +249,11 @@ enum ValidationType {
 
   String toJson() => name.toUpperCase();
 
-  static ValidationType fromJson(String value) {
+  static ValidationType fromJson(dynamic value) {
+    if (value == null) return ValidationType.questions;
+    final String val = value.toString().toUpperCase();
     return ValidationType.values.firstWhere(
-      (e) => e.name.toUpperCase() == value.toUpperCase(),
+      (e) => e.name.toUpperCase() == val,
       orElse: () => ValidationType.questions,
     );
   }
@@ -255,8 +275,10 @@ enum AssignmentStatus {
     }
   }
 
-  static AssignmentStatus fromJson(String value) {
-    switch (value.toUpperCase()) {
+  static AssignmentStatus fromJson(dynamic value) {
+    if (value == null) return AssignmentStatus.pending;
+    final String val = value.toString().toUpperCase();
+    switch (val) {
       case 'PENDING':
         return AssignmentStatus.pending;
       case 'IN_PROGRESS':

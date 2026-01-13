@@ -4,9 +4,9 @@ import 'question_model.dart';
 class Section extends Equatable {
   final int id;
   final int? surveyId;
-  final String title;
-  final String description;
-  final int order;
+  final String? title;
+  final String? description;
+  final int? order;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? deletedAt;
@@ -16,9 +16,9 @@ class Section extends Equatable {
   const Section({
     required this.id,
     this.surveyId,
-    required this.title,
-    required this.description,
-    required this.order,
+    this.title,
+    this.description,
+    this.order,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
@@ -33,13 +33,13 @@ class Section extends Equatable {
       description: json['description'],
       order: json['order'],
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
+          ? DateTime.tryParse(json['updated_at'].toString())
           : null,
       deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
+          ? DateTime.tryParse(json['deleted_at'].toString())
           : null,
       questions: (json['questions'] as List?)
           ?.map((e) => Question.fromJson(e))

@@ -3,10 +3,10 @@ import '../../enums/survey_enums.dart';
 
 class AnswerItem extends Equatable {
   final int id;
-  final int responseId;
-  final int questionId;
-  final String value;
-  final AnswerItemStatus status;
+  final int? responseId;
+  final int? questionId;
+  final String? value;
+  final AnswerItemStatus? status;
   final String? rejectionReason;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -14,10 +14,10 @@ class AnswerItem extends Equatable {
 
   const AnswerItem({
     required this.id,
-    required this.responseId,
-    required this.questionId,
-    required this.value,
-    this.status = AnswerItemStatus.accepted,
+    this.responseId,
+    this.questionId,
+    this.value,
+    this.status,
     this.rejectionReason,
     this.createdAt,
     this.updatedAt,
@@ -30,16 +30,18 @@ class AnswerItem extends Equatable {
       responseId: json['response_id'],
       questionId: json['question_id'],
       value: json['value'],
-      status: AnswerItemStatus.fromJson(json['status']),
+      status: json['status'] != null
+          ? AnswerItemStatus.fromJson(json['status'])
+          : null,
       rejectionReason: json['rejection_reason'],
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
       updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
+          ? DateTime.tryParse(json['updated_at'].toString())
           : null,
       deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
+          ? DateTime.tryParse(json['deleted_at'].toString())
           : null,
     );
   }
@@ -50,7 +52,7 @@ class AnswerItem extends Equatable {
       'response_id': responseId,
       'question_id': questionId,
       'value': value,
-      'status': status.toJson(),
+      'status': status?.toJson(),
       'rejection_reason': rejectionReason,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),

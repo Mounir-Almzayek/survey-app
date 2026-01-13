@@ -2169,6 +2169,176 @@ class S {
       args: [],
     );
   }
+
+  /// `Available Surveys`
+  String get available_surveys {
+    return Intl.message(
+      'Available Surveys',
+      name: 'available_surveys',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No surveys available at the moment`
+  String get no_surveys_available {
+    return Intl.message(
+      'No surveys available at the moment',
+      name: 'no_surveys_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `New response started successfully`
+  String get new_response_success {
+    return Intl.message(
+      'New response started successfully',
+      name: 'new_response_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error: {message}`
+  String error_with_message(String message) {
+    return Intl.message(
+      'Error: $message',
+      name: 'error_with_message',
+      desc: '',
+      args: [message],
+    );
+  }
+
+  /// `Local Responses ({count})`
+  String local_responses_count(int count) {
+    return Intl.message(
+      'Local Responses ($count)',
+      name: 'local_responses_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `New Response`
+  String get new_response {
+    return Intl.message(
+      'New Response',
+      name: 'new_response',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Response ID: {id}`
+  String response_number(int id) {
+    return Intl.message(
+      'Response ID: $id',
+      name: 'response_number',
+      desc: '',
+      args: [id],
+    );
+  }
+
+  /// `Delete Confirmation`
+  String get confirm_delete_title {
+    return Intl.message(
+      'Delete Confirmation',
+      name: 'confirm_delete_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete this response (ID: {id})? This action cannot be undone.`
+  String confirm_delete_message(int id) {
+    return Intl.message(
+      'Are you sure you want to delete this response (ID: $id)? This action cannot be undone.',
+      name: 'confirm_delete_message',
+      desc: '',
+      args: [id],
+    );
+  }
+
+  /// `Pending`
+  String get custody_status_pending {
+    return Intl.message(
+      'Pending',
+      name: 'custody_status_pending',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verified`
+  String get custody_status_verified {
+    return Intl.message(
+      'Verified',
+      name: 'custody_status_verified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancelled`
+  String get custody_status_cancelled {
+    return Intl.message(
+      'Cancelled',
+      name: 'custody_status_cancelled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read more`
+  String get read_more {
+    return Intl.message(
+      'Read more',
+      name: 'read_more',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show less`
+  String get show_less {
+    return Intl.message(
+      'Show less',
+      name: 'show_less',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Availability: {start} / {end}`
+  String availability_period(String start, String end) {
+    return Intl.message(
+      'Availability: $start / $end',
+      name: 'availability_period',
+      desc: '',
+      args: [start, end],
+    );
+  }
+
+  /// `Publish Date: {date}`
+  String publish_date(String date) {
+    return Intl.message(
+      'Publish Date: $date',
+      name: 'publish_date',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `Last Update: {date}`
+  String last_update(String date) {
+    return Intl.message(
+      'Last Update: $date',
+      name: 'last_update',
+      desc: '',
+      args: [date],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
