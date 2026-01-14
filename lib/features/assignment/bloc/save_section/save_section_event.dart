@@ -3,8 +3,9 @@ part of 'save_section_bloc.dart';
 abstract class SaveSectionEvent {}
 
 class UpdateResponseId extends SaveSectionEvent {
-  final int responseId;
-  UpdateResponseId(this.responseId);
+  final int? responseId;
+  final int? initialSectionId;
+  UpdateResponseId(this.responseId, {this.initialSectionId});
 }
 
 class UpdateCurrentSection extends SaveSectionEvent {

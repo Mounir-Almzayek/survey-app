@@ -6,6 +6,20 @@ import '../models/save_section_models.dart';
 class AssignmentLocalRepository {
   static const String _surveysKey = 'cached_surveys_list';
   static const String _responseDraftPrefix = 'response_draft_';
+  static const String _syncedCountKey = 'synced_responses_total_count';
+
+  /// Get the persistent count of total synced responses
+  static Future<int> getSyncedResponsesCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_syncedCountKey) ?? 0;
+  }
+
+  /// Increment the persistent count of total synced responses
+  static Future<void> incrementSyncedResponsesCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    final current = prefs.getInt(_syncedCountKey) ?? 0;
+    await prefs.setInt(_syncedCountKey, current + 1);
+  }
 
   /// Save a draft of the response (answers for a section)
   static Future<void> saveResponseDraft(

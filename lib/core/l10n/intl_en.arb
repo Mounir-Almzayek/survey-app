@@ -346,5 +346,20 @@
   "offline_drafts": "Offline Drafts",
   "completed": "Completed",
   "completion_rate": "Completion Rate",
-  "active_tasks": "Active Tasks"
+  "active_tasks": "Active Tasks",
+  "start_survey": "Start Survey",
+  "survey_completed": "Survey Completed",
+  "thank_you_for_response": "Thank you for your response",
+  "back_to_assignments": "Back to Assignments",
+  "previous": "Previous",
+  "next": "Next",
+  "field_required": "This field is required",
+  "active_surveys": "Active",
+  "expired_surveys": "Expired",
+  "upcoming_surveys": "Upcoming",
+  "draft_responses": "Drafts",
+  "pending_sync": "Pending Sync",
+  "synced_responses": "Synced",
+  "survey_availability": "Survey Availability",
+  "sync_status": "Sync Status"
 }

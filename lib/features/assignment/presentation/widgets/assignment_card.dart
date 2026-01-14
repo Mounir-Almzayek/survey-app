@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/app_routes.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/models/survey/survey_model.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
-import '../../bloc/start_response/start_response_bloc.dart';
 import 'response_list_item.dart';
 
 class AssignmentCard extends StatefulWidget {
@@ -243,27 +243,22 @@ class _AssignmentCardState extends State<AssignmentCard> {
   }
 
   Widget _buildAddButton(BuildContext context, S s) {
-    return BlocBuilder<StartResponseBloc, StartResponseState>(
-      builder: (context, state) {
-        final isLoading =
-            state is StartResponseLoading && state.surveyId == widget.survey.id;
-
-        return Center(
-          child: CustomElevatedButton(
-            fontSize: 14,
-            width: 230.w,
-            height: 45.h,
-            onPressed: () {
-              context.read<StartResponseBloc>().add(
-                UpdateSurveyId(widget.survey.id),
-              );
-              context.read<StartResponseBloc>().add(StartSurveyResponse());
+    return Center(
+      child: CustomElevatedButton(
+        fontSize: 14,
+        width: 230.w,
+        height: 45.h,
+        onPressed: () {
+          context.push(
+            Routes.surveyAnsweringPath,
+            extra: {
+              'survey': widget.survey,
+              'responseId': null, // Explicitly null for new response
             },
-            title: s.new_response,
-            isLoading: isLoading,
-          ),
-        );
-      },
+          );
+        },
+        title: s.new_response,
+      ),
     );
   }
 }

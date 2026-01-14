@@ -59,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "active_links_count": m0,
         "active_responses":
             MessageLookupByLibrary.simpleMessage("الاستجابات النشطة"),
+        "active_surveys": MessageLookupByLibrary.simpleMessage("نشطة"),
         "active_tasks": MessageLookupByLibrary.simpleMessage("المهام النشطة"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("السماح بالوصول إلى الموقع"),
@@ -68,6 +69,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "available_surveys":
             MessageLookupByLibrary.simpleMessage("الاستبيانات المتاحة"),
         "avg": MessageLookupByLibrary.simpleMessage("المعدل"),
+        "back_to_assignments":
+            MessageLookupByLibrary.simpleMessage("العودة للمهام"),
         "browser": MessageLookupByLibrary.simpleMessage("المتصفح"),
         "camera": MessageLookupByLibrary.simpleMessage("الكاميرا"),
         "camera_permission_required": MessageLookupByLibrary.simpleMessage(
@@ -122,6 +125,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "device_type": MessageLookupByLibrary.simpleMessage("نوع الجهاز"),
         "download_file": MessageLookupByLibrary.simpleMessage("تحميل الملف"),
         "downloading": MessageLookupByLibrary.simpleMessage("جاري التحميل..."),
+        "draft_responses": MessageLookupByLibrary.simpleMessage("مسودات"),
         "drafts_available": m5,
         "edit": MessageLookupByLibrary.simpleMessage("تعديل"),
         "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
@@ -148,11 +152,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "entity": MessageLookupByLibrary.simpleMessage("الجهة"),
         "error_occurred": MessageLookupByLibrary.simpleMessage("حدث خطأ ما"),
         "error_with_message": m7,
+        "expired_surveys": MessageLookupByLibrary.simpleMessage("منتهية"),
         "expires_at": MessageLookupByLibrary.simpleMessage("تاريخ الانتهاء"),
         "failed_pick_image": MessageLookupByLibrary.simpleMessage(
             "فشل في اختيار الصورة، يرجى المحاولة لاحقاً!"),
         "failed_to_save_image":
             MessageLookupByLibrary.simpleMessage("فشل في حفظ الصورة"),
+        "field_required":
+            MessageLookupByLibrary.simpleMessage("هذا الحقل مطلوب"),
         "file_downloaded_colon":
             MessageLookupByLibrary.simpleMessage("تم تحميل الملف في:"),
         "file_downloaded_successfully":
@@ -231,6 +238,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "new_response": MessageLookupByLibrary.simpleMessage("رد جديد"),
         "new_response_success":
             MessageLookupByLibrary.simpleMessage("تم بدء رد جديد بنجاح"),
+        "next": MessageLookupByLibrary.simpleMessage("التالي"),
         "no_active_account":
             MessageLookupByLibrary.simpleMessage("ليس لديك حساب مفعل؟"),
         "no_active_responses":
@@ -270,6 +278,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "تمت إعادة تعيين كلمة المرور بنجاح"),
         "password_too_short":
             MessageLookupByLibrary.simpleMessage("كلمة المرور قصيرة جداً"),
+        "pending_sync":
+            MessageLookupByLibrary.simpleMessage("بانتظار المزامنة"),
         "phone": MessageLookupByLibrary.simpleMessage("رقم الهاتف"),
         "place_qr_code":
             MessageLookupByLibrary.simpleMessage("ضع رمز QR داخل الإطار للمسح"),
@@ -283,6 +293,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "point_camera_at_qr_code":
             MessageLookupByLibrary.simpleMessage("وجّه الكاميرا نحو رمز QR"),
         "position": MessageLookupByLibrary.simpleMessage("المنصب"),
+        "previous": MessageLookupByLibrary.simpleMessage("السابق"),
         "processing": MessageLookupByLibrary.simpleMessage("جاري المعالجة..."),
         "processor_cores":
             MessageLookupByLibrary.simpleMessage("أنوية المعالج"),
@@ -365,6 +376,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "show_qr_code": MessageLookupByLibrary.simpleMessage("عرض رمز QR"),
         "start_location_tracking":
             MessageLookupByLibrary.simpleMessage("بدء تتبع الموقع"),
+        "start_survey": MessageLookupByLibrary.simpleMessage("بدء الاستبيان"),
         "start_transfer": MessageLookupByLibrary.simpleMessage("بدء النقل"),
         "statistics": MessageLookupByLibrary.simpleMessage("الإحصائيات"),
         "stop_location_tracking":
@@ -372,14 +384,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("تم رفض إذن التخزين"),
         "submit": MessageLookupByLibrary.simpleMessage("إرسال"),
+        "survey_availability":
+            MessageLookupByLibrary.simpleMessage("توفر الاستبيانات"),
         "survey_code_placeholder":
             MessageLookupByLibrary.simpleMessage("مثال: ABC-123"),
+        "survey_completed":
+            MessageLookupByLibrary.simpleMessage("اكتمل الاستبيان"),
         "survey_link": MessageLookupByLibrary.simpleMessage("رابط الاستطلاع"),
         "survey_overview":
             MessageLookupByLibrary.simpleMessage("نظرة عامة على الاستبيانات"),
         "surveys": MessageLookupByLibrary.simpleMessage("الاستطلاعات"),
         "sync": MessageLookupByLibrary.simpleMessage("مزامنة"),
+        "sync_status": MessageLookupByLibrary.simpleMessage("حالة المزامنة"),
+        "synced_responses":
+            MessageLookupByLibrary.simpleMessage("تمت المزامنة"),
         "tap_to_view": MessageLookupByLibrary.simpleMessage("اضغط للعرض"),
+        "thank_you_for_response":
+            MessageLookupByLibrary.simpleMessage("شكراً لمشاركتك"),
         "to_user_email": MessageLookupByLibrary.simpleMessage(
             "البريد الإلكتروني للمستخدم المستقبل"),
         "total": MessageLookupByLibrary.simpleMessage("الإجمالي"),
@@ -389,6 +410,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "أدخل البريد الإلكتروني للباحث الذي سيستلم الجهاز. سيتم إرسال رمز التحقق لكلا المستخدمين."),
         "transfer_initiated_successfully":
             MessageLookupByLibrary.simpleMessage("تم بدء عملية النقل بنجاح"),
+        "upcoming_surveys": MessageLookupByLibrary.simpleMessage("قادمة"),
         "upload_failed": MessageLookupByLibrary.simpleMessage("فشل الرفع"),
         "upload_file": MessageLookupByLibrary.simpleMessage("رفع ملف"),
         "upload_files": MessageLookupByLibrary.simpleMessage("رفع ملفات"),

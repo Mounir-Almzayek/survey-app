@@ -21,7 +21,6 @@ class AssignmentsListBloc
     Emitter<AssignmentsListState> emit,
   ) async {
     emit(AssignmentsListLoading());
-    await AssignmentRepository.listAssignments();
 
     await _runner.run(
       onlineTask: (_) async => await AssignmentRepository.listAssignments(),

@@ -346,5 +346,20 @@
   "offline_drafts": "المسودات المحلية",
   "completed": "المكتملة",
   "completion_rate": "نسبة الإنجاز",
-  "active_tasks": "المهام النشطة"
+  "active_tasks": "المهام النشطة",
+  "start_survey": "بدء الاستبيان",
+  "survey_completed": "اكتمل الاستبيان",
+  "thank_you_for_response": "شكراً لمشاركتك",
+  "back_to_assignments": "العودة للمهام",
+  "previous": "السابق",
+  "next": "التالي",
+  "field_required": "هذا الحقل مطلوب",
+  "active_surveys": "نشطة",
+  "expired_surveys": "منتهية",
+  "upcoming_surveys": "قادمة",
+  "draft_responses": "مسودات",
+  "pending_sync": "بانتظار المزامنة",
+  "synced_responses": "تمت المزامنة",
+  "survey_availability": "توفر الاستبيانات",
+  "sync_status": "حالة المزامنة"
 }

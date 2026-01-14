@@ -59,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "active_links_count": m0,
         "active_responses":
             MessageLookupByLibrary.simpleMessage("Active Responses"),
+        "active_surveys": MessageLookupByLibrary.simpleMessage("Active"),
         "active_tasks": MessageLookupByLibrary.simpleMessage("Active Tasks"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("Allow location access"),
@@ -68,6 +69,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "available_surveys":
             MessageLookupByLibrary.simpleMessage("Available Surveys"),
         "avg": MessageLookupByLibrary.simpleMessage("Avg."),
+        "back_to_assignments":
+            MessageLookupByLibrary.simpleMessage("Back to Assignments"),
         "browser": MessageLookupByLibrary.simpleMessage("Browser"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "camera_permission_required": MessageLookupByLibrary.simpleMessage(
@@ -123,6 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "device_type": MessageLookupByLibrary.simpleMessage("Device Type"),
         "download_file": MessageLookupByLibrary.simpleMessage("Download File"),
         "downloading": MessageLookupByLibrary.simpleMessage("Downloading..."),
+        "draft_responses": MessageLookupByLibrary.simpleMessage("Drafts"),
         "drafts_available": m5,
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
@@ -150,11 +154,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_occurred":
             MessageLookupByLibrary.simpleMessage("An error occurred"),
         "error_with_message": m7,
+        "expired_surveys": MessageLookupByLibrary.simpleMessage("Expired"),
         "expires_at": MessageLookupByLibrary.simpleMessage("Expires At"),
         "failed_pick_image": MessageLookupByLibrary.simpleMessage(
             "Failed to pick image, please try again later!"),
         "failed_to_save_image":
             MessageLookupByLibrary.simpleMessage("Failed to save image"),
+        "field_required":
+            MessageLookupByLibrary.simpleMessage("This field is required"),
         "file_downloaded_colon":
             MessageLookupByLibrary.simpleMessage("File downloaded to:"),
         "file_downloaded_successfully": MessageLookupByLibrary.simpleMessage(
@@ -233,6 +240,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "new_response": MessageLookupByLibrary.simpleMessage("New Response"),
         "new_response_success": MessageLookupByLibrary.simpleMessage(
             "New response started successfully"),
+        "next": MessageLookupByLibrary.simpleMessage("Next"),
         "no_active_account": MessageLookupByLibrary.simpleMessage(
             "Don\'t have an active account?"),
         "no_active_responses":
@@ -272,6 +280,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Password reset successful"),
         "password_too_short":
             MessageLookupByLibrary.simpleMessage("Password too short"),
+        "pending_sync": MessageLookupByLibrary.simpleMessage("Pending Sync"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone"),
         "place_qr_code": MessageLookupByLibrary.simpleMessage(
             "Place the QR code within the frame to scan"),
@@ -285,6 +294,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "point_camera_at_qr_code":
             MessageLookupByLibrary.simpleMessage("Point camera at QR code"),
         "position": MessageLookupByLibrary.simpleMessage("Position"),
+        "previous": MessageLookupByLibrary.simpleMessage("Previous"),
         "processing": MessageLookupByLibrary.simpleMessage("Processing..."),
         "processor_cores":
             MessageLookupByLibrary.simpleMessage("Processor Cores"),
@@ -366,6 +376,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "show_qr_code": MessageLookupByLibrary.simpleMessage("Show QR Code"),
         "start_location_tracking":
             MessageLookupByLibrary.simpleMessage("Start Location Tracking"),
+        "start_survey": MessageLookupByLibrary.simpleMessage("Start Survey"),
         "start_transfer":
             MessageLookupByLibrary.simpleMessage("Start Transfer"),
         "statistics": MessageLookupByLibrary.simpleMessage("Statistics"),
@@ -374,14 +385,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("Storage permission denied"),
         "submit": MessageLookupByLibrary.simpleMessage("Submit"),
+        "survey_availability":
+            MessageLookupByLibrary.simpleMessage("Survey Availability"),
         "survey_code_placeholder":
             MessageLookupByLibrary.simpleMessage("e.g. ABC-123"),
+        "survey_completed":
+            MessageLookupByLibrary.simpleMessage("Survey Completed"),
         "survey_link": MessageLookupByLibrary.simpleMessage("Survey Link"),
         "survey_overview":
             MessageLookupByLibrary.simpleMessage("Survey Overview"),
         "surveys": MessageLookupByLibrary.simpleMessage("Surveys"),
         "sync": MessageLookupByLibrary.simpleMessage("Sync"),
+        "sync_status": MessageLookupByLibrary.simpleMessage("Sync Status"),
+        "synced_responses": MessageLookupByLibrary.simpleMessage("Synced"),
         "tap_to_view": MessageLookupByLibrary.simpleMessage("Tap to view"),
+        "thank_you_for_response":
+            MessageLookupByLibrary.simpleMessage("Thank you for your response"),
         "to_user_email": MessageLookupByLibrary.simpleMessage("To User Email"),
         "total": MessageLookupByLibrary.simpleMessage("Total"),
         "total_sections_touched":
@@ -390,6 +409,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Enter the email of the researcher who will receive the device. A verification code will be sent to both users."),
         "transfer_initiated_successfully": MessageLookupByLibrary.simpleMessage(
             "Transfer initiated successfully"),
+        "upcoming_surveys": MessageLookupByLibrary.simpleMessage("Upcoming"),
         "upload_failed": MessageLookupByLibrary.simpleMessage("Upload failed"),
         "upload_file": MessageLookupByLibrary.simpleMessage("Upload File"),
         "upload_files": MessageLookupByLibrary.simpleMessage("Upload Files"),

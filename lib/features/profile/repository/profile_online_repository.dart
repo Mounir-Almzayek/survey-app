@@ -18,6 +18,7 @@ class ProfileOnlineRepository {
     final apiRequest = APIRequest(
       path: '/auth/me/logout',
       method: HTTPMethod.post,
+      body: {}, // Provide empty body
       authorizationOption: AuthorizationOption.authorized,
     );
     await apiRequest.send();

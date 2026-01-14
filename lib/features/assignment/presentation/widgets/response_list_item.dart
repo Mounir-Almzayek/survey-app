@@ -6,6 +6,9 @@ import '../../repository/assignment_local_repository.dart';
 import '../../bloc/assignments_list/assignments_list_bloc.dart';
 import 'delete_response_dialog.dart';
 
+import 'package:go_router/go_router.dart';
+import '../../../../core/routes/app_routes.dart';
+
 class ResponseListItem extends StatelessWidget {
   final int responseId;
   final int surveyId;
@@ -29,7 +32,11 @@ class ResponseListItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.assignment_outlined, size: 20, color: AppColors.secondaryText),
+          const Icon(
+            Icons.assignment_outlined,
+            size: 20,
+            color: AppColors.secondaryText,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -46,7 +53,18 @@ class ResponseListItem extends StatelessWidget {
             icon: Icons.play_arrow_rounded,
             color: AppColors.primary,
             onPressed: () {
-              // TODO: Navigate to survey continuation
+              final assignmentsState = context
+                  .read<AssignmentsListBloc>()
+                  .state;
+              if (assignmentsState is AssignmentsListLoaded) {
+                final survey = assignmentsState.response.surveys.firstWhere(
+                  (s) => s.id == surveyId,
+                );
+                context.push(
+                  Routes.surveyAnsweringPath,
+                  extra: {'survey': survey, 'responseId': responseId},
+                );
+              }
             },
           ),
           const SizedBox(width: 8),
@@ -102,8 +120,11 @@ class ResponseListItem extends StatelessWidget {
 
     if (confirmed == true) {
       await AssignmentLocalRepository.removeResponseDraft(responseId);
-      await AssignmentLocalRepository.unlinkResponseFromSurvey(surveyId, responseId);
-      
+      await AssignmentLocalRepository.unlinkResponseFromSurvey(
+        surveyId,
+        responseId,
+      );
+
       if (context.mounted) {
         // Refresh the assignments list to reflect changes
         context.read<AssignmentsListBloc>().add(LoadAssignments());

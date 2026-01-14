@@ -2439,6 +2439,156 @@ class S {
       args: [],
     );
   }
+
+  /// `Start Survey`
+  String get start_survey {
+    return Intl.message(
+      'Start Survey',
+      name: 'start_survey',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Survey Completed`
+  String get survey_completed {
+    return Intl.message(
+      'Survey Completed',
+      name: 'survey_completed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thank you for your response`
+  String get thank_you_for_response {
+    return Intl.message(
+      'Thank you for your response',
+      name: 'thank_you_for_response',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back to Assignments`
+  String get back_to_assignments {
+    return Intl.message(
+      'Back to Assignments',
+      name: 'back_to_assignments',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Previous`
+  String get previous {
+    return Intl.message(
+      'Previous',
+      name: 'previous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next`
+  String get next {
+    return Intl.message(
+      'Next',
+      name: 'next',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This field is required`
+  String get field_required {
+    return Intl.message(
+      'This field is required',
+      name: 'field_required',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active`
+  String get active_surveys {
+    return Intl.message(
+      'Active',
+      name: 'active_surveys',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expired`
+  String get expired_surveys {
+    return Intl.message(
+      'Expired',
+      name: 'expired_surveys',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upcoming`
+  String get upcoming_surveys {
+    return Intl.message(
+      'Upcoming',
+      name: 'upcoming_surveys',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Drafts`
+  String get draft_responses {
+    return Intl.message(
+      'Drafts',
+      name: 'draft_responses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pending Sync`
+  String get pending_sync {
+    return Intl.message(
+      'Pending Sync',
+      name: 'pending_sync',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Synced`
+  String get synced_responses {
+    return Intl.message(
+      'Synced',
+      name: 'synced_responses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Survey Availability`
+  String get survey_availability {
+    return Intl.message(
+      'Survey Availability',
+      name: 'survey_availability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sync Status`
+  String get sync_status {
+    return Intl.message(
+      'Sync Status',
+      name: 'sync_status',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

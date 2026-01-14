@@ -4,12 +4,12 @@ abstract class SurveyNavigationEvent {}
 
 class SetSurvey extends SurveyNavigationEvent {
   final Survey survey;
-  final int responseId;
+  final int? responseId;
   SetSurvey(this.survey, this.responseId);
 }
 
 class UpdateResponseId extends SurveyNavigationEvent {
-  final int responseId;
+  final int? responseId;
   UpdateResponseId(this.responseId);
 }
 
@@ -31,3 +31,7 @@ class GoToSection extends SurveyNavigationEvent {
   final int index;
   GoToSection(this.index);
 }
+
+class StartSurvey extends SurveyNavigationEvent {}
+
+class CompleteSurvey extends SurveyNavigationEvent {}

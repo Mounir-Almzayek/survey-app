@@ -9,12 +9,15 @@ class QuestionBehavior {
   const QuestionBehavior({this.isVisible = true, this.isRequired = false});
 }
 
+enum SurveyStep { intro, survey, completion }
+
 abstract class SurveyNavigationState {
   final Survey? survey;
   final int currentSectionIndex;
   final int? responseId;
   final Map<String, bool> visibilityMap; // "question_5" or "section_2" -> bool
   final Map<String, bool> requirementMap; // "question_5" or "section_2" -> bool
+  final SurveyStep currentStep;
 
   SurveyNavigationState({
     this.survey,
@@ -22,6 +25,7 @@ abstract class SurveyNavigationState {
     this.responseId,
     this.visibilityMap = const {},
     this.requirementMap = const {},
+    this.currentStep = SurveyStep.intro,
   });
 
   Section? get currentSection {
@@ -98,6 +102,7 @@ class SurveyNavigationInitial extends SurveyNavigationState {
     super.responseId,
     super.visibilityMap,
     super.requirementMap,
+    super.currentStep,
   });
 }
 
@@ -108,5 +113,6 @@ class SurveyNavigationUpdated extends SurveyNavigationState {
     super.responseId,
     super.visibilityMap,
     super.requirementMap,
+    super.currentStep,
   });
 }

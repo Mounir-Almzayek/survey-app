@@ -18,8 +18,22 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = ResponsiveLayout.isMobile(context);
     final s = S.of(context);
+
+    // Responsive values
+    final horizontalPadding = ResponsiveLayout.value<double>(
+      context,
+      mobile: 20.w,
+      tablet: 32.w,
+      desktop: 48.w,
+    );
+
+    final headerFontSize = ResponsiveLayout.value<double>(
+      context,
+      mobile: 22.sp,
+      tablet: 28.sp,
+      desktop: 34.sp,
+    );
 
     return BlocProvider(
       create: (context) => HomeStatsBloc()..add(LoadHomeStats()),
@@ -40,10 +54,18 @@ class HomeScreen extends StatelessWidget {
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(
-                        isMobile ? 20.w : 24.w,
-                        24.h,
-                        isMobile ? 20.w : 24.w,
-                        32.h,
+                        horizontalPadding,
+                        ResponsiveLayout.value(
+                          context,
+                          mobile: 24.h,
+                          tablet: 40.h,
+                        ),
+                        horizontalPadding,
+                        ResponsiveLayout.value(
+                          context,
+                          mobile: 32.h,
+                          tablet: 48.h,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                           Text(
                             s.welcome_back_researcher,
                             style: TextStyle(
-                              fontSize: 22.sp,
+                              fontSize: headerFontSize,
                               fontWeight: FontWeight.w800,
                               color: AppColors.primaryText,
                               letterSpacing: -0.5,
@@ -61,7 +83,11 @@ class HomeScreen extends StatelessWidget {
                           Text(
                             s.home_survey_status_subtitle,
                             style: TextStyle(
-                              fontSize: 13.sp,
+                              fontSize: ResponsiveLayout.value(
+                                context,
+                                mobile: 13.sp,
+                                tablet: 15.sp,
+                              ),
                               color: AppColors.secondaryText,
                               fontWeight: FontWeight.w500,
                             ),
@@ -71,25 +97,37 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
 
-                  // Statistics Section
+                  // Content Section (Stats & Public Links)
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                        horizontal: isMobile ? 20.w : 24.w,
+                        horizontal: horizontalPadding,
                       ),
-                      child: _buildStatsContent(context, state),
-                    ),
-                  ),
-
-                  SliverToBoxAdapter(child: SizedBox(height: 32.h)),
-
-                  // Public Links Section
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isMobile ? 20.w : 24.w,
-                      ),
-                      child: const PublicLinksSection(),
+                      child: ResponsiveLayout.isDesktop(context)
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Left side: Statistics
+                                Expanded(
+                                  flex: 2,
+                                  child: _buildStatsContent(context, state),
+                                ),
+                                SizedBox(width: 32.w),
+                                // Right side: Public Links
+                                const Expanded(
+                                  flex: 3,
+                                  child: PublicLinksSection(),
+                                ),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildStatsContent(context, state),
+                                SizedBox(height: 32.h),
+                                const PublicLinksSection(),
+                              ],
+                            ),
                     ),
                   ),
 

@@ -8,6 +8,8 @@ import '../../features/welcome/presentation/welcome_page.dart';
 import '../../features/main_screen/presentation/main_page.dart';
 import '../../features/device_registration/presentation/device_registration_page.dart';
 import '../../features/qr_scanner/presentation/qr_scanner_page.dart';
+import '../../features/assignment/presentation/pages/survey_answering_page.dart';
+import '../../core/models/survey/survey_model.dart';
 import 'app_routes.dart';
 
 /// App Pages
@@ -68,6 +70,15 @@ final appPages = GoRouter(
         final returnCodeOnly =
             state.uri.queryParameters['returnCodeOnly'] == 'true';
         return QrScannerPage(returnCodeOnly: returnCodeOnly);
+      },
+    ),
+    GoRoute(
+      path: Routes.surveyAnsweringPath,
+      builder: (context, state) {
+        final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+        final survey = extra['survey'] as Survey;
+        final responseId = extra['responseId'] as int?;
+        return SurveyAnsweringPage(survey: survey, responseId: responseId);
       },
     ),
   ],

@@ -19,35 +19,46 @@ class SurveyBehaviorManager {
       if (logic.enabled == false) continue;
       if (logic.conditionRules == null || logic.conditionRules!.isEmpty)
         continue;
-      final ruleResults =
-          logic.conditionRules?.map((rule) {
-            final answer = answers[rule.questionId];
-            return SurveyLogicManager.evaluateRule(
-              rule.operator ?? ConditionOperator.eq,
-              rule.value,
-              answer,
-            );
-          }).toList() ??
-          [];
 
-      // We need to know the join type. Usually it's AND by default or from the first rule.
-      // Prisma schema has join_type on ConditionRule.
-      // For simplicity, let's assume the join type of the logic group is AND unless specified.
-      final joinType = logic.conditionRules?.isNotEmpty == true
-          ? logic.conditionRules!.first.joinType ?? ConditionJoinType.and
-          : ConditionJoinType.and;
+      // 1. Sort rules by order to match web logic
+      final sortedRules = List.from(logic.conditionRules!)
+        ..sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0));
 
-      final isLogicTriggered = SurveyLogicManager.evaluateRules(
-        ruleResults,
-        joinType,
+      // 2. Sequential evaluation (Sequential Join)
+      bool isLogicTriggered = SurveyLogicManager.evaluateRule(
+        sortedRules[0].operator ?? ConditionOperator.eq,
+        sortedRules[0].value,
+        answers[sortedRules[0].questionId],
       );
 
+      for (int i = 1; i < sortedRules.length; i++) {
+        final rule = sortedRules[i];
+        final ruleResult = SurveyLogicManager.evaluateRule(
+          rule.operator ?? ConditionOperator.eq,
+          rule.value,
+          answers[rule.questionId],
+        );
+
+        if (rule.joinType == ConditionJoinType.or) {
+          isLogicTriggered = isLogicTriggered || ruleResult;
+        } else {
+          isLogicTriggered = isLogicTriggered && ruleResult;
+        }
+      }
+
+      // 3. Execution of actions
       if (isLogicTriggered &&
           logic.actions != null &&
           logic.actions!.isNotEmpty) {
-        for (ConditionAction action in logic.actions ?? []) {
-          final targetKey = "${action.targetType?.name}_${action.targetId}";
+        // Sort actions by order
+        final sortedActions = List.from(logic.actions!)
+          ..sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0));
+
+        for (ConditionAction action in sortedActions) {
+          final targetKey =
+              "${action.targetType?.name.toLowerCase()}_${action.targetId}";
           if (action.actionType == null) continue;
+
           switch (action.actionType!) {
             case ActionType.show:
               visibilityMap[targetKey] = true;
@@ -62,7 +73,7 @@ class SurveyBehaviorManager {
               requirementMap[targetKey] = false;
               break;
             case ActionType.jump:
-              // JUMP logic is usually handled by the flow controller
+              // Jump logic handled in navigation bloc, but we could add to a jumpMap if needed
               break;
           }
         }

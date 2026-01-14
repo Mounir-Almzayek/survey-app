@@ -16,6 +16,8 @@ class SurveyNavigationBloc
     on<NextSection>(_onNextSection);
     on<PreviousSection>(_onPreviousSection);
     on<GoToSection>(_onGoToSection);
+    on<StartSurvey>(_onStartSurvey);
+    on<CompleteSurvey>(_onCompleteSurvey);
   }
 
   void _onSetSurvey(SetSurvey event, Emitter<SurveyNavigationState> emit) {
@@ -49,6 +51,7 @@ class SurveyNavigationBloc
         currentSectionIndex: state.currentSectionIndex,
         visibilityMap: state.visibilityMap,
         requirementMap: state.requirementMap,
+        currentStep: state.currentStep,
       ),
     );
   }
@@ -68,10 +71,40 @@ class SurveyNavigationBloc
             currentSectionIndex: index,
             visibilityMap: state.visibilityMap,
             requirementMap: state.requirementMap,
+            currentStep: SurveyStep.survey,
           ),
         );
       }
     }
+  }
+
+  void _onStartSurvey(StartSurvey event, Emitter<SurveyNavigationState> emit) {
+    emit(
+      SurveyNavigationUpdated(
+        survey: state.survey,
+        responseId: state.responseId,
+        currentSectionIndex: state.currentSectionIndex,
+        visibilityMap: state.visibilityMap,
+        requirementMap: state.requirementMap,
+        currentStep: SurveyStep.survey,
+      ),
+    );
+  }
+
+  void _onCompleteSurvey(
+    CompleteSurvey event,
+    Emitter<SurveyNavigationState> emit,
+  ) {
+    emit(
+      SurveyNavigationUpdated(
+        survey: state.survey,
+        responseId: state.responseId,
+        currentSectionIndex: state.currentSectionIndex,
+        visibilityMap: state.visibilityMap,
+        requirementMap: state.requirementMap,
+        currentStep: SurveyStep.completion,
+      ),
+    );
   }
 
   void _onRefreshBehavior(
@@ -93,6 +126,7 @@ class SurveyNavigationBloc
         currentSectionIndex: state.currentSectionIndex,
         visibilityMap: Map<String, bool>.from(behavior['visibility'] ?? {}),
         requirementMap: Map<String, bool>.from(behavior['requirement'] ?? {}),
+        currentStep: state.currentStep,
       ),
     );
   }
@@ -111,6 +145,7 @@ class SurveyNavigationBloc
               currentSectionIndex: nextIndex,
               visibilityMap: state.visibilityMap,
               requirementMap: state.requirementMap,
+              currentStep: state.currentStep,
             ),
           );
           return;
@@ -137,6 +172,7 @@ class SurveyNavigationBloc
               currentSectionIndex: prevIndex,
               visibilityMap: state.visibilityMap,
               requirementMap: state.requirementMap,
+              currentStep: state.currentStep,
             ),
           );
           return;
@@ -161,6 +197,7 @@ class SurveyNavigationBloc
             currentSectionIndex: event.index,
             visibilityMap: state.visibilityMap,
             requirementMap: state.requirementMap,
+            currentStep: state.currentStep,
           ),
         );
       }

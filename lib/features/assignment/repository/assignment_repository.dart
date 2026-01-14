@@ -36,6 +36,7 @@ class AssignmentRepository {
     final request = APIRequest(
       path: '/researcher/assignment/survey/$surveyId/start',
       method: HTTPMethod.post,
+      body: {}, // Provide empty body to avoid FST_ERR_CTP_EMPTY_JSON_BODY
     );
 
     final response = await request.send();
@@ -77,6 +78,11 @@ class AssignmentRepository {
         responseId,
         syncedRequest,
       );
+
+      // Increment persistent sync counter if this was the final section
+      if (result.isComplete) {
+        await AssignmentLocalRepository.incrementSyncedResponsesCount();
+      }
     }
 
     return result;
@@ -105,6 +111,16 @@ class AssignmentRepository {
           responseId,
           saveRequest.copyWith(isSynced: true),
         );
+
+        // Check if the response indicates completion to increment sync counter
+        try {
+          if (response.data is Map<String, dynamic>) {
+            final result = SaveSectionResponse.fromJson(response.data);
+            if (result.success && result.isComplete) {
+              await AssignmentLocalRepository.incrementSyncedResponsesCount();
+            }
+          }
+        } catch (_) {}
       },
     );
   }

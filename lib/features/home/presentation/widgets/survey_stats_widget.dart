@@ -17,177 +17,198 @@ class SurveyStatsWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. Modern Metric Cards (Top Row)
+        // 1. Metric Grid (Actionable Insights)
         GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 2,
-          mainAxisSpacing: 14.h,
-          crossAxisSpacing: 14.w,
-          childAspectRatio: 1,
+          mainAxisSpacing: 12.h,
+          crossAxisSpacing: 12.w,
+          childAspectRatio: 1.4,
           children: [
             _MetricCard(
-              label: s.assignments,
-              value: stats.totalAssignments.toString(),
-              icon: Icons.assignment_rounded,
-              color: AppColors.primary,
-            ),
-            _MetricCard(
-              label: s.offline_drafts,
-              value: stats.offlineDrafts.toString(),
-              icon: Icons.cloud_off_rounded,
-              color: AppColors.warning,
-            ),
-            _MetricCard(
-              label: s.completed,
-              value: stats.syncedResponses.toString(),
-              icon: Icons.check_circle_rounded,
+              label: s.active_surveys,
+              value: stats.activeSurveys.toString(),
+              icon: Icons.play_circle_filled_rounded,
               color: AppColors.success,
             ),
             _MetricCard(
-              label: s.completion_rate,
-              value: "${stats.completionRate.toStringAsFixed(1)}%",
-              icon: Icons.auto_graph_rounded,
-              color: AppColors.accent,
+              label: s.draft_responses,
+              value: stats.draftResponses.toString(),
+              icon: Icons.edit_document,
+              color: AppColors.warning,
+            ),
+            _MetricCard(
+              label: s.pending_sync,
+              value: stats.pendingSyncResponses.toString(),
+              icon: Icons.sync_problem_rounded,
+              color: AppColors.error,
+            ),
+            _MetricCard(
+              label: s.synced_responses,
+              value: stats.syncedResponses.toString(),
+              icon: Icons.cloud_done_rounded,
+              color: AppColors.primary,
             ),
           ],
         ),
         SizedBox(height: 24.h),
 
-        // 2. Advanced Analysis Card (Web Design Layout)
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24.r),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 30,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              // Header
-              Padding(
-                padding: EdgeInsets.all(20.r),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(10.r),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Icon(
-                        Icons.insert_chart_rounded,
-                        color: AppColors.primary,
-                        size: 22.sp,
-                      ),
+        // 2. Availability Analysis (Bar Chart)
+        _ChartContainer(
+          title: s.survey_availability,
+          icon: Icons.calendar_month_rounded,
+          iconColor: Colors.blue,
+          child: SizedBox(
+            height: 180.h,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: (stats.totalSurveys + 2).toDouble(),
+                barTouchData: BarTouchData(enabled: false),
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) {
+                        String text = '';
+                        switch (value.toInt()) {
+                          case 0:
+                            text = s.upcoming_surveys;
+                            break;
+                          case 1:
+                            text = s.active_surveys;
+                            break;
+                          case 2:
+                            text = s.expired_surveys;
+                            break;
+                        }
+                        return SideTitleWidget(
+                          meta: meta,
+                          child: Text(
+                            text,
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.secondaryText,
+                            ),
+                          ),
+                        );
+                      },
+                      reservedSize: 30,
                     ),
-                    SizedBox(width: 14.w),
-                    Text(
-                      s.survey_overview,
-                      style: TextStyle(
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.primaryText,
-                      ),
-                    ),
-                  ],
+                  ),
+                  leftTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
+                gridData: const FlGridData(show: false),
+                borderData: FlBorderData(show: false),
+                barGroups: [
+                  BarChartGroupData(
+                    x: 0,
+                    barRods: [
+                      BarChartRodData(
+                        toY: stats.upcomingSurveys.toDouble(),
+                        color: Colors.blue.withOpacity(0.7),
+                        width: 20.w,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                    ],
+                  ),
+                  BarChartGroupData(
+                    x: 1,
+                    barRods: [
+                      BarChartRodData(
+                        toY: stats.activeSurveys.toDouble(),
+                        color: AppColors.success.withOpacity(0.7),
+                        width: 20.w,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                    ],
+                  ),
+                  BarChartGroupData(
+                    x: 2,
+                    barRods: [
+                      BarChartRodData(
+                        toY: stats.expiredSurveys.toDouble(),
+                        color: AppColors.error.withOpacity(0.7),
+                        width: 20.w,
+                        borderRadius: BorderRadius.circular(4.r),
+                      ),
+                    ],
+                  ),
+                ],
               ),
+            ),
+          ),
+        ),
+        SizedBox(height: 16.h),
 
-              // Chart and Legend Side-by-Side
-              Padding(
-                padding: EdgeInsets.fromLTRB(20.r, 0, 20.r, 24.r),
-                child: Row(
-                  children: [
-                    // Donut Chart
-                    Expanded(
-                      flex: 4,
-                      child: SizedBox(
-                        height: 160.h,
-                        child: Stack(
-                          children: [
-                            PieChart(
-                              PieChartData(
-                                sectionsSpace: 4,
-                                centerSpaceRadius: 45.r,
-                                sections: _getSections(stats),
-                              ),
-                            ),
-                            Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    (stats.totalAssignments +
-                                            stats.offlineDrafts +
-                                            stats.syncedResponses)
-                                        .toString(),
-                                    style: TextStyle(
-                                      fontSize: 22.sp,
-                                      fontWeight: FontWeight.w900,
-                                      color: AppColors.primaryText,
-                                    ),
-                                  ),
-                                  Text(
-                                    s.total.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 9.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.secondaryText,
-                                      letterSpacing: 1,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+        // 3. Sync Status (Donut Chart)
+        _ChartContainer(
+          title: s.sync_status,
+          icon: Icons.sync_rounded,
+          iconColor: AppColors.primary,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 4,
+                child: SizedBox(
+                  height: 140.h,
+                  child: Stack(
+                    children: [
+                      PieChart(
+                        PieChartData(
+                          sectionsSpace: 4,
+                          centerSpaceRadius: 35.r,
+                          sections: _getSyncSections(stats, s),
                         ),
                       ),
-                    ),
-
-                    SizedBox(width: 24.w),
-
-                    // Web-style Legend
-                    Expanded(
-                      flex: 5,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _WebLegendItem(
-                            color: AppColors.primary,
-                            label: s.assignments,
-                            value: stats.totalAssignments,
-                            total:
-                                stats.totalAssignments +
-                                stats.offlineDrafts +
-                                stats.syncedResponses,
+                      Center(
+                        child: Text(
+                          (stats.syncedResponses +
+                                  stats.pendingSyncResponses +
+                                  stats.draftResponses)
+                              .toString(),
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.primaryText,
                           ),
-                          _WebLegendItem(
-                            color: AppColors.warning,
-                            label: s.offline_drafts,
-                            value: stats.offlineDrafts,
-                            total:
-                                stats.totalAssignments +
-                                stats.offlineDrafts +
-                                stats.syncedResponses,
-                          ),
-                          _WebLegendItem(
-                            color: AppColors.success,
-                            label: s.completed,
-                            value: stats.syncedResponses,
-                            total:
-                                stats.totalAssignments +
-                                stats.offlineDrafts +
-                                stats.syncedResponses,
-                          ),
-                        ],
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                flex: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _LegendItem(
+                      color: AppColors.primary,
+                      label: s.synced_responses,
+                      value: stats.syncedResponses,
+                    ),
+                    _LegendItem(
+                      color: AppColors.error,
+                      label: s.pending_sync,
+                      value: stats.pendingSyncResponses,
+                    ),
+                    _LegendItem(
+                      color: AppColors.warning,
+                      label: s.draft_responses,
+                      value: stats.draftResponses,
                     ),
                   ],
                 ),
@@ -199,36 +220,44 @@ class SurveyStatsWidget extends StatelessWidget {
     );
   }
 
-  List<PieChartSectionData> _getSections(SurveyStatsModel stats) {
+  List<PieChartSectionData> _getSyncSections(SurveyStatsModel stats, S s) {
     final total =
-        (stats.totalAssignments + stats.offlineDrafts + stats.syncedResponses)
+        (stats.syncedResponses +
+                stats.pendingSyncResponses +
+                stats.draftResponses)
             .toDouble();
 
     if (total == 0) {
       return [
         PieChartSectionData(
-          color: AppColors.border.withValues(alpha: 0.3),
+          color: AppColors.border.withOpacity(0.3),
           value: 1,
           title: '',
-          radius: 35.r,
+          radius: 20.r,
         ),
       ];
     }
 
     return [
-      _buildSection(AppColors.primary, stats.totalAssignments.toDouble(), 35.r),
-      _buildSection(AppColors.warning, stats.offlineDrafts.toDouble(), 35.r),
-      _buildSection(AppColors.success, stats.syncedResponses.toDouble(), 35.r),
+      PieChartSectionData(
+        color: AppColors.primary,
+        value: stats.syncedResponses.toDouble(),
+        title: '',
+        radius: 20.r,
+      ),
+      PieChartSectionData(
+        color: AppColors.error,
+        value: stats.pendingSyncResponses.toDouble(),
+        title: '',
+        radius: 20.r,
+      ),
+      PieChartSectionData(
+        color: AppColors.warning,
+        value: stats.draftResponses.toDouble(),
+        title: '',
+        radius: 20.r,
+      ),
     ];
-  }
-
-  PieChartSectionData _buildSection(Color color, double value, double radius) {
-    return PieChartSectionData(
-      color: color,
-      value: value,
-      title: '',
-      radius: radius,
-    );
   }
 }
 
@@ -248,46 +277,47 @@ class _MetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.4)),
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            padding: EdgeInsets.all(8.r),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Icon(icon, color: color, size: 28.sp),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: EdgeInsets.all(6.r),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: color, size: 20.sp),
+              ),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.primaryText,
+                ),
+              ),
+            ],
           ),
-          const Spacer(),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w900,
-              color: AppColors.primaryText,
-            ),
-          ),
-          const Spacer(),
           Text(
             label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontSize: 11.sp,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.secondaryText,
             ),
@@ -298,61 +328,96 @@ class _MetricCard extends StatelessWidget {
   }
 }
 
-class _WebLegendItem extends StatelessWidget {
-  final Color color;
-  final String label;
-  final int value;
-  final int total;
+class _ChartContainer extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color iconColor;
+  final Widget child;
 
-  const _WebLegendItem({
-    required this.color,
-    required this.label,
-    required this.value,
-    required this.total,
+  const _ChartContainer({
+    required this.title,
+    required this.icon,
+    required this.iconColor,
+    required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
-    final double percentage = total > 0 ? (value / total) * 100 : 0;
-
     return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      padding: EdgeInsets.only(bottom: 8.h),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.border.withValues(alpha: 0.5),
-            width: 1,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 20,
+            offset: const Offset(0, 6),
           ),
-        ),
+        ],
       ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: iconColor, size: 18.sp),
+              SizedBox(width: 8.w),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primaryText,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
+class _LegendItem extends StatelessWidget {
+  final Color color;
+  final String label;
+  final int value;
+
+  const _LegendItem({
+    required this.color,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.h),
       child: Row(
         children: [
           Container(
             width: 8.r,
             height: 8.r,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(2.r),
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
-          SizedBox(width: 10.w),
+          SizedBox(width: 8.w),
           Expanded(
             child: Text(
               label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
+                fontSize: 11.sp,
                 color: AppColors.secondaryText,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
           Text(
-            "${percentage.toStringAsFixed(0)}%",
+            value.toString(),
             style: TextStyle(
-              fontSize: 12.sp,
+              fontSize: 11.sp,
               fontWeight: FontWeight.w700,
               color: AppColors.primaryText,
             ),

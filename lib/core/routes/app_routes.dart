@@ -18,6 +18,7 @@ class Routes {
   static const String notificationsPath = '/notifications';
   static const String qrScannerPath = '/qr-scanner';
   static const String deviceRegistrationPath = '/device-registration';
+  static const String surveyAnsweringPath = '/survey-answering';
 
   // Route names
   static const String notifications = 'notifications';

@@ -26,9 +26,25 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
     UpdateResponseId event,
     Emitter<SaveSectionState> emit,
   ) async {
+    final responseId = event.responseId;
+
+    if (responseId == null) {
+      emit(
+        SaveSectionInitial(
+          responseId: null,
+          saveRequest: SaveSectionRequest(
+            sectionId: event.initialSectionId ?? 0,
+            lastReachedSectionId: event.initialSectionId ?? 0,
+            answers: [],
+          ),
+        ),
+      );
+      return;
+    }
+
     // Check if there is a cached draft for this responseId
     final cachedDraft = await AssignmentLocalRepository.getResponseDraft(
-      event.responseId,
+      responseId,
     );
 
     if (cachedDraft != null) {
@@ -39,13 +55,13 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
         ),
       );
     } else {
-      // If no draft, create a blank model
+      // If no draft, create a blank model with initial section ID
       emit(
         SaveSectionInitial(
           responseId: event.responseId,
           saveRequest: SaveSectionRequest(
-            sectionId: 0,
-            lastReachedSectionId: 0,
+            sectionId: event.initialSectionId ?? 0,
+            lastReachedSectionId: event.initialSectionId ?? 0,
             answers: [],
           ),
         ),
