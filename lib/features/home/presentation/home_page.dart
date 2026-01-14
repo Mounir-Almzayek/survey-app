@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../public_links/bloc/get_my_public_links/get_my_public_links_bloc.dart';
 import '../../public_links/bloc/get_my_public_links/get_my_public_links_event.dart';
-import '../../public_links/bloc/active_responses/active_responses_bloc.dart';
-import '../../public_links/bloc/active_responses/active_responses_event.dart';
 import 'home_screen.dart';
 
 class HomePage extends StatelessWidget {
@@ -17,12 +15,8 @@ class HomePage extends StatelessWidget {
           create: (context) =>
               GetMyPublicLinksBloc()..add(const GetMyPublicLinks()),
         ),
-        BlocProvider(
-          create: (context) => ActiveResponsesBloc()..add(LoadActiveResponses()),
-        ),
       ],
       child: const HomeScreen(),
     );
   }
 }
-

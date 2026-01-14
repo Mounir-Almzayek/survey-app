@@ -103,7 +103,8 @@ class PublicLink extends Equatable {
   String get surveyTitle => survey?.title ?? '';
 
   /// Get full URL (computed from shortCode)
-  String get fullUrl => 'https://survey.example.com/s/$shortCode';
+  String get fullUrl =>
+      'https://survey-frontend.system2030.com/ar/survey/$shortCode';
 
   /// Create PublicLink from JSON
   factory PublicLink.fromJson(Map<String, dynamic> json) {

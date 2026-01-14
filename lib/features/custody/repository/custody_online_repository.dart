@@ -1,17 +1,21 @@
 import '../../../data/network/api_request.dart';
 import '../models/custody_record.dart';
 import '../models/custody_transfer.dart';
+import '../models/custody_list_request.dart';
 
 /// Repository for custody online operations
 /// Each method should have its own bloc
 class CustodyOnlineRepository {
-  /// Get list of custody records for researcher
+  /// Get list of custody records for researcher with filters
   /// This method should use CustodyListBloc
-  static Future<List<CustodyRecord>> getCustodyRecords() async {
+  static Future<List<CustodyRecord>> getCustodyRecords([
+    CustodyListRequest? request,
+  ]) async {
     try {
       final apiRequest = APIRequest(
         path: '/researcher/custody',
         method: HTTPMethod.get,
+        query: request?.toQueryParameters(),
         authorizationOption: AuthorizationOption.authorized,
       );
 
@@ -20,8 +24,7 @@ class CustodyOnlineRepository {
 
       if (data is List) {
         return data
-            .map((item) =>
-                CustodyRecord.fromJson(item as Map<String, dynamic>))
+            .map((item) => CustodyRecord.fromJson(item as Map<String, dynamic>))
             .toList();
       }
 
@@ -118,4 +121,3 @@ class CustodyOnlineRepository {
     }
   }
 }
-

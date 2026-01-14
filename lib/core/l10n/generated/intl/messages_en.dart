@@ -59,9 +59,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "active_links_count": m0,
         "active_responses":
             MessageLookupByLibrary.simpleMessage("Active Responses"),
+        "active_tasks": MessageLookupByLibrary.simpleMessage("Active Tasks"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("Allow location access"),
         "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
+        "assignments": MessageLookupByLibrary.simpleMessage("Assignments"),
         "availability_period": m1,
         "available_surveys":
             MessageLookupByLibrary.simpleMessage("Available Surveys"),
@@ -82,6 +84,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Complete the device registration process in the system"),
         "complete_registration_tap_notice": MessageLookupByLibrary.simpleMessage(
             "By tapping \'Link Device\', this device will be unique to your researcher profile."),
+        "completed": MessageLookupByLibrary.simpleMessage("Completed"),
+        "completion_rate":
+            MessageLookupByLibrary.simpleMessage("Completion Rate"),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "confirm_delete_message": m3,
         "confirm_delete_title":
@@ -145,6 +150,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_occurred":
             MessageLookupByLibrary.simpleMessage("An error occurred"),
         "error_with_message": m7,
+        "expires_at": MessageLookupByLibrary.simpleMessage("Expires At"),
         "failed_pick_image": MessageLookupByLibrary.simpleMessage(
             "Failed to pick image, please try again later!"),
         "failed_to_save_image":
@@ -219,6 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to log out?"),
         "logout_title": MessageLookupByLibrary.simpleMessage("Log Out"),
         "main_menu": MessageLookupByLibrary.simpleMessage("Main Menu"),
+        "max_responses": MessageLookupByLibrary.simpleMessage("Max Responses"),
         "max_touch_points":
             MessageLookupByLibrary.simpleMessage("Maximum Touch Points"),
         "nationality": MessageLookupByLibrary.simpleMessage("Nationality"),
@@ -252,6 +259,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "not_available": MessageLookupByLibrary.simpleMessage("Not Available"),
         "notes": MessageLookupByLibrary.simpleMessage("Notes"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
+        "offline_drafts":
+            MessageLookupByLibrary.simpleMessage("Offline Drafts"),
         "offline_mode":
             MessageLookupByLibrary.simpleMessage("Viewing offline data"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
@@ -367,10 +376,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "submit": MessageLookupByLibrary.simpleMessage("Submit"),
         "survey_code_placeholder":
             MessageLookupByLibrary.simpleMessage("e.g. ABC-123"),
+        "survey_link": MessageLookupByLibrary.simpleMessage("Survey Link"),
+        "survey_overview":
+            MessageLookupByLibrary.simpleMessage("Survey Overview"),
         "surveys": MessageLookupByLibrary.simpleMessage("Surveys"),
         "sync": MessageLookupByLibrary.simpleMessage("Sync"),
         "tap_to_view": MessageLookupByLibrary.simpleMessage("Tap to view"),
         "to_user_email": MessageLookupByLibrary.simpleMessage("To User Email"),
+        "total": MessageLookupByLibrary.simpleMessage("Total"),
         "total_sections_touched":
             MessageLookupByLibrary.simpleMessage("Total Sections Touched"),
         "transfer_info_message": MessageLookupByLibrary.simpleMessage(

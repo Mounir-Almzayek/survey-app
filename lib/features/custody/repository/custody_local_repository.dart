@@ -91,6 +91,28 @@ class CustodyLocalRepository {
     }
   }
 
+  /// Append custody records to local storage (for pagination)
+  static Future<void> appendCustodyRecords(
+    List<CustodyRecord> newRecords,
+  ) async {
+    try {
+      final currentRecords = await getCustodyRecords();
+
+      // Filter out duplicates based on ID
+      final Map<int, CustodyRecord> recordMap = {
+        for (var r in currentRecords) r.id: r,
+      };
+
+      for (var r in newRecords) {
+        recordMap[r.id] = r;
+      }
+
+      await saveCustodyRecords(recordMap.values.toList());
+    } catch (e) {
+      // Ignore errors in local storage
+    }
+  }
+
   /// Clear all custody records from local storage
   static Future<void> clearCustodyRecords() async {
     try {

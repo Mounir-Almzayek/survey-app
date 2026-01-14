@@ -10,12 +10,26 @@ import '../../../core/widgets/unified_snackbar.dart';
 import '../bloc/custody_list/custody_list_bloc.dart';
 import '../bloc/custody_list/custody_list_event.dart';
 import '../bloc/custody_list/custody_list_state.dart';
+import '../../../core/widgets/infinite_list_view_widget.dart';
 import 'widgets/custody_card.dart';
 import 'custody_transfer_screen.dart';
 import 'custody_verification_screen.dart';
 
-class CustodyListScreen extends StatelessWidget {
+class CustodyListScreen extends StatefulWidget {
   const CustodyListScreen({super.key});
+
+  @override
+  State<CustodyListScreen> createState() => _CustodyListScreenState();
+}
+
+class _CustodyListScreenState extends State<CustodyListScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +67,9 @@ class CustodyListScreen extends StatelessWidget {
             return const LoadingWidget();
           }
 
-          if (state is CustodyListError) {
+          if (state is CustodyListError &&
+              (state is! CustodyListLoaded ||
+                  (state as CustodyListLoaded).records.isEmpty)) {
             return ErrorStateWidget(
               message: state.message,
               onRetry: () {
@@ -73,38 +89,40 @@ class CustodyListScreen extends StatelessWidget {
               );
             }
 
-            return RefreshIndicator(
+            return InfiniteListViewWidget(
+              scrollController: _scrollController,
+              items: state.records,
+              isLoading: state.isFetchingMore,
+              hasMoreData: state.hasMoreData,
+              fetchMoreItems: () async {
+                context.read<CustodyListBloc>().add(const LoadNextPage());
+              },
               onRefresh: () async {
                 context.read<CustodyListBloc>().add(
                   const RefreshCustodyRecords(),
                 );
               },
-              child: ListView.builder(
-                padding: EdgeInsets.all(16.w),
-                itemCount: state.records.length,
-                itemBuilder: (context, index) {
-                  final record = state.records[index];
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 12.h),
-                    child: CustodyCard(
-                      record: record,
-                      onVerify: record.isPending
-                          ? () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CustodyVerificationScreen(
-                                        custodyId: record.id,
-                                      ),
+              padding: EdgeInsets.all(16.w),
+              itemBuilder: (context, record) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 12.h),
+                  child: CustodyCard(
+                    record: record,
+                    onVerify: record.isPending
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CustodyVerificationScreen(
+                                  custodyId: record.id,
                                 ),
-                              );
-                            }
-                          : null,
-                    ),
-                  );
-                },
-              ),
+                              ),
+                            );
+                          }
+                        : null,
+                  ),
+                );
+              },
             );
           }
 

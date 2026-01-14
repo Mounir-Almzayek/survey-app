@@ -197,6 +197,9 @@
     }
   },
   "view_details": "عرض التفاصيل",
+  "survey_link": "رابط الاستطلاع",
+  "max_responses": "أقصى عدد للاستجابات",
+  "expires_at": "تاريخ الانتهاء",
   "enter_survey_code": "أدخل رمز الاستطلاع",
   "survey_code_placeholder": "مثال: ABC-123",
   "scan_qr": "مسح رمز QR",
@@ -336,5 +339,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "survey_overview": "نظرة عامة على الاستبيانات",
+  "total": "الإجمالي",
+  "assignments": "المهام",
+  "offline_drafts": "المسودات المحلية",
+  "completed": "المكتملة",
+  "completion_rate": "نسبة الإنجاز",
+  "active_tasks": "المهام النشطة"
 }

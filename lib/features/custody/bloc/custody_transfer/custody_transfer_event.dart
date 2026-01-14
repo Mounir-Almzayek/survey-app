@@ -23,4 +23,3 @@ class CreateCustodyTransfer extends CustodyTransferEvent {
 class ResetCustodyTransfer extends CustodyTransferEvent {
   const ResetCustodyTransfer();
 }
-

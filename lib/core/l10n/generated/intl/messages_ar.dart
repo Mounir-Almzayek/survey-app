@@ -59,9 +59,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "active_links_count": m0,
         "active_responses":
             MessageLookupByLibrary.simpleMessage("الاستجابات النشطة"),
+        "active_tasks": MessageLookupByLibrary.simpleMessage("المهام النشطة"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("السماح بالوصول إلى الموقع"),
         "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
+        "assignments": MessageLookupByLibrary.simpleMessage("المهام"),
         "availability_period": m1,
         "available_surveys":
             MessageLookupByLibrary.simpleMessage("الاستبيانات المتاحة"),
@@ -82,6 +84,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "إكمال عملية تسجيل الجهاز في النظام"),
         "complete_registration_tap_notice": MessageLookupByLibrary.simpleMessage(
             "بالضغط على \'ربط الجهاز\'، سيصبح هذا الجهاز مخصصاً لملفك التعريفي كباحث."),
+        "completed": MessageLookupByLibrary.simpleMessage("المكتملة"),
+        "completion_rate": MessageLookupByLibrary.simpleMessage("نسبة الإنجاز"),
         "confirm": MessageLookupByLibrary.simpleMessage("تأكيد"),
         "confirm_delete_message": m3,
         "confirm_delete_title":
@@ -144,6 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "entity": MessageLookupByLibrary.simpleMessage("الجهة"),
         "error_occurred": MessageLookupByLibrary.simpleMessage("حدث خطأ ما"),
         "error_with_message": m7,
+        "expires_at": MessageLookupByLibrary.simpleMessage("تاريخ الانتهاء"),
         "failed_pick_image": MessageLookupByLibrary.simpleMessage(
             "فشل في اختيار الصورة، يرجى المحاولة لاحقاً!"),
         "failed_to_save_image":
@@ -216,6 +221,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "هل أنت متأكد من رغبتك في تسجيل الخروج؟"),
         "logout_title": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
         "main_menu": MessageLookupByLibrary.simpleMessage("القائمة الرئيسية"),
+        "max_responses":
+            MessageLookupByLibrary.simpleMessage("أقصى عدد للاستجابات"),
         "max_touch_points":
             MessageLookupByLibrary.simpleMessage("نقاط اللمس القصوى"),
         "nationality": MessageLookupByLibrary.simpleMessage("الجنسية"),
@@ -250,6 +257,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "not_available": MessageLookupByLibrary.simpleMessage("غير متاح"),
         "notes": MessageLookupByLibrary.simpleMessage("ملاحظات"),
         "notifications": MessageLookupByLibrary.simpleMessage("التنبيهات"),
+        "offline_drafts":
+            MessageLookupByLibrary.simpleMessage("المسودات المحلية"),
         "offline_mode": MessageLookupByLibrary.simpleMessage(
             "عرض البيانات المحفوظة (أوفلاين)"),
         "ok": MessageLookupByLibrary.simpleMessage("موافق"),
@@ -365,11 +374,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "submit": MessageLookupByLibrary.simpleMessage("إرسال"),
         "survey_code_placeholder":
             MessageLookupByLibrary.simpleMessage("مثال: ABC-123"),
+        "survey_link": MessageLookupByLibrary.simpleMessage("رابط الاستطلاع"),
+        "survey_overview":
+            MessageLookupByLibrary.simpleMessage("نظرة عامة على الاستبيانات"),
         "surveys": MessageLookupByLibrary.simpleMessage("الاستطلاعات"),
         "sync": MessageLookupByLibrary.simpleMessage("مزامنة"),
         "tap_to_view": MessageLookupByLibrary.simpleMessage("اضغط للعرض"),
         "to_user_email": MessageLookupByLibrary.simpleMessage(
             "البريد الإلكتروني للمستخدم المستقبل"),
+        "total": MessageLookupByLibrary.simpleMessage("الإجمالي"),
         "total_sections_touched":
             MessageLookupByLibrary.simpleMessage("إجمالي الأقسام المفتوحة"),
         "transfer_info_message": MessageLookupByLibrary.simpleMessage(

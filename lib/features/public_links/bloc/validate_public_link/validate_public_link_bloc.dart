@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/async_runner.dart';
 import '../../models/validated_public_link.dart';
-import '../../repository/public_links_online_repository.dart';
+import '../../repository/public_links_repository.dart';
 import 'validate_public_link_event.dart';
 import 'validate_public_link_state.dart';
 
@@ -25,7 +25,7 @@ class ValidatePublicLinkBloc
 
     await _validateLinkRunner.run(
       onlineTask: (_) async {
-        return await PublicLinksOnlineRepository.validatePublicLink(
+        return await PublicLinksRepository.validatePublicLink(
           event.shortCode,
         );
       },

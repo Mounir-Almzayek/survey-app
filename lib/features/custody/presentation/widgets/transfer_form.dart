@@ -22,12 +22,14 @@ class TransferForm extends StatefulWidget {
 
 class _TransferFormState extends State<TransferForm> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _deviceIdController = TextEditingController();
+  final _toUserIdController = TextEditingController();
   final _notesController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _deviceIdController.dispose();
+    _toUserIdController.dispose();
     _notesController.dispose();
     super.dispose();
   }
@@ -35,7 +37,8 @@ class _TransferFormState extends State<TransferForm> {
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
       final transfer = CustodyTransfer(
-        toUserEmail: _emailController.text.trim(),
+        physicalDeviceId: int.parse(_deviceIdController.text.trim()),
+        toUserId: int.parse(_toUserIdController.text.trim()),
         notes: _notesController.text.trim().isEmpty
             ? null
             : _notesController.text.trim(),
@@ -54,21 +57,41 @@ class _TransferFormState extends State<TransferForm> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           CustomTextField(
-            controller: _emailController,
-            label: locale.to_user_email,
-            hintText: locale.enter_email,
-            keyboardType: TextInputType.emailAddress,
+            controller: _deviceIdController,
+            label: "Physical Device ID",
+            hintText: "Enter Device ID",
+            keyboardType: TextInputType.number,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return locale.please_enter_email;
+                return "Please enter device ID";
               }
-              if (!value.contains('@')) {
-                return locale.invalid_email;
+              if (int.tryParse(value) == null) {
+                return "Invalid ID";
               }
               return null;
             },
             prefixIcon: Icon(
-              Icons.email_outlined,
+              Icons.devices_other_outlined,
+              color: AppColors.secondaryText,
+            ),
+          ),
+          SizedBox(height: 16.h),
+          CustomTextField(
+            controller: _toUserIdController,
+            label: "To User ID",
+            hintText: "Enter Target User ID",
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "Please enter user ID";
+              }
+              if (int.tryParse(value) == null) {
+                return "Invalid ID";
+              }
+              return null;
+            },
+            prefixIcon: Icon(
+              Icons.person_outline_rounded,
               color: AppColors.secondaryText,
             ),
           ),

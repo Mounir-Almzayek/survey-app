@@ -1670,6 +1670,36 @@ class S {
     );
   }
 
+  /// `Survey Link`
+  String get survey_link {
+    return Intl.message(
+      'Survey Link',
+      name: 'survey_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Max Responses`
+  String get max_responses {
+    return Intl.message(
+      'Max Responses',
+      name: 'max_responses',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expires At`
+  String get expires_at {
+    return Intl.message(
+      'Expires At',
+      name: 'expires_at',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Enter Survey Code`
   String get enter_survey_code {
     return Intl.message(
@@ -2337,6 +2367,76 @@ class S {
       name: 'last_update',
       desc: '',
       args: [date],
+    );
+  }
+
+  /// `Survey Overview`
+  String get survey_overview {
+    return Intl.message(
+      'Survey Overview',
+      name: 'survey_overview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total`
+  String get total {
+    return Intl.message(
+      'Total',
+      name: 'total',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Assignments`
+  String get assignments {
+    return Intl.message(
+      'Assignments',
+      name: 'assignments',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Offline Drafts`
+  String get offline_drafts {
+    return Intl.message(
+      'Offline Drafts',
+      name: 'offline_drafts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completed`
+  String get completed {
+    return Intl.message(
+      'Completed',
+      name: 'completed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completion Rate`
+  String get completion_rate {
+    return Intl.message(
+      'Completion Rate',
+      name: 'completion_rate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active Tasks`
+  String get active_tasks {
+    return Intl.message(
+      'Active Tasks',
+      name: 'active_tasks',
+      desc: '',
+      args: [],
     );
   }
 }

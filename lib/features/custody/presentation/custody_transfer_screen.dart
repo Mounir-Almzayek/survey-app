@@ -81,9 +81,9 @@ class CustodyTransferScreen extends StatelessWidget {
                   // Transfer form
                   TransferForm(
                     onSubmit: (transfer) {
-                      context
-                          .read<CustodyTransferBloc>()
-                          .add(CreateCustodyTransfer(transfer));
+                      context.read<CustodyTransferBloc>().add(
+                        CreateCustodyTransfer(transfer),
+                      );
                     },
                     isLoading: isLoading,
                   ),
@@ -96,4 +96,3 @@ class CustodyTransferScreen extends StatelessWidget {
     );
   }
 }
-

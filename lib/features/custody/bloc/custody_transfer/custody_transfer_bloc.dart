@@ -60,4 +60,3 @@ class CustodyTransferBloc
     return super.close();
   }
 }
-

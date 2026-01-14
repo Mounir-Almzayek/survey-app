@@ -39,7 +39,7 @@ class AppColors {
   static final LinearGradient surveySecondaryGradient = LinearGradient(
     colors: [
       surveyPrimaryStart.withOpacity(0.1),
-      surveyPrimaryEnd.withOpacity(0.1)
+      surveyPrimaryEnd.withOpacity(0.1),
     ],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
