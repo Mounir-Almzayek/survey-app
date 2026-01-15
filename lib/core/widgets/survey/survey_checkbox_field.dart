@@ -28,6 +28,7 @@ class SurveyCheckboxField extends StatelessWidget {
       isRequired: question.isRequired,
       errorText: errorText,
       isVisible: isVisible,
+      validations: question.questionValidations,
       child: Column(
         children:
             question.questionOptions?.map((option) {

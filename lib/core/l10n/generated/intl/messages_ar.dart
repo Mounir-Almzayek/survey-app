@@ -43,13 +43,17 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(count) => "الردود المحلية (${count})";
 
-  static String m11(date) => "موعد النشر: ${date}";
+  static String m11(count) => "+ ${count} دقائق";
 
-  static String m12(id) => "رد رقم: ${id}";
+  static String m12(date) => "موعد النشر: ${date}";
 
-  static String m13(count) => "${count} أقسام";
+  static String m13(count) => "${count} أسئلة";
 
-  static String m14(title) => "رابط الاستطلاع: ${title}";
+  static String m14(id) => "رد رقم: ${id}";
+
+  static String m15(count) => "${count} أقسام";
+
+  static String m16(title) => "رابط الاستطلاع: ${title}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -79,6 +83,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel_download":
             MessageLookupByLibrary.simpleMessage("إلغاء التحميل"),
         "cancel_upload": MessageLookupByLibrary.simpleMessage("إلغاء الرفع"),
+        "clear_all": MessageLookupByLibrary.simpleMessage("إخلاء الكل"),
         "close": MessageLookupByLibrary.simpleMessage("إغلاق"),
         "code": MessageLookupByLibrary.simpleMessage("الكود"),
         "code_colon": m2,
@@ -232,6 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("أقصى عدد للاستجابات"),
         "max_touch_points":
             MessageLookupByLibrary.simpleMessage("نقاط اللمس القصوى"),
+        "minutes_count": m11,
         "nationality": MessageLookupByLibrary.simpleMessage("الجنسية"),
         "new_password":
             MessageLookupByLibrary.simpleMessage("كلمة المرور الجديدة"),
@@ -301,9 +307,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "public_link_not_found":
             MessageLookupByLibrary.simpleMessage("الرابط العام غير موجود"),
         "public_links": MessageLookupByLibrary.simpleMessage("الروابط العامة"),
-        "publish_date": m11,
+        "publish_date": m12,
         "qr_code": MessageLookupByLibrary.simpleMessage("رمز QR"),
         "qr_scanner": MessageLookupByLibrary.simpleMessage("قارئ رمز QR"),
+        "questions_count": m13,
         "queue_detail_body":
             MessageLookupByLibrary.simpleMessage("البيانات المرسلة"),
         "queue_detail_error": MessageLookupByLibrary.simpleMessage("الخطأ"),
@@ -344,7 +351,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("إعادة تعيين كلمة المرور"),
         "response_details_title":
             MessageLookupByLibrary.simpleMessage("تفاصيل الاستجابة"),
-        "response_number": m12,
+        "response_number": m14,
         "response_status_flagged":
             MessageLookupByLibrary.simpleMessage("معلَّمة"),
         "response_status_pending":
@@ -356,6 +363,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "responses_title": MessageLookupByLibrary.simpleMessage("الاستجابات"),
         "resume_survey": MessageLookupByLibrary.simpleMessage("استكمال"),
         "retry": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
+        "retry_all": MessageLookupByLibrary.simpleMessage("إعادة محاولة الكل"),
         "retry_upload":
             MessageLookupByLibrary.simpleMessage("إعادة محاولة الرفع"),
         "scan_qr": MessageLookupByLibrary.simpleMessage("مسح رمز QR"),
@@ -364,14 +372,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ضع رمز QR داخل الإطار للمسح"),
         "screen_resolution": MessageLookupByLibrary.simpleMessage("دقة الشاشة"),
         "search": MessageLookupByLibrary.simpleMessage("بحث"),
-        "sections_count": m13,
+        "sections_count": m15,
         "select_date": MessageLookupByLibrary.simpleMessage("اختر التاريخ"),
         "select_file": MessageLookupByLibrary.simpleMessage("اختر ملف"),
         "select_language": MessageLookupByLibrary.simpleMessage("اختر اللغة"),
         "send_code": MessageLookupByLibrary.simpleMessage("إرسال الرمز"),
         "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
         "share_link": MessageLookupByLibrary.simpleMessage("مشاركة"),
-        "share_link_subject": m14,
+        "share_link_subject": m16,
         "show_less": MessageLookupByLibrary.simpleMessage("عرض أقل"),
         "show_qr_code": MessageLookupByLibrary.simpleMessage("عرض رمز QR"),
         "start_location_tracking":

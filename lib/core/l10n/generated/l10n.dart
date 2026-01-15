@@ -1660,6 +1660,26 @@ class S {
     );
   }
 
+  /// `{count} Questions`
+  String questions_count(int count) {
+    return Intl.message(
+      '$count Questions',
+      name: 'questions_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `+{count} Mins`
+  String minutes_count(int count) {
+    return Intl.message(
+      '+$count Mins',
+      name: 'minutes_count',
+      desc: '',
+      args: [count],
+    );
+  }
+
   /// `View Details`
   String get view_details {
     return Intl.message(
@@ -2585,6 +2605,26 @@ class S {
     return Intl.message(
       'Sync Status',
       name: 'sync_status',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Retry All`
+  String get retry_all {
+    return Intl.message(
+      'Retry All',
+      name: 'retry_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear All`
+  String get clear_all {
+    return Intl.message(
+      'Clear All',
+      name: 'clear_all',
       desc: '',
       args: [],
     );

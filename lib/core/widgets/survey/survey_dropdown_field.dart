@@ -28,10 +28,11 @@ class SurveyDropdownField extends StatelessWidget {
       isRequired: question.isRequired,
       errorText: errorText,
       isVisible: isVisible,
+      validations: question.questionValidations,
       child: CustomDropdownField<String>(
         label: "", // Handled by SurveyQuestionCard
         activeColor: AppColors.surveyPrimary,
-        activeGradient: AppColors.surveyGradient,
+        activeGradient: AppColors.primaryGradient,
         items:
             question.questionOptions?.map((e) => e.value ?? "").toList() ?? [],
         getLabel: (val) =>

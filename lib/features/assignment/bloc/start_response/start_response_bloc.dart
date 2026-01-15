@@ -38,9 +38,21 @@ class StartResponseBloc extends Bloc<StartResponseEvent, StartResponseState> {
     await _runner.run(
       onlineTask: (_) async =>
           await AssignmentRepository.startResponse(surveyId),
+      offlineTask: (_) async =>
+          await AssignmentRepository.startResponseOffline(surveyId),
       checkConnectivity: true,
       onSuccess: (response) async {
         // Link the new response ID to the survey in local storage
+        await AssignmentLocalRepository.linkResponseToSurvey(
+          surveyId,
+          response.response.id,
+        );
+        if (!emit.isDone) {
+          emit(StartResponseSuccess(response, surveyId: surveyId));
+        }
+      },
+      onOffline: (response) async {
+        // Link the dummy response ID to the survey in local storage
         await AssignmentLocalRepository.linkResponseToSurvey(
           surveyId,
           response.response.id,

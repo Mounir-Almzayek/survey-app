@@ -16,3 +16,10 @@ class QueueSessionItemUpdated extends QueueSessionEvent {
   List<Object?> get props => [response];
 }
 
+class QueueSessionRetryAll extends QueueSessionEvent {
+  const QueueSessionRetryAll();
+}
+
+class QueueSessionClearAll extends QueueSessionEvent {
+  const QueueSessionClearAll();
+}

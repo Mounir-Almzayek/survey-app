@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../styles/app_colors.dart';
+import '../../models/survey/question_validation_model.dart';
 
 class SurveyQuestionCard extends StatelessWidget {
   final String? label;
@@ -9,6 +10,7 @@ class SurveyQuestionCard extends StatelessWidget {
   final Widget child;
   final String? errorText;
   final bool isVisible;
+  final List<QuestionValidation>? validations;
 
   const SurveyQuestionCard({
     super.key,
@@ -18,11 +20,13 @@ class SurveyQuestionCard extends StatelessWidget {
     required this.child,
     this.errorText,
     this.isVisible = true,
+    this.validations,
   });
 
   @override
   Widget build(BuildContext context) {
     if (!isVisible) return const SizedBox.shrink();
+    final locale = Localizations.localeOf(context).languageCode;
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
@@ -77,6 +81,58 @@ class SurveyQuestionCard extends StatelessWidget {
           ],
           SizedBox(height: 12.h),
           child,
+          if (validations != null && validations!.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            Wrap(
+              spacing: 8.w,
+              runSpacing: 8.h,
+              children: validations!.map((qv) {
+                final validation = qv.validation;
+                if (validation == null || validation.isActive == false) {
+                  return const SizedBox.shrink();
+                }
+
+                final title = locale == 'ar'
+                    ? validation.arTitle
+                    : validation.enTitle;
+                if (title == null) return const SizedBox.shrink();
+
+                final values = qv.values;
+                String displayText = title;
+
+                if (values != null && values.isNotEmpty) {
+                  final min = values['min'];
+                  final max = values['max'];
+                  if (min != null && max != null) {
+                    displayText = '$title: $min – $max';
+                  } else if (min != null) {
+                    displayText = '$title: $min+';
+                  } else if (max != null) {
+                    displayText = '$title: ≤$max';
+                  }
+                }
+
+                return Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.border.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    displayText,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: AppColors.secondaryText,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
           if (errorText != null) ...[
             SizedBox(height: 8.h),
             Text(

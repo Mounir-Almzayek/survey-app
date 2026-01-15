@@ -5,15 +5,11 @@ class AppColors {
   static const Color primaryStart = Color(0xFF0D9488); // Teal 600
   static const Color primaryEnd = Color(0xFF14B8A6); // Teal 500
 
-  // 🌿 Survey Gradient Colors (From Web Public Survey)
-  static const Color surveyPrimaryStart = Color(0xFF72A850);
-  static const Color surveyPrimaryEnd = Color(0xFFB4BD00);
-
   // 🔹 Primary & Accent (Based on Gradient)
   static const Color primary = Color(0xFF0D9488);
   static const Color accent = Color(0xFF14B8A6);
 
-  static const Color surveyPrimary = Color(0xFF72A850);
+  static const Color surveyPrimary = primary;
 
   static const Color destructive = Color(0xFFEF4444);
 
@@ -24,23 +20,8 @@ class AppColors {
     end: Alignment.bottomCenter,
   );
 
-  static const LinearGradient surveyGradient = LinearGradient(
-    colors: [surveyPrimaryStart, surveyPrimaryEnd],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
-
   static final LinearGradient secondaryGradient = LinearGradient(
     colors: [primaryStart.withOpacity(0.1), primaryEnd.withOpacity(0.1)],
-    begin: Alignment.centerLeft,
-    end: Alignment.centerRight,
-  );
-
-  static final LinearGradient surveySecondaryGradient = LinearGradient(
-    colors: [
-      surveyPrimaryStart.withOpacity(0.1),
-      surveyPrimaryEnd.withOpacity(0.1),
-    ],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );

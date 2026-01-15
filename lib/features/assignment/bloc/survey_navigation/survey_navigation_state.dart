@@ -17,6 +17,7 @@ abstract class SurveyNavigationState {
   final int? responseId;
   final Map<String, bool> visibilityMap; // "question_5" or "section_2" -> bool
   final Map<String, bool> requirementMap; // "question_5" or "section_2" -> bool
+  final Map<int, int> jumpMap; // Trigger ID -> Target Section ID
   final SurveyStep currentStep;
 
   SurveyNavigationState({
@@ -25,6 +26,7 @@ abstract class SurveyNavigationState {
     this.responseId,
     this.visibilityMap = const {},
     this.requirementMap = const {},
+    this.jumpMap = const {},
     this.currentStep = SurveyStep.intro,
   });
 
@@ -37,16 +39,16 @@ abstract class SurveyNavigationState {
   }
 
   /// Returns behavior for a specific question/section key
-  QuestionBehavior getBehavior(String key) {
+  QuestionBehavior getBehavior(String key, {bool defaultRequired = false}) {
     return QuestionBehavior(
       isVisible: visibilityMap[key] ?? true,
-      isRequired: requirementMap[key] ?? false,
+      isRequired: requirementMap[key] ?? defaultRequired,
     );
   }
 
   /// Helper for questions
-  QuestionBehavior getQuestionBehavior(int questionId) =>
-      getBehavior("question_$questionId");
+  QuestionBehavior getQuestionBehavior(int questionId, {bool defaultRequired = false}) =>
+      getBehavior("question_$questionId", defaultRequired: defaultRequired);
 
   /// Helper for sections
   QuestionBehavior getSectionBehavior(int sectionId) =>
@@ -102,6 +104,7 @@ class SurveyNavigationInitial extends SurveyNavigationState {
     super.responseId,
     super.visibilityMap,
     super.requirementMap,
+    super.jumpMap,
     super.currentStep,
   });
 }
@@ -113,6 +116,7 @@ class SurveyNavigationUpdated extends SurveyNavigationState {
     super.responseId,
     super.visibilityMap,
     super.requirementMap,
+    super.jumpMap,
     super.currentStep,
   });
 }

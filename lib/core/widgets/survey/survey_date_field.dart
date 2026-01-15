@@ -28,6 +28,7 @@ class SurveyDateField extends StatelessWidget {
       isRequired: question.isRequired,
       errorText: errorText,
       isVisible: isVisible,
+      validations: question.questionValidations,
       child: CustomDatePickerField(
         label: "", // Handled by SurveyQuestionCard
         selectedDate: value,

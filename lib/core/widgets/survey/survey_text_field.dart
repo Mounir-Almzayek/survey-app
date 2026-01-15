@@ -56,6 +56,7 @@ class _SurveyTextFieldState extends State<SurveyTextField> {
       isRequired: widget.question.isRequired,
       errorText: widget.errorText,
       isVisible: widget.isVisible,
+      validations: widget.question.questionValidations,
       child: CustomTextField(
         controller: _controller,
         label: null,

@@ -28,6 +28,7 @@ class SurveyRadioField extends StatelessWidget {
       isRequired: question.isRequired,
       errorText: errorText,
       isVisible: isVisible,
+      validations: question.questionValidations,
       child: CustomRadioGroupField<String>(
         label: "", // Label handled by SurveyQuestionCard
         activeColor: AppColors.surveyPrimary,

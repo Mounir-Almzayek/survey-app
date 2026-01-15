@@ -61,7 +61,7 @@
   "no_user_data": "لم يتم العثور على بيانات المستخدم",
   "phone": "رقم الهاتف",
   "company": "الشركة",
-  "position": "المنصب",
+  "position": "المنصب",  
   "entity": "الجهة",
   "code": "الكود",
   "nationality": "الجنسية",
@@ -190,6 +190,22 @@
   },
   "sections_count": "{count} أقسام",
   "@sections_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "questions_count": "{count} أسئلة",
+  "@questions_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "minutes_count": "+ {count} دقائق",
+  "@minutes_count": {
     "placeholders": {
       "count": {
         "type": "int"
@@ -361,5 +377,7 @@
   "pending_sync": "بانتظار المزامنة",
   "synced_responses": "تمت المزامنة",
   "survey_availability": "توفر الاستبيانات",
-  "sync_status": "حالة المزامنة"
+  "sync_status": "حالة المزامنة",
+  "retry_all": "إعادة محاولة الكل",
+  "clear_all": "إخلاء الكل"
 }

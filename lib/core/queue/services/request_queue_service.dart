@@ -46,7 +46,8 @@ class RequestQueueService {
       final queue = _getQueue(box);
       return queue
           .map(
-              (item) => RequestQueueItem.fromJson(item as Map<String, dynamic>))
+            (item) => RequestQueueItem.fromJson(item as Map<String, dynamic>),
+          )
           .where((item) => item.status == QueueItemStatus.pending)
           .toList()
         ..sort((a, b) => a.queuedAt.compareTo(b.queuedAt));
@@ -62,7 +63,8 @@ class RequestQueueService {
       final queue = _getQueue(box);
       return queue
           .map(
-              (item) => RequestQueueItem.fromJson(item as Map<String, dynamic>))
+            (item) => RequestQueueItem.fromJson(item as Map<String, dynamic>),
+          )
           .toList();
     } catch (e) {
       return [];
@@ -89,11 +91,125 @@ class RequestQueueService {
     try {
       final box = await _getBox();
       final queue = _getQueue(box);
-      queue.removeWhere(
-        (q) => (q as Map<String, dynamic>)['id'] == id,
-      );
+      queue.removeWhere((q) => (q as Map<String, dynamic>)['id'] == id);
       await box.put(_queueKey, json.encode(queue));
     } catch (e) {}
+  }
+
+  /// Reset all failed requests to pending
+  static Future<void> resetFailedRequests() async {
+    try {
+      final box = await _getBox();
+      final queue = _getQueue(box);
+      bool changed = false;
+
+      for (int i = 0; i < queue.length; i++) {
+        final itemMap = Map<String, dynamic>.from(queue[i] as Map);
+        if (itemMap['status'] == QueueItemStatus.failed.name) {
+          itemMap['status'] = QueueItemStatus.pending.name;
+          itemMap['retryCount'] = 0;
+          queue[i] = itemMap;
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        await box.put(_queueKey, json.encode(queue));
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[RequestQueueService] resetFailedRequests ERROR: $e');
+      }
+    }
+  }
+
+  /// Remap IDs in all queued requests (useful when a dummy ID is replaced by a real one from server)
+  static Future<void> remapIds(int oldId, int newId) async {
+    try {
+      final box = await _getBox();
+      final queue = _getQueue(box);
+      bool changed = false;
+
+      final oldIdStr = oldId.toString();
+      final newIdStr = newId.toString();
+
+      final oldPathSegment = '/$oldIdStr';
+      final newPathSegment = '/$newIdStr';
+
+      for (int i = 0; i < queue.length; i++) {
+        var itemMap = Map<String, dynamic>.from(queue[i] as Map);
+        bool itemChanged = false;
+
+        // 1. Check path
+        final requestMap = Map<String, dynamic>.from(itemMap['request'] as Map);
+        String path = requestMap['path'] as String;
+
+        if (path.contains(oldPathSegment)) {
+          // Robust path replacement handling segments like /response/-1/section or /response/-1
+          requestMap['path'] = path.replaceAllMapped(
+            RegExp('$oldPathSegment(/|\$)'),
+            (match) => '$newPathSegment${match.group(1)}',
+          );
+          itemChanged = true;
+        }
+
+        // 2. Check body (Recursive search and replace)
+        if (requestMap['body'] != null) {
+          final newBody = _recursiveReplace(requestMap['body'], oldId, newId);
+          if (newBody != requestMap['body']) {
+            requestMap['body'] = newBody;
+            itemChanged = true;
+          }
+        }
+
+        // 3. Check metadata
+        if (itemMap['metadata'] != null) {
+          final newMetadata = _recursiveReplace(
+            itemMap['metadata'],
+            oldId,
+            newId,
+          );
+          if (newMetadata != itemMap['metadata']) {
+            itemMap['metadata'] = newMetadata;
+            itemChanged = true;
+          }
+        }
+
+        if (itemChanged) {
+          itemMap['request'] = requestMap;
+          queue[i] = itemMap;
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        await box.put(_queueKey, json.encode(queue));
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[RequestQueueService] remapIds ERROR: $e');
+      }
+    }
+  }
+
+  static dynamic _recursiveReplace(dynamic data, int oldId, int newId) {
+    if (data is int) {
+      return data == oldId ? newId : data;
+    } else if (data is String) {
+      final oldIdStr = oldId.toString();
+      final newIdStr = newId.toString();
+      if (data == oldIdStr) return newIdStr;
+      return data.replaceAll(oldIdStr, newIdStr);
+    } else if (data is Map) {
+      final Map<String, dynamic> result = {};
+      data.forEach((key, value) {
+        result[key.toString()] = _recursiveReplace(value, oldId, newId);
+      });
+      return result;
+    } else if (data is List) {
+      return data.map((e) => _recursiveReplace(e, oldId, newId)).toList();
+    }
+    return data;
   }
 
   /// Clear all requests from the queue
@@ -117,4 +233,3 @@ class RequestQueueService {
     }
   }
 }
-

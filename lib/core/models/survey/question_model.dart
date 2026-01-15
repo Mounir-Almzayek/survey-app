@@ -86,6 +86,38 @@ class Question extends Equatable {
     };
   }
 
+  Question copyWith({
+    int? id,
+    int? sectionId,
+    QuestionType? type,
+    String? label,
+    String? helpText,
+    bool? isRequired,
+    int? order,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+    List<QuestionOption>? questionOptions,
+    List<QuestionRow>? questionRows,
+    List<QuestionValidation>? questionValidations,
+  }) {
+    return Question(
+      id: id ?? this.id,
+      sectionId: sectionId ?? this.sectionId,
+      type: type ?? this.type,
+      label: label ?? this.label,
+      helpText: helpText ?? this.helpText,
+      isRequired: isRequired ?? this.isRequired,
+      order: order ?? this.order,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      questionOptions: questionOptions ?? this.questionOptions,
+      questionRows: questionRows ?? this.questionRows,
+      questionValidations: questionValidations ?? this.questionValidations,
+    );
+  }
+
   @override
   List<Object?> get props => [
     id,

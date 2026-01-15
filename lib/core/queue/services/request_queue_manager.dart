@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import '../../../data/network/api_request.dart';
+import '../../../features/assignment/repository/assignment_repository.dart';
 import '../models/request_queue_item.dart';
 import 'request_queue_service.dart';
 
@@ -61,6 +62,7 @@ class RequestQueueManager {
 
   Future<bool> queueRequest(
     APIRequest request, {
+    Map<String, dynamic>? metadata,
     FutureOr<void> Function(dynamic response)? onSuccess,
   }) async {
     final requestId = DateTime.now().millisecondsSinceEpoch.toString();
@@ -96,25 +98,40 @@ class RequestQueueManager {
     }
 
     if (_isOnline && !_isProcessing) {
-      try {
-        final response = await request.send();
-        await onSuccess?.call(response);
-        _responseController.add(
-          QueueResponse(
-            requestId: requestId,
-            success: true,
-            response: response,
-          ),
-        );
-        _successCallbacks.remove(requestId);
-        return false;
-      } catch (e) {}
+      // SAFETY CHECK: Don't attempt to send requests containing dummy IDs (negative numbers)
+      final hasDummyId =
+          request.path.contains('/-') ||
+          (request.body is Map &&
+              request.body.toString().contains(': -')); // Simple heuristic
+
+      if (!hasDummyId) {
+        try {
+          final response = await request.send();
+          await onSuccess?.call(response);
+          _responseController.add(
+            QueueResponse(
+              requestId: requestId,
+              success: true,
+              response: response,
+            ),
+          );
+          _successCallbacks.remove(requestId);
+          return false;
+        } catch (e) {}
+      } else {
+        if (kDebugMode) {
+          debugPrint(
+            '[RequestQueueManager] Dummy ID detected in request. Force queuing.',
+          );
+        }
+      }
     }
 
     final item = RequestQueueItem(
       id: requestId,
       request: request,
       queuedAt: DateTime.now(),
+      metadata: metadata,
     );
 
     await RequestQueueService.enqueue(item);
@@ -126,6 +143,18 @@ class RequestQueueManager {
     );
 
     return true;
+  }
+
+  Future<void> retryAll() async {
+    await RequestQueueService.resetFailedRequests();
+    _processQueue();
+  }
+
+  Future<void> clearAll() async {
+    await RequestQueueService.clearAll();
+    _queueStatusController.add(
+      QueueStatus(isOnline: _isOnline, queueLength: 0),
+    );
   }
 
   Future<void> _processQueue() async {
@@ -170,6 +199,17 @@ class RequestQueueManager {
               response: response,
             ),
           );
+
+          // SMART REMAPPING: Detect and trigger remapping if required
+          if (item.metadata != null &&
+              item.metadata!['type'] == 'start_response' &&
+              item.metadata!['dummyId'] != null) {
+            final dummyId = item.metadata!['dummyId'] as int;
+            final realId = response.data['data']['id'] as int;
+
+            // Trigger the repository-specific handler
+            await AssignmentRepository.handleStartResponseSync(dummyId, realId);
+          }
 
           await Future.delayed(const Duration(seconds: 1));
           await RequestQueueService.removeRequest(item.id);

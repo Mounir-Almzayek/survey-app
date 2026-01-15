@@ -30,6 +30,7 @@ class SurveyGpsField extends StatelessWidget {
       isRequired: question.isRequired,
       errorText: errorText,
       isVisible: isVisible,
+      validations: question.questionValidations,
       child: Container(
         padding: EdgeInsets.all(12.r),
         decoration: BoxDecoration(

@@ -32,6 +32,7 @@ class SurveyFileField extends StatelessWidget {
       isRequired: question.isRequired,
       errorText: errorText,
       isVisible: isVisible,
+      validations: question.questionValidations,
       child: CustomImagePicker(
         title: "", // Handled by SurveyQuestionCard
         onImagePicked: onChanged,

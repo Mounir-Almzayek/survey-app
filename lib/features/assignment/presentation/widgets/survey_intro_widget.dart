@@ -139,14 +139,21 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
                     position: _slideAnimation,
                     child: FadeTransition(
                       opacity: _fadeAnimation,
-                      child: Text(
-                        intro,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: AppColors.secondaryText,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      child: Column(
+                        children: [
+                          Text(
+                            intro,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: AppColors.secondaryText,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                            ),
+                          ),
+                          SizedBox(height: 32.h),
+                          _buildMetadataRow(context),
+                        ],
                       ),
                     ),
                   ),
@@ -208,6 +215,85 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
       width: size,
       height: size,
       decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+    );
+  }
+
+  Widget _buildMetadataRow(BuildContext context) {
+    final s = S.of(context);
+
+    int questionCount = 0;
+    if (widget.survey.sections != null) {
+      for (var section in widget.survey.sections!) {
+        questionCount += section.questions?.length ?? 0;
+      }
+    }
+
+    final sectionCount = widget.survey.sections?.length ?? 0;
+    final minutes = widget.survey.minimumResponseTimeMinutes ?? 5;
+
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 24.w,
+      runSpacing: 16.h,
+      children: [
+        _buildInfoItem(
+          index: 0,
+          icon: Icons.help_outline_rounded,
+          text: s.questions_count(questionCount),
+        ),
+        _buildInfoItem(
+          index: 1,
+          icon: Icons.access_time_rounded,
+          text: s.minutes_count(minutes),
+        ),
+        _buildInfoItem(
+          index: 2,
+          icon: Icons.list_rounded,
+          text: s.sections_count(sectionCount),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoItem({
+    required int index,
+    required IconData icon,
+    required String text,
+  }) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(
+        position: Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero)
+            .animate(
+              CurvedAnimation(
+                parent: _controller,
+                curve: Interval(
+                  0.4 + (index * 0.1),
+                  0.8 + (index * 0.1),
+                  curve: Curves.easeOutBack,
+                ),
+              ),
+            ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppColors.primaryText.withOpacity(0.8),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Icon(
+              icon,
+              size: 20.sp,
+              color: AppColors.primaryText.withOpacity(0.6),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

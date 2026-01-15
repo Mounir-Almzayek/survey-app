@@ -36,6 +36,7 @@ class SurveySliderField extends StatelessWidget {
       isRequired: question.isRequired,
       errorText: errorText,
       isVisible: isVisible,
+      validations: question.questionValidations,
       child: Column(
         children: [
           SliderTheme(

@@ -21,6 +21,15 @@ class SurveyAnsweringScreen extends StatelessWidget {
       listeners: [
         BlocListener<SaveSectionBloc, SaveSectionState>(
           listener: (context, state) async {
+            if (state is SaveSectionInitial && state.saveRequest != null) {
+              // Refresh behavior when a draft is loaded (Resume scenario)
+              final answers = state.saveRequest?.answers ?? [];
+              final answersMap = {for (var a in answers) a.questionId: a.value};
+              context.read<SurveyNavigationBloc>().add(
+                RefreshBehavior(answersMap),
+              );
+            }
+
             if (state is SaveSectionSuccess) {
               final navBloc = context.read<SurveyNavigationBloc>();
               final isLastSection = navBloc.state.isLastSection;

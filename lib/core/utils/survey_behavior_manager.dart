@@ -14,6 +14,7 @@ class SurveyBehaviorManager {
     final visibilityMap =
         <String, bool>{}; // "question_5" or "section_2" -> bool
     final requirementMap = <String, bool>{};
+    final jumpMap = <int, int>{}; // Trigger ID -> Target Section ID
 
     for (final logic in logics) {
       if (logic.enabled == false) continue;
@@ -73,13 +74,23 @@ class SurveyBehaviorManager {
               requirementMap[targetKey] = false;
               break;
             case ActionType.jump:
-              // Jump logic handled in navigation bloc, but we could add to a jumpMap if needed
+              final jumpToId = action.params?['jump_to_section'] ??
+                  action.params?['jump_to_id'] ??
+                  action.params?['target_id'];
+              if (jumpToId != null && action.targetId != null) {
+                jumpMap[action.targetId!] =
+                    int.tryParse(jumpToId.toString()) ?? 0;
+              }
               break;
           }
         }
       }
     }
 
-    return {'visibility': visibilityMap, 'requirement': requirementMap};
+    return {
+      'visibility': visibilityMap,
+      'requirement': requirementMap,
+      'jump': jumpMap,
+    };
   }
 }

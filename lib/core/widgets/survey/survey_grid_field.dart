@@ -32,6 +32,7 @@ class SurveyGridField extends StatelessWidget {
       isRequired: question.isRequired,
       errorText: errorText,
       isVisible: isVisible,
+      validations: question.questionValidations,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Column(

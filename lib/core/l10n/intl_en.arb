@@ -196,6 +196,22 @@
       }
     }
   },
+  "questions_count": "{count} Questions",
+  "@questions_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "minutes_count": "+{count} Mins",
+  "@minutes_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "view_details": "View Details",
   "survey_link": "Survey Link",
   "max_responses": "Max Responses",
@@ -361,5 +377,7 @@
   "pending_sync": "Pending Sync",
   "synced_responses": "Synced",
   "survey_availability": "Survey Availability",
-  "sync_status": "Sync Status"
+  "sync_status": "Sync Status",
+  "retry_all": "Retry All",
+  "clear_all": "Clear All"
 }

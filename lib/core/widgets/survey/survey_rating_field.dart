@@ -30,6 +30,7 @@ class SurveyRatingField extends StatelessWidget {
       isRequired: question.isRequired,
       errorText: errorText,
       isVisible: isVisible,
+      validations: question.questionValidations,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(maxRating, (index) {

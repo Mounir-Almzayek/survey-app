@@ -7,6 +7,53 @@ class AssignmentLocalRepository {
   static const String _surveysKey = 'cached_surveys_list';
   static const String _responseDraftPrefix = 'response_draft_';
   static const String _syncedCountKey = 'synced_responses_total_count';
+  static const String _negativeIdCounterKey = 'negative_response_id_counter';
+
+  /// Get the next available negative ID for offline responses
+  static Future<int> getNextNegativeId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final current = prefs.getInt(_negativeIdCounterKey) ?? 0;
+    final next = current - 1;
+    await prefs.setInt(_negativeIdCounterKey, next);
+    return next;
+  }
+
+  /// Remap an old ID (usually negative) to a new real ID across local storage
+  static Future<void> remapIds(int oldId, int newId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      // 1. Remap response drafts
+      final oldKey = '$_responseDraftPrefix$oldId';
+      final newKey = '$_responseDraftPrefix$newId';
+      final draftData = prefs.getString(oldKey);
+      if (draftData != null) {
+        await prefs.setString(newKey, draftData);
+        await prefs.remove(oldKey);
+      }
+
+      // 2. Remap localResponseIds in cached surveys
+      final surveys = await getSurveys();
+      bool changed = false;
+      for (int i = 0; i < surveys.length; i++) {
+        final survey = surveys[i];
+        if (survey.localResponseIds != null &&
+            survey.localResponseIds!.contains(oldId)) {
+          final updatedIds = survey.localResponseIds!
+              .map((id) => id == oldId ? newId : id)
+              .toList();
+          surveys[i] = survey.copyWith(localResponseIds: updatedIds);
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        await _saveRawSurveys(surveys);
+      }
+    } catch (_) {
+      // Ignore errors in remapping
+    }
+  }
 
   /// Get the persistent count of total synced responses
   static Future<int> getSyncedResponsesCount() async {
@@ -151,7 +198,9 @@ class AssignmentLocalRepository {
 
   /// Unlink a response ID from a specific survey in the cached list
   static Future<void> unlinkResponseFromSurvey(
-      int surveyId, int responseId) async {
+    int surveyId,
+    int responseId,
+  ) async {
     final surveys = await getSurveys();
     final index = surveys.indexWhere((s) => s.id == surveyId);
 

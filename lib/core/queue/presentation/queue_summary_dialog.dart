@@ -146,6 +146,25 @@ class QueueSummaryDialog extends StatelessWidget {
             ),
           ),
           actions: [
+            if (items.any((vm) => vm.item.status == QueueItemStatus.failed))
+              TextButton(
+                onPressed: () {
+                  context.read<QueueSessionBloc>().add(const QueueSessionRetryAll());
+                },
+                child: Text(
+                  locale.retry_all,
+                  style: const TextStyle(color: AppColors.primary),
+                ),
+              ),
+            TextButton(
+              onPressed: () {
+                context.read<QueueSessionBloc>().add(const QueueSessionClearAll());
+              },
+              child: Text(
+                locale.clear_all,
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();

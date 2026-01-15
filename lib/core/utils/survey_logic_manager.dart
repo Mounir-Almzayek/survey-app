@@ -1,4 +1,5 @@
 import '../enums/survey_enums.dart';
+import 'survey_validator.dart';
 
 class SurveyLogicManager {
   /// Evaluates a single rule against a given value.
@@ -9,10 +10,10 @@ class SurveyLogicManager {
   ) {
     // 1. Handle Empty/Not Empty operators
     if (operator == ConditionOperator.isEmpty) {
-      return _isEmpty(actualValue);
+      return SurveyValidator.isValueEmpty(actualValue);
     }
     if (operator == ConditionOperator.notEmpty) {
-      return !_isEmpty(actualValue);
+      return !SurveyValidator.isValueEmpty(actualValue);
     }
 
     // 2. If actual value is null, other operators always fail (matches Web logic)
@@ -70,13 +71,6 @@ class SurveyLogicManager {
     if (value == null) return "";
     if (value is List) return value.join(","); // JS: [1,2].toString() -> "1,2"
     return value.toString();
-  }
-
-  static bool _isEmpty(dynamic value) {
-    if (value == null) return true;
-    if (value is String) return value.trim().isEmpty;
-    if (value is List) return value.isEmpty;
-    return false;
   }
 
   static double? _compare(dynamic actual, dynamic rule) {

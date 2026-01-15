@@ -3,6 +3,7 @@ import '../../models/save_section_models.dart';
 import '../../repository/assignment_repository.dart';
 import '../../repository/assignment_local_repository.dart';
 import '../../../../core/utils/async_runner.dart';
+import '../../../../core/utils/survey_validator.dart';
 
 part 'save_section_event.dart';
 part 'save_section_state.dart';
@@ -108,8 +109,16 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
   ) async {
     final currentRequest = state.saveRequest;
     if (currentRequest != null) {
+      final sanitizedAnswers = event.answers
+          .map((a) => AnswerRequest(
+                questionId: a.questionId,
+                value: SurveyValidator.sanitizeValue(a.value),
+              ))
+          .where((a) => a.value != null) // Filter out null values
+          .toList();
+
       final newRequest = currentRequest.copyWith(
-        answers: event.answers,
+        answers: sanitizedAnswers,
         isSynced: false,
       );
       emit(
@@ -128,9 +137,19 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
   ) async {
     final currentRequest = state.saveRequest;
     if (currentRequest != null) {
+      final sanitizedValue = SurveyValidator.sanitizeValue(event.answer.value);
+
       final newAnswers = List<AnswerRequest>.from(currentRequest.answers);
       newAnswers.removeWhere((a) => a.questionId == event.answer.questionId);
-      newAnswers.add(event.answer);
+
+      if (sanitizedValue != null) {
+        newAnswers.add(
+          AnswerRequest(
+            questionId: event.answer.questionId,
+            value: sanitizedValue,
+          ),
+        );
+      }
 
       final newRequest = currentRequest.copyWith(
         answers: newAnswers,
@@ -152,28 +171,41 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
   ) async {
     final currentRequest = state.saveRequest;
     if (currentRequest != null) {
+      final sanitizedValue = SurveyValidator.sanitizeValue(event.value);
       final newAnswers = List<AnswerRequest>.from(currentRequest.answers);
-      final index = newAnswers.indexWhere(
-        (a) => a.questionId == event.questionId,
-      );
 
-      if (index != -1) {
-        newAnswers[index] = AnswerRequest(
-          questionId: event.questionId,
-          value: event.value,
+      if (sanitizedValue == null) {
+        newAnswers.removeWhere((a) => a.questionId == event.questionId);
+      } else {
+        final index = newAnswers.indexWhere(
+          (a) => a.questionId == event.questionId,
         );
-        final newRequest = currentRequest.copyWith(
-          answers: newAnswers,
-          isSynced: false,
-        );
-        emit(
-          SaveSectionInitial(
-            responseId: state.responseId,
-            saveRequest: newRequest,
-          ),
-        );
-        await _autoSave();
+        if (index != -1) {
+          newAnswers[index] = AnswerRequest(
+            questionId: event.questionId,
+            value: sanitizedValue,
+          );
+        } else {
+          newAnswers.add(
+            AnswerRequest(
+              questionId: event.questionId,
+              value: sanitizedValue,
+            ),
+          );
+        }
       }
+
+      final newRequest = currentRequest.copyWith(
+        answers: newAnswers,
+        isSynced: false,
+      );
+      emit(
+        SaveSectionInitial(
+          responseId: state.responseId,
+          saveRequest: newRequest,
+        ),
+      );
+      await _autoSave();
     }
   }
 

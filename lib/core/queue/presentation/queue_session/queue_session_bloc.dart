@@ -24,6 +24,8 @@ class QueueSessionBloc extends Bloc<QueueSessionEvent, QueueSessionState> {
           },
         )) {
     on<QueueSessionItemUpdated>(_onItemUpdated);
+    on<QueueSessionRetryAll>(_onRetryAll);
+    on<QueueSessionClearAll>(_onClearAll);
 
     _responseSub = RequestQueueManager().responseStream.listen(
       (response) {
@@ -54,6 +56,39 @@ class QueueSessionBloc extends Bloc<QueueSessionEvent, QueueSessionState> {
       ..[event.response.requestId] = updatedItem;
 
     emit(state.copyWith(items: updatedMap));
+  }
+
+  Future<void> _onRetryAll(
+    QueueSessionRetryAll event,
+    Emitter<QueueSessionState> emit,
+  ) async {
+    // Reset all failed items in the UI state to processing
+    final updatedItems = Map<String, QueueSessionItem>.from(state.items);
+    bool changed = false;
+
+    for (final id in updatedItems.keys) {
+      final current = updatedItems[id]!;
+      if (current.item.status == QueueItemStatus.failed) {
+        updatedItems[id] = current.copyWith(
+          item: current.item.copyWith(status: QueueItemStatus.processing),
+        );
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      emit(state.copyWith(items: updatedItems));
+    }
+
+    await RequestQueueManager().retryAll();
+  }
+
+  Future<void> _onClearAll(
+    QueueSessionClearAll event,
+    Emitter<QueueSessionState> emit,
+  ) async {
+    await RequestQueueManager().clearAll();
+    emit(state.copyWith(items: {}));
   }
 
   @override

@@ -24,10 +24,13 @@ class SurveyNavigationBloc
     int firstVisibleIndex = 0;
     if (event.survey.sections != null) {
       for (int i = 0; i < event.survey.sections!.length; i++) {
-        // Initially visibility maps are empty, but we check if we should skip
-        // If we want to support initial visibility from saved answers,
-        // we might need to call _calculateInitialBehavior
-        break;
+        final section = event.survey.sections![i];
+        // Note: At this point visibilityMap is empty, so all are visible by default.
+        // But if we ever add default hidden logic, this is where it starts.
+        if (state.isVisible("section_${section.id}")) {
+          firstVisibleIndex = i;
+          break;
+        }
       }
     }
 
@@ -51,6 +54,7 @@ class SurveyNavigationBloc
         currentSectionIndex: state.currentSectionIndex,
         visibilityMap: state.visibilityMap,
         requirementMap: state.requirementMap,
+        jumpMap: state.jumpMap,
         currentStep: state.currentStep,
       ),
     );
@@ -71,6 +75,7 @@ class SurveyNavigationBloc
             currentSectionIndex: index,
             visibilityMap: state.visibilityMap,
             requirementMap: state.requirementMap,
+            jumpMap: state.jumpMap,
             currentStep: SurveyStep.survey,
           ),
         );
@@ -86,6 +91,7 @@ class SurveyNavigationBloc
         currentSectionIndex: state.currentSectionIndex,
         visibilityMap: state.visibilityMap,
         requirementMap: state.requirementMap,
+        jumpMap: state.jumpMap,
         currentStep: SurveyStep.survey,
       ),
     );
@@ -102,6 +108,7 @@ class SurveyNavigationBloc
         currentSectionIndex: state.currentSectionIndex,
         visibilityMap: state.visibilityMap,
         requirementMap: state.requirementMap,
+        jumpMap: state.jumpMap,
         currentStep: SurveyStep.completion,
       ),
     );
@@ -126,6 +133,7 @@ class SurveyNavigationBloc
         currentSectionIndex: state.currentSectionIndex,
         visibilityMap: Map<String, bool>.from(behavior['visibility'] ?? {}),
         requirementMap: Map<String, bool>.from(behavior['requirement'] ?? {}),
+        jumpMap: Map<int, int>.from(behavior['jump'] ?? {}),
         currentStep: state.currentStep,
       ),
     );
@@ -134,6 +142,31 @@ class SurveyNavigationBloc
   void _onNextSection(NextSection event, Emitter<SurveyNavigationState> emit) {
     final survey = state.survey;
     if (survey != null && survey.sections != null) {
+      final section = state.currentSection;
+      if (section == null) return;
+
+      // Check for Jump logic
+      final jumpTargetId = state.jumpMap[section.id];
+      if (jumpTargetId != null) {
+        final targetIndex = survey.sections!.indexWhere(
+          (s) => s.id == jumpTargetId,
+        );
+        if (targetIndex != -1) {
+          emit(
+            SurveyNavigationUpdated(
+              survey: survey,
+              responseId: state.responseId,
+              currentSectionIndex: targetIndex,
+              visibilityMap: state.visibilityMap,
+              requirementMap: state.requirementMap,
+              jumpMap: state.jumpMap,
+              currentStep: state.currentStep,
+            ),
+          );
+          return;
+        }
+      }
+
       int nextIndex = state.currentSectionIndex + 1;
       while (nextIndex < survey.sections!.length) {
         final section = survey.sections![nextIndex];
@@ -145,6 +178,7 @@ class SurveyNavigationBloc
               currentSectionIndex: nextIndex,
               visibilityMap: state.visibilityMap,
               requirementMap: state.requirementMap,
+              jumpMap: state.jumpMap,
               currentStep: state.currentStep,
             ),
           );
@@ -172,6 +206,7 @@ class SurveyNavigationBloc
               currentSectionIndex: prevIndex,
               visibilityMap: state.visibilityMap,
               requirementMap: state.requirementMap,
+              jumpMap: state.jumpMap,
               currentStep: state.currentStep,
             ),
           );
@@ -197,6 +232,7 @@ class SurveyNavigationBloc
             currentSectionIndex: event.index,
             visibilityMap: state.visibilityMap,
             requirementMap: state.requirementMap,
+            jumpMap: state.jumpMap,
             currentStep: state.currentStep,
           ),
         );

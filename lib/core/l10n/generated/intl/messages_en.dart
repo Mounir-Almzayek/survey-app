@@ -43,13 +43,17 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(count) => "Local Responses (${count})";
 
-  static String m11(date) => "Publish Date: ${date}";
+  static String m11(count) => "+${count} Mins";
 
-  static String m12(id) => "Response ID: ${id}";
+  static String m12(date) => "Publish Date: ${date}";
 
-  static String m13(count) => "${count} Sections";
+  static String m13(count) => "${count} Questions";
 
-  static String m14(title) => "Survey Link: ${title}";
+  static String m14(id) => "Response ID: ${id}";
+
+  static String m15(count) => "${count} Sections";
+
+  static String m16(title) => "Survey Link: ${title}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -79,6 +83,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel_download":
             MessageLookupByLibrary.simpleMessage("Cancel Download"),
         "cancel_upload": MessageLookupByLibrary.simpleMessage("Cancel Upload"),
+        "clear_all": MessageLookupByLibrary.simpleMessage("Clear All"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "code": MessageLookupByLibrary.simpleMessage("Code"),
         "code_colon": m2,
@@ -235,6 +240,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "max_responses": MessageLookupByLibrary.simpleMessage("Max Responses"),
         "max_touch_points":
             MessageLookupByLibrary.simpleMessage("Maximum Touch Points"),
+        "minutes_count": m11,
         "nationality": MessageLookupByLibrary.simpleMessage("Nationality"),
         "new_password": MessageLookupByLibrary.simpleMessage("New Password"),
         "new_response": MessageLookupByLibrary.simpleMessage("New Response"),
@@ -302,9 +308,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "public_link_not_found":
             MessageLookupByLibrary.simpleMessage("Public link not found"),
         "public_links": MessageLookupByLibrary.simpleMessage("Public Links"),
-        "publish_date": m11,
+        "publish_date": m12,
         "qr_code": MessageLookupByLibrary.simpleMessage("QR Code"),
         "qr_scanner": MessageLookupByLibrary.simpleMessage("QR Scanner"),
+        "questions_count": m13,
         "queue_detail_body": MessageLookupByLibrary.simpleMessage("Body"),
         "queue_detail_error": MessageLookupByLibrary.simpleMessage("Error"),
         "queue_status_completed":
@@ -343,7 +350,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Reset Password"),
         "response_details_title":
             MessageLookupByLibrary.simpleMessage("Response details"),
-        "response_number": m12,
+        "response_number": m14,
         "response_status_flagged":
             MessageLookupByLibrary.simpleMessage("Flagged"),
         "response_status_pending":
@@ -355,6 +362,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "responses_title": MessageLookupByLibrary.simpleMessage("Responses"),
         "resume_survey": MessageLookupByLibrary.simpleMessage("Resume"),
         "retry": MessageLookupByLibrary.simpleMessage("Retry"),
+        "retry_all": MessageLookupByLibrary.simpleMessage("Retry All"),
         "retry_upload": MessageLookupByLibrary.simpleMessage("Retry Upload"),
         "scan_qr": MessageLookupByLibrary.simpleMessage("Scan QR"),
         "scan_qr_code": MessageLookupByLibrary.simpleMessage("Scan QR Code"),
@@ -363,7 +371,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "screen_resolution":
             MessageLookupByLibrary.simpleMessage("Screen Resolution"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
-        "sections_count": m13,
+        "sections_count": m15,
         "select_date": MessageLookupByLibrary.simpleMessage("Select Date"),
         "select_file": MessageLookupByLibrary.simpleMessage("Select File"),
         "select_language":
@@ -371,7 +379,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "send_code": MessageLookupByLibrary.simpleMessage("Send Code"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share_link": MessageLookupByLibrary.simpleMessage("Share"),
-        "share_link_subject": m14,
+        "share_link_subject": m16,
         "show_less": MessageLookupByLibrary.simpleMessage("Show less"),
         "show_qr_code": MessageLookupByLibrary.simpleMessage("Show QR Code"),
         "start_location_tracking":
