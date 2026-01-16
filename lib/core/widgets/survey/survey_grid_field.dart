@@ -11,6 +11,7 @@ class SurveyGridField extends StatelessWidget {
   final ValueChanged<Map<int, List<String>>> onChanged;
   final String? errorText;
   final bool isVisible;
+  final bool isEditable;
 
   const SurveyGridField({
     super.key,
@@ -19,6 +20,7 @@ class SurveyGridField extends StatelessWidget {
     this.value,
     this.errorText,
     this.isVisible = true,
+    this.isEditable = true,
   });
 
   @override
@@ -87,28 +89,30 @@ class SurveyGridField extends StatelessWidget {
                                 width: 80.w,
                                 alignment: Alignment.center,
                                 child: GestureDetector(
-                                  onTap: () {
-                                    final newMap = Map<int, List<String>>.from(
-                                      selectedValues,
-                                    );
-                                    final currentSelections = List<String>.from(
-                                      newMap[row.id] ?? [],
-                                    );
+                                  onTap: isEditable
+                                      ? () {
+                                          final newMap = Map<int, List<String>>.from(
+                                            selectedValues,
+                                          );
+                                          final currentSelections = List<String>.from(
+                                            newMap[row.id] ?? [],
+                                          );
 
-                                    if (isMulti) {
-                                      if (isSelected) {
-                                        currentSelections.remove(opt.value);
-                                      } else {
-                                        currentSelections.add(opt.value ?? "");
-                                      }
-                                    } else {
-                                      currentSelections.clear();
-                                      currentSelections.add(opt.value ?? "");
-                                    }
+                                          if (isMulti) {
+                                            if (isSelected) {
+                                              currentSelections.remove(opt.value);
+                                            } else {
+                                              currentSelections.add(opt.value ?? "");
+                                            }
+                                          } else {
+                                            currentSelections.clear();
+                                            currentSelections.add(opt.value ?? "");
+                                          }
 
-                                    newMap[row.id] = currentSelections;
-                                    onChanged(newMap);
-                                  },
+                                          newMap[row.id] = currentSelections;
+                                          onChanged(newMap);
+                                        }
+                                      : null,
                                   child: Container(
                                     padding: EdgeInsets.all(8.r),
                                     decoration: BoxDecoration(

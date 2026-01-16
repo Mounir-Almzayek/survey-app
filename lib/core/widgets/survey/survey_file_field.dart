@@ -12,6 +12,7 @@ class SurveyFileField extends StatelessWidget {
   final String? errorText;
   final bool isVisible;
   final bool isBusy;
+  final bool isEditable;
 
   const SurveyFileField({
     super.key,
@@ -22,6 +23,7 @@ class SurveyFileField extends StatelessWidget {
     this.errorText,
     this.isVisible = true,
     this.isBusy = false,
+    this.isEditable = true,
   });
 
   @override
@@ -33,12 +35,18 @@ class SurveyFileField extends StatelessWidget {
       errorText: errorText,
       isVisible: isVisible,
       validations: question.questionValidations,
-      child: CustomImagePicker(
-        title: "", // Handled by SurveyQuestionCard
-        onImagePicked: onChanged,
-        selectedImage: value,
-        existingImageUrl: existingFileUrl,
-        isBusy: isBusy,
+      child: AbsorbPointer(
+        absorbing: !isEditable,
+        child: Opacity(
+          opacity: isEditable ? 1.0 : 0.6,
+          child: CustomImagePicker(
+            title: "", // Handled by SurveyQuestionCard
+            onImagePicked: isEditable ? onChanged : (_) {},
+            selectedImage: value,
+            existingImageUrl: existingFileUrl,
+            isBusy: isBusy,
+          ),
+        ),
       ),
     );
   }

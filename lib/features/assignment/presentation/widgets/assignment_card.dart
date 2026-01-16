@@ -71,7 +71,7 @@ class _AssignmentCardState extends State<AssignmentCard> {
                 const SizedBox(height: 12),
                 _buildDatesInfo(s),
                 const SizedBox(height: 16),
-                _buildAddButton(context, s),
+                _buildButtons(context, s),
               ],
             ),
           ),
@@ -242,23 +242,54 @@ class _AssignmentCardState extends State<AssignmentCard> {
     );
   }
 
-  Widget _buildAddButton(BuildContext context, S s) {
-    return Center(
-      child: CustomElevatedButton(
-        fontSize: 14,
-        width: 230.w,
-        height: 45.h,
-        onPressed: () {
-          context.push(
-            Routes.surveyAnsweringPath,
-            extra: {
-              'survey': widget.survey,
-              'responseId': null, // Explicitly null for new response
+  Widget _buildButtons(BuildContext context, S s) {
+    return Column(
+      children: [
+        // New Response Button
+        CustomElevatedButton(
+          fontSize: 14,
+          width: 230.w,
+          height: 45.h,
+          onPressed: () {
+            context.push(
+              Routes.surveyAnsweringPath,
+              extra: {
+                'survey': widget.survey,
+                'responseId': null, // Explicitly null for new response
+              },
+            );
+          },
+          title: s.new_response,
+        ),
+        const SizedBox(height: 12),
+        // View Completed Responses Button
+        SizedBox(
+          width: 230.w,
+          height: 45.h,
+          child: OutlinedButton(
+            onPressed: () {
+              context.push(
+                Routes.completedResponsesPath,
+                extra: {'surveyId': widget.survey.id},
+              );
             },
-          );
-        },
-        title: s.new_response,
-      ),
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: AppColors.primary, width: 1.5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+            ),
+            child: Text(
+              'View Completed Responses',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

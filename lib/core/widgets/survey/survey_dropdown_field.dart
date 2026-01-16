@@ -10,6 +10,7 @@ class SurveyDropdownField extends StatelessWidget {
   final ValueChanged<String?> onChanged;
   final String? errorText;
   final bool isVisible;
+  final bool isEditable;
 
   const SurveyDropdownField({
     super.key,
@@ -18,6 +19,7 @@ class SurveyDropdownField extends StatelessWidget {
     this.selectedValue,
     this.errorText,
     this.isVisible = true,
+    this.isEditable = true,
   });
 
   @override
@@ -44,7 +46,7 @@ class SurveyDropdownField extends StatelessWidget {
                 .label ??
             val,
         selectedValue: selectedValue,
-        onChanged: onChanged,
+        onChanged: isEditable ? onChanged : (_) {},
       ),
     );
   }

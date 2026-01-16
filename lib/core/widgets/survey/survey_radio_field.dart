@@ -10,6 +10,7 @@ class SurveyRadioField extends StatelessWidget {
   final ValueChanged<String?> onChanged;
   final String? errorText;
   final bool isVisible;
+  final bool isEditable;
 
   const SurveyRadioField({
     super.key,
@@ -18,6 +19,7 @@ class SurveyRadioField extends StatelessWidget {
     this.selectedValue,
     this.errorText,
     this.isVisible = true,
+    this.isEditable = true,
   });
 
   @override
@@ -43,7 +45,7 @@ class SurveyRadioField extends StatelessWidget {
                 .label ??
             val,
         selectedValue: selectedValue,
-        onChanged: onChanged,
+        onChanged: isEditable ? onChanged : (_) {},
       ),
     );
   }

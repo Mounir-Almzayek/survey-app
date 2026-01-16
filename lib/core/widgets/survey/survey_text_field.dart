@@ -10,6 +10,7 @@ class SurveyTextField extends StatefulWidget {
   final String? errorText;
   final bool isVisible;
   final bool isLongText;
+  final bool isEditable;
 
   const SurveyTextField({
     super.key,
@@ -19,6 +20,7 @@ class SurveyTextField extends StatefulWidget {
     this.errorText,
     this.isVisible = true,
     this.isLongText = false,
+    this.isEditable = true,
   });
 
   @override
@@ -61,7 +63,8 @@ class _SurveyTextFieldState extends State<SurveyTextField> {
         controller: _controller,
         label: null,
         hintText: widget.question.helpText,
-        onChanged: widget.onChanged,
+        onChanged: widget.isEditable ? widget.onChanged : null,
+        enabled: widget.isEditable,
         keyboardType: widget.isLongText
             ? TextInputType.multiline
             : TextInputType.text,

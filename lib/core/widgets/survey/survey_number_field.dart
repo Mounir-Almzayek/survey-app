@@ -9,6 +9,7 @@ class SurveyNumberField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final String? errorText;
   final bool isVisible;
+  final bool isEditable;
 
   const SurveyNumberField({
     super.key,
@@ -17,6 +18,7 @@ class SurveyNumberField extends StatefulWidget {
     this.onChanged,
     this.errorText,
     this.isVisible = true,
+    this.isEditable = true,
   });
 
   @override
@@ -59,7 +61,8 @@ class _SurveyNumberFieldState extends State<SurveyNumberField> {
         controller: _controller,
         label: null,
         hintText: widget.question.helpText,
-        onChanged: widget.onChanged,
+        onChanged: widget.isEditable ? widget.onChanged : null,
+        enabled: widget.isEditable,
         keyboardType: const TextInputType.numberWithOptions(
           decimal: true,
           signed: true,

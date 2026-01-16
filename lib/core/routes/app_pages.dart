@@ -9,6 +9,8 @@ import '../../features/main_screen/presentation/main_page.dart';
 import '../../features/device_registration/presentation/device_registration_page.dart';
 import '../../features/qr_scanner/presentation/qr_scanner_page.dart';
 import '../../features/assignment/presentation/pages/survey_answering_page.dart';
+import '../../features/assignment/presentation/pages/completed_responses_page.dart';
+import '../../features/assignment/presentation/pages/completed_response_view_page.dart';
 import '../../core/models/survey/survey_model.dart';
 import 'app_routes.dart';
 
@@ -79,6 +81,22 @@ final appPages = GoRouter(
         final survey = extra['survey'] as Survey;
         final responseId = extra['responseId'] as int?;
         return SurveyAnsweringPage(survey: survey, responseId: responseId);
+      },
+    ),
+    GoRoute(
+      path: Routes.completedResponsesPath,
+      builder: (context, state) {
+        final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+        final surveyId = extra['surveyId'] as int;
+        return CompletedResponsesPage(surveyId: surveyId);
+      },
+    ),
+    GoRoute(
+      path: Routes.completedResponseViewPath,
+      builder: (context, state) {
+        final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+        final responseId = extra['responseId'] as int;
+        return CompletedResponseViewPage(responseId: responseId);
       },
     ),
   ],

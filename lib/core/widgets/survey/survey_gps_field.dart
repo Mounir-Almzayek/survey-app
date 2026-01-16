@@ -11,6 +11,7 @@ class SurveyGpsField extends StatelessWidget {
   final String? errorText;
   final bool isVisible;
   final bool isFetching;
+  final bool isEditable;
 
   const SurveyGpsField({
     super.key,
@@ -20,6 +21,7 @@ class SurveyGpsField extends StatelessWidget {
     this.errorText,
     this.isVisible = true,
     this.isFetching = false,
+    this.isEditable = true,
   });
 
   @override
@@ -80,7 +82,7 @@ class SurveyGpsField extends StatelessWidget {
                       AlwaysStoppedAnimation<Color>(AppColors.surveyPrimary),
                 ),
               )
-            else
+            else if (isEditable)
               TextButton(
                 onPressed: () {
                   // In a real scenario, this would trigger geolocator

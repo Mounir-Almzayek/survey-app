@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/generated/l10n.dart';
+import '../../../core/routes/app_routes.dart';
 import '../bloc/responses_list/responses_list_bloc.dart';
 import '../models/response.dart';
 import '../models/response_status.dart';
@@ -78,7 +80,12 @@ class _ResponsesListScreenState extends State<ResponsesListScreen> {
                     final r = responses[index];
                     return ResponseCard(
                       response: r,
-                      // TODO: wire to navigation for view/review when routes exist.
+                      onView: () {
+                        context.push(
+                          Routes.completedResponseViewPath,
+                          extra: {'responseId': r.id},
+                        );
+                      },
                     );
                   },
                 );

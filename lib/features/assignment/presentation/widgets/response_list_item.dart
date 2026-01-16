@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
-import '../../repository/assignment_local_repository.dart';
 import '../../bloc/assignments_list/assignments_list_bloc.dart';
-import 'delete_response_dialog.dart';
 
 import 'package:go_router/go_router.dart';
 import '../../../../core/routes/app_routes.dart';
@@ -67,13 +65,6 @@ class ResponseListItem extends StatelessWidget {
               }
             },
           ),
-          const SizedBox(width: 8),
-          _buildActionButton(
-            label: s.delete,
-            icon: Icons.delete_outline_rounded,
-            color: AppColors.error,
-            onPressed: () => _handleDelete(context),
-          ),
         ],
       ),
     );
@@ -110,25 +101,5 @@ class ResponseListItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _handleDelete(BuildContext context) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => DeleteResponseDialog(responseId: responseId),
-    );
-
-    if (confirmed == true) {
-      await AssignmentLocalRepository.removeResponseDraft(responseId);
-      await AssignmentLocalRepository.unlinkResponseFromSurvey(
-        surveyId,
-        responseId,
-      );
-
-      if (context.mounted) {
-        // Refresh the assignments list to reflect changes
-        context.read<AssignmentsListBloc>().add(LoadAssignments());
-      }
-    }
   }
 }

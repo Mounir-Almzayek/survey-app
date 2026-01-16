@@ -11,6 +11,7 @@ class SurveyRatingField extends StatelessWidget {
   final String? errorText;
   final bool isVisible;
   final int maxRating;
+  final bool isEditable;
 
   const SurveyRatingField({
     super.key,
@@ -20,6 +21,7 @@ class SurveyRatingField extends StatelessWidget {
     this.errorText,
     this.isVisible = true,
     this.maxRating = 5,
+    this.isEditable = true,
   });
 
   @override
@@ -37,7 +39,7 @@ class SurveyRatingField extends StatelessWidget {
           final starValue = index + 1;
           final isSelected = value != null && starValue <= value!;
           return GestureDetector(
-            onTap: () => onChanged(starValue),
+            onTap: isEditable ? () => onChanged(starValue) : null,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.w),
               child: Icon(

@@ -10,6 +10,7 @@ class SurveyCheckboxField extends StatelessWidget {
   final ValueChanged<List<String>> onChanged;
   final String? errorText;
   final bool isVisible;
+  final bool isEditable;
 
   const SurveyCheckboxField({
     super.key,
@@ -18,6 +19,7 @@ class SurveyCheckboxField extends StatelessWidget {
     this.selectedValues = const [],
     this.errorText,
     this.isVisible = true,
+    this.isEditable = true,
   });
 
   @override
@@ -34,15 +36,17 @@ class SurveyCheckboxField extends StatelessWidget {
             question.questionOptions?.map((option) {
               final isSelected = selectedValues.contains(option.value);
               return GestureDetector(
-                onTap: () {
-                  final newValues = List<String>.from(selectedValues);
-                  if (isSelected) {
-                    newValues.remove(option.value);
-                  } else if (option.value != null) {
-                    newValues.add(option.value!);
-                  }
-                  onChanged(newValues);
-                },
+                onTap: isEditable
+                    ? () {
+                        final newValues = List<String>.from(selectedValues);
+                        if (isSelected) {
+                          newValues.remove(option.value);
+                        } else if (option.value != null) {
+                          newValues.add(option.value!);
+                        }
+                        onChanged(newValues);
+                      }
+                    : null,
                 child: Container(
                   margin: EdgeInsets.only(bottom: 8.h),
                   padding: EdgeInsets.symmetric(

@@ -10,6 +10,7 @@ class SurveyDateField extends StatelessWidget {
   final ValueChanged<String> onChanged;
   final String? errorText;
   final bool isVisible;
+  final bool isEditable;
 
   const SurveyDateField({
     super.key,
@@ -18,6 +19,7 @@ class SurveyDateField extends StatelessWidget {
     this.value,
     this.errorText,
     this.isVisible = true,
+    this.isEditable = true,
   });
 
   @override
@@ -29,12 +31,18 @@ class SurveyDateField extends StatelessWidget {
       errorText: errorText,
       isVisible: isVisible,
       validations: question.questionValidations,
-      child: CustomDatePickerField(
-        label: "", // Handled by SurveyQuestionCard
-        selectedDate: value,
-        onDateSelected: onChanged,
-        pickTime: question.type == QuestionType.datetime ||
-            question.type == QuestionType.time,
+      child: AbsorbPointer(
+        absorbing: !isEditable,
+        child: Opacity(
+          opacity: isEditable ? 1.0 : 0.6,
+          child: CustomDatePickerField(
+            label: "", // Handled by SurveyQuestionCard
+            selectedDate: value,
+            onDateSelected: isEditable ? onChanged : (_) {},
+            pickTime: question.type == QuestionType.datetime ||
+                question.type == QuestionType.time,
+          ),
+        ),
       ),
     );
   }

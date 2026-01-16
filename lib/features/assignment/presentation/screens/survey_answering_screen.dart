@@ -8,7 +8,6 @@ import '../widgets/survey_section_widget.dart';
 
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
-import '../../repository/assignment_local_repository.dart';
 
 import '../../bloc/start_response/start_response_bloc.dart' as start;
 
@@ -35,21 +34,10 @@ class SurveyAnsweringScreen extends StatelessWidget {
               final isLastSection = navBloc.state.isLastSection;
 
               if (state.response.isComplete || isLastSection) {
-                // 1. Cleanup local storage for completed response
-                final surveyId = navBloc.state.survey?.id;
-                final responseId = navBloc.state.responseId;
+                // Keep completed response - do not delete it
+                // The response will remain in localResponseIds for viewing later
 
-                if (surveyId != null && responseId != null) {
-                  await AssignmentLocalRepository.removeResponseDraft(
-                    responseId,
-                  );
-                  await AssignmentLocalRepository.unlinkResponseFromSurvey(
-                    surveyId,
-                    responseId,
-                  );
-                }
-
-                // 2. Move to completion step
+                // Move to completion step
                 navBloc.add(CompleteSurvey());
               } else {
                 // If section saved successfully and not complete, move to next

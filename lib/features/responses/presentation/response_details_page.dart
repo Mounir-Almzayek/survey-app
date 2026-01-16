@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../core/l10n/generated/l10n.dart';
 import '../bloc/response_details/response_details_bloc.dart';
+import 'response_details_screen.dart';
 
 class ResponseDetailsPage extends StatelessWidget {
   final int responseId;
@@ -11,62 +10,11 @@ class ResponseDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = S.of(context);
     return BlocProvider(
       create: (_) =>
           ResponseDetailsBloc()
             ..add(LoadResponseDetails(responseId: responseId)),
-      child: Scaffold(
-        appBar: AppBar(title: Text(locale.response_details_title)),
-        body: SafeArea(
-          child: BlocBuilder<ResponseDetailsBloc, ResponseDetailsState>(
-            builder: (context, state) {
-              if (state is ResponseDetailsLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (state is ResponseDetailsError) {
-                return Center(child: Text(state.message));
-              }
-
-              if (state is ResponseDetailsLoaded) {
-                final d = state.details;
-                 return ListView(
-                   padding: const EdgeInsets.all(16),
-                   children: [
-                     if (d.surveyTitle != null)
-                       Text(
-                         d.surveyTitle!,
-                         style: Theme.of(context)
-                             .textTheme
-                             .headlineSmall
-                             ?.copyWith(fontWeight: FontWeight.bold),
-                       ),
-                     const SizedBox(height: 16),
-                     for (final answer in d.answers) ...[
-                       Text(
-                         answer.questionLabel,
-                         style: Theme.of(context)
-                             .textTheme
-                             .bodyMedium
-                             ?.copyWith(fontWeight: FontWeight.bold),
-                       ),
-                       const SizedBox(height: 4),
-                       Text(
-                         answer.value,
-                         style: Theme.of(context).textTheme.bodySmall,
-                       ),
-                       const Divider(height: 24),
-                     ],
-                   ],
-                 );
-              }
-
-              return const SizedBox.shrink();
-            },
-          ),
-        ),
-      ),
+      child: const ResponseDetailsScreen(),
     );
   }
 }

@@ -13,6 +13,7 @@ class SurveySliderField extends StatelessWidget {
   final double min;
   final double max;
   final int? divisions;
+  final bool isEditable;
 
   const SurveySliderField({
     super.key,
@@ -24,6 +25,7 @@ class SurveySliderField extends StatelessWidget {
     this.min = 0,
     this.max = 100,
     this.divisions,
+    this.isEditable = true,
   });
 
   @override
@@ -54,7 +56,7 @@ class SurveySliderField extends StatelessWidget {
               max: max,
               divisions: divisions,
               label: effectiveValue.round().toString(),
-              onChanged: onChanged,
+              onChanged: isEditable ? onChanged : null,
             ),
           ),
           Padding(

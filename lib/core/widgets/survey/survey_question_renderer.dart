@@ -19,6 +19,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
   final ValueChanged<dynamic> onAnswerChange;
   final String? errorText;
   final bool isVisible;
+  final bool isEditable;
 
   const SurveyQuestionRenderer({
     super.key,
@@ -27,6 +28,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
     required this.onAnswerChange,
     this.errorText,
     this.isVisible = true,
+    this.isEditable = true,
   });
 
   @override
@@ -41,6 +43,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
       case QuestionType.textLong:
         return SurveyTextField(
@@ -50,6 +53,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           errorText: errorText,
           isVisible: isVisible,
           isLongText: true,
+          isEditable: isEditable,
         );
       case QuestionType.number:
         return SurveyNumberField(
@@ -58,6 +62,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(num.tryParse(val)),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
       case QuestionType.radio:
         return SurveyRadioField(
@@ -66,6 +71,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
       case QuestionType.checkbox:
         return SurveyCheckboxField(
@@ -74,6 +80,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
       case QuestionType.dropdown:
         return SurveyDropdownField(
@@ -82,6 +89,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
       case QuestionType.date:
       case QuestionType.time:
@@ -92,6 +100,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
       case QuestionType.file:
         return SurveyFileField(
@@ -99,6 +108,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
       case QuestionType.rating:
         return SurveyRatingField(
@@ -107,6 +117,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
       case QuestionType.slider:
         return SurveySliderField(
@@ -115,6 +126,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
       case QuestionType.gps:
         return SurveyGpsField(
@@ -122,6 +134,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
       case QuestionType.singleSelectGrid:
       case QuestionType.multiSelectGrid:
@@ -130,6 +143,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
+          isEditable: isEditable,
         );
     }
   }
