@@ -236,7 +236,7 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
     Emitter<SaveSectionState> emit,
   ) async {
     final responseId = state.responseId;
-    final saveRequest = state.saveRequest;
+    var saveRequest = state.saveRequest;
 
     if (responseId == null || saveRequest == null) {
       emit(
@@ -249,18 +249,23 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
       return;
     }
 
+    // Use answers from event if provided, otherwise use from state
+    if (event.answers != null) {
+      saveRequest = saveRequest.copyWith(answers: event.answers);
+    }
+
     emit(SaveSectionLoading(responseId: responseId, saveRequest: saveRequest));
 
     await _runner.run(
       onlineTask: (_) async => await AssignmentRepository.saveSectionAnswers(
         responseId: responseId,
-        saveRequest: saveRequest,
+        saveRequest: saveRequest!,
       ),
       offlineTask: (_) async {
         // 1. Enqueue the request via repository (marks as unsynced locally + adds to queue)
         await AssignmentRepository.enqueueSaveSectionAnswers(
           responseId: responseId,
-          saveRequest: saveRequest,
+          saveRequest: saveRequest!,
         );
 
         return SaveSectionResponse(
@@ -278,7 +283,7 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
             SaveSectionSuccess(
               response,
               responseId: responseId,
-              saveRequest: saveRequest.copyWith(isSynced: true),
+              saveRequest: saveRequest!.copyWith(isSynced: true),
             ),
           );
         }
@@ -289,7 +294,7 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
             SaveSectionSuccess(
               response,
               responseId: responseId,
-              saveRequest: saveRequest.copyWith(isSynced: false),
+              saveRequest: saveRequest!.copyWith(isSynced: false),
             ),
           );
         }

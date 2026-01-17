@@ -35,7 +35,10 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
         children: [
           // Header - Always visible
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.isDesktop ? 12.0 : 8.w,
+              vertical: context.isDesktop ? 12.0 : 8.h,
+            ),
             child: Row(
               children: [
                 // Expandable Area
@@ -44,11 +47,11 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
                     onTap: () => setState(() => _isExpanded = !_isExpanded),
                     borderRadius: BorderRadius.circular(12.r),
                     child: Padding(
-                      padding: EdgeInsets.all(8.r),
+                      padding: EdgeInsets.all(context.isDesktop ? 12.0 : 8.r),
                       child: Row(
                         children: [
                           Container(
-                            padding: EdgeInsets.all(8.r),
+                            padding: EdgeInsets.all(context.isDesktop ? 10.0 : 8.r),
                             decoration: BoxDecoration(
                               color: AppColors.primary.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8.r),
@@ -59,7 +62,7 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
                               size: context.adaptiveIcon(18.sp),
                             ),
                           ),
-                          SizedBox(width: 12.w),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,10 +75,8 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
                                     color: AppColors.primaryText,
                                   ),
                                 ),
-                                BlocBuilder<
-                                  GetMyPublicLinksBloc,
-                                  GetMyPublicLinksState
-                                >(
+                                BlocBuilder<GetMyPublicLinksBloc,
+                                    GetMyPublicLinksState>(
                                   builder: (context, state) {
                                     if (state is GetMyPublicLinksSuccess) {
                                       return Text(
@@ -114,10 +115,10 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
 
                 // Vertical Divider
                 Container(
-                  height: 32.h,
+                  height: 32,
                   width: 1,
                   color: AppColors.border.withValues(alpha: 0.5),
-                  margin: EdgeInsets.symmetric(horizontal: 4.w),
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
                 ),
 
                 // Independent Sync Button - Always accessible

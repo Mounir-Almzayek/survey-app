@@ -39,4 +39,7 @@ class RemoveAnswer extends SaveSectionEvent {
   RemoveAnswer(this.questionId);
 }
 
-class SubmitSection extends SaveSectionEvent {}
+class SubmitSection extends SaveSectionEvent {
+  final List<AnswerRequest>? answers;
+  SubmitSection({this.answers});
+}

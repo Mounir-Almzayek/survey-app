@@ -23,7 +23,10 @@ class RefreshBehavior extends SurveyNavigationEvent {
   RefreshBehavior(this.answers);
 }
 
-class NextSection extends SurveyNavigationEvent {}
+class NextSection extends SurveyNavigationEvent {
+  final Map<int, dynamic>? answers;
+  NextSection({this.answers});
+}
 
 class PreviousSection extends SurveyNavigationEvent {}
 

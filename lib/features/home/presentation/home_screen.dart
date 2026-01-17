@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
     final horizontalPadding = context.responsive(
       20.w,
       tablet: 32.w,
-      desktop: 48.w,
+      desktop: 32.0,
     );
     final headerFontSize = context.adaptiveFont(22.sp);
 
@@ -42,9 +42,7 @@ class HomeScreen extends StatelessWidget {
               color: AppColors.primary,
               child: Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: context.responsive(1.sw, desktop: 1400.w),
-                  ),
+                  constraints: const BoxConstraints(maxWidth: 1400),
                   child: CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     slivers: [
@@ -56,13 +54,13 @@ class HomeScreen extends StatelessWidget {
                             context.responsive(
                               24.h,
                               tablet: 40.h,
-                              desktop: 50.h,
+                              desktop: 40.0,
                             ),
                             horizontalPadding,
                             context.responsive(
                               32.h,
                               tablet: 48.h,
-                              desktop: 60.h,
+                              desktop: 40.0,
                             ),
                           ),
                           child: Column(
@@ -77,7 +75,7 @@ class HomeScreen extends StatelessWidget {
                                   letterSpacing: -0.5,
                                 ),
                               ),
-                              SizedBox(height: 4.h),
+                              const SizedBox(height: 8),
                               Text(
                                 s.home_survey_status_subtitle,
                                 style: TextStyle(
@@ -101,16 +99,22 @@ class HomeScreen extends StatelessWidget {
                               ? Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Left side: Statistics
+                                    // Left side: Large Charts
                                     Expanded(
-                                      flex: 4,
-                                      child: _buildStatsContent(context, state),
-                                    ),
-                                    SizedBox(width: 32.w),
-                                    // Right side: Public Links
-                                    const Expanded(
                                       flex: 3,
-                                      child: PublicLinksSection(),
+                                      child: _buildChartsOnly(context, state),
+                                    ),
+                                    const SizedBox(width: 60),
+                                    // Right side: Metrics Sidebar + Public Links
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        children: [
+                                          _buildMetricsOnly(context, state),
+                                          const SizedBox(height: 32),
+                                          const PublicLinksSection(),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 )
@@ -152,5 +156,19 @@ class HomeScreen extends StatelessWidget {
       return SurveyStatsWidget(stats: state.stats);
     }
     return const SizedBox.shrink();
+  }
+
+  Widget _buildChartsOnly(BuildContext context, HomeStatsState state) {
+    if (state is HomeStatsLoaded) {
+      return SurveyChartsOnly(stats: state.stats);
+    }
+    return _buildStatsContent(context, state); // Fallback for loading/error
+  }
+
+  Widget _buildMetricsOnly(BuildContext context, HomeStatsState state) {
+    if (state is HomeStatsLoaded) {
+      return SurveyStatsWidget(stats: state.stats, isSidebarLayout: true);
+    }
+    return const SizedBox.shrink(); // Don't show metrics if not loaded
   }
 }

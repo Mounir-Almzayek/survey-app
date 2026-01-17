@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/l10n/generated/l10n.dart';
+import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/custom_app_bar.dart';
 import '../../../core/utils/responsive_layout.dart';
 import '../../../core/services/device_local_metadata_service.dart';
@@ -29,6 +30,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final ZoomDrawerController _drawerController = ZoomDrawerController();
+  bool _isSidebarCollapsed = false;
 
   @override
   void initState() {
@@ -73,6 +75,7 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   MainSidebar(
                     selectedTab: state.currentTab,
+                    isCollapsed: _isSidebarCollapsed,
                     onTabChanged: (tab) {
                       context.read<MainNavigationBloc>().add(ChangeTab(tab));
                     },
@@ -83,6 +86,22 @@ class _MainScreenState extends State<MainScreen> {
                       appBar: CustomAppBar(
                         title: state.currentTab.label(S.of(context)),
                         showDrawerButton: false,
+                        actions: [
+                          IconButton(
+                            icon: Icon(
+                              _isSidebarCollapsed
+                                  ? Icons.menu_open_rounded
+                                  : Icons.menu_rounded,
+                              color: AppColors.primary,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isSidebarCollapsed = !_isSidebarCollapsed;
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                        ],
                       ),
                       body: _buildPage(state.currentTab),
                     ),

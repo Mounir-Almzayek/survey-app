@@ -380,5 +380,7 @@
   "sync_status": "Sync Status",
   "retry_all": "Retry All",
   "clear_all": "Clear All",
-  "view_completed_responses": "View Completed Responses"
+  "view_completed_responses": "View Completed Responses",
+  "to": "To",
+  "from": "From"
 }

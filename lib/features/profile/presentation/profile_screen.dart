@@ -56,8 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   constraints: BoxConstraints(
                     maxWidth: context.responsive(
                       1.sw,
-                      tablet: 600.w,
-                      desktop: 800.w,
+                      tablet: 600.0,
+                      desktop: 1000.0,
                     ),
                   ),
                   child: SingleChildScrollView(
@@ -142,9 +142,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(flex: 2, child: ProfileInfoCard(user: user)),
-          SizedBox(width: 24.w),
-          Expanded(flex: 3, child: _buildMenuSection(context, locale)),
+          Expanded(flex: 1, child: ProfileInfoCard(user: user)),
+          const SizedBox(width: 40),
+          Expanded(flex: 2, child: _buildMenuSection(context, locale)),
         ],
       );
     }

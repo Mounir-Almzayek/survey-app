@@ -77,7 +77,8 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
                           errorText: _errors[question.id],
                           onAnswerChange: (value) {
                             // Sanitize value: Empty strings should be null
-                            final sanitizedValue = SurveyValidator.sanitizeValue(value);
+                            final sanitizedValue =
+                                SurveyValidator.sanitizeValue(value);
 
                             context.read<SaveSectionBloc>().add(
                               AddAnswer(
@@ -124,7 +125,12 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
     int totalCount,
   ) {
     return Container(
-      padding: EdgeInsets.fromLTRB(20.w, 45.h, 20.w, 20.h),
+      padding: EdgeInsets.fromLTRB(
+        20.w,
+        context.isPhoneLandscape ? 12.h : 45.h,
+        20.w,
+        context.isPhoneLandscape ? 12.h : 20.h,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(32.r)),
@@ -186,36 +192,40 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
               ),
             ],
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: context.isPhoneLandscape ? 12.h : 24.h),
           // Animated Progress Bar
-          Container(
-            height: 10.h,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.border.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(5.r),
-            ),
-            child: Stack(
-              children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 600),
-                  curve: Curves.elasticOut,
-                  height: 10.h,
-                  width: ScreenUtil().screenWidth * progress,
-                  decoration: BoxDecoration(
-                    gradient: AppColors.primaryGradient,
-                    borderRadius: BorderRadius.circular(5.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primaryStart.withOpacity(0.3),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                height: 10.h,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.border.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(5.r),
                 ),
-              ],
-            ),
+                child: Stack(
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 600),
+                      curve: Curves.elasticOut,
+                      height: 10.h,
+                      width: constraints.maxWidth * progress,
+                      decoration: BoxDecoration(
+                        gradient: AppColors.primaryGradient,
+                        borderRadius: BorderRadius.circular(5.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primaryStart.withOpacity(0.3),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -233,7 +243,12 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
     final isLoading = saveState is SaveSectionLoading;
 
     return Container(
-      padding: EdgeInsets.fromLTRB(20.r, 20.r, 20.r, 35.r),
+      padding: EdgeInsets.fromLTRB(
+        20.r,
+        context.isPhoneLandscape ? 12.r : 20.r,
+        20.r,
+        context.isPhoneLandscape ? 12.r : 35.r,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
@@ -250,7 +265,10 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
           if (!isFirst)
             IconButton.filledTonal(
               onPressed: isLoading ? null : () => _handlePrevious(context),
-              icon: Icon(Icons.arrow_back_ios_new_rounded, size: context.adaptiveIcon(20.sp)),
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: context.adaptiveIcon(20.sp),
+              ),
               style: IconButton.styleFrom(
                 backgroundColor: AppColors.primary.withOpacity(0.1),
                 foregroundColor: AppColors.primary,
@@ -300,7 +318,8 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
         if (survey?.sections != null) {
           final section = survey!.sections!.firstWhere(
             (s) => s.questions?.any((q) => q.id == answer.questionId) ?? false,
-            orElse: () => navState.currentSection!, // Fallback to current section
+            orElse: () =>
+                navState.currentSection!, // Fallback to current section
           );
           if (!navState.isVisible("section_${section.id}")) return false;
         }
@@ -309,9 +328,9 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
       }).toList();
 
       // Update answers with filtered ones before submitting
-      context.read<SaveSectionBloc>().add(UpdateAnswers(filteredAnswers));
-
-      context.read<SaveSectionBloc>().add(SubmitSection());
+      context.read<SaveSectionBloc>().add(
+        SubmitSection(answers: filteredAnswers),
+      );
     }
   }
 

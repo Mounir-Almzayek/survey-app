@@ -142,11 +142,26 @@ class SurveyNavigationBloc
   void _onNextSection(NextSection event, Emitter<SurveyNavigationState> emit) {
     final survey = state.survey;
     if (survey != null && survey.sections != null) {
+      // 1. If answers provided, recalculate behavior first to ensure current state is up-to-date
+      Map<String, bool> currentVisibility = state.visibilityMap;
+      Map<int, int> currentJumpMap = state.jumpMap;
+
+      if (event.answers != null) {
+        final behavior = SurveyBehaviorManager.calculateBehavior(
+          logics: survey.conditionalLogics ?? [],
+          answers: event.answers!,
+        );
+        currentVisibility = Map<String, bool>.from(
+          behavior['visibility'] ?? {},
+        );
+        currentJumpMap = Map<int, int>.from(behavior['jump'] ?? {});
+      }
+
       final section = state.currentSection;
       if (section == null) return;
 
-      // Check for Jump logic
-      final jumpTargetId = state.jumpMap[section.id];
+      // 2. Check for Jump logic using the latest jump map
+      final jumpTargetId = currentJumpMap[section.id];
       if (jumpTargetId != null) {
         final targetIndex = survey.sections!.indexWhere(
           (s) => s.id == jumpTargetId,
@@ -157,9 +172,9 @@ class SurveyNavigationBloc
               survey: survey,
               responseId: state.responseId,
               currentSectionIndex: targetIndex,
-              visibilityMap: state.visibilityMap,
+              visibilityMap: currentVisibility,
               requirementMap: state.requirementMap,
-              jumpMap: state.jumpMap,
+              jumpMap: currentJumpMap,
               currentStep: state.currentStep,
             ),
           );
@@ -167,24 +182,35 @@ class SurveyNavigationBloc
         }
       }
 
+      // 3. Find next visible section
       int nextIndex = state.currentSectionIndex + 1;
+      bool foundNext = false;
       while (nextIndex < survey.sections!.length) {
         final section = survey.sections![nextIndex];
-        if (state.isVisible("section_${section.id}")) {
+        final bool isSectionVisible =
+            currentVisibility["section_${section.id}"] ?? true;
+
+        if (isSectionVisible) {
           emit(
             SurveyNavigationUpdated(
               survey: survey,
               responseId: state.responseId,
               currentSectionIndex: nextIndex,
-              visibilityMap: state.visibilityMap,
+              visibilityMap: currentVisibility,
               requirementMap: state.requirementMap,
-              jumpMap: state.jumpMap,
+              jumpMap: currentJumpMap,
               currentStep: state.currentStep,
             ),
           );
-          return;
+          foundNext = true;
+          break;
         }
         nextIndex++;
+      }
+
+      // 4. Fallback: If no next section found, trigger completion
+      if (!foundNext) {
+        add(CompleteSurvey());
       }
     }
   }

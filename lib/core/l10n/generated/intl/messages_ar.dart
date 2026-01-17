@@ -174,6 +174,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تم اختيار الملف"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("نسيت كلمة المرور؟"),
+        "from": MessageLookupByLibrary.simpleMessage("من"),
         "gallery": MessageLookupByLibrary.simpleMessage("المعرض"),
         "gb": MessageLookupByLibrary.simpleMessage("جيجابايت"),
         "get_started": MessageLookupByLibrary.simpleMessage("ابدأ الآن"),
@@ -409,6 +410,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tap_to_view": MessageLookupByLibrary.simpleMessage("اضغط للعرض"),
         "thank_you_for_response":
             MessageLookupByLibrary.simpleMessage("شكراً لمشاركتك"),
+        "to": MessageLookupByLibrary.simpleMessage("ل"),
         "to_user_email": MessageLookupByLibrary.simpleMessage(
             "البريد الإلكتروني للمستخدم المستقبل"),
         "total": MessageLookupByLibrary.simpleMessage("الإجمالي"),

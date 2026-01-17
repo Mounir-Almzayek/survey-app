@@ -21,198 +21,304 @@ class CustodyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = S.of(context);
+    final hasNotes = record.notes != null && record.notes!.isNotEmpty;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(16.w),
+        margin: EdgeInsets.only(bottom: 12.h),
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(14.r),
+          borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: record.status.color.withValues(alpha: 0.3),
-            width: 1,
+            color: record.status.color.withValues(alpha: 0.2),
+            width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 15,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header with status
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    record.physicalDeviceName,
-                    style: TextStyle(
-                      fontSize: context.adaptiveFont(14.sp),
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryText,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. Header with Status & Device Name
+              Container(
+                padding: EdgeInsets.all(16.r),
+                decoration: BoxDecoration(
+                  color: record.status.color.withValues(alpha: 0.05),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: record.status.color.withValues(alpha: 0.1),
                     ),
                   ),
                 ),
-                _buildStatusBadge(context),
-              ],
-            ),
-            SizedBox(height: 12.h),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(10.r),
+                      decoration: BoxDecoration(
+                        color: record.status.color.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.devices_other_rounded,
+                        size: context.adaptiveIcon(20.sp),
+                        color: record.status.color,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            record.physicalDeviceName,
+                            style: TextStyle(
+                              fontSize: context.adaptiveFont(15.sp),
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.primaryText,
+                            ),
+                          ),
+                          if (record.physicalDeviceType != null)
+                            Text(
+                              record.physicalDeviceType!,
+                              style: TextStyle(
+                                fontSize: context.adaptiveFont(11.sp),
+                                color: AppColors.secondaryText,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    _buildStatusBadge(context),
+                  ],
+                ),
+              ),
 
-            // Device info
-            if (record.physicalDeviceType != null) ...[
-              Row(
-                children: [
-                  Icon(
-                    Icons.devices_rounded,
-                    size: context.adaptiveIcon(16.sp),
-                    color: AppColors.secondaryText,
+              // 2. Transfer Path (From -> To)
+              Padding(
+                padding: EdgeInsets.fromLTRB(16.r, 16.r, 16.r, 8.r),
+                child: Row(
+                  children: [
+                    _buildUserNode(
+                      context,
+                      label: locale.from,
+                      name: record.fromUserName,
+                      email: record.fromUserEmail,
+                      icon: Icons.person_outline_rounded,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                      child: Icon(
+                        Icons.arrow_forward_rounded,
+                        size: context.adaptiveIcon(18.sp),
+                        color: AppColors.secondaryText.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    _buildUserNode(
+                      context,
+                      label: locale.to,
+                      name: record.toUserName,
+                      email: record.toUserEmail,
+                      icon: Icons.person_add_alt_1_rounded,
+                      isReceiver: true,
+                    ),
+                  ],
+                ),
+              ),
+
+              // 3. Notes Section (If exists)
+              if (hasNotes)
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.r,
+                    vertical: 8.r,
                   ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    record.physicalDeviceType!,
-                    style: TextStyle(
-                      fontSize: context.adaptiveFont(12.sp),
+                  child: Container(
+                    padding: EdgeInsets.all(12.r),
+                    decoration: BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: AppColors.border.withValues(alpha: 0.5),
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.notes_rounded,
+                          size: context.adaptiveIcon(14.sp),
+                          color: AppColors.secondaryText,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            record.notes!,
+                            style: TextStyle(
+                              fontSize: context.adaptiveFont(11.sp),
+                              color: AppColors.primaryText.withValues(
+                                alpha: 0.8,
+                              ),
+                              fontStyle: FontStyle.italic,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+              // 4. Footer: Dates & Actions
+              Padding(
+                padding: EdgeInsets.all(16.r),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.access_time_rounded,
+                      size: context.adaptiveIcon(14.sp),
                       color: AppColors.secondaryText,
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8.h),
-            ],
-
-            // From user
-            if (record.fromUserEmail != null) ...[
-              Row(
-                children: [
-                  Icon(
-                    Icons.person_outline_rounded,
-                    size: context.adaptiveIcon(16.sp),
-                    color: AppColors.secondaryText,
-                  ),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: Text(
-                      record.fromUserName ?? record.fromUserEmail!,
+                    const SizedBox(width: 6),
+                    Text(
+                      _formatDate(record.createdAt),
                       style: TextStyle(
-                        fontSize: context.adaptiveFont(12.sp),
+                        fontSize: context.adaptiveFont(11.sp),
                         color: AppColors.secondaryText,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 4.h),
-              Padding(
-                padding: EdgeInsets.only(left: 24.w),
-                child: Text(
-                  record.fromUserEmail!,
-                  style: TextStyle(
-                    fontSize: context.adaptiveFont(10.sp),
-                    color: AppColors.secondaryText.withValues(alpha: 0.7),
-                  ),
-                ),
-              ),
-              SizedBox(height: 8.h),
-            ],
-
-            // To user
-            if (record.toUserEmail != null) ...[
-              Row(
-                children: [
-                  Icon(
-                    Icons.person_add_outlined,
-                    size: context.adaptiveIcon(16.sp),
-                    color: AppColors.secondaryText,
-                  ),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: Text(
-                      record.toUserName ?? record.toUserEmail!,
-                      style: TextStyle(
-                        fontSize: context.adaptiveFont(12.sp),
-                        color: AppColors.secondaryText,
+                    const Spacer(),
+                    if (record.isPending && onVerify != null)
+                      ElevatedButton.icon(
+                        onPressed: onVerify,
+                        icon: Icon(
+                          Icons.verified_user_rounded,
+                          size: context.adaptiveIcon(16.sp),
+                        ),
+                        label: Text(locale.verify_custody),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 8.h,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          textStyle: TextStyle(
+                            fontSize: context.adaptiveFont(12.sp),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    else if (record.isVerified)
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle_rounded,
+                            size: context.adaptiveIcon(14.sp),
+                            color: AppColors.success,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            _formatDate(record.verifiedAt!),
+                            style: TextStyle(
+                              fontSize: context.adaptiveFont(11.sp),
+                              color: AppColors.success,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 4.h),
-              Padding(
-                padding: EdgeInsets.only(left: 24.w),
-                child: Text(
-                  record.toUserEmail!,
-                  style: TextStyle(
-                    fontSize: context.adaptiveFont(12.sp),
-                    color: AppColors.secondaryText.withValues(alpha: 0.7),
-                  ),
-                ),
-              ),
-              SizedBox(height: 8.h),
-            ],
-
-            // Date
-            Row(
-              children: [
-                Icon(
-                  Icons.calendar_today_outlined,
-                  size: context.adaptiveIcon(14.sp),
-                  color: AppColors.secondaryText,
-                ),
-                SizedBox(width: 4.w),
-                Text(
-                  _formatDate(record.createdAt),
-                  style: TextStyle(
-                    fontSize: context.adaptiveFont(12.sp),
-                    color: AppColors.secondaryText,
-                  ),
-                ),
-                if (record.verifiedAt != null) ...[
-                  SizedBox(width: 16.w),
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: context.adaptiveIcon(14.sp),
-                    color: AppColors.success,
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    _formatDate(record.verifiedAt!),
-                    style: TextStyle(fontSize: context.adaptiveFont(12.sp), color: AppColors.success),
-                  ),
-                ],
-              ],
-            ),
-
-            // Action button for pending records
-            if (record.isPending && onVerify != null) ...[
-              SizedBox(height: 12.h),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: onVerify,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                  ),
-                  child: Text(
-                    locale.verify_custody,
-                    style: TextStyle(
-                      fontSize: context.adaptiveFont(13.sp),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  ],
                 ),
               ),
             ],
-          ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildUserNode(
+    BuildContext context, {
+    required String label,
+    String? name,
+    String? email,
+    required IconData icon,
+    bool isReceiver = false,
+  }) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: isReceiver
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
+        children: [
+          Text(
+            label.toUpperCase(),
+            style: TextStyle(
+              fontSize: context.adaptiveFont(9.sp),
+              fontWeight: FontWeight.bold,
+              color: AppColors.secondaryText.withValues(alpha: 0.6),
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (!isReceiver) ...[
+                Icon(
+                  icon,
+                  size: context.adaptiveIcon(14.sp),
+                  color: AppColors.primary,
+                ),
+                const SizedBox(width: 6),
+              ],
+              Flexible(
+                child: Text(
+                  name ?? email ?? '---',
+                  style: TextStyle(
+                    fontSize: context.adaptiveFont(12.sp),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryText,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (isReceiver) ...[
+                const SizedBox(width: 6),
+                Icon(
+                  icon,
+                  size: context.adaptiveIcon(14.sp),
+                  color: AppColors.accent,
+                ),
+              ],
+            ],
+          ),
+          if (email != null && name != null)
+            Text(
+              email,
+              style: TextStyle(
+                fontSize: context.adaptiveFont(10.sp),
+                color: AppColors.secondaryText,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+        ],
       ),
     );
   }

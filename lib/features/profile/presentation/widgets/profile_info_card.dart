@@ -41,13 +41,13 @@ class ProfileInfoCard extends StatelessWidget {
         ],
       ),
       padding: EdgeInsets.all(
-        context.responsive(24.r, tablet: 32.r, desktop: 40.r),
+        context.responsive(24.r, tablet: 32.r, desktop: 24.0),
       ),
       child: Column(
         children: [
           Container(
-            width: context.responsive(80.w, tablet: 100.w, desktop: 120.w),
-            height: context.responsive(80.w, tablet: 100.w, desktop: 120.w),
+            width: context.responsive(80.w, tablet: 100.w, desktop: 100.0),
+            height: context.responsive(80.w, tablet: 100.w, desktop: 100.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: AppColors.primaryGradient,

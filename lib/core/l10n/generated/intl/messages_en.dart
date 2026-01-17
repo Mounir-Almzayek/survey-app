@@ -175,6 +175,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "file_selected": MessageLookupByLibrary.simpleMessage("File selected"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Forgot your password?"),
+        "from": MessageLookupByLibrary.simpleMessage("From"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
         "gb": MessageLookupByLibrary.simpleMessage("GB"),
         "get_started": MessageLookupByLibrary.simpleMessage("Get Started"),
@@ -409,6 +410,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tap_to_view": MessageLookupByLibrary.simpleMessage("Tap to view"),
         "thank_you_for_response":
             MessageLookupByLibrary.simpleMessage("Thank you for your response"),
+        "to": MessageLookupByLibrary.simpleMessage("To"),
         "to_user_email": MessageLookupByLibrary.simpleMessage("To User Email"),
         "total": MessageLookupByLibrary.simpleMessage("Total"),
         "total_sections_touched":

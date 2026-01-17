@@ -8,53 +8,95 @@ import '../../models/survey_stats_model.dart';
 
 class SurveyStatsWidget extends StatelessWidget {
   final SurveyStatsModel stats;
+  final bool isSidebarLayout;
 
-  const SurveyStatsWidget({super.key, required this.stats});
+  const SurveyStatsWidget({
+    super.key,
+    required this.stats,
+    this.isSidebarLayout = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
 
+    if (isSidebarLayout) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildMetricList(context, s),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 1. Metric Grid (Actionable Insights)
-        GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: context.responsive(2, tablet: 3, desktop: 4),
-          mainAxisSpacing: 12.h,
-          crossAxisSpacing: 12.w,
-          childAspectRatio: context.responsive(1.4, tablet: 1.6, desktop: 1.8),
-          children: [
-            _MetricCard(
-              label: s.active_surveys,
-              value: stats.activeSurveys.toString(),
-              icon: Icons.play_circle_filled_rounded,
-              color: AppColors.success,
-            ),
-            _MetricCard(
-              label: s.draft_responses,
-              value: stats.draftResponses.toString(),
-              icon: Icons.edit_document,
-              color: AppColors.warning,
-            ),
-            _MetricCard(
-              label: s.pending_sync,
-              value: stats.pendingSyncResponses.toString(),
-              icon: Icons.sync_problem_rounded,
-              color: AppColors.error,
-            ),
-            _MetricCard(
-              label: s.synced_responses,
-              value: stats.syncedResponses.toString(),
-              icon: Icons.cloud_done_rounded,
-              color: AppColors.primary,
-            ),
-          ],
-        ),
+        _buildMetricGrid(context, s),
         SizedBox(height: 24.h),
 
+        // 2. Charts Section
+        _buildChartsSection(context, s),
+      ],
+    );
+  }
+
+  Widget _buildMetricGrid(BuildContext context, S s) {
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: context.responsive(2, tablet: 3, desktop: 2),
+      mainAxisSpacing: 16.0,
+      crossAxisSpacing: 16.0,
+      childAspectRatio: context.responsive(1.4, tablet: 1.5, desktop: 1.8),
+      children: _getMetricCards(s),
+    );
+  }
+
+  Widget _buildMetricList(BuildContext context, S s) {
+    return Column(
+      children: _getMetricCards(s).map((card) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: card,
+        );
+      }).toList(),
+    );
+  }
+
+  List<Widget> _getMetricCards(S s) {
+    return [
+      _MetricCard(
+        label: s.active_surveys,
+        value: stats.activeSurveys.toString(),
+        icon: Icons.play_circle_filled_rounded,
+        color: AppColors.success,
+      ),
+      _MetricCard(
+        label: s.draft_responses,
+        value: stats.draftResponses.toString(),
+        icon: Icons.edit_document,
+        color: AppColors.warning,
+      ),
+      _MetricCard(
+        label: s.pending_sync,
+        value: stats.pendingSyncResponses.toString(),
+        icon: Icons.sync_problem_rounded,
+        color: AppColors.error,
+      ),
+      _MetricCard(
+        label: s.synced_responses,
+        value: stats.syncedResponses.toString(),
+        icon: Icons.cloud_done_rounded,
+        color: AppColors.primary,
+      ),
+    ];
+  }
+
+  Widget _buildChartsSection(BuildContext context, S s) {
+    return Column(
+      children: [
         // 2. Availability Analysis (Bar Chart)
         _ChartContainer(
           title: s.survey_availability,
@@ -222,11 +264,10 @@ class SurveyStatsWidget extends StatelessWidget {
   }
 
   List<PieChartSectionData> _getSyncSections(SurveyStatsModel stats, S s) {
-    final total =
-        (stats.syncedResponses +
-                stats.pendingSyncResponses +
-                stats.draftResponses)
-            .toDouble();
+    final total = (stats.syncedResponses +
+            stats.pendingSyncResponses +
+            stats.draftResponses)
+        .toDouble();
 
     if (total == 0) {
       return [
@@ -262,6 +303,18 @@ class SurveyStatsWidget extends StatelessWidget {
   }
 }
 
+// Added this helper class to expose chart section
+class SurveyChartsOnly extends StatelessWidget {
+  final SurveyStatsModel stats;
+  const SurveyChartsOnly({super.key, required this.stats});
+
+  @override
+  Widget build(BuildContext context) {
+    return SurveyStatsWidget(stats: stats)._buildChartsSection(context, S.of(context));
+  }
+}
+
+
 class _MetricCard extends StatelessWidget {
   final String label;
   final String value;
@@ -277,8 +330,9 @@ class _MetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final horizontalPadding = context.isDesktop ? 40.0 : 16.r;
     return Container(
-      padding: EdgeInsets.all(12.r),
+      padding: EdgeInsets.all(horizontalPadding),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -292,13 +346,13 @@ class _MetricCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.all(6.r),
+                padding: EdgeInsets.all(context.isDesktop ? 8.0 : 6.r),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
                   shape: BoxShape.circle,
@@ -309,22 +363,32 @@ class _MetricCard extends StatelessWidget {
                   size: context.adaptiveIcon(18.sp),
                 ),
               ),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: context.adaptiveFont(16.sp),
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.primaryText,
+              const SizedBox(width: 8),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: context.adaptiveFont(16.sp),
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.primaryText,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 12),
           Text(
             label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: context.adaptiveFont(11.sp),
               fontWeight: FontWeight.w600,
               color: AppColors.secondaryText,
+              height: 1.2,
             ),
           ),
         ],
@@ -367,18 +431,20 @@ class _ChartContainer extends StatelessWidget {
           Row(
             children: [
               Icon(icon, color: iconColor, size: context.adaptiveIcon(16.sp)),
-              SizedBox(width: 8.w),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: context.adaptiveFont(13.sp),
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primaryText,
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: context.adaptiveFont(13.sp),
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primaryText,
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          const SizedBox(height: 16),
           child,
         ],
       ),
@@ -400,15 +466,15 @@ class _LegendItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.h),
+      padding: EdgeInsets.only(bottom: context.isDesktop ? 12.0 : 8.h),
       child: Row(
         children: [
           Container(
-            width: 8.r,
-            height: 8.r,
+            width: 8,
+            height: 8,
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
-          SizedBox(width: 8.w),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               label,
@@ -419,6 +485,7 @@ class _LegendItem extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(width: 8),
           Text(
             value.toString(),
             style: TextStyle(

@@ -24,7 +24,7 @@ class PublicLinkCard extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(
-        context.responsive(12.r, tablet: 16.r, desktop: 20.r),
+        context.responsive(12.r, tablet: 16.r, desktop: 20.0),
       ),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -53,20 +53,21 @@ class PublicLinkCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryText,
                   ),
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
+              const SizedBox(width: 8),
               _buildStatusChip(context, status),
             ],
           ),
-          SizedBox(height: 8.h),
+          const SizedBox(height: 12),
 
           // Row 2: Description (Read More)
           if (publicLink.survey?.description != null &&
               publicLink.survey!.description?.isNotEmpty == true)
             Padding(
-              padding: EdgeInsets.only(bottom: 12.h),
+              padding: const EdgeInsets.only(bottom: 12),
               child: ReadMoreText(
                 publicLink.survey!.description ?? "",
                 trimLines: 2,
@@ -94,7 +95,7 @@ class PublicLinkCard extends StatelessWidget {
 
           // Row 3: Details
           Wrap(
-            spacing: 16.w,
+            spacing: context.isDesktop ? 20.0 : 16.w,
             runSpacing: 8.h,
             children: [
               _InfoItem(
@@ -119,11 +120,11 @@ class PublicLinkCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          const SizedBox(height: 16),
 
           // Row 4: URL and Actions
           Container(
-            padding: EdgeInsets.all(12.r),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: AppColors.background,
               borderRadius: BorderRadius.circular(12.r),
@@ -142,7 +143,7 @@ class PublicLinkCard extends StatelessWidget {
                     color: AppColors.secondaryText,
                   ),
                 ),
-                SizedBox(height: 4.h),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     Expanded(
@@ -160,13 +161,13 @@ class PublicLinkCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 8.w),
+                    const SizedBox(width: 12),
                     _ActionButton(
                       icon: Icons.copy_rounded,
                       onTap: () => _copyToClipboard(context, url, s),
                       tooltip: s.copy_link,
                     ),
-                    SizedBox(width: 8.w),
+                    const SizedBox(width: 8),
                     _ActionButton(
                       icon: Icons.qr_code_2_rounded,
                       onTap: () =>

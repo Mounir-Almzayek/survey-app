@@ -61,9 +61,8 @@ class SurveySliderField extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   min.round().toString(),
@@ -72,6 +71,7 @@ class SurveySliderField extends StatelessWidget {
                     color: AppColors.mutedForeground,
                   ),
                 ),
+                const Spacer(),
                 Text(
                   max.round().toString(),
                   style: TextStyle(

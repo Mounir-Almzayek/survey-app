@@ -19,6 +19,28 @@ class SurveyAnsweringScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener<SurveyNavigationBloc, SurveyNavigationState>(
+          listenWhen: (prev, curr) =>
+              prev.currentStep != curr.currentStep &&
+              curr.currentStep == SurveyStep.completion,
+          listener: (context, state) async {
+            // Ensure local storage reflects completion when moving to completion step
+            if (state.responseId != null && state.survey != null) {
+              final surveyId = state.survey!.id;
+              final responseId = state.responseId!;
+
+              await AssignmentLocalRepository.addCompletedResponse(
+                surveyId,
+                responseId,
+              );
+              await AssignmentLocalRepository.unlinkResponseFromSurvey(
+                surveyId,
+                responseId,
+              );
+              await AssignmentLocalRepository.removeResponseDraft(responseId);
+            }
+          },
+        ),
         BlocListener<SaveSectionBloc, SaveSectionState>(
           listener: (context, state) async {
             if (state is SaveSectionInitial && state.saveRequest != null) {
@@ -32,34 +54,13 @@ class SurveyAnsweringScreen extends StatelessWidget {
 
             if (state is SaveSectionSuccess) {
               final navBloc = context.read<SurveyNavigationBloc>();
-              final isLastSection = navBloc.state.isLastSection;
+              final answers = state.saveRequest?.answers ?? [];
+              final answersMap = {for (var a in answers) a.questionId: a.value};
 
-              if (state.response.isComplete || isLastSection) {
-                // 1. Store as completed locally
-                if (state.responseId != null && navBloc.state.survey != null) {
-                  final surveyId = navBloc.state.survey!.id;
-                  final responseId = state.responseId!;
-
-                  await AssignmentLocalRepository.addCompletedResponse(
-                    surveyId,
-                    responseId,
-                  );
-
-                  // 2. Remove from local drafts/responses list
-                  await AssignmentLocalRepository.unlinkResponseFromSurvey(
-                    surveyId,
-                    responseId,
-                  );
-                  await AssignmentLocalRepository.removeResponseDraft(
-                    responseId,
-                  );
-                }
-
-                // Move to completion step
+              if (state.response.isComplete) {
                 navBloc.add(CompleteSurvey());
               } else {
-                // If section saved successfully and not complete, move to next
-                navBloc.add(NextSection());
+                navBloc.add(NextSection(answers: answersMap));
               }
             } else if (state is SaveSectionError) {
               UnifiedSnackbar.error(context, message: state.message);

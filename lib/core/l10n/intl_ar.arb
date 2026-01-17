@@ -380,5 +380,7 @@
   "sync_status": "حالة المزامنة",
   "retry_all": "إعادة محاولة الكل",
   "clear_all": "إخلاء الكل",
-  "view_completed_responses": "عرض الاستجابات المكتملة"
+  "view_completed_responses": "عرض الاستجابات المكتملة",
+  "to": "ل",
+  "from": "من"
 }
