@@ -7,9 +7,9 @@ class ResponsesListInitial extends ResponsesListState {}
 class ResponsesListLoading extends ResponsesListState {}
 
 class ResponsesListLoaded extends ResponsesListState {
-  final List<ResponseSummary> responses;
+  final List<int> responseIds;
 
-  ResponsesListLoaded(this.responses);
+  ResponsesListLoaded(this.responseIds);
 }
 
 class ResponsesListError extends ResponsesListState {

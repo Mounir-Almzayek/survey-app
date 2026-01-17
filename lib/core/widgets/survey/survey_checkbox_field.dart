@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../models/survey/question_model.dart';
 import '../../styles/app_colors.dart';
+import '../../utils/responsive_layout.dart';
 import 'survey_question_card.dart';
 
 class SurveyCheckboxField extends StatelessWidget {
@@ -51,7 +52,11 @@ class SurveyCheckboxField extends StatelessWidget {
                   margin: EdgeInsets.only(bottom: 8.h),
                   padding: EdgeInsets.symmetric(
                     horizontal: 12.w,
-                    vertical: 12.h,
+                    vertical: context.responsive(
+                      10.h,
+                      tablet: 12.h,
+                      desktop: 14.h,
+                    ),
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14.r),
@@ -74,14 +79,14 @@ class SurveyCheckboxField extends StatelessWidget {
                         color: isSelected
                             ? AppColors.surveyPrimary
                             : AppColors.mutedForeground,
-                        size: 24.sp,
+                        size: context.adaptiveIcon(20.sp),
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
                         child: Text(
                           option.label ?? "",
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: context.adaptiveFont(13.sp),
                             color: isSelected
                                 ? AppColors.surveyPrimary
                                 : AppColors.primaryText,

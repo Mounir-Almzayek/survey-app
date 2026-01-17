@@ -4,6 +4,7 @@ import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/logo_rectangle.dart';
 import '../models/main_nav_tab.dart';
+import '../../../core/utils/responsive_layout.dart';
 
 class MainSidebar extends StatelessWidget {
   final MainNavTab selectedTab;
@@ -23,7 +24,9 @@ class MainSidebar extends StatelessWidget {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      width: isCollapsed ? 80.w : 260.w,
+      width: isCollapsed
+          ? context.responsive(70.w, tablet: 40.w)
+          : context.responsive(220.w, tablet: 100.w),
       decoration: BoxDecoration(
         color: Colors.white,
         border: BorderDirectional(
@@ -37,8 +40,10 @@ class MainSidebar extends StatelessWidget {
         children: [
           // Logo Area
           Container(
-            height: 100.h,
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            height: context.responsive(100.h, tablet: 120.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: context.responsive(20.w, tablet: 24.w),
+            ),
             alignment: isCollapsed
                 ? Alignment.center
                 : AlignmentDirectional.centerStart,
@@ -52,7 +57,7 @@ class MainSidebar extends StatelessWidget {
                         child: Text(
                           "KAC Survey",
                           style: TextStyle(
-                            fontSize: 18.sp,
+                            fontSize: context.adaptiveFont(18.sp),
                             fontWeight: FontWeight.bold,
                             color: AppColors.primary,
                           ),
@@ -98,7 +103,7 @@ class MainSidebar extends StatelessWidget {
                       child: Icon(
                         Icons.person,
                         color: Colors.white,
-                        size: 20.sp,
+                        size: context.adaptiveIcon(20.sp),
                       ),
                     ),
                     SizedBox(width: 10.w),
@@ -110,7 +115,7 @@ class MainSidebar extends StatelessWidget {
                           Text(
                             "Researcher",
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: context.adaptiveFont(14.sp),
                               fontWeight: FontWeight.bold,
                               color: AppColors.primaryText,
                             ),
@@ -118,7 +123,7 @@ class MainSidebar extends StatelessWidget {
                           Text(
                             "Field Team",
                             style: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: context.adaptiveFont(12.sp),
                               color: AppColors.secondaryText,
                             ),
                           ),
@@ -178,7 +183,7 @@ class _SidebarItem extends StatelessWidget {
               Icon(
                 icon,
                 color: isSelected ? AppColors.primary : AppColors.secondaryText,
-                size: 22.sp,
+                size: context.adaptiveIcon(22.sp),
               ),
               if (!isCollapsed) ...[
                 SizedBox(width: 12.w),
@@ -186,7 +191,7 @@ class _SidebarItem extends StatelessWidget {
                   child: Text(
                     label,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: context.adaptiveFont(14.sp),
                       fontWeight: isSelected
                           ? FontWeight.bold
                           : FontWeight.w500,

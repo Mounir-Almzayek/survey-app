@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:async';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/utils/responsive_layout.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/logo_rectangle.dart';
@@ -119,7 +120,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: Text(
                       "Survey System",
                       style: TextStyle(
-                        fontSize: 20.sp,
+                        fontSize: context.adaptiveFont(20.sp),
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,
                         letterSpacing: 1.2,

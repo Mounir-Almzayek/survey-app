@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../models/registration_method.dart';
@@ -42,14 +43,14 @@ class RegistrationMethodIndicator extends StatelessWidget {
                   color: color.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: color, size: 24.sp),
+                child: Icon(icon, color: color, size: context.adaptiveIcon(24.sp)),
               ),
               SizedBox(width: 16.w),
               Expanded(
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: context.adaptiveFont(16.sp),
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryText,
                   ),
@@ -65,7 +66,7 @@ class RegistrationMethodIndicator extends StatelessWidget {
                 child: Text(
                   isDeviceBound ? "REC" : "ALT",
                   style: TextStyle(
-                    fontSize: 10.sp,
+                    fontSize: context.adaptiveFont(10.sp),
                     fontWeight: FontWeight.bold,
                     color: color,
                   ),
@@ -77,7 +78,7 @@ class RegistrationMethodIndicator extends StatelessWidget {
           Text(
             description,
             style: TextStyle(
-              fontSize: 13.sp,
+              fontSize: context.adaptiveFont(13.sp),
               color: AppColors.secondaryText,
               height: 1.5,
             ),

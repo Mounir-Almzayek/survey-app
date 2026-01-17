@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/utils/responsive_layout.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
@@ -59,7 +60,7 @@ class ImagePickerWidget extends StatelessWidget {
                   child: Text(
                     title!,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: context.adaptiveFont(14.sp),
                       fontWeight: FontWeight.w600,
                       color: AppColors.primaryText,
                     ),
@@ -119,7 +120,7 @@ class ImagePickerWidget extends StatelessWidget {
               ),
               child: Icon(
                 Icons.add_photo_alternate_rounded,
-                size: 48.sp,
+                size: context.adaptiveIcon(48.sp),
                 color: AppColors.primary,
               ),
             ),
@@ -127,7 +128,7 @@ class ImagePickerWidget extends StatelessWidget {
             Text(
               locale.upload_image,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: context.adaptiveFont(14.sp),
                 color: AppColors.primaryText,
                 fontWeight: FontWeight.w600,
               ),
@@ -135,7 +136,7 @@ class ImagePickerWidget extends StatelessWidget {
             SizedBox(height: 4.h),
             Text(
               '${locale.camera} ${locale.or} ${locale.gallery}',
-              style: TextStyle(fontSize: 12.sp, color: AppColors.secondaryText),
+              style: TextStyle(fontSize: context.adaptiveFont(12.sp), color: AppColors.secondaryText),
             ),
           ],
         ),
@@ -185,7 +186,7 @@ class ImagePickerWidget extends StatelessWidget {
                     Text(
                       locale.uploading,
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: context.adaptiveFont(14.sp),
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
                       ),
@@ -204,7 +205,7 @@ class ImagePickerWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: IconButton(
-              icon: Icon(Icons.close_rounded, color: Colors.white, size: 20.sp),
+              icon: Icon(Icons.close_rounded, color: Colors.white, size: context.adaptiveIcon(20.sp)),
               onPressed: () {
                 context.read<UploadBloc>().add(const ClearUploadsEvent());
               },
@@ -256,7 +257,7 @@ class ImagePickerWidget extends StatelessWidget {
           Text(
             '${(progressValue * 100).toInt()}%',
             style: TextStyle(
-              fontSize: 20.sp,
+              fontSize: context.adaptiveFont(20.sp),
               fontWeight: FontWeight.bold,
               color: AppColors.primary,
             ),
@@ -265,7 +266,7 @@ class ImagePickerWidget extends StatelessWidget {
           Text(
             locale.uploading,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: context.adaptiveFont(14.sp),
               color: AppColors.secondaryText,
               fontWeight: FontWeight.w500,
             ),
@@ -299,7 +300,7 @@ class ImagePickerWidget extends StatelessWidget {
               width: double.infinity,
               height: double.infinity,
               errorBuilder: (context, error, stackTrace) =>
-                  Center(child: Icon(Icons.broken_image_rounded, size: 40)),
+                  Center(child: Icon(Icons.broken_image_rounded, size: context.adaptiveIcon(40.sp))),
             ),
           ),
           Positioned(
@@ -321,7 +322,7 @@ class ImagePickerWidget extends StatelessWidget {
               child: Icon(
                 Icons.check_rounded,
                 color: Colors.white,
-                size: 20.sp,
+                size: context.adaptiveIcon(20.sp),
               ),
             ),
           ),
@@ -338,7 +339,7 @@ class ImagePickerWidget extends StatelessWidget {
               child: Text(
                 locale.uploaded,
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: context.adaptiveFont(12.sp),
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
                 ),
@@ -382,7 +383,7 @@ class ImagePickerWidget extends StatelessWidget {
                 title: Text(
                   locale.gallery,
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: context.adaptiveFont(16.sp),
                     color: AppColors.primaryText,
                     fontWeight: FontWeight.w600,
                   ),
@@ -426,7 +427,7 @@ class ImagePickerWidget extends StatelessWidget {
                 title: Text(
                   locale.camera,
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: context.adaptiveFont(16.sp),
                     color: AppColors.primaryText,
                     fontWeight: FontWeight.w600,
                   ),

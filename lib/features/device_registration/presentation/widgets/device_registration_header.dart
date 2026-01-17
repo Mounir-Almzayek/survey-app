@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 
@@ -47,14 +48,14 @@ class DeviceRegistrationHeader extends StatelessWidget {
           child: Icon(
             Icons.device_hub_rounded,
             color: Colors.white,
-            size: 50.sp,
+            size: context.adaptiveIcon(50.sp),
           ),
         ),
         SizedBox(height: 24.h),
         Text(
           locale.register_device,
           style: TextStyle(
-            fontSize: 24.sp,
+            fontSize: context.adaptiveFont(24.sp),
             fontWeight: FontWeight.bold,
             color: AppColors.primaryText,
           ),
@@ -63,7 +64,7 @@ class DeviceRegistrationHeader extends StatelessWidget {
         Text(
           locale.complete_device_registration,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 14.sp, color: AppColors.secondaryText),
+          style: TextStyle(fontSize: context.adaptiveFont(14.sp), color: AppColors.secondaryText),
         ),
         SizedBox(height: 32.h),
 
@@ -152,7 +153,7 @@ class _InfoTile extends StatelessWidget {
                   color: AppColors.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Icon(icon, color: AppColors.primary, size: 20.sp),
+                child: Icon(icon, color: AppColors.primary, size: context.adaptiveIcon(20.sp)),
               ),
               SizedBox(width: 16.w),
               Expanded(
@@ -162,7 +163,7 @@ class _InfoTile extends StatelessWidget {
                     Text(
                       label,
                       style: TextStyle(
-                        fontSize: 12.sp,
+                        fontSize: context.adaptiveFont(12.sp),
                         color: AppColors.secondaryText,
                         fontWeight: FontWeight.w500,
                       ),
@@ -171,7 +172,7 @@ class _InfoTile extends StatelessWidget {
                     Text(
                       value,
                       style: TextStyle(
-                        fontSize: 15.sp,
+                        fontSize: context.adaptiveFont(15.sp),
                         color: AppColors.primaryText,
                         fontWeight: FontWeight.w600,
                       ),

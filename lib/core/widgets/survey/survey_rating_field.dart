@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../models/survey/question_model.dart';
 import '../../styles/app_colors.dart';
+import '../../utils/responsive_layout.dart';
 import 'survey_question_card.dart';
 
 class SurveyRatingField extends StatelessWidget {
@@ -45,7 +46,7 @@ class SurveyRatingField extends StatelessWidget {
               child: Icon(
                 isSelected ? Icons.star_rounded : Icons.star_outline_rounded,
                 color: isSelected ? Colors.amber : AppColors.mutedForeground,
-                size: 40.sp,
+                size: context.adaptiveIcon(32.sp),
               ),
             ),
           );

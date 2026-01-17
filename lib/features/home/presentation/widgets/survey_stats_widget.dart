@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../models/survey_stats_model.dart';
 
 class SurveyStatsWidget extends StatelessWidget {
@@ -21,10 +22,10 @@ class SurveyStatsWidget extends StatelessWidget {
         GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
+          crossAxisCount: context.responsive(2, tablet: 3, desktop: 4),
           mainAxisSpacing: 12.h,
           crossAxisSpacing: 12.w,
-          childAspectRatio: 1.4,
+          childAspectRatio: context.responsive(1.4, tablet: 1.6, desktop: 1.8),
           children: [
             _MetricCard(
               label: s.active_surveys,
@@ -89,7 +90,7 @@ class SurveyStatsWidget extends StatelessWidget {
                           child: Text(
                             text,
                             style: TextStyle(
-                              fontSize: 10.sp,
+                              fontSize: context.adaptiveFont(9.sp),
                               fontWeight: FontWeight.w600,
                               color: AppColors.secondaryText,
                             ),
@@ -179,7 +180,7 @@ class SurveyStatsWidget extends StatelessWidget {
                                   stats.draftResponses)
                               .toString(),
                           style: TextStyle(
-                            fontSize: 18.sp,
+                            fontSize: context.adaptiveFont(16.sp),
                             fontWeight: FontWeight.w900,
                             color: AppColors.primaryText,
                           ),
@@ -302,12 +303,16 @@ class _MetricCard extends StatelessWidget {
                   color: color.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: color, size: 20.sp),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: context.adaptiveIcon(18.sp),
+                ),
               ),
               Text(
                 value,
                 style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: context.adaptiveFont(16.sp),
                   fontWeight: FontWeight.w900,
                   color: AppColors.primaryText,
                 ),
@@ -317,7 +322,7 @@ class _MetricCard extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontSize: 12.sp,
+              fontSize: context.adaptiveFont(11.sp),
               fontWeight: FontWeight.w600,
               color: AppColors.secondaryText,
             ),
@@ -361,12 +366,12 @@ class _ChartContainer extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: iconColor, size: 18.sp),
+              Icon(icon, color: iconColor, size: context.adaptiveIcon(16.sp)),
               SizedBox(width: 8.w),
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: context.adaptiveFont(13.sp),
                   fontWeight: FontWeight.w700,
                   color: AppColors.primaryText,
                 ),
@@ -408,7 +413,7 @@ class _LegendItem extends StatelessWidget {
             child: Text(
               label,
               style: TextStyle(
-                fontSize: 11.sp,
+                fontSize: context.adaptiveFont(10.sp),
                 color: AppColors.secondaryText,
                 fontWeight: FontWeight.w500,
               ),
@@ -417,7 +422,7 @@ class _LegendItem extends StatelessWidget {
           Text(
             value.toString(),
             style: TextStyle(
-              fontSize: 11.sp,
+              fontSize: context.adaptiveFont(10.sp),
               fontWeight: FontWeight.w700,
               color: AppColors.primaryText,
             ),

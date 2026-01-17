@@ -22,11 +22,7 @@ class ResponsesLocalRepository {
 
       final list = jsonDecode(jsonStr) as List<dynamic>;
       return list
-          .map(
-            (item) => ResponseSummary.fromJson(
-              item as Map<String, dynamic>,
-            ),
-          )
+          .map((item) => ResponseSummary.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (_) {
       return [];
@@ -74,5 +70,3 @@ class ResponsesLocalRepository {
     }
   }
 }
-
-

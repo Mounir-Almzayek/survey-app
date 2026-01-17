@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/loading_widget.dart';
@@ -256,7 +257,7 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
               ),
               child: Icon(
                 Icons.error_outline,
-                size: 64.sp,
+                size: context.adaptiveIcon(64.sp),
                 color: AppColors.error,
               ),
             ),
@@ -265,7 +266,7 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
               message,
               style: TextStyle(
                 color: AppColors.error,
-                fontSize: 16.sp,
+                fontSize: context.adaptiveFont(16.sp),
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,

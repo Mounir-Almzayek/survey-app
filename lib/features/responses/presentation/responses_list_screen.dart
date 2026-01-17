@@ -5,54 +5,30 @@ import 'package:go_router/go_router.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_routes.dart';
 import '../bloc/responses_list/responses_list_bloc.dart';
-import '../models/response.dart';
-import '../models/response_status.dart';
-import 'widgets/response_card.dart';
-import 'widgets/response_filter.dart';
+import '../../assignment/presentation/widgets/response_id_card.dart';
 
 class ResponsesListScreen extends StatefulWidget {
   final int surveyId;
 
-  const ResponsesListScreen({
-    super.key,
-    required this.surveyId,
-  });
+  const ResponsesListScreen({super.key, required this.surveyId});
 
   @override
   State<ResponsesListScreen> createState() => _ResponsesListScreenState();
 }
 
 class _ResponsesListScreenState extends State<ResponsesListScreen> {
-  ResponseStatus? _statusFilter;
-
   @override
   void initState() {
     super.initState();
-    context
-        .read<ResponsesListBloc>()
-        .add(LoadResponsesForSurvey(surveyId: widget.surveyId));
+    context.read<ResponsesListBloc>().add(
+      LoadResponsesForSurvey(surveyId: widget.surveyId),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ResponseFilter(
-                status: _statusFilter,
-                onChanged: (value) {
-                  setState(() {
-                    _statusFilter = value;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
         Expanded(
           child: BlocBuilder<ResponsesListBloc, ResponsesListState>(
             builder: (context, state) {
@@ -66,24 +42,22 @@ class _ResponsesListScreenState extends State<ResponsesListScreen> {
               }
 
               if (state is ResponsesListLoaded) {
-                final responses = _applyFilters(state.responses);
-                if (responses.isEmpty) {
-                  return Center(
-                    child: Text(S.of(context).no_responses_found),
-                  );
+                final responseIds = state.responseIds;
+                if (responseIds.isEmpty) {
+                  return Center(child: Text(S.of(context).no_responses_found));
                 }
                 return ListView.separated(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  itemCount: responses.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  itemCount: responseIds.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
-                    final r = responses[index];
-                    return ResponseCard(
-                      response: r,
-                      onView: () {
+                    final rId = responseIds[index];
+                    return ResponseIdCard(
+                      responseId: rId,
+                      onTap: () {
                         context.push(
                           Routes.completedResponseViewPath,
-                          extra: {'responseId': r.id},
+                          extra: {'responseId': rId},
                         );
                       },
                     );
@@ -98,15 +72,4 @@ class _ResponsesListScreenState extends State<ResponsesListScreen> {
       ],
     );
   }
-
-  List<ResponseSummary> _applyFilters(List<ResponseSummary> responses) {
-    return responses.where((r) {
-      if (_statusFilter != null && r.status != _statusFilter) {
-        return false;
-      }
-      return true;
-    }).toList();
-  }
 }
-
-

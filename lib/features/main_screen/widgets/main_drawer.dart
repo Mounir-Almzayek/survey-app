@@ -6,6 +6,7 @@ import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/logo_rectangle.dart';
 import '../../../core/enums/app_language.dart';
+import '../../../core/utils/responsive_layout.dart';
 import '../../language/bloc/language/language_bloc.dart';
 import '../../profile/widgets/profile_logout_dialog.dart';
 import '../../../core/queue/services/request_queue_service.dart';
@@ -73,7 +74,10 @@ class _MainDrawerState extends State<MainDrawer>
         decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 24.w),
+            padding: EdgeInsets.symmetric(
+              vertical: context.responsive(40.h, tablet: 50.h, desktop: 60.h),
+              horizontal: context.responsive(24.w, tablet: 30.w, desktop: 36.w),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -86,8 +90,16 @@ class _MainDrawerState extends State<MainDrawer>
                   child: LogoRectangle(
                     big: false,
                     isFlat: true,
-                    width: 120.w,
-                    height: 60.h,
+                    width: context.responsive(
+                      100.w,
+                      tablet: 120.w,
+                      desktop: 140.w,
+                    ),
+                    height: context.responsive(
+                      50.h,
+                      tablet: 60.h,
+                      desktop: 70.h,
+                    ),
                   ),
                 ),
 
@@ -201,7 +213,7 @@ class _MainDrawerState extends State<MainDrawer>
                     "v1.0.0",
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.5),
-                      fontSize: 12.sp,
+                      fontSize: context.adaptiveFont(11.sp),
                     ),
                   ),
                 ),
@@ -288,7 +300,7 @@ class _SectionHeader extends StatelessWidget {
       child: Text(
         title,
         style: TextStyle(
-          fontSize: 14.sp,
+          fontSize: context.adaptiveFont(13.sp),
           fontWeight: FontWeight.bold,
           color: isLight ? Colors.white70 : AppColors.primary,
         ),
@@ -338,13 +350,17 @@ class _DrawerItem extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
-        leading: Icon(icon, color: iconColor),
+        leading: Icon(
+          icon,
+          color: iconColor,
+          size: context.adaptiveIcon(22.sp),
+        ),
         title: Text(
           title,
           style: TextStyle(
             color: color,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-            fontSize: 14.sp,
+            fontSize: context.adaptiveFont(13.sp),
           ),
         ),
         trailing: trailingText != null

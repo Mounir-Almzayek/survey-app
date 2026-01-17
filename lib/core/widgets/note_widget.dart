@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 
 class NoteWidget extends StatelessWidget {
   final String text;
@@ -22,14 +23,18 @@ class NoteWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (icon != null) ...[
-            Icon(icon, color: AppColors.primaryStart, size: 20.sp),
+            Icon(
+              icon,
+              color: AppColors.primaryStart,
+              size: context.adaptiveIcon(18.sp),
+            ),
             SizedBox(width: 8.w),
           ],
           Expanded(
             child: Text(
               text,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: context.adaptiveFont(13.sp),
                 color: AppColors.primaryText,
                 fontWeight: FontWeight.w500,
                 fontFamily: 'Cairo',

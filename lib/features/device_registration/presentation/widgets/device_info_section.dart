@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/models/fingerprint.dart';
@@ -54,7 +55,7 @@ class _DeviceInfoSectionState extends State<DeviceInfoSection> {
                     child: Icon(
                       Icons.settings_suggest_outlined,
                       color: AppColors.accent,
-                      size: 22.sp,
+                      size: context.adaptiveIcon(22.sp),
                     ),
                   ),
                   SizedBox(width: 16.w),
@@ -65,7 +66,7 @@ class _DeviceInfoSectionState extends State<DeviceInfoSection> {
                         Text(
                           locale.device_information,
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: context.adaptiveFont(16.sp),
                             fontWeight: FontWeight.bold,
                             color: AppColors.primaryText,
                           ),
@@ -75,7 +76,7 @@ class _DeviceInfoSectionState extends State<DeviceInfoSection> {
                               ? "Tap to collapse"
                               : "Tap to show details",
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: context.adaptiveFont(12.sp),
                             color: AppColors.secondaryText,
                           ),
                         ),
@@ -104,24 +105,28 @@ class _DeviceInfoSectionState extends State<DeviceInfoSection> {
                 children: [
                   const Divider(),
                   SizedBox(height: 12.h),
-                  _buildGridItem(Icons.web, locale.browser, f.browser),
-                  _buildGridItem(Icons.laptop, locale.operating_system, f.os),
+                  _buildGridItem(context, Icons.web, locale.browser, f.browser),
+                  _buildGridItem(context, Icons.laptop, locale.operating_system, f.os),
                   _buildGridItem(
+                    context,
                     Icons.smartphone,
                     locale.device_type,
                     f.deviceType,
                   ),
                   _buildGridItem(
+                    context,
                     Icons.aspect_ratio,
                     locale.screen_resolution,
                     "${f.screenWidth}x${f.screenHeight}",
                   ),
                   _buildGridItem(
+                    context,
                     Icons.memory,
                     locale.ram,
                     f.ramGB > 0 ? "${f.ramGB} GB" : "N/A",
                   ),
                   _buildGridItem(
+                    context,
                     Icons.speed,
                     locale.processor_cores,
                     f.processorCores > 0 ? f.processorCores.toString() : "N/A",
@@ -141,6 +146,7 @@ class _DeviceInfoSectionState extends State<DeviceInfoSection> {
   }
 
   Widget _buildGridItem(
+    BuildContext context,
     IconData icon,
     String label,
     String value, {
@@ -150,17 +156,17 @@ class _DeviceInfoSectionState extends State<DeviceInfoSection> {
       padding: EdgeInsets.only(bottom: isLast ? 0 : 12.h),
       child: Row(
         children: [
-          Icon(icon, size: 18.sp, color: AppColors.secondaryText),
+          Icon(icon, size: context.adaptiveIcon(18.sp), color: AppColors.secondaryText),
           SizedBox(width: 12.w),
           Text(
             label,
-            style: TextStyle(fontSize: 13.sp, color: AppColors.secondaryText),
+            style: TextStyle(fontSize: context.adaptiveFont(13.sp), color: AppColors.secondaryText),
           ),
           const Spacer(),
           Text(
             value,
             style: TextStyle(
-              fontSize: 13.sp,
+              fontSize: context.adaptiveFont(13.sp),
               fontWeight: FontWeight.w600,
               color: AppColors.primaryText,
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -55,7 +56,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             child: Text(
               widget.label!,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: context.adaptiveFont(13.sp),
                 fontWeight: FontWeight.w600,
                 color: AppColors.primaryText,
               ),
@@ -71,12 +72,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
           obscureText: widget.isPassword ? _currentObscure : false,
           onChanged: widget.onChanged,
           style: TextStyle(
-            fontSize: 15.sp,
+            fontSize: context.adaptiveFont(14.sp),
             color: AppColors.primaryText,
             fontWeight: FontWeight.w500,
           ),
           decoration: InputDecoration(
             hintText: widget.hintText,
+            hintStyle: TextStyle(
+              fontSize: context.adaptiveFont(14.sp),
+              color: AppColors.mutedForeground,
+            ),
             prefixIcon: widget.prefixIcon,
             suffixIcon: widget.isPassword
                 ? IconButton(
@@ -85,7 +90,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                           ? Icons.visibility_outlined
                           : Icons.visibility_off_outlined,
                       color: AppColors.mutedForeground,
-                      size: 20.sp,
+                      size: context.adaptiveIcon(18.sp),
                     ),
                     onPressed: () {
                       setState(() {
@@ -96,7 +101,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 : widget.suffixIcon,
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,
-              vertical: 16.h,
+              vertical: context.responsive(14.h, tablet: 16.h, desktop: 18.h),
             ),
             fillColor: widget.enabled ? Colors.white : AppColors.muted,
           ),

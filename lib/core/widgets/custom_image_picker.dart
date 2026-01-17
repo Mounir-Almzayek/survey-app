@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import '../l10n/generated/l10n.dart';
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 import '../../data/network/api_config.dart';
 
 class CustomImagePicker extends StatelessWidget {
@@ -40,7 +41,7 @@ class CustomImagePicker extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: context.adaptiveFont(13.sp),
               fontWeight: FontWeight.w600,
               color: AppColors.primaryText,
             ),
@@ -54,7 +55,11 @@ class CustomImagePicker extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
-                  height: 200.h,
+                  height: context.responsive(
+                    160.h,
+                    tablet: 180.h,
+                    desktop: 200.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.muted,
                     borderRadius: BorderRadius.circular(14.r),
@@ -101,8 +106,8 @@ class CustomImagePicker extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: double.infinity,
-                  errorBuilder: (context, error, stackTrace) => const Center(
-                    child: Icon(Icons.broken_image_rounded, size: 40),
+                  errorBuilder: (context, error, stackTrace) => Center(
+                    child: Icon(Icons.broken_image_rounded, size: context.adaptiveIcon(40.sp)),
                   ),
                 ),
         ),
@@ -115,7 +120,11 @@ class CustomImagePicker extends StatelessWidget {
               color: AppColors.primary.withOpacity(0.9),
               borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Icon(Icons.edit_rounded, color: Colors.white, size: 20.sp),
+            child: Icon(
+              Icons.edit_rounded,
+              color: Colors.white,
+              size: context.adaptiveIcon(18.sp),
+            ),
           ),
         ),
       ],
@@ -128,14 +137,14 @@ class CustomImagePicker extends StatelessWidget {
       children: [
         Icon(
           Icons.add_photo_alternate_rounded,
-          size: 48.sp,
+          size: context.adaptiveIcon(40.sp),
           color: AppColors.mutedForeground,
         ),
         SizedBox(height: 8.h),
         Text(
           locale.upload_image,
           style: TextStyle(
-            fontSize: 14.sp,
+            fontSize: context.adaptiveFont(13.sp),
             color: AppColors.mutedForeground,
             fontWeight: FontWeight.w500,
           ),
@@ -158,85 +167,96 @@ class CustomImagePicker extends StatelessWidget {
       builder: (context) => SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.photo_library_rounded,
-                    color: AppColors.primary,
-                  ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: context.responsive(
+                  double.infinity,
+                  tablet: 500.w,
+                  desktop: 600.w,
                 ),
-                title: Text(
-                  locale.gallery,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: AppColors.primaryText,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(context, ImageSource.gallery);
-                },
               ),
-              ListTile(
-                leading: Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
-                    shape: BoxShape.circle,
+              child: Wrap(
+                children: [
+                  ListTile(
+                    leading: Container(
+                      padding: EdgeInsets.all(8.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.photo_library_rounded,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    title: Text(
+                      locale.gallery,
+                      style: TextStyle(
+                        fontSize: context.adaptiveFont(14.sp),
+                        color: AppColors.primaryText,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _pickImage(context, ImageSource.gallery);
+                    },
                   ),
-                  child: const Icon(
-                    Icons.photo_camera_rounded,
-                    color: AppColors.primary,
+                  ListTile(
+                    leading: Container(
+                      padding: EdgeInsets.all(8.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.photo_camera_rounded,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    title: Text(
+                      locale.camera,
+                      style: TextStyle(
+                        fontSize: context.adaptiveFont(14.sp),
+                        color: AppColors.primaryText,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _pickImage(context, ImageSource.camera);
+                    },
                   ),
-                ),
-                title: Text(
-                  locale.camera,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: AppColors.primaryText,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(context, ImageSource.camera);
-                },
+                  if (selectedImage != null || existingImageUrl != null)
+                    ListTile(
+                      leading: Container(
+                        padding: EdgeInsets.all(8.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.delete_rounded,
+                          color: AppColors.error,
+                        ),
+                      ),
+                      title: Text(
+                        locale.delete,
+                        style: TextStyle(
+                          fontSize: context.adaptiveFont(14.sp),
+                          color: AppColors.error,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        onImagePicked(null);
+                      },
+                    ),
+                ],
               ),
-              if (selectedImage != null || existingImageUrl != null)
-                ListTile(
-                  leading: Container(
-                    padding: EdgeInsets.all(8.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.error.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.delete_rounded,
-                      color: AppColors.error,
-                    ),
-                  ),
-                  title: Text(
-                    locale.delete,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      color: AppColors.error,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    onImagePicked(null);
-                  },
-                ),
-            ],
+            ),
           ),
         ),
       ),

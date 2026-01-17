@@ -1,46 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app_colors.dart';
+import '../utils/responsive_layout.dart';
 
-ThemeData appThemeData() {
+ThemeData appThemeData(BuildContext context) {
   const double globalRadius = 14.0;
 
+  // 🔹 Helper to get adaptive font size
+  double size(double base) =>
+      ResponsiveLayout.adaptiveFontSize(context, base.sp);
+
+  // 🔹 Helper to get adaptive icon size
+  double iSize(double base) =>
+      ResponsiveLayout.adaptiveIconSize(context, base.sp);
+
   // 🔹 Standard TextTheme with Cairo
-  const textTheme = TextTheme(
-    displayLarge: TextStyle(color: AppColors.primaryText),
-    displayMedium: TextStyle(color: AppColors.primaryText),
-    displaySmall: TextStyle(color: AppColors.primaryText),
+  final textTheme = TextTheme(
+    displayLarge: TextStyle(color: AppColors.primaryText, fontSize: size(57)),
+    displayMedium: TextStyle(color: AppColors.primaryText, fontSize: size(45)),
+    displaySmall: TextStyle(color: AppColors.primaryText, fontSize: size(36)),
     headlineLarge: TextStyle(
       color: AppColors.primaryText,
       fontWeight: FontWeight.bold,
+      fontSize: size(32),
     ),
     headlineMedium: TextStyle(
       color: AppColors.primaryText,
       fontWeight: FontWeight.bold,
+      fontSize: size(28),
     ),
     headlineSmall: TextStyle(
       color: AppColors.primaryText,
       fontWeight: FontWeight.bold,
+      fontSize: size(24),
     ),
     titleLarge: TextStyle(
       color: AppColors.primaryText,
       fontWeight: FontWeight.w600,
+      fontSize: size(22),
     ),
     titleMedium: TextStyle(
       color: AppColors.primaryText,
       fontWeight: FontWeight.w600,
+      fontSize: size(16),
     ),
     titleSmall: TextStyle(
       color: AppColors.primaryText,
       fontWeight: FontWeight.w600,
+      fontSize: size(14),
     ),
-    bodyLarge: TextStyle(color: AppColors.primaryText),
-    bodyMedium: TextStyle(color: AppColors.primaryText),
-    bodySmall: TextStyle(color: AppColors.secondaryText),
-    labelLarge: TextStyle(color: AppColors.primaryText),
-    labelMedium: TextStyle(color: AppColors.secondaryText),
-    labelSmall: TextStyle(color: AppColors.secondaryText),
+    bodyLarge: TextStyle(color: AppColors.primaryText, fontSize: size(16)),
+    bodyMedium: TextStyle(color: AppColors.primaryText, fontSize: size(14)),
+    bodySmall: TextStyle(color: AppColors.secondaryText, fontSize: size(12)),
+    labelLarge: TextStyle(color: AppColors.primaryText, fontSize: size(14)),
+    labelMedium: TextStyle(color: AppColors.secondaryText, fontSize: size(12)),
+    labelSmall: TextStyle(color: AppColors.secondaryText, fontSize: size(11)),
   );
 
   return ThemeData(
@@ -63,7 +79,7 @@ ThemeData appThemeData() {
     ),
 
     // 🔹 AppBar
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
@@ -71,10 +87,10 @@ ThemeData appThemeData() {
       titleTextStyle: TextStyle(
         fontFamily: 'Cairo',
         color: Colors.white,
-        fontSize: 18,
+        fontSize: size(18),
         fontWeight: FontWeight.bold,
       ),
-      systemOverlayStyle: SystemUiOverlayStyle(
+      systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
@@ -82,7 +98,7 @@ ThemeData appThemeData() {
     ),
 
     // 🔹 Icons
-    iconTheme: const IconThemeData(color: AppColors.foreground, size: 24),
+    iconTheme: IconThemeData(color: AppColors.foreground, size: iSize(24)),
 
     // 🔹 Dividers & Borders
     dividerTheme: const DividerThemeData(
@@ -118,8 +134,8 @@ ThemeData appThemeData() {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(globalRadius),
         ),
-        textStyle: const TextStyle(
-          fontSize: 16,
+        textStyle: TextStyle(
+          fontSize: size(16),
           fontWeight: FontWeight.bold,
           fontFamily: 'Cairo',
         ),
@@ -149,12 +165,12 @@ ThemeData appThemeData() {
       ),
       hintStyle: TextStyle(
         color: Colors.grey.shade400,
-        fontSize: 14,
+        fontSize: size(14),
         fontFamily: 'Cairo',
       ),
-      labelStyle: const TextStyle(
+      labelStyle: TextStyle(
         color: AppColors.secondaryText,
-        fontSize: 14,
+        fontSize: size(14),
         fontWeight: FontWeight.w600,
         fontFamily: 'Cairo',
       ),

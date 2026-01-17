@@ -437,6 +437,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Verify Custody"),
         "verifying_device_key":
             MessageLookupByLibrary.simpleMessage("Verifying device key..."),
+        "view_completed_responses":
+            MessageLookupByLibrary.simpleMessage("View Completed Responses"),
         "view_details": MessageLookupByLibrary.simpleMessage("View Details"),
         "view_survey_drafts":
             MessageLookupByLibrary.simpleMessage("View Survey Drafts"),

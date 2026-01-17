@@ -1,3 +1,5 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../utils/responsive_layout.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -104,15 +106,15 @@ class QueueSummaryDialog extends StatelessWidget {
                           if (item.request.body != null)
                             Text(
                               '${locale.queue_detail_body}: ${item.request.body}',
-                              style: const TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: context.adaptiveFont(12.sp)),
                             ),
                           if (item.status == QueueItemStatus.failed &&
                               result?.error != null) ...[
                             const SizedBox(height: 4),
                             Text(
                               '${locale.queue_detail_error}: ${result!.error}',
-                              style: const TextStyle(
-                                fontSize: 12,
+                              style: TextStyle(
+                                fontSize: context.adaptiveFont(12.sp),
                                 color: Colors.red,
                               ),
                             ),
@@ -121,8 +123,8 @@ class QueueSummaryDialog extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               responseStatusText,
-                              style: const TextStyle(
-                                fontSize: 12,
+                              style: TextStyle(
+                                fontSize: context.adaptiveFont(12.sp),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -132,7 +134,7 @@ class QueueSummaryDialog extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               responseBodyText,
-                              style: const TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: context.adaptiveFont(12.sp)),
                               maxLines: 5,
                               overflow: TextOverflow.ellipsis,
                             ),

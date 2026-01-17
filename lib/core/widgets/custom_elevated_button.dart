@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -22,7 +23,7 @@ class CustomElevatedButton extends StatelessWidget {
     this.useGradient = true,
     this.width,
     this.height,
-    this.fontSize = 16,
+    this.fontSize,
     this.icon,
   });
 
@@ -33,7 +34,7 @@ class CustomElevatedButton extends StatelessWidget {
 
     return Container(
       width: width ?? double.infinity,
-      height: height ?? 52.h,
+      height: height ?? context.responsive(48.h, tablet: 52.h, desktop: 56.h),
       decoration: BoxDecoration(
         gradient: (isButtonDisabled || !useGradient)
             ? null
@@ -73,7 +74,7 @@ class CustomElevatedButton extends StatelessWidget {
                       Text(
                         title,
                         style: TextStyle(
-                          fontSize: fontSize?.sp ?? 16.sp,
+                          fontSize: fontSize ?? context.adaptiveFont(14.sp),
                           fontWeight: FontWeight.bold,
                           color: isButtonDisabled
                               ? AppColors.mutedForeground
@@ -87,7 +88,7 @@ class CustomElevatedButton extends StatelessWidget {
                           color: isButtonDisabled
                               ? AppColors.mutedForeground
                               : Colors.white,
-                          size: 18.sp,
+                          size: context.adaptiveIcon(16.sp),
                         ),
                       ],
                     ],

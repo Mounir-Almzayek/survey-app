@@ -51,31 +51,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
 
             if (state is ProfileLoaded) {
-              return SingleChildScrollView(
-                padding: EdgeInsets.all(isMobile ? 16.r : 24.r),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (!isMobile)
-                      Text(
-                        locale.profile,
-                        style: TextStyle(
-                          fontSize: 24.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryText,
-                        ),
-                      ),
-                    if (!isMobile) SizedBox(height: 24.h),
+              return Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: context.responsive(
+                      1.sw,
+                      tablet: 600.w,
+                      desktop: 800.w,
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(
+                      context.responsive(16.r, tablet: 24.r, desktop: 32.r),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (!isMobile)
+                          Text(
+                            locale.profile,
+                            style: TextStyle(
+                              fontSize: context.adaptiveFont(20.sp),
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryText,
+                            ),
+                          ),
+                        if (!isMobile) SizedBox(height: 24.h),
 
-                    if (state.isOffline) _buildOfflineWarning(context),
+                        if (state.isOffline) _buildOfflineWarning(context),
 
-                    // Main Content Grid for Web/Tablet
-                    isMobile
-                        ? _buildMobileProfile(context, state.user, locale)
-                        : _buildWebProfile(context, state.user, locale),
+                        // Main Content Grid
+                        _buildProfileContent(context, state.user, locale),
 
-                    SizedBox(height: 80.h), // Space for floating bottom bar
-                  ],
+                        SizedBox(
+                          height: 100.h,
+                        ), // Space for floating bottom bar
+                      ],
+                    ),
+                  ),
                 ),
               );
             }
@@ -99,14 +112,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         child: Row(
           children: [
-            const Icon(Icons.wifi_off_rounded, color: AppColors.warning),
+            Icon(
+              Icons.wifi_off_rounded,
+              color: AppColors.warning,
+              size: context.adaptiveIcon(18.sp),
+            ),
             SizedBox(width: 12.w),
             Expanded(
               child: Text(
                 S.of(context).offline_mode,
                 style: TextStyle(
                   color: AppColors.warning,
-                  fontSize: 13.sp,
+                  fontSize: context.adaptiveFont(12.sp),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -117,23 +134,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildMobileProfile(BuildContext context, User user, S locale) {
+  Widget _buildProfileContent(BuildContext context, User user, S locale) {
+    // Even on tablet/desktop, we might want a vertical stack if it's cleaner
+    // or keep the side-by-side if there's enough room.
+    // For "mobile style always", let's stick to vertical mostly but maybe side-by-side on very wide desktop.
+    if (ResponsiveLayout.isDesktop(context)) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(flex: 2, child: ProfileInfoCard(user: user)),
+          SizedBox(width: 24.w),
+          Expanded(flex: 3, child: _buildMenuSection(context, locale)),
+        ],
+      );
+    }
     return Column(
       children: [
         ProfileInfoCard(user: user),
         SizedBox(height: 20.h),
         _buildMenuSection(context, locale),
-      ],
-    );
-  }
-
-  Widget _buildWebProfile(BuildContext context, User user, S locale) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(flex: 2, child: ProfileInfoCard(user: user)),
-        SizedBox(width: 24.w),
-        Expanded(flex: 3, child: _buildMenuSection(context, locale)),
       ],
     );
   }
@@ -203,7 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Text(
                 S.of(context).language,
                 style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: context.adaptiveFont(16.sp),
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryText,
                 ),
@@ -274,20 +293,20 @@ class _ProfileMenuTile extends StatelessWidget {
         child: Icon(
           icon,
           color: isDestructive ? AppColors.error : AppColors.primary,
-          size: 20.sp,
+          size: context.adaptiveIcon(20.sp),
         ),
       ),
       title: Text(
         title,
         style: TextStyle(
-          fontSize: 15.sp,
+          fontSize: context.adaptiveFont(13.sp),
           fontWeight: FontWeight.w500,
           color: isDestructive ? AppColors.error : AppColors.primaryText,
         ),
       ),
       trailing: Icon(
         Icons.chevron_right_rounded,
-        size: 22.sp,
+        size: context.adaptiveIcon(20.sp),
         color: AppColors.secondaryText.withValues(alpha: 0.5),
       ),
     );

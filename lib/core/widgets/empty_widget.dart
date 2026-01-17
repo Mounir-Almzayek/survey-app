@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 
 class EmptyWidget extends StatelessWidget {
   final String title;
@@ -26,7 +27,7 @@ class EmptyWidget extends StatelessWidget {
               ),
               child: Icon(
                 icon ?? Icons.inbox_rounded,
-                size: 64.sp,
+                size: context.adaptiveIcon(48.sp),
                 color: AppColors.primary.withOpacity(0.2),
               ),
             ),
@@ -35,7 +36,7 @@ class EmptyWidget extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 18.sp,
+                fontSize: context.adaptiveFont(16.sp),
                 fontWeight: FontWeight.bold,
                 color: AppColors.primaryText,
               ),
@@ -46,7 +47,7 @@ class EmptyWidget extends StatelessWidget {
                 subtitle!,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: context.adaptiveFont(13.sp),
                   color: AppColors.secondaryText,
                 ),
               ),

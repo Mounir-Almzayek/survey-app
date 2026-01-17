@@ -39,12 +39,12 @@ class SurveyFileField extends StatelessWidget {
         absorbing: !isEditable,
         child: Opacity(
           opacity: isEditable ? 1.0 : 0.6,
-          child: CustomImagePicker(
-            title: "", // Handled by SurveyQuestionCard
+      child: CustomImagePicker(
+        title: "", // Handled by SurveyQuestionCard
             onImagePicked: isEditable ? onChanged : (_) {},
-            selectedImage: value,
-            existingImageUrl: existingFileUrl,
-            isBusy: isBusy,
+        selectedImage: value,
+        existingImageUrl: existingFileUrl,
+        isBusy: isBusy,
           ),
         ),
       ),

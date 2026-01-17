@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../responses/bloc/responses_list/responses_list_bloc.dart';
-import '../../../responses/models/response_status.dart';
-import '../widgets/completed_response_card.dart';
+import '../widgets/response_id_card.dart';
 import '../../../../core/widgets/loading_widget.dart';
 
 class CompletedResponsesPage extends StatelessWidget {
@@ -37,14 +38,21 @@ class CompletedResponsesPage extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: 64, color: AppColors.error),
-                    const SizedBox(height: 16),
+                    Icon(
+                      Icons.error_outline,
+                      size: context.adaptiveIcon(64.sp),
+                      color: AppColors.error,
+                    ),
+                    SizedBox(height: 16.h),
                     Text(
                       state.message,
-                      style: const TextStyle(color: AppColors.error),
+                      style: TextStyle(
+                        color: AppColors.error,
+                        fontSize: context.adaptiveFont(14.sp),
+                      ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     ElevatedButton(
                       onPressed: () {
                         context.read<ResponsesListBloc>().add(
@@ -62,27 +70,24 @@ class CompletedResponsesPage extends StatelessWidget {
             }
 
             if (state is ResponsesListLoaded) {
-              // Filter only completed (submitted) responses
-              final completedResponses = state.responses
-                  .where((r) => r.status == ResponseStatus.submitted)
-                  .toList();
+              final completedResponseIds = state.responseIds;
 
-              if (completedResponses.isEmpty) {
+              if (completedResponseIds.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.assignment_outlined,
-                        size: 64,
+                        size: context.adaptiveIcon(64.sp),
                         color: AppColors.secondaryText.withOpacity(0.5),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
                       Text(
                         s.no_responses_found,
                         style: TextStyle(
                           color: AppColors.secondaryText,
-                          fontSize: 16,
+                          fontSize: context.adaptiveFont(16.sp),
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -102,16 +107,16 @@ class CompletedResponsesPage extends StatelessWidget {
                 },
                 child: ListView.separated(
                   padding: const EdgeInsets.all(16),
-                  itemCount: completedResponses.length,
+                  itemCount: completedResponseIds.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
-                    final response = completedResponses[index];
-                    return CompletedResponseCard(
-                      response: response,
+                    final responseId = completedResponseIds[index];
+                    return ResponseIdCard(
+                      responseId: responseId,
                       onTap: () {
                         context.push(
                           Routes.completedResponseViewPath,
-                          extra: {'responseId': response.id},
+                          extra: {'responseId': responseId},
                         );
                       },
                     );

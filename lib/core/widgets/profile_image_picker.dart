@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 
 class ProfileImagePicker extends StatefulWidget {
   final Function(XFile?) onImageSelected;
@@ -33,7 +34,8 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    final size = widget.size ?? 120.w;
+    final double size =
+        widget.size ?? context.responsive(100.w, tablet: 120.w, desktop: 140.w);
 
     return GestureDetector(
       onTap: _pickImage,
@@ -106,8 +108,11 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
   }
 
   Widget _buildDefaultIcon(double size) {
-    return Icon(Icons.person_rounded,
-        size: size * 0.5, color: AppColors.primary);
+    return Icon(
+      Icons.person_rounded,
+      size: size * 0.5,
+      color: AppColors.primary,
+    );
   }
 
   Widget _buildDefaultContent(double size) {

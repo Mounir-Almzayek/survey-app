@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../styles/app_colors.dart';
 import '../l10n/generated/l10n.dart';
+import '../utils/responsive_layout.dart';
 
 class CustomDatePickerField extends StatelessWidget {
   final String label;
@@ -34,7 +35,7 @@ class CustomDatePickerField extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: context.adaptiveFont(13.sp),
               fontWeight: FontWeight.w600,
               color: AppColors.primaryText,
             ),
@@ -45,7 +46,10 @@ class CustomDatePickerField extends StatelessWidget {
           onTap: () => _selectDate(context),
           borderRadius: BorderRadius.circular(14.r),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: 16.w,
+              vertical: context.responsive(12.h, tablet: 14.h, desktop: 16.h),
+            ),
             decoration: BoxDecoration(
               color: AppColors.brightWhite,
               borderRadius: BorderRadius.circular(14.r),
@@ -59,7 +63,7 @@ class CustomDatePickerField extends StatelessWidget {
                         ? selectedDate!
                         : S.of(context).select_date,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: context.adaptiveFont(14.sp),
                       color: selectedDate?.isNotEmpty == true
                           ? AppColors.primaryText
                           : AppColors.mutedForeground,
@@ -68,7 +72,7 @@ class CustomDatePickerField extends StatelessWidget {
                 ),
                 Icon(
                   Icons.calendar_today_rounded,
-                  size: 20.sp,
+                  size: context.adaptiveIcon(18.sp),
                   color: AppColors.primary,
                 ),
               ],

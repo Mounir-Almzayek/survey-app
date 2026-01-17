@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../models/survey/question_model.dart';
 import '../../styles/app_colors.dart';
+import '../../utils/responsive_layout.dart';
 import 'survey_question_card.dart';
 
 class SurveySliderField extends StatelessWidget {
@@ -67,14 +68,14 @@ class SurveySliderField extends StatelessWidget {
                 Text(
                   min.round().toString(),
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: context.adaptiveFont(11.sp),
                     color: AppColors.mutedForeground,
                   ),
                 ),
                 Text(
                   max.round().toString(),
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: context.adaptiveFont(11.sp),
                     color: AppColors.mutedForeground,
                   ),
                 ),

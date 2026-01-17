@@ -7,6 +7,7 @@ import '../../../../core/routes/app_routes.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/models/survey/survey_model.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import 'response_list_item.dart';
 
@@ -56,8 +57,8 @@ class _AssignmentCardState extends State<AssignmentCard> {
                     Expanded(
                       child: Text(
                         widget.survey.title ?? "",
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: TextStyle(
+                          fontSize: context.adaptiveFont(15.sp),
                           fontWeight: FontWeight.bold,
                           color: AppColors.primaryText,
                         ),
@@ -95,13 +96,15 @@ class _AssignmentCardState extends State<AssignmentCard> {
                           ? Icons.keyboard_arrow_up
                           : Icons.keyboard_arrow_down,
                       color: AppColors.primary,
+                      size: context.adaptiveIcon(24.sp),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       s.local_responses_count(
                         widget.survey.localResponseIds!.length,
                       ),
-                      style: const TextStyle(
+                      style: TextStyle(
+                        fontSize: context.adaptiveFont(14.sp),
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,
                       ),
@@ -141,8 +144,8 @@ class _AssignmentCardState extends State<AssignmentCard> {
       ),
       child: Text(
         widget.survey.status!.name.toUpperCase(),
-        style: const TextStyle(
-          fontSize: 10,
+        style: TextStyle(
+          fontSize: context.adaptiveFont(9.sp),
           fontWeight: FontWeight.bold,
           color: AppColors.primary,
         ),
@@ -161,14 +164,17 @@ class _AssignmentCardState extends State<AssignmentCard> {
       trimMode: TrimMode.Line,
       trimCollapsedText: s.read_more,
       trimExpandedText: ' ${s.show_less}',
-      style: const TextStyle(fontSize: 14, color: AppColors.secondaryText),
-      moreStyle: const TextStyle(
-        fontSize: 12,
+      style: TextStyle(
+        fontSize: context.adaptiveFont(12.sp),
+        color: AppColors.secondaryText,
+      ),
+      moreStyle: TextStyle(
+        fontSize: context.adaptiveFont(10.sp),
         fontWeight: FontWeight.bold,
         color: AppColors.primary,
       ),
-      lessStyle: const TextStyle(
-        fontSize: 12,
+      lessStyle: TextStyle(
+        fontSize: context.adaptiveFont(10.sp),
         fontWeight: FontWeight.bold,
         color: AppColors.primary,
       ),
@@ -228,12 +234,16 @@ class _AssignmentCardState extends State<AssignmentCard> {
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         children: [
-          Icon(icon, size: 14, color: AppColors.secondaryText.withOpacity(0.6)),
-          const SizedBox(width: 6),
+          Icon(
+            icon,
+            size: context.adaptiveIcon(12.sp),
+            color: AppColors.secondaryText.withOpacity(0.6),
+          ),
+          SizedBox(width: 6.w),
           Text(
             text,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: context.adaptiveFont(9.sp),
               color: AppColors.secondaryText.withOpacity(0.8),
             ),
           ),
@@ -244,12 +254,23 @@ class _AssignmentCardState extends State<AssignmentCard> {
 
   Widget _buildButtons(BuildContext context, S s) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // New Response Button
         CustomElevatedButton(
-          fontSize: 14,
-          width: 230.w,
-          height: 45.h,
+          fontSize: context.adaptiveFont(13.sp),
+          width: ResponsiveLayout.value(
+            context,
+            mobile: 1.sw,
+            tablet: 300.w,
+            desktop: 400.w,
+          ),
+          height: ResponsiveLayout.value(
+            context,
+            mobile: 44.h,
+            tablet: 48.h,
+            desktop: 52.h,
+          ),
           onPressed: () {
             context.push(
               Routes.surveyAnsweringPath,
@@ -264,29 +285,39 @@ class _AssignmentCardState extends State<AssignmentCard> {
         const SizedBox(height: 12),
         // View Completed Responses Button
         SizedBox(
-          width: 230.w,
-          height: 45.h,
-          child: OutlinedButton(
+          width: ResponsiveLayout.value(
+            context,
+            mobile: 1.sw,
+            tablet: 300.w,
+            desktop: 400.w,
+          ),
+          height: ResponsiveLayout.value(
+            context,
+            mobile: 44.h,
+            tablet: 48.h,
+            desktop: 52.h,
+          ),
+          child: CustomElevatedButton(
+            fontSize: context.adaptiveFont(13.sp),
+            width: ResponsiveLayout.value(
+              context,
+              mobile: 1.sw,
+              tablet: 300.w,
+              desktop: 400.w,
+            ),
+            height: ResponsiveLayout.value(
+              context,
+              mobile: 44.h,
+              tablet: 48.h,
+              desktop: 52.h,
+            ),
             onPressed: () {
               context.push(
                 Routes.completedResponsesPath,
                 extra: {'surveyId': widget.survey.id},
               );
             },
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: AppColors.primary, width: 1.5),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
-              ),
-            ),
-            child: Text(
-              'View Completed Responses',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primary,
-              ),
-            ),
+            title: s.view_completed_responses,
           ),
         ),
       ],

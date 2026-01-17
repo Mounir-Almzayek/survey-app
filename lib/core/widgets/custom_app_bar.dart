@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 import 'logo_rectangle.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -50,7 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ? Text(
                 title!,
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: context.adaptiveFont(14.sp),
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryText,
                 ),
@@ -64,15 +65,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget? _buildLeading(BuildContext context) {
     if (showDrawerButton) {
       return IconButton(
-        icon: const Icon(Icons.menu_rounded, color: AppColors.primary),
+        icon: Icon(
+          Icons.menu_rounded,
+          color: AppColors.primary,
+          size: context.adaptiveIcon(22.sp),
+        ),
         onPressed: onDrawerPressed ?? () => Scaffold.of(context).openDrawer(),
       );
     }
     if (showBackButton) {
       return IconButton(
-        icon: const Icon(
+        icon: Icon(
           Icons.arrow_back_ios_new_rounded,
           color: AppColors.primary,
+          size: context.adaptiveIcon(18.sp),
         ),
         onPressed: () => Navigator.of(context).pop(),
       );
@@ -81,5 +87,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(56.h);
+  Size get preferredSize => Size.fromHeight(
+    ScreenUtil().orientation == Orientation.portrait ? 56.h : 64.h,
+  );
 }

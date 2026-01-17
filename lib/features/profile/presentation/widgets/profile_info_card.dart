@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../models/user.dart';
 
 class ProfileInfoCard extends StatelessWidget {
@@ -39,12 +40,14 @@ class ProfileInfoCard extends StatelessWidget {
           ),
         ],
       ),
-      padding: EdgeInsets.all(32.r),
+      padding: EdgeInsets.all(
+        context.responsive(24.r, tablet: 32.r, desktop: 40.r),
+      ),
       child: Column(
         children: [
           Container(
-            width: 100.w,
-            height: 100.w,
+            width: context.responsive(80.w, tablet: 100.w, desktop: 120.w),
+            height: context.responsive(80.w, tablet: 100.w, desktop: 120.w),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: AppColors.primaryGradient,
@@ -61,7 +64,7 @@ class ProfileInfoCard extends StatelessWidget {
               child: Text(
                 initials,
                 style: TextStyle(
-                  fontSize: 36.sp,
+                  fontSize: context.adaptiveFont(24.sp),
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                   letterSpacing: 1.5,
@@ -73,7 +76,7 @@ class ProfileInfoCard extends StatelessWidget {
           Text(
             user.name,
             style: TextStyle(
-              fontSize: 22.sp,
+              fontSize: context.adaptiveFont(18.sp),
               fontWeight: FontWeight.bold,
               color: AppColors.primaryText,
               height: 1.2,
@@ -83,7 +86,10 @@ class ProfileInfoCard extends StatelessWidget {
           SizedBox(height: 4.h),
           Text(
             user.email,
-            style: TextStyle(fontSize: 14.sp, color: AppColors.secondaryText),
+            style: TextStyle(
+              fontSize: context.adaptiveFont(12.sp),
+              color: AppColors.secondaryText,
+            ),
             textAlign: TextAlign.center,
           ),
           if (rolesText != null && rolesText.isNotEmpty) ...[
@@ -100,7 +106,7 @@ class ProfileInfoCard extends StatelessWidget {
               child: Text(
                 rolesText,
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: context.adaptiveFont(10.sp),
                   fontWeight: FontWeight.w600,
                   color: AppColors.primary,
                 ),

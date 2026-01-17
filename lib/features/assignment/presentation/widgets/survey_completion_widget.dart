@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/models/survey/survey_model.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -92,7 +93,7 @@ class _SurveyCompletionWidgetState extends State<SurveyCompletionWidget>
                       ),
                       child: Icon(
                         Icons.check_circle_rounded,
-                        size: 100.r,
+                        size: context.adaptiveIcon(100.sp),
                         color: AppColors.success,
                       ),
                     ),
@@ -109,7 +110,7 @@ class _SurveyCompletionWidgetState extends State<SurveyCompletionWidget>
                           s.survey_completed,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 30.sp,
+                            fontSize: context.adaptiveFont(30.sp),
                             fontWeight: FontWeight.w700,
                             color: AppColors.primaryText,
                             letterSpacing: -0.5,
@@ -120,7 +121,7 @@ class _SurveyCompletionWidgetState extends State<SurveyCompletionWidget>
                           goodbye,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: context.adaptiveFont(16.sp),
                             color: AppColors.secondaryText,
                             fontWeight: FontWeight.w500,
                           ),

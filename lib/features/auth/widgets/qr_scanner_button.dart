@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/utils/responsive_layout.dart';
 import '../../../core/widgets/unified_snackbar.dart';
 import '../../qr_scanner/presentation/qr_scanner_page.dart';
 import '../../device_registration/presentation/device_registration_page.dart';
@@ -77,7 +78,7 @@ class QRScannerButton extends StatelessWidget {
           child: Icon(
             Icons.qr_code_scanner_rounded,
             color: AppColors.primary,
-            size: 24.sp,
+            size: context.adaptiveIcon(24.sp),
           ),
         ),
       ),

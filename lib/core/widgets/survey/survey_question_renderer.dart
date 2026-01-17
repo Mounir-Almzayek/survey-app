@@ -113,7 +113,9 @@ class SurveyQuestionRenderer extends StatelessWidget {
       case QuestionType.rating:
         return SurveyRatingField(
           question: question,
-          value: value as int?,
+          value: value is int
+              ? value
+              : (value != null ? int.tryParse(value.toString()) : null),
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
@@ -122,7 +124,9 @@ class SurveyQuestionRenderer extends StatelessWidget {
       case QuestionType.slider:
         return SurveySliderField(
           question: question,
-          value: value is num ? (value as num).toDouble() : null,
+          value: value is num
+              ? (value as num).toDouble()
+              : (value != null ? double.tryParse(value.toString()) : null),
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,

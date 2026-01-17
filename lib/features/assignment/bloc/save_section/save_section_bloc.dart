@@ -110,10 +110,12 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
     final currentRequest = state.saveRequest;
     if (currentRequest != null) {
       final sanitizedAnswers = event.answers
-          .map((a) => AnswerRequest(
-                questionId: a.questionId,
-                value: SurveyValidator.sanitizeValue(a.value),
-              ))
+          .map(
+            (a) => AnswerRequest(
+              questionId: a.questionId,
+              value: SurveyValidator.sanitizeValue(a.value),
+            ),
+          )
           .where((a) => a.value != null) // Filter out null values
           .toList();
 
@@ -187,10 +189,7 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
           );
         } else {
           newAnswers.add(
-            AnswerRequest(
-              questionId: event.questionId,
-              value: sanitizedValue,
-            ),
+            AnswerRequest(questionId: event.questionId, value: sanitizedValue),
           );
         }
       }

@@ -6,6 +6,7 @@ import '../models/save_section_models.dart';
 class AssignmentLocalRepository {
   static const String _surveysKey = 'cached_surveys_list';
   static const String _responseDraftPrefix = 'response_draft_';
+  static const String _completedResponsesPrefix = 'completed_responses_';
   static const String _syncedCountKey = 'synced_responses_total_count';
   static const String _negativeIdCounterKey = 'negative_response_id_counter';
 
@@ -49,6 +50,18 @@ class AssignmentLocalRepository {
 
       if (changed) {
         await _saveRawSurveys(surveys);
+      }
+
+      // 3. Remap completed responses lists
+      for (var survey in surveys) {
+        final compKey = '$_completedResponsesPrefix${survey.id}';
+        final compList = prefs.getStringList(compKey);
+        if (compList != null && compList.contains(oldId.toString())) {
+          final updatedCompList = compList
+              .map((id) => id == oldId.toString() ? newId.toString() : id)
+              .toList();
+          await prefs.setStringList(compKey, updatedCompList);
+        }
       }
     } catch (_) {
       // Ignore errors in remapping
@@ -104,6 +117,31 @@ class AssignmentLocalRepository {
       await prefs.remove(key);
     } catch (_) {
       // Ignore
+    }
+  }
+
+  /// Add a response ID to the completed list for a survey
+  static Future<void> addCompletedResponse(int surveyId, int responseId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = '$_completedResponsesPrefix$surveyId';
+      final currentList = prefs.getStringList(key) ?? [];
+      if (!currentList.contains(responseId.toString())) {
+        currentList.add(responseId.toString());
+        await prefs.setStringList(key, currentList);
+      }
+    } catch (_) {}
+  }
+
+  /// Get the list of completed response IDs for a survey
+  static Future<List<int>> getCompletedResponses(int surveyId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = '$_completedResponsesPrefix$surveyId';
+      final list = prefs.getStringList(key) ?? [];
+      return list.map((e) => int.parse(e)).toList();
+    } catch (_) {
+      return [];
     }
   }
 

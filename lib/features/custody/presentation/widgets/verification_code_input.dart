@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/styles/app_colors.dart';
 
 class VerificationCodeInput extends StatefulWidget {
@@ -92,7 +93,7 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
           SizedBox(height: 8.h),
           Text(
             widget.errorText!,
-            style: TextStyle(fontSize: 12.sp, color: AppColors.error),
+            style: TextStyle(fontSize: context.adaptiveFont(12.sp), color: AppColors.error),
           ),
         ],
       ],
@@ -117,7 +118,7 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
           LengthLimitingTextInputFormatter(1),
         ],
         style: TextStyle(
-          fontSize: 24.sp,
+          fontSize: context.adaptiveFont(24.sp),
           fontWeight: FontWeight.bold,
           color: AppColors.primaryText,
         ),

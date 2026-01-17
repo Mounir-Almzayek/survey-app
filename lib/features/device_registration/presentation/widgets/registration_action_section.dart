@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -40,7 +41,7 @@ class RegistrationActionSection extends StatelessWidget {
                 verifyKeyState.response.valid;
 
             if (isKeyAlreadyRegistered) {
-              return _buildAlreadyRegisteredCard(locale);
+              return _buildAlreadyRegisteredCard(locale, context);
             }
 
             return Column(
@@ -68,7 +69,7 @@ class RegistrationActionSection extends StatelessWidget {
                 Text(
                   locale.complete_registration_tap_notice,
                   style: TextStyle(
-                    fontSize: 11.sp,
+                    fontSize: context.adaptiveFont(11.sp),
                     color: AppColors.secondaryText,
                     height: 1.4,
                   ),
@@ -82,7 +83,7 @@ class RegistrationActionSection extends StatelessWidget {
     );
   }
 
-  Widget _buildAlreadyRegisteredCard(S locale) {
+  Widget _buildAlreadyRegisteredCard(S locale, BuildContext context) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -101,7 +102,7 @@ class RegistrationActionSection extends StatelessWidget {
             child: Icon(
               Icons.warning_amber_rounded,
               color: AppColors.error,
-              size: 32.sp,
+              size: context.adaptiveIcon(32.sp),
             ),
           ),
           SizedBox(height: 16.h),
@@ -109,7 +110,7 @@ class RegistrationActionSection extends StatelessWidget {
             locale.device_already_registered,
             style: TextStyle(
               color: AppColors.error,
-              fontSize: 16.sp,
+              fontSize: context.adaptiveFont(16.sp),
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
@@ -117,7 +118,7 @@ class RegistrationActionSection extends StatelessWidget {
           SizedBox(height: 8.h),
           Text(
             locale.device_already_registered_desc,
-            style: TextStyle(color: AppColors.secondaryText, fontSize: 13.sp),
+            style: TextStyle(color: AppColors.secondaryText, fontSize: context.adaptiveFont(13.sp)),
             textAlign: TextAlign.center,
           ),
         ],

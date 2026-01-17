@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../models/survey/question_model.dart';
 import '../../enums/survey_enums.dart';
 import '../../styles/app_colors.dart';
+import '../../utils/responsive_layout.dart';
 import 'survey_question_card.dart';
 
 class SurveyGridField extends StatelessWidget {
@@ -43,17 +44,27 @@ class SurveyGridField extends StatelessWidget {
             // Header Row
             Row(
               children: [
-                SizedBox(width: 120.w), // Row label space
+                SizedBox(
+                  width: context.responsive(
+                    100.w,
+                    tablet: 120.w,
+                    desktop: 140.w,
+                  ),
+                ), // Row label space
                 ...question.questionOptions?.map(
                       (opt) => Container(
-                        width: 80.w,
+                        width: context.responsive(
+                          70.w,
+                          tablet: 80.w,
+                          desktop: 90.w,
+                        ),
                         padding: EdgeInsets.symmetric(horizontal: 4.w),
                         alignment: Alignment.center,
                         child: Text(
                           opt.label ?? "",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: context.adaptiveFont(11.sp),
                             fontWeight: FontWeight.bold,
                             color: AppColors.mutedForeground,
                           ),
@@ -71,11 +82,15 @@ class SurveyGridField extends StatelessWidget {
                     child: Row(
                       children: [
                         SizedBox(
-                          width: 120.w,
+                          width: context.responsive(
+                            100.w,
+                            tablet: 120.w,
+                            desktop: 140.w,
+                          ),
                           child: Text(
                             row.label ?? "",
                             style: TextStyle(
-                              fontSize: 13.sp,
+                              fontSize: context.adaptiveFont(12.sp),
                               fontWeight: FontWeight.w600,
                               color: AppColors.primaryText,
                             ),
@@ -86,27 +101,39 @@ class SurveyGridField extends StatelessWidget {
                                   selectedValues[row.id]?.contains(opt.value) ??
                                   false;
                               return Container(
-                                width: 80.w,
+                                width: context.responsive(
+                                  70.w,
+                                  tablet: 80.w,
+                                  desktop: 90.w,
+                                ),
                                 alignment: Alignment.center,
                                 child: GestureDetector(
                                   onTap: isEditable
                                       ? () {
-                                          final newMap = Map<int, List<String>>.from(
-                                            selectedValues,
-                                          );
-                                          final currentSelections = List<String>.from(
-                                            newMap[row.id] ?? [],
-                                          );
+                                          final newMap =
+                                              Map<int, List<String>>.from(
+                                                selectedValues,
+                                              );
+                                          final currentSelections =
+                                              List<String>.from(
+                                                newMap[row.id] ?? [],
+                                              );
 
                                           if (isMulti) {
                                             if (isSelected) {
-                                              currentSelections.remove(opt.value);
+                                              currentSelections.remove(
+                                                opt.value,
+                                              );
                                             } else {
-                                              currentSelections.add(opt.value ?? "");
+                                              currentSelections.add(
+                                                opt.value ?? "",
+                                              );
                                             }
                                           } else {
                                             currentSelections.clear();
-                                            currentSelections.add(opt.value ?? "");
+                                            currentSelections.add(
+                                              opt.value ?? "",
+                                            );
                                           }
 
                                           newMap[row.id] = currentSelections;
@@ -138,7 +165,7 @@ class SurveyGridField extends StatelessWidget {
                                           ? AppColors.surveyPrimary
                                           : AppColors.mutedForeground
                                                 .withOpacity(0.5),
-                                      size: 24.sp,
+                                      size: context.adaptiveIcon(22.sp),
                                     ),
                                   ),
                                 ),

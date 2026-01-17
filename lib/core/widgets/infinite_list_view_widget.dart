@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 import 'loading_widget.dart';
 
 class InfiniteListViewWidget extends StatelessWidget {
@@ -33,7 +34,9 @@ class InfiniteListViewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget listView = ListView.builder(
       controller: scrollController,
-      padding: padding ?? EdgeInsets.all(16.w),
+      padding:
+          padding ??
+          EdgeInsets.all(context.responsive(16.w, tablet: 20.w, desktop: 24.w)),
       shrinkWrap: shrinkWrap,
       physics: physics ?? const AlwaysScrollableScrollPhysics(),
       itemCount: items.length + (isLoading ? 1 : 0),
@@ -42,10 +45,10 @@ class InfiniteListViewWidget extends StatelessWidget {
           return itemBuilder(context, items[index]);
         } else {
           return Padding(
-            padding: EdgeInsets.symmetric(vertical: 24.h),
-            child: const Center(
-              child: LoadingWidget(withPadding: false),
+            padding: EdgeInsets.symmetric(
+              vertical: context.responsive(16.h, tablet: 20.h, desktop: 24.h),
             ),
+            child: const Center(child: LoadingWidget(withPadding: false)),
           );
         }
       },

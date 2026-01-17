@@ -9,6 +9,8 @@ import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/custom_elevated_button.dart';
 import '../../splash/repositories/settings_local_repository.dart';
 
+import '../../../core/utils/responsive_layout.dart';
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
@@ -35,8 +37,8 @@ class WelcomeScreen extends StatelessWidget {
               top: -100.h,
               right: -100.w,
               child: Container(
-                width: 400.w,
-                height: 400.w,
+                width: context.responsive(400.w, tablet: 300.w),
+                height: context.responsive(400.w, tablet: 300.w),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
@@ -52,8 +54,8 @@ class WelcomeScreen extends StatelessWidget {
               bottom: -50.h,
               left: -50.w,
               child: Container(
-                width: 300.w,
-                height: 300.w,
+                width: context.responsive(300.w, tablet: 250.w),
+                height: context.responsive(300.w, tablet: 250.w),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
@@ -86,8 +88,8 @@ class WelcomeScreen extends StatelessWidget {
                         child: Image.asset(
                           Assets.logo1,
                           fit: BoxFit.contain,
-                          width: 100.w,
-                          height: 100.h,
+                          width: context.responsive(100.w, tablet: 150.w),
+                          height: context.responsive(100.h, tablet: 150.h),
                         ),
                       ),
                     ),
@@ -113,7 +115,7 @@ class WelcomeScreen extends StatelessWidget {
                           Text(
                             locale.welcome,
                             style: TextStyle(
-                              fontSize: 28.sp,
+                              fontSize: context.adaptiveFont(28.sp),
                               fontWeight: FontWeight.bold,
                               color: AppColors.primary,
                               height: 1.2,
@@ -130,11 +132,13 @@ class WelcomeScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(2),
                             ),
                           ),
-                          SizedBox(height: 20.h),
+                          SizedBox(
+                            height: context.responsive(20.h, tablet: 32.h),
+                          ),
                           Text(
                             locale.welcome_subtitle,
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: context.adaptiveFont(14.sp),
                               color: AppColors.secondaryText.withOpacity(0.8),
                               height: 1.6,
                               fontWeight: FontWeight.w500,

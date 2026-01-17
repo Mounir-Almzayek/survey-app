@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -149,7 +150,7 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 17.sp,
+                    fontSize: context.adaptiveFont(17.sp),
                     fontWeight: FontWeight.w800,
                     color: AppColors.primaryText,
                     height: 1.3,
@@ -176,7 +177,7 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
                   child: Text(
                     '${currentIndex + 1}/$totalCount',
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: context.adaptiveFont(12.sp),
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
                     ),
@@ -249,7 +250,7 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
           if (!isFirst)
             IconButton.filledTonal(
               onPressed: isLoading ? null : () => _handlePrevious(context),
-              icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20.sp),
+              icon: Icon(Icons.arrow_back_ios_new_rounded, size: context.adaptiveIcon(20.sp)),
               style: IconButton.styleFrom(
                 backgroundColor: AppColors.primary.withOpacity(0.1),
                 foregroundColor: AppColors.primary,

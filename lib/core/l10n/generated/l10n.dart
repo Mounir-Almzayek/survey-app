@@ -2629,6 +2629,16 @@ class S {
       args: [],
     );
   }
+
+  /// `View Completed Responses`
+  String get view_completed_responses {
+    return Intl.message(
+      'View Completed Responses',
+      name: 'view_completed_responses',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

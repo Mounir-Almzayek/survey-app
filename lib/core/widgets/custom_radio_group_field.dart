@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 
 class CustomRadioGroupField<T> extends StatelessWidget {
   final String label;
@@ -37,7 +38,7 @@ class CustomRadioGroupField<T> extends StatelessWidget {
             child: Text(
               effectiveLabel,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: context.adaptiveFont(13.sp),
                 fontWeight: FontWeight.w600,
                 color: AppColors.primaryText,
               ),
@@ -74,15 +75,16 @@ class CustomRadioGroupField<T> extends StatelessWidget {
                   ),
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 12.w,
-                    vertical: 0,
+                    vertical: context.responsive(0, tablet: 2.h, desktop: 4.h),
                   ),
                   title: Text(
                     getLabel(item),
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: context.adaptiveFont(14.sp),
                       color: isSelected ? color : AppColors.primaryText,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   ),
                   onChanged: onChanged,

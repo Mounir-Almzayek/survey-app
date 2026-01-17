@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:king_abdulaziz_center_survey_app/core/utils/responsive_layout.dart';
 import '../../../../core/models/survey/survey_model.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -104,7 +105,7 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
                         ),
                         child: Icon(
                           Icons.assignment_turned_in_rounded,
-                          size: 90.r,
+                          size: context.adaptiveIcon(90.sp),
                           color: AppColors.primary,
                         ),
                       ),
@@ -122,7 +123,7 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
                         title,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 28.sp,
+                          fontSize: context.adaptiveFont(28.sp),
                           fontWeight: FontWeight.w700,
                           color: AppColors.primaryText,
                           letterSpacing: -0.5,
@@ -145,7 +146,7 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
                             intro,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 16.sp,
+                              fontSize: context.adaptiveFont(16.sp),
                               color: AppColors.secondaryText,
                               fontWeight: FontWeight.w500,
                               height: 1.5,
@@ -194,7 +195,7 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
                           isLoading: widget.isLoading,
                           width: double.infinity,
                           height: 56.h,
-                          fontSize: 16.sp,
+                          fontSize: context.adaptiveFont(16.sp),
                         ),
                       ),
                     ),
@@ -280,7 +281,7 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
             Text(
               text,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: context.adaptiveFont(14.sp),
                 color: AppColors.primaryText.withOpacity(0.8),
                 fontWeight: FontWeight.w600,
               ),
@@ -288,7 +289,7 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
             SizedBox(width: 8.w),
             Icon(
               icon,
-              size: 20.sp,
+              size: context.adaptiveIcon(20.sp),
               color: AppColors.primaryText.withOpacity(0.6),
             ),
           ],

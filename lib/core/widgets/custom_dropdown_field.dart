@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../styles/app_colors.dart';
 import '../l10n/generated/l10n.dart';
+import '../utils/responsive_layout.dart';
 
 class CustomDropdownField<T> extends StatelessWidget {
   final String label;
@@ -42,7 +43,7 @@ class CustomDropdownField<T> extends StatelessWidget {
             child: Text(
               label,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: context.adaptiveFont(13.sp),
                 fontWeight: FontWeight.w600,
                 color: AppColors.primaryText,
               ),
@@ -53,7 +54,10 @@ class CustomDropdownField<T> extends StatelessWidget {
         GestureDetector(
           onTap: useSearch ? () => _showSearchDialog(context) : null,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: 16.w,
+              vertical: context.responsive(10.h, tablet: 12.h, desktop: 14.h),
+            ),
             decoration: BoxDecoration(
               color: AppColors.brightWhite,
               borderRadius: BorderRadius.circular(14.r),
@@ -68,7 +72,7 @@ class CustomDropdownField<T> extends StatelessWidget {
                               ? getLabel(selectedValue as T)
                               : S.of(context).please_select,
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: context.adaptiveFont(14.sp),
                             color: selectedValue != null
                                 ? AppColors.primaryText
                                 : AppColors.mutedForeground,
@@ -78,7 +82,7 @@ class CustomDropdownField<T> extends StatelessWidget {
                       Icon(
                         Icons.keyboard_arrow_down_rounded,
                         color: color,
-                        size: 24.sp,
+                        size: context.adaptiveIcon(22.sp),
                       ),
                     ],
                   )
@@ -90,12 +94,12 @@ class CustomDropdownField<T> extends StatelessWidget {
                       icon: Icon(
                         Icons.keyboard_arrow_down_rounded,
                         color: color,
-                        size: 24.sp,
+                        size: context.adaptiveIcon(22.sp),
                       ),
                       hint: Text(
                         S.of(context).please_select,
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: context.adaptiveFont(14.sp),
                           color: AppColors.mutedForeground,
                         ),
                       ),
@@ -105,7 +109,7 @@ class CustomDropdownField<T> extends StatelessWidget {
                           child: Text(
                             getLabel(item),
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: context.adaptiveFont(14.sp),
                               color: AppColors.primaryText,
                             ),
                           ),
@@ -234,7 +238,7 @@ class _SearchableDropdownDialogState<T>
                         child: Text(
                           S.of(widget.parentContext).please_select,
                           style: TextStyle(
-                            fontSize: 18.sp,
+                            fontSize: context.adaptiveFont(16.sp),
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -250,7 +254,7 @@ class _SearchableDropdownDialogState<T>
                   SizedBox(height: 12.h),
                   TextField(
                     controller: _searchController,
-                    style: TextStyle(fontSize: 14.sp),
+                    style: TextStyle(fontSize: context.adaptiveFont(13.sp)),
                     decoration: InputDecoration(
                       hintText: S.of(widget.parentContext).search,
                       prefixIcon: const Icon(Icons.search_rounded),
@@ -271,7 +275,7 @@ class _SearchableDropdownDialogState<T>
                       child: Text(
                         S.of(widget.parentContext).no_data,
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: context.adaptiveFont(13.sp),
                           color: AppColors.mutedForeground,
                         ),
                       ),
@@ -290,10 +294,7 @@ class _SearchableDropdownDialogState<T>
                           ),
                           decoration: BoxDecoration(
                             border: isSelected
-                                ? Border.all(
-                                    color: color,
-                                    width: 1.5,
-                                  )
+                                ? Border.all(color: color, width: 1.5)
                                 : Border.all(color: AppColors.border, width: 1),
                             borderRadius: BorderRadius.circular(12.r),
                             color: isSelected
@@ -305,8 +306,10 @@ class _SearchableDropdownDialogState<T>
                             title: Text(
                               widget.getLabel(item),
                               style: TextStyle(
-                                fontSize: 14.sp,
-                                color: isSelected ? color : AppColors.primaryText,
+                                fontSize: context.adaptiveFont(13.sp),
+                                color: isSelected
+                                    ? color
+                                    : AppColors.primaryText,
                                 fontWeight: isSelected
                                     ? FontWeight.bold
                                     : FontWeight.normal,
@@ -316,7 +319,7 @@ class _SearchableDropdownDialogState<T>
                                 ? Icon(
                                     Icons.check_circle_rounded,
                                     color: color,
-                                    size: 22.sp,
+                                    size: context.adaptiveIcon(18.sp),
                                   )
                                 : null,
                             onTap: () {

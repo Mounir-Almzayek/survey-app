@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/utils/responsive_layout.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../service/location_service.dart';
 
@@ -70,13 +72,13 @@ class _LocationPermissionGateState extends State<LocationPermissionGate> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.location_on_outlined, size: 48),
+                Icon(Icons.location_on_outlined, size: context.adaptiveIcon(48.sp)),
                 const SizedBox(height: 16),
                 Text(
                   S.of(context).location_permission_required_title,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 18,
+                  style: TextStyle(
+                    fontSize: context.adaptiveFont(18.sp),
                     fontWeight: FontWeight.bold,
                   ),
                 ),

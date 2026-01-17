@@ -3,6 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/utils/responsive_layout.dart';
 
 class QRCodeDialog extends StatelessWidget {
   final String url;
@@ -20,13 +21,13 @@ class QRCodeDialog extends StatelessWidget {
         surveyTitle,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 18.sp,
+          fontSize: context.adaptiveFont(16.sp),
           fontWeight: FontWeight.bold,
           color: AppColors.primaryText,
         ),
       ),
       content: SizedBox(
-        width: 250.w,
+        width: context.responsive(250.w, tablet: 300.w, desktop: 350.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -44,12 +45,20 @@ class QRCodeDialog extends StatelessWidget {
                 ],
               ),
               child: SizedBox(
-                width: 200.w,
-                height: 200.w,
+                width: context.responsive(200.w, tablet: 220.w, desktop: 240.w),
+                height: context.responsive(
+                  200.w,
+                  tablet: 220.w,
+                  desktop: 240.w,
+                ),
                 child: QrImageView(
                   data: url,
                   version: QrVersions.auto,
-                  size: 200.w,
+                  size: context.responsive(
+                    200.w,
+                    tablet: 220.w,
+                    desktop: 240.w,
+                  ),
                   backgroundColor: Colors.white,
                   gapless: false,
                 ),
@@ -59,7 +68,10 @@ class QRCodeDialog extends StatelessWidget {
             Text(
               s.scan_qr_code,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14.sp, color: AppColors.secondaryText),
+              style: TextStyle(
+                fontSize: context.adaptiveFont(12.sp),
+                color: AppColors.secondaryText,
+              ),
             ),
           ],
         ),

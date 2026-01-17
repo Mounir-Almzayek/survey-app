@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../bloc/assignments_list/assignments_list_bloc.dart';
 import '../widgets/assignment_card.dart';
@@ -25,30 +27,34 @@ class AssignmentsScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.error_outline,
-                    size: 60,
+                    size: context.adaptiveIcon(50.sp),
                     color: AppColors.error,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16.h),
                   Text(
                     s.error_occurred,
-                    style: const TextStyle(
-                      fontSize: 18,
+                    style: TextStyle(
+                      fontSize: context.adaptiveFont(16.sp),
                       color: AppColors.primaryText,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Text(
                     state.message,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: AppColors.secondaryText),
+                    style: TextStyle(
+                      color: AppColors.secondaryText,
+                      fontSize: context.adaptiveFont(12.sp),
+                    ),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () => context.read<AssignmentsListBloc>().add(
-                          LoadAssignments(),
-                        ),
+                      LoadAssignments(),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
@@ -74,13 +80,32 @@ class AssignmentsScreen extends StatelessWidget {
               onRefresh: () async {
                 context.read<AssignmentsListBloc>().add(LoadAssignments());
               },
-              child: ListView.separated(
-                padding: const EdgeInsets.all(16),
-                itemCount: surveys.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 16),
-                itemBuilder: (context, index) {
-                  return AssignmentCard(survey: surveys[index]);
-                },
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: context.responsive(
+                      1.sw,
+                      tablet: 600.w,
+                      desktop: 800.w,
+                    ),
+                  ),
+                  child: ListView.separated(
+                    padding: EdgeInsets.all(
+                      context.responsive(16.r, tablet: 24.r, desktop: 32.r),
+                    ),
+                    itemCount: surveys.length,
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: context.responsive(
+                        12.h,
+                        tablet: 16.h,
+                        desktop: 20.h,
+                      ),
+                    ),
+                    itemBuilder: (context, index) {
+                      return AssignmentCard(survey: surveys[index]);
+                    },
+                  ),
+                ),
               ),
             );
           }

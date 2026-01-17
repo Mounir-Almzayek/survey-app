@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../l10n/generated/l10n.dart';
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 import 'custom_elevated_button.dart';
 
 class ErrorStateWidget extends StatelessWidget {
@@ -28,7 +29,7 @@ class ErrorStateWidget extends StatelessWidget {
               ),
               child: Icon(
                 Icons.error_outline_rounded,
-                size: 64.sp,
+                size: context.adaptiveIcon(48.sp),
                 color: AppColors.error.withOpacity(0.5),
               ),
             ),
@@ -37,7 +38,7 @@ class ErrorStateWidget extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16.sp,
+                fontSize: context.adaptiveFont(14.sp),
                 color: AppColors.primaryText,
                 fontWeight: FontWeight.w500,
               ),
@@ -49,6 +50,7 @@ class ErrorStateWidget extends StatelessWidget {
                 title: locale.retry,
                 width: 160.w,
                 useGradient: false,
+                fontSize: context.adaptiveFont(16.sp),
               ),
             ],
           ],

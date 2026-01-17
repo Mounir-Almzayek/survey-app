@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/utils/responsive_layout.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/custom_app_bar.dart';
@@ -128,14 +129,14 @@ class _CustodyVerificationScreenState extends State<CustodyVerificationScreen> {
                         Icon(
                           Icons.info_outline_rounded,
                           color: AppColors.primary,
-                          size: 24.sp,
+                          size: context.adaptiveIcon(24.sp),
                         ),
                         SizedBox(width: 12.w),
                         Expanded(
                           child: Text(
                             locale.verification_info_message,
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: context.adaptiveFont(14.sp),
                               color: AppColors.primaryText,
                             ),
                           ),
@@ -150,7 +151,7 @@ class _CustodyVerificationScreenState extends State<CustodyVerificationScreen> {
                     locale.enter_verification_code,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: context.adaptiveFont(16.sp),
                       fontWeight: FontWeight.w600,
                       color: AppColors.primaryText,
                     ),
@@ -181,6 +182,7 @@ class _CustodyVerificationScreenState extends State<CustodyVerificationScreen> {
                     prefixIcon: Icon(
                       Icons.note_outlined,
                       color: AppColors.secondaryText,
+                      size: context.adaptiveIcon(22.sp),
                     ),
                   ),
                   SizedBox(height: 24.h),
@@ -203,7 +205,7 @@ class _CustodyVerificationScreenState extends State<CustodyVerificationScreen> {
                     child: Text(
                       locale.resend_code,
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: context.adaptiveFont(14.sp),
                         fontWeight: FontWeight.w600,
                         color: (isVerifying || isResending || _isResending)
                             ? AppColors.secondaryText

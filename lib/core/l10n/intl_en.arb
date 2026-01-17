@@ -379,5 +379,6 @@
   "survey_availability": "Survey Availability",
   "sync_status": "Sync Status",
   "retry_all": "Retry All",
-  "clear_all": "Clear All"
+  "clear_all": "Clear All",
+  "view_completed_responses": "View Completed Responses"
 }

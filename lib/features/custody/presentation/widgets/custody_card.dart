@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../models/custody_record.dart';
 
 class CustodyCard extends StatelessWidget {
@@ -50,7 +51,7 @@ class CustodyCard extends StatelessWidget {
                   child: Text(
                     record.physicalDeviceName,
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: context.adaptiveFont(14.sp),
                       fontWeight: FontWeight.bold,
                       color: AppColors.primaryText,
                     ),
@@ -67,14 +68,14 @@ class CustodyCard extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.devices_rounded,
-                    size: 16.sp,
+                    size: context.adaptiveIcon(16.sp),
                     color: AppColors.secondaryText,
                   ),
                   SizedBox(width: 8.w),
                   Text(
                     record.physicalDeviceType!,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: context.adaptiveFont(12.sp),
                       color: AppColors.secondaryText,
                     ),
                   ),
@@ -89,7 +90,7 @@ class CustodyCard extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.person_outline_rounded,
-                    size: 16.sp,
+                    size: context.adaptiveIcon(16.sp),
                     color: AppColors.secondaryText,
                   ),
                   SizedBox(width: 8.w),
@@ -97,7 +98,7 @@ class CustodyCard extends StatelessWidget {
                     child: Text(
                       record.fromUserName ?? record.fromUserEmail!,
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: context.adaptiveFont(12.sp),
                         color: AppColors.secondaryText,
                       ),
                     ),
@@ -110,7 +111,7 @@ class CustodyCard extends StatelessWidget {
                 child: Text(
                   record.fromUserEmail!,
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: context.adaptiveFont(10.sp),
                     color: AppColors.secondaryText.withValues(alpha: 0.7),
                   ),
                 ),
@@ -124,7 +125,7 @@ class CustodyCard extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.person_add_outlined,
-                    size: 16.sp,
+                    size: context.adaptiveIcon(16.sp),
                     color: AppColors.secondaryText,
                   ),
                   SizedBox(width: 8.w),
@@ -132,7 +133,7 @@ class CustodyCard extends StatelessWidget {
                     child: Text(
                       record.toUserName ?? record.toUserEmail!,
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: context.adaptiveFont(12.sp),
                         color: AppColors.secondaryText,
                       ),
                     ),
@@ -145,7 +146,7 @@ class CustodyCard extends StatelessWidget {
                 child: Text(
                   record.toUserEmail!,
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: context.adaptiveFont(12.sp),
                     color: AppColors.secondaryText.withValues(alpha: 0.7),
                   ),
                 ),
@@ -158,14 +159,14 @@ class CustodyCard extends StatelessWidget {
               children: [
                 Icon(
                   Icons.calendar_today_outlined,
-                  size: 14.sp,
+                  size: context.adaptiveIcon(14.sp),
                   color: AppColors.secondaryText,
                 ),
                 SizedBox(width: 4.w),
                 Text(
                   _formatDate(record.createdAt),
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: context.adaptiveFont(12.sp),
                     color: AppColors.secondaryText,
                   ),
                 ),
@@ -173,13 +174,13 @@ class CustodyCard extends StatelessWidget {
                   SizedBox(width: 16.w),
                   Icon(
                     Icons.check_circle_outline,
-                    size: 14.sp,
+                    size: context.adaptiveIcon(14.sp),
                     color: AppColors.success,
                   ),
                   SizedBox(width: 4.w),
                   Text(
                     _formatDate(record.verifiedAt!),
-                    style: TextStyle(fontSize: 12.sp, color: AppColors.success),
+                    style: TextStyle(fontSize: context.adaptiveFont(12.sp), color: AppColors.success),
                   ),
                 ],
               ],
@@ -203,7 +204,7 @@ class CustodyCard extends StatelessWidget {
                   child: Text(
                     locale.verify_custody,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: context.adaptiveFont(13.sp),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -230,7 +231,7 @@ class CustodyCard extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 10.sp,
+          fontSize: context.adaptiveFont(9.sp),
           fontWeight: FontWeight.w600,
           color: color,
         ),

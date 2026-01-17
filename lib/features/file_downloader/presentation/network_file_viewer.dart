@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/utils/responsive_layout.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/widgets/error_state_widget.dart';
 import '../../../core/widgets/loading_widget.dart';
@@ -72,7 +74,7 @@ class NetworkFileViewer extends StatelessWidget {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.check_circle, color: Colors.green, size: 48),
+                Icon(Icons.check_circle, color: Colors.green, size: context.adaptiveIcon(48.sp)),
                 const SizedBox(height: 16),
                 Text('${locale.file_downloaded_colon} ${state.path}'),
                 const SizedBox(height: 16),

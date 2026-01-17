@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../models/survey/question_model.dart';
 import '../../styles/app_colors.dart';
+import '../../utils/responsive_layout.dart';
 import 'survey_question_card.dart';
 
 class SurveyGpsField extends StatelessWidget {
@@ -34,7 +35,11 @@ class SurveyGpsField extends StatelessWidget {
       isVisible: isVisible,
       validations: question.questionValidations,
       child: Container(
-        padding: EdgeInsets.all(12.r),
+        padding: context.responsive(
+          EdgeInsets.all(10.r),
+          tablet: EdgeInsets.all(12.r),
+          desktop: EdgeInsets.all(14.r),
+        ),
         decoration: BoxDecoration(
           color: AppColors.muted.withOpacity(0.3),
           borderRadius: BorderRadius.circular(14.r),
@@ -51,7 +56,7 @@ class SurveyGpsField extends StatelessWidget {
               child: Icon(
                 Icons.location_on_rounded,
                 color: Colors.white,
-                size: 20.sp,
+                size: context.adaptiveIcon(18.sp),
               ),
             ),
             SizedBox(width: 12.w),
@@ -62,7 +67,7 @@ class SurveyGpsField extends StatelessWidget {
                   Text(
                     value?.isNotEmpty == true ? value! : "Location not set",
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: context.adaptiveFont(13.sp),
                       fontWeight: FontWeight.w600,
                       color: value?.isNotEmpty == true
                           ? AppColors.primaryText
@@ -78,8 +83,9 @@ class SurveyGpsField extends StatelessWidget {
                 height: 20.w,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(AppColors.surveyPrimary),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppColors.surveyPrimary,
+                  ),
                 ),
               )
             else if (isEditable)
@@ -91,7 +97,7 @@ class SurveyGpsField extends StatelessWidget {
                 child: Text(
                   value?.isNotEmpty == true ? "Refresh" : "Fetch",
                   style: TextStyle(
-                    fontSize: 13.sp,
+                    fontSize: context.adaptiveFont(12.sp),
                     fontWeight: FontWeight.bold,
                     color: AppColors.surveyPrimary,
                   ),

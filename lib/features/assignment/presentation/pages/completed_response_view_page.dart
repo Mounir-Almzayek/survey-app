@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/utils/responsive_layout.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/survey/survey_question_renderer.dart';
 import '../../../../core/models/survey/question_model.dart';
+import '../../../../core/enums/survey_enums.dart';
 import '../../../responses/bloc/response_details/response_details_bloc.dart';
 import '../../../responses/models/response_details.dart';
 import '../../../assignment/repository/assignment_local_repository.dart';
@@ -14,17 +17,15 @@ import '../../../../core/models/survey/section_model.dart';
 class CompletedResponseViewPage extends StatelessWidget {
   final int responseId;
 
-  const CompletedResponseViewPage({
-    super.key,
-    required this.responseId,
-  });
+  const CompletedResponseViewPage({super.key, required this.responseId});
 
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
     return BlocProvider(
-      create: (_) => ResponseDetailsBloc()
-        ..add(LoadResponseDetails(responseId: responseId)),
+      create: (_) =>
+          ResponseDetailsBloc()
+            ..add(LoadResponseDetails(responseId: responseId)),
       child: Scaffold(
         appBar: AppBar(
           title: Text(s.response_details_title),
@@ -44,13 +45,16 @@ class CompletedResponseViewPage extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.error_outline,
-                      size: 64,
+                      size: context.adaptiveIcon(64.sp),
                       color: AppColors.error,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     Text(
                       state.message,
-                      style: const TextStyle(color: AppColors.error),
+                      style: TextStyle(
+                        color: AppColors.error,
+                        fontSize: context.adaptiveFont(14.sp),
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -106,13 +110,13 @@ class CompletedResponseViewPage extends StatelessWidget {
               child: Text(
                 details.surveyTitle!,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryText,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryText,
+                ),
               ),
             ),
           // Sections with questions
-          ..._buildSections(survey.sections!, answersMap),
+          ..._buildSections(context, survey.sections!, answersMap),
         ],
       );
     } else {
@@ -126,26 +130,29 @@ class CompletedResponseViewPage extends StatelessWidget {
               child: Text(
                 details.surveyTitle!,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryText,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryText,
+                ),
               ),
             ),
-          ...details.answers.map((answer) => _buildSimpleAnswerCard(answer)),
+          ...details.answers.map(
+            (answer) => _buildSimpleAnswerCard(context, answer),
+          ),
         ],
       );
     }
   }
 
   List<Widget> _buildSections(
+    BuildContext context,
     List<Section> sections,
     Map<int, String> answersMap,
   ) {
     final widgets = <Widget>[];
-    
+
     for (int i = 0; i < sections.length; i++) {
       final section = sections[i];
-      
+
       // Section Header
       widgets.add(
         Container(
@@ -165,18 +172,18 @@ class CompletedResponseViewPage extends StatelessWidget {
               if (section.title != null)
                 Text(
                   section.title!,
-                  style: const TextStyle(
-                    fontSize: 18,
+                  style: TextStyle(
+                    fontSize: context.adaptiveFont(18.sp),
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryText,
                   ),
                 ),
               if (section.description != null) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Text(
                   section.description!,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: context.adaptiveFont(14.sp),
                     color: AppColors.secondaryText,
                   ),
                 ),
@@ -194,7 +201,7 @@ class CompletedResponseViewPage extends StatelessWidget {
             widgets.add(
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: _buildQuestionWithAnswer(question, answerValue),
+                child: _buildQuestionWithAnswer(context, question, answerValue),
               ),
             );
           }
@@ -204,11 +211,7 @@ class CompletedResponseViewPage extends StatelessWidget {
       // Divider between sections (except after last section)
       if (i < sections.length - 1) {
         widgets.add(
-          const Divider(
-            height: 32,
-            thickness: 2,
-            color: AppColors.border,
-          ),
+          const Divider(height: 32, thickness: 2, color: AppColors.border),
         );
       }
     }
@@ -216,17 +219,29 @@ class CompletedResponseViewPage extends StatelessWidget {
     return widgets;
   }
 
-  Widget _buildQuestionWithAnswer(Question question, String answerValue) {
+  Widget _buildQuestionWithAnswer(
+    BuildContext context,
+    Question question,
+    String answerValue,
+  ) {
     // Parse answer value based on question type
     dynamic parsedValue = answerValue;
-    
+
     // Try to parse as number if question type is number
-    if (question.type?.name == 'number') {
+    if (question.type == QuestionType.number) {
       parsedValue = num.tryParse(answerValue);
     }
+    // Try to parse as rating
+    else if (question.type == QuestionType.rating) {
+      parsedValue = int.tryParse(answerValue);
+    }
+    // Try to parse as slider
+    else if (question.type == QuestionType.slider) {
+      parsedValue = double.tryParse(answerValue);
+    }
     // Try to parse as list if question type is checkbox or multi-select
-    else if (question.type?.name == 'checkbox' ||
-        question.type?.name == 'multiSelectGrid') {
+    else if (question.type == QuestionType.checkbox ||
+        question.type == QuestionType.multiSelectGrid) {
       try {
         parsedValue = answerValue.split(',').map((e) => e.trim()).toList();
       } catch (_) {
@@ -250,8 +265,8 @@ class CompletedResponseViewPage extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 12),
               child: Text(
                 question.label!,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: context.adaptiveFont(16.sp),
                   fontWeight: FontWeight.w600,
                   color: AppColors.primaryText,
                 ),
@@ -270,7 +285,10 @@ class CompletedResponseViewPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSimpleAnswerCard(ResponseAnswerDetail answer) {
+  Widget _buildSimpleAnswerCard(
+    BuildContext context,
+    ResponseAnswerDetail answer,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -284,17 +302,17 @@ class CompletedResponseViewPage extends StatelessWidget {
         children: [
           Text(
             answer.questionLabel,
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: context.adaptiveFont(16.sp),
               fontWeight: FontWeight.w600,
               color: AppColors.primaryText,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Text(
             answer.value,
-            style: const TextStyle(
-              fontSize: 14,
+            style: TextStyle(
+              fontSize: context.adaptiveFont(14.sp),
               color: AppColors.secondaryText,
             ),
           ),

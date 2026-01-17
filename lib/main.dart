@@ -45,10 +45,11 @@ class MyApp extends StatelessWidget {
             designSize: const Size(360, 800),
             minTextAdapt: true,
             splitScreenMode: true,
+            rebuildFactor: RebuildFactors.always,
             builder: (context, child) {
               return MaterialApp.router(
                 title: 'Accreditation App',
-                theme: appThemeData(),
+                theme: appThemeData(context),
                 debugShowCheckedModeBanner: false,
                 locale: state.language.locale,
                 localizationsDelegates: const [

@@ -437,6 +437,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("التحقق من العهدة"),
         "verifying_device_key": MessageLookupByLibrary.simpleMessage(
             "جارٍ التحقق من مفتاح الجهاز..."),
+        "view_completed_responses":
+            MessageLookupByLibrary.simpleMessage("عرض الاستجابات المكتملة"),
         "view_details": MessageLookupByLibrary.simpleMessage("عرض التفاصيل"),
         "view_survey_drafts":
             MessageLookupByLibrary.simpleMessage("عرض مسودات الاستطلاع"),

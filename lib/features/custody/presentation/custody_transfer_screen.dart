@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/utils/responsive_layout.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/custom_app_bar.dart';
@@ -61,14 +62,14 @@ class CustodyTransferScreen extends StatelessWidget {
                         Icon(
                           Icons.info_outline_rounded,
                           color: AppColors.primary,
-                          size: 24.sp,
+                          size: context.adaptiveIcon(24.sp),
                         ),
                         SizedBox(width: 12.w),
                         Expanded(
                           child: Text(
                             locale.transfer_info_message,
                             style: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: context.adaptiveFont(14.sp),
                               color: AppColors.primaryText,
                             ),
                           ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/utils/responsive_layout.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/routes/app_pages.dart';
 import '../../../core/routes/app_routes.dart';
@@ -97,14 +98,14 @@ class _ZoneViolationListenerState extends State<ZoneViolationListener> {
             child: Icon(
               Icons.gpp_maybe_rounded,
               color: AppColors.error,
-              size: 48.sp,
+              size: context.adaptiveIcon(48.sp),
             ),
           ),
           SizedBox(height: 24.h),
           Text(
             locale.zone_violation_title,
             style: TextStyle(
-              fontSize: 20.sp,
+              fontSize: context.adaptiveFont(20.sp),
               fontWeight: FontWeight.bold,
               color: AppColors.primaryText,
             ),
@@ -114,7 +115,7 @@ class _ZoneViolationListenerState extends State<ZoneViolationListener> {
           Text(
             locale.zone_violation_message,
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: context.adaptiveFont(14.sp),
               color: AppColors.secondaryText,
               height: 1.5,
             ),
@@ -137,7 +138,7 @@ class _ZoneViolationListenerState extends State<ZoneViolationListener> {
             ),
             child: Text(
               locale.ok.toUpperCase(),
-              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: context.adaptiveFont(15.sp), fontWeight: FontWeight.bold),
             ),
           ),
         ],

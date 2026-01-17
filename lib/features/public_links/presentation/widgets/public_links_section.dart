@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/widgets/error_state_widget.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../bloc/get_my_public_links/get_my_public_links_bloc.dart';
@@ -55,7 +56,7 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
                             child: Icon(
                               Icons.link_rounded,
                               color: AppColors.primary,
-                              size: 20.sp,
+                              size: context.adaptiveIcon(18.sp),
                             ),
                           ),
                           SizedBox(width: 12.w),
@@ -66,7 +67,7 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
                                 Text(
                                   s.public_links,
                                   style: TextStyle(
-                                    fontSize: 16.sp,
+                                    fontSize: context.adaptiveFont(14.sp),
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.primaryText,
                                   ),
@@ -82,7 +83,7 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
                                           state.links.length,
                                         ),
                                         style: TextStyle(
-                                          fontSize: 12.sp,
+                                          fontSize: context.adaptiveFont(10.sp),
                                           color: AppColors.secondaryText,
                                         ),
                                       );
@@ -90,7 +91,7 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
                                     return Text(
                                       s.tap_to_view,
                                       style: TextStyle(
-                                        fontSize: 12.sp,
+                                        fontSize: context.adaptiveFont(10.sp),
                                         color: AppColors.secondaryText,
                                       ),
                                     );
@@ -129,7 +130,7 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
                   tooltip: s.sync,
                   icon: Icon(
                     Icons.sync_rounded,
-                    size: 20.sp,
+                    size: context.adaptiveIcon(18.sp),
                     color: AppColors.primary,
                   ),
                 ),
@@ -210,13 +211,16 @@ class _PublicLinksSectionState extends State<PublicLinksSection> {
         children: [
           Icon(
             Icons.link_off_rounded,
-            size: 40.sp,
+            size: context.adaptiveIcon(40.sp),
             color: AppColors.secondaryText.withValues(alpha: 0.5),
           ),
           SizedBox(height: 8.h),
           Text(
             s.no_public_links,
-            style: TextStyle(fontSize: 14.sp, color: AppColors.secondaryText),
+            style: TextStyle(
+              fontSize: context.adaptiveFont(12.sp),
+              color: AppColors.secondaryText,
+            ),
           ),
         ],
       ),

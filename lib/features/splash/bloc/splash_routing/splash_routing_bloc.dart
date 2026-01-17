@@ -28,7 +28,6 @@ class SplashRoutingBloc extends Bloc<SplashRoutingEvent, SplashRoutingState> {
     } else {
       dest = SplashDestination.appReady;
     }
-
     emit(SplashLoaded(destination: dest));
   }
 }

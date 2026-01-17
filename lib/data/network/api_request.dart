@@ -141,7 +141,6 @@ class APIRequest {
     } else {
       headers.remove('Authorization');
     }
-
     // Add device cookie if available
     final deviceCookie = await DeviceCookieRepository.getDeviceCookie();
     if (deviceCookie != null && deviceCookie.isNotEmpty) {

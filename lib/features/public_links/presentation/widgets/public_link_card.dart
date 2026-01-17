@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../models/public_link.dart';
 import 'qr_code_dialog.dart';
 
@@ -22,7 +23,9 @@ class PublicLinkCard extends StatelessWidget {
     final url = publicLink.fullUrl;
 
     return Container(
-      padding: EdgeInsets.all(16.r),
+      padding: EdgeInsets.all(
+        context.responsive(12.r, tablet: 16.r, desktop: 20.r),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -46,7 +49,7 @@ class PublicLinkCard extends StatelessWidget {
                 child: Text(
                   publicLink.surveyTitle,
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: context.adaptiveFont(14.sp),
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryText,
                   ),
@@ -54,7 +57,7 @@ class PublicLinkCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              _buildStatusChip(status),
+              _buildStatusChip(context, status),
             ],
           ),
           SizedBox(height: 8.h),
@@ -72,17 +75,17 @@ class PublicLinkCard extends StatelessWidget {
                 trimCollapsedText: s.read_more,
                 trimExpandedText: ' ${s.show_less}',
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: context.adaptiveFont(11.sp),
                   color: AppColors.secondaryText,
                   height: 1.5,
                 ),
                 moreStyle: TextStyle(
-                  fontSize: 11.sp,
+                  fontSize: context.adaptiveFont(11.sp),
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
                 ),
                 lessStyle: TextStyle(
-                  fontSize: 11.sp,
+                  fontSize: context.adaptiveFont(11.sp),
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
                 ),
@@ -134,7 +137,7 @@ class PublicLinkCard extends StatelessWidget {
                 Text(
                   s.survey_link,
                   style: TextStyle(
-                    fontSize: 10.sp,
+                    fontSize: context.adaptiveFont(9.sp),
                     fontWeight: FontWeight.bold,
                     color: AppColors.secondaryText,
                   ),
@@ -148,7 +151,7 @@ class PublicLinkCard extends StatelessWidget {
                         child: Text(
                           url,
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: context.adaptiveFont(11.sp),
                             color: AppColors.primary,
                             decoration: TextDecoration.underline,
                           ),
@@ -180,7 +183,7 @@ class PublicLinkCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusChip(PublicLinkStatus status) {
+  Widget _buildStatusChip(BuildContext context, PublicLinkStatus status) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
       decoration: BoxDecoration(
@@ -190,12 +193,16 @@ class PublicLinkCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(status.icon, size: 12.sp, color: status.color),
+          Icon(
+            status.icon,
+            size: context.adaptiveIcon(10.sp),
+            color: status.color,
+          ),
           SizedBox(width: 4.w),
           Text(
             status.label.toUpperCase(),
             style: TextStyle(
-              fontSize: 10.sp,
+              fontSize: context.adaptiveFont(8.sp),
               fontWeight: FontWeight.bold,
               color: status.color,
             ),
@@ -252,11 +259,18 @@ class _InfoItem extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 14.sp, color: AppColors.secondaryText),
+        Icon(
+          icon,
+          size: context.adaptiveIcon(12.sp),
+          color: AppColors.secondaryText,
+        ),
         SizedBox(width: 4.w),
         Text(
           label,
-          style: TextStyle(fontSize: 11.sp, color: AppColors.secondaryText),
+          style: TextStyle(
+            fontSize: context.adaptiveFont(10.sp),
+            color: AppColors.secondaryText,
+          ),
         ),
       ],
     );
@@ -287,7 +301,11 @@ class _ActionButton extends StatelessWidget {
             color: AppColors.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8.r),
           ),
-          child: Icon(icon, size: 18.sp, color: AppColors.primary),
+          child: Icon(
+            icon,
+            size: context.adaptiveIcon(16.sp),
+            color: AppColors.primary,
+          ),
         ),
       ),
     );

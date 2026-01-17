@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/l10n/generated/l10n.dart';
-import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/custom_app_bar.dart';
 import '../../../core/utils/responsive_layout.dart';
 import '../../../core/services/device_local_metadata_service.dart';
@@ -38,16 +37,12 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _startLocationTracking() async {
-    // Get device ID and assignment ID from DeviceLocalMetadataService
     final metadataService = DeviceLocalMetadataService();
     final deviceId = await metadataService.getPhysicalDeviceId();
-    if (deviceId == null) {
-      return; // No device ID, skip location tracking
-    }
+    if (deviceId == null) return;
 
     final assignmentId = await metadataService.getAssignmentId();
 
-    // Start location tracking
     if (mounted) {
       context.read<DeviceLocationBloc>().add(
         StartLocationTrackingEvent(
@@ -65,27 +60,46 @@ class _MainScreenState extends State<MainScreen> {
         BlocListener<DeviceLocationBloc, DeviceLocationState>(
           listener: (context, state) {
             if (state is DeviceLocationWarningLogout) {
-              // Force logout when warning or outside zone
-              // This will be handled by the background service
-            } else if (state is DeviceLocationError) {
-              // Log error but don't stop tracking
+              // Forced logout logic if needed
             }
           },
         ),
       ],
       child: BlocBuilder<MainNavigationBloc, MainNavigationState>(
         builder: (context, state) {
-          if (ResponsiveLayout.isMobile(context)) {
-            return ZoomDrawer(
-              controller: _drawerController,
-              menuScreen: const MainDrawer(),
-              mainScreen: _MobileLayout(
-                currentTab: state.currentTab,
-                drawerController: _drawerController,
+          if (context.shouldShowSideBar) {
+            return Scaffold(
+              body: Row(
+                children: [
+                  MainSidebar(
+                    selectedTab: state.currentTab,
+                    onTabChanged: (tab) {
+                      context.read<MainNavigationBloc>().add(ChangeTab(tab));
+                    },
+                  ),
+                  const VerticalDivider(width: 1, thickness: 1),
+                  Expanded(
+                    child: Scaffold(
+                      appBar: CustomAppBar(
+                        title: state.currentTab.label(S.of(context)),
+                        showDrawerButton: false,
+                      ),
+                      body: _buildPage(state.currentTab),
+                    ),
+                  ),
+                ],
               ),
             );
           }
-          return _WebLayout(currentTab: state.currentTab);
+
+          return ZoomDrawer(
+            controller: _drawerController,
+            menuScreen: const MainDrawer(),
+            mainScreen: _MobileLayout(
+              currentTab: state.currentTab,
+              drawerController: _drawerController,
+            ),
+          );
         },
       ),
     );
@@ -119,161 +133,32 @@ class _MobileLayout extends StatelessWidget {
         children: [
           _buildPage(currentTab),
           Positioned(
-            left: 20.w,
-            right: 20.w,
-            bottom: 20.h,
-            child: FloatingBottomBar(
-              currentTab: currentTab,
-              onTabChanged: (tab) {
-                context.read<MainNavigationBloc>().add(ChangeTab(tab));
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _WebLayout extends StatelessWidget {
-  final MainNavTab currentTab;
-  const _WebLayout({required this.currentTab});
-
-  @override
-  Widget build(BuildContext context) {
-    final isTablet = ResponsiveLayout.isTablet(context);
-
-    return Scaffold(
-      body: Row(
-        children: [
-          MainSidebar(
-            selectedTab: currentTab,
-            isCollapsed: isTablet,
-            onTabChanged: (tab) {
-              context.read<MainNavigationBloc>().add(ChangeTab(tab));
-            },
-          ),
-          Expanded(
-            child: Column(
-              children: [
-                _WebHeader(currentTab: currentTab),
-                Expanded(child: _buildPage(currentTab)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _WebHeader extends StatelessWidget {
-  final MainNavTab currentTab;
-  const _WebHeader({required this.currentTab});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 64.h,
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.border.withValues(alpha: 0.5),
-            width: 1,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          if (ResponsiveLayout.isTablet(context)) ...[
-            IconButton(
-              icon: const Icon(Icons.menu_rounded, color: AppColors.primary),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            ),
-            SizedBox(width: 8.w),
-          ],
-          Text(
-            currentTab.label(S.of(context)),
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryText,
-            ),
-          ),
-          const Spacer(),
-          _HeaderIcon(icon: Icons.search_rounded, onTap: () {}),
-          SizedBox(width: 8.w),
-          _HeaderIcon(icon: Icons.notifications_none_rounded, onTap: () {}),
-          SizedBox(width: 16.w),
-          Container(
-            width: 1,
-            height: 24.h,
-            color: AppColors.border.withValues(alpha: 0.8),
-          ),
-          SizedBox(width: 16.w),
-          Row(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    "Researcher",
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryText,
-                      height: 1.2,
+            left: 0,
+            right: 0,
+            bottom: context.responsive(20.h, tablet: 24.h, desktop: 32.h),
+            child: context.isPhoneLandscape
+                ? const SizedBox.shrink() // Hide bottom bar on phone landscape
+                : Center(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: context.responsive(
+                          1.sw - 40.w,
+                          tablet: 300.w,
+                          desktop: 400.w,
+                        ),
+                      ),
+                      child: FloatingBottomBar(
+                        currentTab: currentTab,
+                        onTabChanged: (tab) {
+                          context.read<MainNavigationBloc>().add(
+                            ChangeTab(tab),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                  Text(
-                    "Field Team",
-                    style: TextStyle(
-                      fontSize: 10.sp,
-                      color: AppColors.secondaryText,
-                      height: 1.2,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(width: 12.w),
-              CircleAvatar(
-                radius: 16.r,
-                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                child: Icon(
-                  Icons.person_outline,
-                  color: AppColors.primary,
-                  size: 18.sp,
-                ),
-              ),
-            ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _HeaderIcon extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-
-  const _HeaderIcon({required this.icon, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8.r),
-      child: Container(
-        padding: EdgeInsets.all(8.r),
-        decoration: BoxDecoration(
-          color: AppColors.muted.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(8.r),
-        ),
-        child: Icon(icon, color: AppColors.secondaryText, size: 20.sp),
       ),
     );
   }

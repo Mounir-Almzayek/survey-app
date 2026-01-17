@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 
 class CustomBackButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -25,7 +26,7 @@ class CustomBackButton extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Icon(
           Icons.arrow_back_rounded,
-          size: 18.sp,
+          size: context.adaptiveIcon(18.sp),
           color: AppColors.primary,
         ),
       ),

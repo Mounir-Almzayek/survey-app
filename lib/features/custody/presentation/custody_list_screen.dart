@@ -11,6 +11,7 @@ import '../bloc/custody_list/custody_list_bloc.dart';
 import '../bloc/custody_list/custody_list_event.dart';
 import '../bloc/custody_list/custody_list_state.dart';
 import '../../../core/widgets/infinite_list_view_widget.dart';
+import '../../../core/utils/responsive_layout.dart';
 import 'widgets/custody_card.dart';
 import 'custody_transfer_screen.dart';
 import 'custody_verification_screen.dart';
@@ -38,7 +39,9 @@ class _CustodyListScreenState extends State<CustodyListScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: 100.h),
+        padding: EdgeInsets.only(
+          bottom: context.responsive(100.h, tablet: 120.h, desktop: 140.h),
+        ),
         child: FloatingActionButton.extended(
           onPressed: () {
             Navigator.push(
@@ -89,40 +92,60 @@ class _CustodyListScreenState extends State<CustodyListScreen> {
               );
             }
 
-            return InfiniteListViewWidget(
-              scrollController: _scrollController,
-              items: state.records,
-              isLoading: state.isFetchingMore,
-              hasMoreData: state.hasMoreData,
-              fetchMoreItems: () async {
-                context.read<CustodyListBloc>().add(const LoadNextPage());
-              },
-              onRefresh: () async {
-                context.read<CustodyListBloc>().add(
-                  const RefreshCustodyRecords(),
-                );
-              },
-              padding: EdgeInsets.all(16.w),
-              itemBuilder: (context, record) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 12.h),
-                  child: CustodyCard(
-                    record: record,
-                    onVerify: record.isPending
-                        ? () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CustodyVerificationScreen(
-                                  custodyId: record.id,
-                                ),
-                              ),
-                            );
-                          }
-                        : null,
+            return Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: context.responsive(
+                    1.sw,
+                    tablet: 600.w,
+                    desktop: 800.w,
                   ),
-                );
-              },
+                ),
+                child: InfiniteListViewWidget(
+                  scrollController: _scrollController,
+                  items: state.records,
+                  isLoading: state.isFetchingMore,
+                  hasMoreData: state.hasMoreData,
+                  fetchMoreItems: () async {
+                    context.read<CustodyListBloc>().add(const LoadNextPage());
+                  },
+                  onRefresh: () async {
+                    context.read<CustodyListBloc>().add(
+                      const RefreshCustodyRecords(),
+                    );
+                  },
+                  padding: EdgeInsets.all(
+                    context.responsive(16.w, tablet: 24.w, desktop: 32.w),
+                  ),
+                  itemBuilder: (context, record) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: context.responsive(
+                          12.h,
+                          tablet: 16.h,
+                          desktop: 20.h,
+                        ),
+                      ),
+                      child: CustodyCard(
+                        record: record,
+                        onVerify: record.isPending
+                            ? () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CustodyVerificationScreen(
+                                          custodyId: record.id,
+                                        ),
+                                  ),
+                                );
+                              }
+                            : null,
+                      ),
+                    );
+                  },
+                ),
+              ),
             );
           }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 
 class LoadingWidget extends StatelessWidget {
   final bool withPadding;
@@ -32,8 +33,8 @@ class LoadingWidget extends StatelessWidget {
           ],
         ),
         child: SizedBox(
-          width: 32.w,
-          height: 32.w,
+          width: context.adaptiveIcon(28.w),
+          height: context.adaptiveIcon(28.w),
           child: const CircularProgressIndicator(
             color: AppColors.primary,
             strokeWidth: 3,
@@ -54,7 +55,7 @@ class LoadingWidget extends StatelessWidget {
               Text(
                 message!,
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: context.adaptiveFont(13.sp),
                   color: AppColors.secondaryText,
                   fontWeight: FontWeight.w500,
                 ),

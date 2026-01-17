@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
@@ -54,7 +55,7 @@ class FilePickerWidget extends StatelessWidget {
                   child: Text(
                     title!,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: context.adaptiveFont(14.sp),
                       fontWeight: FontWeight.w600,
                       color: AppColors.primaryText,
                     ),
@@ -127,7 +128,7 @@ class FilePickerWidget extends StatelessWidget {
               ),
               child: Icon(
                 Icons.attach_file_rounded,
-                size: 48.sp,
+                size: context.adaptiveIcon(48.sp),
                 color: AppColors.primary,
               ),
             ),
@@ -135,7 +136,7 @@ class FilePickerWidget extends StatelessWidget {
             Text(
               locale.select_file,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: context.adaptiveFont(14.sp),
                 color: AppColors.primaryText,
                 fontWeight: FontWeight.w600,
               ),
@@ -143,7 +144,7 @@ class FilePickerWidget extends StatelessWidget {
             SizedBox(height: 4.h),
             Text(
               locale.upload_file,
-              style: TextStyle(fontSize: 12.sp, color: AppColors.secondaryText),
+              style: TextStyle(fontSize: context.adaptiveFont(12.sp), color: AppColors.secondaryText),
             ),
           ],
         ),
@@ -177,7 +178,7 @@ class FilePickerWidget extends StatelessWidget {
             child: Icon(
               _getFileIcon(file),
               color: AppColors.primary,
-              size: 24.sp,
+              size: context.adaptiveIcon(24.sp),
             ),
           ),
           SizedBox(width: 16.w),
@@ -188,7 +189,7 @@ class FilePickerWidget extends StatelessWidget {
                 Text(
                   file.fileName ?? file.file.name,
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: context.adaptiveFont(14.sp),
                     fontWeight: FontWeight.w600,
                     color: AppColors.primaryText,
                   ),
@@ -199,7 +200,7 @@ class FilePickerWidget extends StatelessWidget {
                 Text(
                   _getFileSize(file),
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: context.adaptiveFont(12.sp),
                     color: AppColors.secondaryText,
                   ),
                 ),
@@ -215,7 +216,7 @@ class FilePickerWidget extends StatelessWidget {
               icon: Icon(
                 Icons.close_rounded,
                 color: AppColors.error,
-                size: 20.sp,
+                size: context.adaptiveIcon(20.sp),
               ),
               onPressed: () {
                 context.read<UploadBloc>().add(const ClearUploadsEvent());
@@ -264,7 +265,7 @@ class FilePickerWidget extends StatelessWidget {
                 child: Icon(
                   _getFileIcon(progress.file),
                   color: AppColors.primary,
-                  size: 24.sp,
+                  size: context.adaptiveIcon(24.sp),
                 ),
               ),
               SizedBox(width: 16.w),
@@ -275,7 +276,7 @@ class FilePickerWidget extends StatelessWidget {
                     Text(
                       progress.file.fileName ?? progress.file.file.name,
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: context.adaptiveFont(14.sp),
                         fontWeight: FontWeight.w600,
                         color: AppColors.primaryText,
                       ),
@@ -299,7 +300,7 @@ class FilePickerWidget extends StatelessWidget {
                         Text(
                           locale.uploading,
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: context.adaptiveFont(12.sp),
                             color: AppColors.secondaryText,
                             fontWeight: FontWeight.w500,
                           ),
@@ -307,7 +308,7 @@ class FilePickerWidget extends StatelessWidget {
                         Text(
                           '${(progressValue * 100).toInt()}%',
                           style: TextStyle(
-                            fontSize: 12.sp,
+                            fontSize: context.adaptiveFont(12.sp),
                             color: AppColors.primary,
                             fontWeight: FontWeight.w600,
                           ),
@@ -354,7 +355,7 @@ class FilePickerWidget extends StatelessWidget {
                 ),
               ],
             ),
-            child: Icon(Icons.check_rounded, color: Colors.white, size: 24.sp),
+            child: Icon(Icons.check_rounded, color: Colors.white, size: context.adaptiveIcon(24.sp)),
           ),
           SizedBox(width: 16.w),
           Expanded(
@@ -364,7 +365,7 @@ class FilePickerWidget extends StatelessWidget {
                 Text(
                   locale.uploaded,
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: context.adaptiveFont(14.sp),
                     fontWeight: FontWeight.w600,
                     color: AppColors.success,
                   ),
@@ -373,7 +374,7 @@ class FilePickerWidget extends StatelessWidget {
                 Text(
                   locale.upload_success,
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: context.adaptiveFont(12.sp),
                     color: AppColors.secondaryText,
                   ),
                 ),

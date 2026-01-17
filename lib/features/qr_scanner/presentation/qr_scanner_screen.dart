@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../core/utils/responsive_layout.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/loading_widget.dart';
@@ -120,7 +121,7 @@ class _QrScannerScreenState extends State<QrScannerScreen>
         title: Text(
           locale.qr_scanner,
           style: TextStyle(
-            fontSize: 20.sp,
+            fontSize: context.adaptiveFont(20.sp),
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -190,14 +191,14 @@ class _QrScannerScreenState extends State<QrScannerScreen>
             children: [
               Icon(
                 Icons.camera_alt_outlined,
-                size: 80.sp,
+                size: context.adaptiveIcon(80.sp),
                 color: AppColors.primary,
               ),
               SizedBox(height: 24.h),
               Text(
                 locale.camera_permission_required,
                 style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: context.adaptiveFont(18.sp),
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryText,
                 ),
@@ -363,7 +364,7 @@ class _ScannerOverlayState extends State<_ScannerOverlay>
                 widget.locale.place_qr_code,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16.sp,
+                  fontSize: context.adaptiveFont(16.sp),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -400,7 +401,7 @@ class _ScannerOverlayState extends State<_ScannerOverlay>
                   child: Icon(
                     widget.isTorchOn ? Icons.flash_on : Icons.flash_off,
                     color: Colors.white,
-                    size: 30.sp,
+                    size: context.adaptiveIcon(30.sp),
                   ),
                 ),
               ),
@@ -409,7 +410,7 @@ class _ScannerOverlayState extends State<_ScannerOverlay>
                 widget.isTorchOn ? "Flash ON" : "Flash OFF",
                 style: TextStyle(
                   color: Colors.white70,
-                  fontSize: 12.sp,
+                  fontSize: context.adaptiveFont(12.sp),
                   fontWeight: FontWeight.bold,
                 ),
               ),

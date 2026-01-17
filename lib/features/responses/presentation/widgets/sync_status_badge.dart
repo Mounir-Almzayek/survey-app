@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../models/response_status.dart';
 
@@ -44,7 +46,7 @@ class SyncStatusBadge extends StatelessWidget {
         label,
         style: TextStyle(
           color: color,
-          fontSize: 11,
+          fontSize: context.adaptiveFont(11.sp),
           fontWeight: FontWeight.w500,
         ),
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/survey_navigation/survey_navigation_bloc.dart';
 import '../../bloc/save_section/save_section_bloc.dart';
+import '../../repository/assignment_local_repository.dart';
 import '../widgets/survey_intro_widget.dart';
 import '../widgets/survey_completion_widget.dart';
 import '../widgets/survey_section_widget.dart';
@@ -34,8 +35,25 @@ class SurveyAnsweringScreen extends StatelessWidget {
               final isLastSection = navBloc.state.isLastSection;
 
               if (state.response.isComplete || isLastSection) {
-                // Keep completed response - do not delete it
-                // The response will remain in localResponseIds for viewing later
+                // 1. Store as completed locally
+                if (state.responseId != null && navBloc.state.survey != null) {
+                  final surveyId = navBloc.state.survey!.id;
+                  final responseId = state.responseId!;
+
+                  await AssignmentLocalRepository.addCompletedResponse(
+                    surveyId,
+                    responseId,
+                  );
+
+                  // 2. Remove from local drafts/responses list
+                  await AssignmentLocalRepository.unlinkResponseFromSurvey(
+                    surveyId,
+                    responseId,
+                  );
+                  await AssignmentLocalRepository.removeResponseDraft(
+                    responseId,
+                  );
+                }
 
                 // Move to completion step
                 navBloc.add(CompleteSurvey());

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/utils/responsive_layout.dart';
 import '../../../core/widgets/loading_widget.dart';
 import '../bloc/image_download/image_download_bloc.dart';
 
@@ -33,7 +35,7 @@ class NetworkImageViewer extends StatelessWidget {
                   return const LoadingWidget();
                 },
                 errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.error, size: 48);
+                  return Icon(Icons.error, size: context.adaptiveIcon(48.sp));
                 },
               ),
               if (state is ImageDownloadLoading ||

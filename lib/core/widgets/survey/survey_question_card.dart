@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../styles/app_colors.dart';
 import '../../models/survey/question_validation_model.dart';
+import '../../utils/responsive_layout.dart';
 
 class SurveyQuestionCard extends StatelessWidget {
   final String? label;
@@ -29,8 +30,13 @@ class SurveyQuestionCard extends StatelessWidget {
     final locale = Localizations.localeOf(context).languageCode;
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
-      padding: EdgeInsets.all(16.r),
+      margin: EdgeInsets.symmetric(
+        vertical: 8.h,
+        horizontal: context.responsive(16.w, tablet: 20.w, desktop: 24.w),
+      ),
+      padding: EdgeInsets.all(
+        context.responsive(16.r, tablet: 20.r, desktop: 24.r),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -55,7 +61,7 @@ class SurveyQuestionCard extends StatelessWidget {
             text: TextSpan(
               text: label,
               style: TextStyle(
-                fontSize: 15.sp,
+                fontSize: context.adaptiveFont(14.sp),
                 fontWeight: FontWeight.w600,
                 color: AppColors.primaryText,
                 fontFamily: 'Cairo', // Use app font
@@ -66,7 +72,7 @@ class SurveyQuestionCard extends StatelessWidget {
                     text: ' *',
                     style: TextStyle(
                       color: AppColors.destructive,
-                      fontSize: 15.sp,
+                      fontSize: context.adaptiveFont(14.sp),
                     ),
                   ),
               ],
@@ -76,7 +82,10 @@ class SurveyQuestionCard extends StatelessWidget {
             SizedBox(height: 4.h),
             Text(
               helpText!,
-              style: TextStyle(fontSize: 12.sp, color: AppColors.secondaryText),
+              style: TextStyle(
+                fontSize: context.adaptiveFont(11.sp),
+                color: AppColors.secondaryText,
+              ),
             ),
           ],
           SizedBox(height: 12.h),
@@ -124,7 +133,7 @@ class SurveyQuestionCard extends StatelessWidget {
                   child: Text(
                     displayText,
                     style: TextStyle(
-                      fontSize: 11.sp,
+                      fontSize: context.adaptiveFont(10.sp),
                       color: AppColors.secondaryText,
                       fontWeight: FontWeight.w500,
                     ),
@@ -138,7 +147,7 @@ class SurveyQuestionCard extends StatelessWidget {
             Text(
               errorText!,
               style: TextStyle(
-                fontSize: 12.sp,
+                fontSize: context.adaptiveFont(11.sp),
                 color: AppColors.destructive,
                 fontWeight: FontWeight.w500,
               ),

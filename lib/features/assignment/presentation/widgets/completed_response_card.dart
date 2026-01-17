@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../responses/models/response.dart';
 import '../../../responses/models/response_status.dart';
@@ -51,9 +53,9 @@ class CompletedResponseCard extends StatelessWidget {
                           color: AppColors.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.assignment_turned_in_rounded,
-                          size: 20,
+                          size: context.adaptiveIcon(20.sp),
                           color: AppColors.primary,
                         ),
                       ),
@@ -64,8 +66,8 @@ class CompletedResponseCard extends StatelessWidget {
                           children: [
                             Text(
                               _formatId(response.id),
-                              style: const TextStyle(
-                                fontSize: 16,
+                              style: TextStyle(
+                                fontSize: context.adaptiveFont(16.sp),
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryText,
                               ),
@@ -73,8 +75,8 @@ class CompletedResponseCard extends StatelessWidget {
                             if (response.survey?.title != null)
                               Text(
                                 response.survey!.title!,
-                                style: const TextStyle(
-                                  fontSize: 12,
+                                style: TextStyle(
+                                  fontSize: context.adaptiveFont(12.sp),
                                   color: AppColors.secondaryText,
                                 ),
                                 maxLines: 1,
@@ -86,13 +88,14 @@ class CompletedResponseCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                _buildStatusChip(response.status),
+                _buildStatusChip(context, response.status),
               ],
             ),
             const SizedBox(height: 16),
             // Completion Date and Time
             if (response.endedAt != null)
               _buildInfoRow(
+                context: context,
                 icon: Icons.check_circle_outline_rounded,
                 iconColor: AppColors.success,
                 label: 'Completed at',
@@ -102,6 +105,7 @@ class CompletedResponseCard extends StatelessWidget {
             // Survey Expiration Date and Time
             if (response.survey?.availabilityEndAt != null)
               _buildInfoRow(
+                context: context,
                 icon: Icons.event_outlined,
                 iconColor: AppColors.warning,
                 label: 'Survey expires at',
@@ -112,6 +116,7 @@ class CompletedResponseCard extends StatelessWidget {
             const SizedBox(height: 8),
             // Duration
             _buildInfoRow(
+              context: context,
               icon: Icons.timer_outlined,
               iconColor: AppColors.secondaryText,
               label: 'Duration',
@@ -124,6 +129,7 @@ class CompletedResponseCard extends StatelessWidget {
   }
 
   Widget _buildInfoRow({
+    required BuildContext context,
     required IconData icon,
     required Color iconColor,
     required String label,
@@ -131,7 +137,7 @@ class CompletedResponseCard extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: iconColor),
+        Icon(icon, size: context.adaptiveIcon(16.sp), color: iconColor),
         const SizedBox(width: 8),
         Expanded(
           child: Row(
@@ -140,14 +146,14 @@ class CompletedResponseCard extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: context.adaptiveFont(12.sp),
                   color: AppColors.secondaryText.withOpacity(0.8),
                 ),
               ),
               Text(
                 value,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: TextStyle(
+                  fontSize: context.adaptiveFont(12.sp),
                   fontWeight: FontWeight.w600,
                   color: AppColors.primaryText,
                 ),
@@ -159,7 +165,7 @@ class CompletedResponseCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusChip(ResponseStatus status) {
+  Widget _buildStatusChip(BuildContext context, ResponseStatus status) {
     String label;
     Color color;
 
@@ -191,7 +197,7 @@ class CompletedResponseCard extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 10,
+          fontSize: context.adaptiveFont(10.sp),
           fontWeight: FontWeight.bold,
           color: color,
         ),

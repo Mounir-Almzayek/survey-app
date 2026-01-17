@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../styles/app_colors.dart';
+import '../utils/responsive_layout.dart';
 
 /// Unified Snackbar Types
 enum SnackbarType { success, error, info, warning }
+// ... (rest of configuration classes same)
 
 /// Snackbar Configuration
 class SnackbarConfig {
@@ -196,13 +198,13 @@ class _SnackbarContent extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildIcon(),
+          _buildIcon(context),
           SizedBox(width: 12.w),
           Expanded(
             child: Text(
               message,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: context.adaptiveFont(13.sp),
                 fontWeight: FontWeight.w600,
                 color: _getTextColor(),
               ),
@@ -221,7 +223,7 @@ class _SnackbarContent extends StatelessWidget {
     );
   }
 
-  Widget _buildIcon() {
+  Widget _buildIcon(BuildContext context) {
     return Container(
       width: 28.w,
       height: 28.w,
@@ -229,7 +231,11 @@ class _SnackbarContent extends StatelessWidget {
         color: _getIconBackgroundColor(),
         shape: BoxShape.circle,
       ),
-      child: Icon(_getIcon(), size: 18.sp, color: Colors.white),
+      child: Icon(
+        _getIcon(),
+        size: context.adaptiveIcon(16.sp),
+        color: Colors.white,
+      ),
     );
   }
 
@@ -245,7 +251,7 @@ class _SnackbarContent extends StatelessWidget {
         child: Text(
           actionLabel!,
           style: TextStyle(
-            fontSize: 12.sp,
+            fontSize: context.adaptiveFont(11.sp),
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -267,7 +273,7 @@ class _SnackbarContent extends StatelessWidget {
         ),
         child: Icon(
           Icons.close_rounded,
-          size: 12.sp,
+          size: context.adaptiveIcon(10.sp),
           color: _getTextColor().withOpacity(0.6),
         ),
       ),
@@ -410,13 +416,22 @@ class _OverlaySnackbarWidgetState extends State<_OverlaySnackbarWidget>
             color: Colors.transparent,
             child: SafeArea(
               child: Center(
-                child: _SnackbarContent(
-                  message: widget.message,
-                  type: widget.type,
-                  showCloseButton: widget.config.showCloseButton,
-                  actionLabel: widget.config.actionLabel,
-                  onActionTap: widget.config.onActionTap,
-                  onClose: widget.onDismiss,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: context.responsive(
+                      double.infinity,
+                      tablet: 500.w,
+                      desktop: 600.w,
+                    ),
+                  ),
+                  child: _SnackbarContent(
+                    message: widget.message,
+                    type: widget.type,
+                    showCloseButton: widget.config.showCloseButton,
+                    actionLabel: widget.config.actionLabel,
+                    onActionTap: widget.config.onActionTap,
+                    onClose: widget.onDismiss,
+                  ),
                 ),
               ),
             ),
