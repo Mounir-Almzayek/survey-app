@@ -89,7 +89,7 @@ class AssignmentLocalRepository {
     try {
       final prefs = await SharedPreferences.getInstance();
       final key = '$_responseDraftPrefix$responseId';
-      await prefs.setString(key, jsonEncode(request.toJson()));
+      await prefs.setString(key, jsonEncode(request.toLocalJson()));
     } catch (_) {
       // Ignore
     }

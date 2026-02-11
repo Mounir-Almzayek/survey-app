@@ -1,25 +1,25 @@
 part of 'start_response_bloc.dart';
 
 abstract class StartResponseState {
-  final int? surveyId;
+  final StartResponseRequest? request;
 
-  StartResponseState({this.surveyId});
+  StartResponseState({this.request});
 }
 
 class StartResponseInitial extends StartResponseState {
-  StartResponseInitial({super.surveyId});
+  StartResponseInitial({super.request});
 }
 
 class StartResponseLoading extends StartResponseState {
-  StartResponseLoading({super.surveyId});
+  StartResponseLoading({super.request});
 }
 
 class StartResponseSuccess extends StartResponseState {
   final StartResponseResponse response;
-  StartResponseSuccess(this.response, {super.surveyId});
+  StartResponseSuccess(this.response, {super.request});
 }
 
 class StartResponseError extends StartResponseState {
   final String message;
-  StartResponseError(this.message, {super.surveyId});
+  StartResponseError(this.message, {super.request});
 }

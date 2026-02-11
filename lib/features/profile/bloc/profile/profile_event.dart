@@ -14,4 +14,3 @@ class LoadProfile extends ProfileEvent {
 class Logout extends ProfileEvent {
   const Logout();
 }
-

@@ -14,6 +14,7 @@ class CustodyRecord extends Equatable {
   final int? toUserId;
   final String? toUserName;
   final String? toUserEmail;
+  final String? verificationCode;
   final DateTime? verifiedAt;
   final String? notes;
   final DateTime createdAt;
@@ -32,6 +33,7 @@ class CustodyRecord extends Equatable {
     this.toUserId,
     this.toUserName,
     this.toUserEmail,
+    this.verificationCode,
     this.verifiedAt,
     this.notes,
     required this.createdAt,
@@ -44,7 +46,8 @@ class CustodyRecord extends Equatable {
     return CustodyRecord(
       id: json['id'] as int,
       physicalDeviceId: json['physical_device_id'] as int,
-      physicalDeviceName: json['physical_device']?['name'] as String? ??
+      physicalDeviceName:
+          json['physical_device']?['name'] as String? ??
           json['physical_device_name'] as String? ??
           '',
       physicalDeviceType: json['physical_device']?['type'] as String?,
@@ -55,6 +58,7 @@ class CustodyRecord extends Equatable {
       toUserId: json['to_user_id'] as int?,
       toUserName: json['to_user']?['name'] as String?,
       toUserEmail: json['to_user']?['email'] as String?,
+      verificationCode: json['verification_code'] as String? ?? '',
       verifiedAt: json['verified_at'] != null
           ? DateTime.parse(json['verified_at'] as String)
           : null,
@@ -81,6 +85,7 @@ class CustodyRecord extends Equatable {
       'to_user_id': toUserId,
       'to_user_name': toUserName,
       'to_user_email': toUserEmail,
+      'verification_code': verificationCode,
       'verified_at': verifiedAt?.toIso8601String(),
       'notes': notes,
       'created_at': createdAt.toIso8601String(),
@@ -111,22 +116,22 @@ class CustodyRecord extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        physicalDeviceId,
-        physicalDeviceName,
-        physicalDeviceType,
-        physicalDeviceStatus,
-        fromUserId,
-        fromUserName,
-        fromUserEmail,
-        toUserId,
-        toUserName,
-        toUserEmail,
-        verifiedAt,
-        notes,
-        createdAt,
-        updatedAt,
-        deletedAt,
-      ];
+    id,
+    physicalDeviceId,
+    physicalDeviceName,
+    physicalDeviceType,
+    physicalDeviceStatus,
+    fromUserId,
+    fromUserName,
+    fromUserEmail,
+    toUserId,
+    toUserName,
+    toUserEmail,
+    verificationCode,
+    verifiedAt,
+    notes,
+    createdAt,
+    updatedAt,
+    deletedAt,
+  ];
 }
-

@@ -55,7 +55,7 @@ class _SurveyCompletionWidgetState extends State<SurveyCompletionWidget>
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
-    final goodbye = widget.survey.goodbyeMessage ?? s.thank_you_for_response;
+    final goodbye = widget.survey.goodbayMessage ?? s.thank_you_for_response;
 
     return Scaffold(
       backgroundColor: Colors.white,

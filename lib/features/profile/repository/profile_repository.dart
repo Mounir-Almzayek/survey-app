@@ -1,19 +1,28 @@
 import 'profile_local_repository.dart';
 import 'profile_online_repository.dart';
-import '../models/user.dart';
+import '../models/researcher_profile_response_model.dart';
 
 class ProfileRepository {
   /// Get profile data (chooses between local and online)
-  static Future<User> getProfile({bool forceOnline = false}) async {
+  static Future<ResearcherProfileResponseModel> getProfile({
+    bool forceOnline = false,
+  }) async {
     if (forceOnline) {
-      final user = await ProfileOnlineRepository.getProfile();
-      await ProfileLocalRepository.saveUser(user);
-      return user;
+      final profile = await ProfileOnlineRepository.getResearcherProfile();
+      await ProfileLocalRepository.saveResearcherProfile(profile);
+      return profile;
     }
 
-    final onlineUser = await ProfileOnlineRepository.getProfile();
-    await ProfileLocalRepository.saveUser(onlineUser);
-    return onlineUser;
+    // Try to get from local storage first
+    final localProfile = await ProfileLocalRepository.getResearcherProfile();
+    if (localProfile != null) {
+      return localProfile;
+    }
+
+    // If no local data, fetch from online
+    final onlineProfile = await ProfileOnlineRepository.getResearcherProfile();
+    await ProfileLocalRepository.saveResearcherProfile(onlineProfile);
+    return onlineProfile;
   }
 
   /// Perform logout (online and local)

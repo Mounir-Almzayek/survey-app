@@ -382,5 +382,19 @@
   "clear_all": "إخلاء الكل",
   "view_completed_responses": "عرض الاستجابات المكتملة",
   "to": "ل",
-  "from": "من"
+  "from": "من",
+  "demographics_title": "بيانات المستجيب",
+  "gender": "الجنس",
+  "gender_male": "ذكر",
+  "gender_female": "أنثى",
+  "supervisor": "المشرف",
+  "noSupervisorAssigned": "لم يتم تعيين مشرف",
+  "noAssignments": "لا توجد تكليفات متاحة",
+  "assignments": "التكليفات",
+  "boundedDevice": "جهاز مركز",
+  "unboundedDevice": "جهاز شخصي",
+  "progress": "التقدم",
+  "age_group": "الفئة العمرية",
+  "select_gender": "اختر الجنس",
+  "select_age_group": "اختر الفئة العمرية"
 }

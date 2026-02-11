@@ -1,15 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../../../core/utils/async_runner.dart';
-import '../../models/user.dart';
+import '../../models/researcher_profile_response_model.dart';
 import '../../repository/profile_repository.dart';
-import '../../repository/profile_local_repository.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  final AsyncRunner<User> _profileRunner = AsyncRunner<User>();
+  final AsyncRunner<ResearcherProfileResponseModel> _profileRunner =
+      AsyncRunner<ResearcherProfileResponseModel>();
   final AsyncRunner<void> _logoutRunner = AsyncRunner<void>();
 
   ProfileBloc() : super(ProfileInitial()) {
@@ -25,19 +25,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     await _profileRunner.run(
       onlineTask: (_) async {
-        return await ProfileRepository.getProfile();
+        return await ProfileRepository.getProfile(forceOnline: true);
       },
       offlineTask: (_) async {
-        final user = await ProfileLocalRepository.getUser();
-        if (user == null) throw Exception('No local user data');
+        final user = await ProfileRepository.getProfile();
         return user;
       },
       checkConnectivity: true,
-      onSuccess: (user) {
-        if (!emit.isDone) emit(ProfileLoaded(user, isOffline: false));
+      onSuccess: (profile) {
+        if (!emit.isDone) emit(ProfileLoaded(profile, isOffline: false));
       },
-      onOffline: (user) {
-        if (!emit.isDone) emit(ProfileLoaded(user, isOffline: true));
+      onOffline: (profile) {
+        if (!emit.isDone) emit(ProfileLoaded(profile, isOffline: true));
       },
       onError: (error) {
         if (!emit.isDone) emit(ProfileError(error.toString()));

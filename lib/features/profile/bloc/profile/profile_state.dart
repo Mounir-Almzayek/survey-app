@@ -12,12 +12,12 @@ class ProfileInitial extends ProfileState {}
 class ProfileLoading extends ProfileState {}
 
 class ProfileLoaded extends ProfileState {
-  final User user;
+  final ResearcherProfileResponseModel profile;
   final bool isOffline;
-  const ProfileLoaded(this.user, {this.isOffline = false});
+  const ProfileLoaded(this.profile, {this.isOffline = false});
 
   @override
-  List<Object?> get props => [user, isOffline];
+  List<Object?> get props => [profile, isOffline];
 }
 
 class ProfileError extends ProfileState {

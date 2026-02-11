@@ -36,7 +36,7 @@ class UploadOnlineRepository {
 
       // Extract URL from response
       final data = response.data['data'] ?? response.data;
-      return data['url'] ?? data['imageUrl'] ?? '';
+      return data['path'] ?? data['url'] ?? data['imageUrl'] ?? '';
     } catch (e) {
       throw Exception('Failed to upload image: ${e.toString()}');
     }
@@ -67,7 +67,7 @@ class UploadOnlineRepository {
 
       // Extract URL from response
       final data = response.data['data'] ?? response.data;
-      return data['url'] ?? data['fileUrl'] ?? '';
+      return data['path'] ?? data['url'] ?? data['fileUrl'] ?? '';
     } catch (e) {
       throw Exception('Failed to upload file: ${e.toString()}');
     }

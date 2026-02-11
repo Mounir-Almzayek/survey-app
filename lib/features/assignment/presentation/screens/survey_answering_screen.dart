@@ -9,7 +9,9 @@ import '../widgets/survey_section_widget.dart';
 
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
+import '../widgets/demographics_dialog.dart';
 
+import '../../../../core/enums/survey_enums.dart';
 import '../../bloc/start_response/start_response_bloc.dart' as start;
 
 class SurveyAnsweringScreen extends StatelessWidget {
@@ -105,15 +107,33 @@ class SurveyAnsweringScreen extends StatelessWidget {
         return SurveyIntroWidget(
           survey: state.survey!,
           isLoading: isLoading,
-          onStart: () {
+          onStart: () async {
             if (state.responseId == null) {
-              // Trigger starting a new response online/offline
-              context.read<start.StartResponseBloc>().add(
-                start.UpdateSurveyId(state.survey!.id),
+              // Show demographics dialog to collect required data
+              final result = await showDialog<Map<String, dynamic>>(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const DemographicsDialog(),
               );
-              context.read<start.StartResponseBloc>().add(
-                start.StartSurveyResponse(),
-              );
+
+              if (result != null && context.mounted) {
+                final gender = result['gender'] as Gender;
+                final ageGroup = result['ageGroup'] as AgeGroup;
+
+                // Trigger starting a new response online/offline
+                context.read<start.StartResponseBloc>().add(
+                  start.UpdateSurveyId(state.survey!.id),
+                );
+                context.read<start.StartResponseBloc>().add(
+                  start.UpdateGender(gender),
+                );
+                context.read<start.StartResponseBloc>().add(
+                  start.UpdateAgeGroup(ageGroup),
+                );
+                context.read<start.StartResponseBloc>().add(
+                  start.StartSurveyResponse(),
+                );
+              }
             } else {
               // Already have an ID (resume), just move forward
               context.read<SurveyNavigationBloc>().add(StartSurvey());

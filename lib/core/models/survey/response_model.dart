@@ -13,6 +13,8 @@ class Response extends Equatable {
   final DateTime? startedAt;
   final DateTime? endedAt;
   final int? durationSec;
+  final Gender? gender;
+  final AgeGroup? ageGroup;
   final String? rejectionReason;
   final String? ipAddress;
   final DateTime? createdAt;
@@ -32,6 +34,8 @@ class Response extends Equatable {
     this.startedAt,
     this.endedAt,
     this.durationSec,
+    this.gender,
+    this.ageGroup,
     this.rejectionReason,
     this.ipAddress,
     this.createdAt,
@@ -58,6 +62,10 @@ class Response extends Equatable {
           ? DateTime.tryParse(json['ended_at'].toString())
           : null,
       durationSec: json['duration_sec'],
+      gender: json['gender'] != null ? Gender.fromJson(json['gender']) : null,
+      ageGroup: json['age_group'] != null
+          ? AgeGroup.fromJson(json['age_group'])
+          : null,
       rejectionReason: json['rejection_reason'],
       ipAddress: json['ip_address'],
       createdAt: json['created_at'] != null
@@ -89,6 +97,8 @@ class Response extends Equatable {
       'started_at': startedAt?.toIso8601String(),
       'ended_at': endedAt?.toIso8601String(),
       'duration_sec': durationSec,
+      'gender': gender?.toJson(),
+      'age_group': ageGroup?.toJson(),
       'rejection_reason': rejectionReason,
       'ip_address': ipAddress,
       'created_at': createdAt?.toIso8601String(),
@@ -110,6 +120,8 @@ class Response extends Equatable {
     startedAt,
     endedAt,
     durationSec,
+    gender,
+    ageGroup,
     rejectionReason,
     ipAddress,
     createdAt,

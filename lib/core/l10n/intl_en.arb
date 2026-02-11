@@ -382,5 +382,19 @@
   "clear_all": "Clear All",
   "view_completed_responses": "View Completed Responses",
   "to": "To",
-  "from": "From"
+  "from": "From",
+  "demographics_title": "Respondent Demographics",
+  "gender": "Gender",
+  "gender_male": "Male",
+  "gender_female": "Female",
+  "supervisor": "Supervisor",
+  "noSupervisorAssigned": "No supervisor assigned",
+  "noAssignments": "No assignments available",
+  "assignments": "Assignments",
+  "boundedDevice": "Bounded Device",
+  "unboundedDevice": "Unbounded Device",
+  "progress": "Progress",
+  "age_group": "Age Group",
+  "select_gender": "Select Gender",
+  "select_age_group": "Select Age Group"
 }

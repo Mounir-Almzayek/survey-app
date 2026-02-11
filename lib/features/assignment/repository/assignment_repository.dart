@@ -1,12 +1,14 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import '../../../data/network/api_request.dart';
+import '../../../core/enums/survey_enums.dart';
 import '../../../core/queue/services/request_queue_manager.dart';
 import '../../../core/queue/services/request_queue_service.dart';
 import '../../../core/models/survey/response_model.dart' as survey_models;
 import '../models/assignment_response_model.dart';
 import '../models/save_section_models.dart';
 import '../models/start_response_model.dart';
+import '../models/start_response_request_model.dart';
 import 'assignment_local_repository.dart';
 
 class AssignmentRepository {
@@ -36,14 +38,16 @@ class AssignmentRepository {
     );
   }
 
-  static Future<StartResponseResponse> startResponse(int surveyId) async {
-    final request = APIRequest(
-      path: '/researcher/assignment/survey/$surveyId/start',
+  static Future<StartResponseResponse> startResponse(
+    StartResponseRequest request,
+  ) async {
+    final apiRequest = APIRequest(
+      path: '/researcher/assignment/survey/${request.surveyId}/start',
       method: HTTPMethod.post,
-      body: {}, // Provide empty body to avoid FST_ERR_CTP_EMPTY_JSON_BODY
+      body: request.toJson(),
     );
 
-    final response = await request.send();
+    final response = await apiRequest.send();
     return StartResponseResponse.fromJson(
       response.data as Map<String, dynamic>,
     );
@@ -51,38 +55,38 @@ class AssignmentRepository {
 
   /// Start a survey offline by generating a dummy negative ID and queuing the real request
   static Future<StartResponseResponse> startResponseOffline(
-    int surveyId,
+    StartResponseRequest request,
   ) async {
     final dummyId = await AssignmentLocalRepository.getNextNegativeId();
 
-    final request = APIRequest(
-      path: '/researcher/assignment/survey/$surveyId/start',
+    final apiRequest = APIRequest(
+      path: '/researcher/assignment/survey/${request.surveyId}/start',
       method: HTTPMethod.post,
-      body: {},
+      body: request.toJson(),
     );
 
     // Queue the real request with metadata for remapping later
     await RequestQueueManager().queueRequest(
-      request,
+      apiRequest,
       metadata: {
         'dummyId': dummyId,
         'type': 'start_response',
-        'message': 'Starting survey #$surveyId',
-      },
-      onSuccess: (_) {
-        // Success coordination is handled globally in RequestQueueManager
+        'message': 'Starting survey #${request.surveyId}',
       },
     );
 
-    // Add metadata to the queued item via the manager (Internal update)
-    // Actually, queueRequest doesn't return the ID easily here,
-    // but we can modify queueRequest to accept metadata.
-    // Let's check RequestQueueManager.queueRequest again.
-
+    // Return a dummy response immediately (offline mode)
     return StartResponseResponse(
       success: true,
-      message: 'Started offline',
-      response: survey_models.Response(id: dummyId, surveyId: surveyId),
+      message: 'Response started offline',
+      response: survey_models.Response(
+        id: dummyId,
+        surveyId: request.surveyId,
+        status: ResponseStatus.draft,
+        gender: request.gender,
+        ageGroup: request.ageGroup,
+        startedAt: DateTime.now(),
+      ),
     );
   }
 

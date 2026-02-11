@@ -2659,6 +2659,136 @@ class S {
       args: [],
     );
   }
+
+  /// `Respondent Demographics`
+  String get demographics_title {
+    return Intl.message(
+      'Respondent Demographics',
+      name: 'demographics_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gender`
+  String get gender {
+    return Intl.message(
+      'Gender',
+      name: 'gender',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Male`
+  String get gender_male {
+    return Intl.message(
+      'Male',
+      name: 'gender_male',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Female`
+  String get gender_female {
+    return Intl.message(
+      'Female',
+      name: 'gender_female',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Supervisor`
+  String get supervisor {
+    return Intl.message(
+      'Supervisor',
+      name: 'supervisor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No supervisor assigned`
+  String get noSupervisorAssigned {
+    return Intl.message(
+      'No supervisor assigned',
+      name: 'noSupervisorAssigned',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No assignments available`
+  String get noAssignments {
+    return Intl.message(
+      'No assignments available',
+      name: 'noAssignments',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bounded Device`
+  String get boundedDevice {
+    return Intl.message(
+      'Bounded Device',
+      name: 'boundedDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unbounded Device`
+  String get unboundedDevice {
+    return Intl.message(
+      'Unbounded Device',
+      name: 'unboundedDevice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Progress`
+  String get progress {
+    return Intl.message(
+      'Progress',
+      name: 'progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Age Group`
+  String get age_group {
+    return Intl.message(
+      'Age Group',
+      name: 'age_group',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Gender`
+  String get select_gender {
+    return Intl.message(
+      'Select Gender',
+      name: 'select_gender',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Age Group`
+  String get select_age_group {
+    return Intl.message(
+      'Select Age Group',
+      name: 'select_age_group',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

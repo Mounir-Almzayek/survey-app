@@ -47,11 +47,18 @@ class SaveSectionRequest {
   Map<String, dynamic> toJson() {
     return {
       'section_id': sectionId,
-      'last_reached_section_id': lastReachedSectionId,
       'answers': answers.map((e) => e.toJson()).toList(),
-      'is_synced': isSynced,
       if (latitude != null && longitude != null)
         'location': {'latitude': latitude, 'longitude': longitude},
+    };
+  }
+
+  /// Convert to JSON including local-only fields (for local storage)
+  Map<String, dynamic> toLocalJson() {
+    return {
+      ...toJson(),
+      'last_reached_section_id': lastReachedSectionId,
+      'is_synced': isSynced,
     };
   }
 

@@ -5,10 +5,10 @@ import '../../../../core/styles/app_colors.dart';
 import '../../../../core/utils/responsive_layout.dart';
 import '../../models/researcher_profile_response_model.dart';
 
-class ProfileInfoCard extends StatelessWidget {
+class ResearcherBasicInfoCard extends StatelessWidget {
   final ResearcherUserModel user;
 
-  const ProfileInfoCard({super.key, required this.user});
+  const ResearcherBasicInfoCard({super.key, required this.user});
 
   String _getInitials(String name) {
     if (name.isEmpty) return '';
@@ -19,9 +19,6 @@ class ProfileInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // For researcher profile, we don't have roles info like userTypes
-    final rolesText = null; // Researcher role is implied
-
     final initials = _getInitials(user.name);
 
     return Container(
@@ -65,7 +62,6 @@ class ProfileInfoCard extends StatelessWidget {
                   fontSize: context.adaptiveFont(24.sp),
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
-                  letterSpacing: 1.5,
                 ),
               ),
             ),
@@ -74,42 +70,30 @@ class ProfileInfoCard extends StatelessWidget {
           Text(
             user.name,
             style: TextStyle(
-              fontSize: context.adaptiveFont(18.sp),
+              fontSize: context.adaptiveFont(20.sp),
               fontWeight: FontWeight.bold,
               color: AppColors.primaryText,
-              height: 1.2,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 4.h),
+          SizedBox(height: 8.h),
           Text(
             user.email,
             style: TextStyle(
-              fontSize: context.adaptiveFont(12.sp),
+              fontSize: context.adaptiveFont(14.sp),
               color: AppColors.secondaryText,
             ),
             textAlign: TextAlign.center,
           ),
-          if (rolesText != null && rolesText.isNotEmpty) ...[
-            SizedBox(height: 16.h),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.2),
-                ),
+          if (user.mobile != null) ...[
+            SizedBox(height: 4.h),
+            Text(
+              user.mobile!,
+              style: TextStyle(
+                fontSize: context.adaptiveFont(14.sp),
+                color: AppColors.secondaryText,
               ),
-              child: Text(
-                rolesText,
-                style: TextStyle(
-                  fontSize: context.adaptiveFont(10.sp),
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
-                ),
-                textAlign: TextAlign.center,
-              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ],

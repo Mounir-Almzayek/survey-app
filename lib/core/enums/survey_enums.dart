@@ -44,11 +44,12 @@ enum QuestionType {
   }
 }
 
+// ResponseStatus enum for response tracking
 enum ResponseStatus {
-  draft,
-  submitted,
-  flagged,
-  rejected;
+  draft, // DRAFT
+  submitted, // SUBMITTED
+  flagged, // FLAGGED
+  rejected; // REJECTED
 
   String toJson() => name.toUpperCase();
 
@@ -262,7 +263,8 @@ enum ValidationType {
 enum AssignmentStatus {
   pending,
   inProgress,
-  completed;
+  completed,
+  revoked;
 
   String toJson() {
     switch (this) {
@@ -272,6 +274,8 @@ enum AssignmentStatus {
         return 'IN_PROGRESS';
       case AssignmentStatus.completed:
         return 'COMPLETED';
+      case AssignmentStatus.revoked:
+        return 'REVOKED';
     }
   }
 
@@ -285,8 +289,237 @@ enum AssignmentStatus {
         return AssignmentStatus.inProgress;
       case 'COMPLETED':
         return AssignmentStatus.completed;
+      case 'REVOKED':
+        return AssignmentStatus.revoked;
       default:
         return AssignmentStatus.pending;
+    }
+  }
+}
+
+/// PhysicalDeviceStatus enum for device management
+enum PhysicalDeviceStatus {
+  pending,
+  active,
+  inactive,
+  lost;
+
+  String toJson() => name.toUpperCase();
+
+  static PhysicalDeviceStatus fromJson(dynamic value) {
+    if (value == null) return PhysicalDeviceStatus.pending;
+    final String val = value.toString().toUpperCase();
+    return PhysicalDeviceStatus.values.firstWhere(
+      (e) => e.name.toUpperCase() == val,
+      orElse: () => PhysicalDeviceStatus.pending,
+    );
+  }
+}
+
+/// ZoneAdministrativeClass enum for geographic zones
+enum ZoneAdministrativeClass {
+  region,
+  governorate,
+  city,
+  administrativeCenter;
+
+  String toJson() => name.toUpperCase();
+
+  static ZoneAdministrativeClass fromJson(dynamic value) {
+    if (value == null) return ZoneAdministrativeClass.region;
+    final String val = value.toString().toUpperCase();
+    return ZoneAdministrativeClass.values.firstWhere(
+      (e) => e.name.toUpperCase() == val,
+      orElse: () => ZoneAdministrativeClass.region,
+    );
+  }
+}
+
+/// Gender enum for quota tracking
+enum Gender {
+  male,
+  female;
+
+  String toJson() => name.toUpperCase();
+
+  static Gender fromJson(dynamic value) {
+    if (value == null) return Gender.male;
+    final String val = value.toString().toUpperCase();
+    return Gender.values.firstWhere(
+      (e) => e.name.toUpperCase() == val,
+      orElse: () => Gender.male,
+    );
+  }
+}
+
+/// AgeGroup enum for quota tracking
+enum AgeGroup {
+  age18_29,
+  age30_39,
+  age40_49,
+  age50_59,
+  age60_69,
+  age70_79,
+  age80_89,
+  age90_99,
+  age100Plus;
+
+  String toJson() {
+    switch (this) {
+      case AgeGroup.age18_29:
+        return "AGE_18_29";
+      case AgeGroup.age30_39:
+        return "AGE_30_39";
+      case AgeGroup.age40_49:
+        return "AGE_40_49";
+      case AgeGroup.age50_59:
+        return "AGE_50_59";
+      case AgeGroup.age60_69:
+        return "AGE_60_69";
+      case AgeGroup.age70_79:
+        return "AGE_70_79";
+      case AgeGroup.age80_89:
+        return "AGE_80_89";
+      case AgeGroup.age90_99:
+        return "AGE_90_99";
+      case AgeGroup.age100Plus:
+        return "AGE_100_PLUS";
+    }
+  }
+
+  static AgeGroup fromJson(dynamic value) {
+    if (value == null) return AgeGroup.age18_29;
+    final String val = value.toString().toUpperCase();
+    switch (val) {
+      case "AGE_18_29":
+      case "18-29":
+        return AgeGroup.age18_29;
+      case "AGE_30_39":
+      case "30-39":
+        return AgeGroup.age30_39;
+      case "AGE_40_49":
+      case "40-49":
+        return AgeGroup.age40_49;
+      case "AGE_50_59":
+      case "50-59":
+        return AgeGroup.age50_59;
+      case "AGE_60_69":
+      case "60-69":
+        return AgeGroup.age60_69;
+      case "AGE_70_79":
+      case "70-79":
+        return AgeGroup.age70_79;
+      case "AGE_80_89":
+      case "80-89":
+        return AgeGroup.age80_89;
+      case "AGE_90_99":
+      case "90-99":
+        return AgeGroup.age90_99;
+      case "AGE_100_PLUS":
+      case "100+":
+        return AgeGroup.age100Plus;
+      default:
+        return AgeGroup.age18_29;
+    }
+  }
+}
+
+/// ReportSchedule enum for report scheduling
+enum ReportSchedule {
+  hourly,
+  daily,
+  weekly,
+  monthly,
+  quarterly,
+  yearly;
+
+  String toJson() => name.toUpperCase();
+
+  static ReportSchedule fromJson(dynamic value) {
+    if (value == null) return ReportSchedule.daily;
+    final String val = value.toString().toUpperCase();
+    return ReportSchedule.values.firstWhere(
+      (e) => e.name.toUpperCase() == val,
+      orElse: () => ReportSchedule.daily,
+    );
+  }
+}
+
+/// ReportFormat enum for report export formats
+enum ReportFormat {
+  csv,
+  excel,
+  pdf;
+
+  String toJson() => name.toUpperCase();
+
+  static ReportFormat fromJson(dynamic value) {
+    if (value == null) return ReportFormat.csv;
+    final String val = value.toString().toUpperCase();
+    return ReportFormat.values.firstWhere(
+      (e) => e.name.toUpperCase() == val,
+      orElse: () => ReportFormat.csv,
+    );
+  }
+}
+
+/// AggregationType enum for report metric aggregation
+enum AggregationType {
+  count,
+  sum,
+  avg;
+
+  String toJson() => name.toUpperCase();
+
+  static AggregationType fromJson(dynamic value) {
+    if (value == null) return AggregationType.count;
+    final String val = value.toString().toUpperCase();
+    return AggregationType.values.firstWhere(
+      (e) => e.name.toUpperCase() == val,
+      orElse: () => AggregationType.count,
+    );
+  }
+}
+
+/// MetricsFiltersTypes enum for report metric filters
+enum MetricsFiltersTypes {
+  range,
+  eq,
+  notEq,
+  lt,
+  gt,
+  lte,
+  gte;
+
+  String toJson() => name.toUpperCase();
+
+  static MetricsFiltersTypes fromJson(dynamic value) {
+    if (value == null) return MetricsFiltersTypes.range;
+    final String val = value.toString().toUpperCase();
+    return MetricsFiltersTypes.values.firstWhere(
+      (e) => e.name.toUpperCase() == val,
+      orElse: () => MetricsFiltersTypes.range,
+    );
+  }
+}
+
+/// AssignmentType enum for assignment types
+enum AssignmentType {
+  bounded,
+  unbounded;
+
+  String toJson() => name.toUpperCase();
+
+  static AssignmentType fromJson(dynamic value) {
+    if (value == null) return AssignmentType.unbounded;
+    final String val = value.toString().toUpperCase();
+    switch (val) {
+      case 'BOUNDED':
+        return AssignmentType.bounded;
+      case 'UNBOUNDED':
+        return AssignmentType.unbounded;
+      default:
+        return AssignmentType.unbounded;
     }
   }
 }

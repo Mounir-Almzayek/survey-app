@@ -2,11 +2,14 @@ import 'package:equatable/equatable.dart';
 import '../../enums/survey_enums.dart';
 import 'survey_model.dart';
 import 'response_model.dart';
+import 'researcher_quota_model.dart';
+import 'physical_device_model.dart';
 
 class Assignment extends Equatable {
   final int id;
   final int? surveyId;
   final int? physicalDeviceId;
+  final int? zoneId;
   final int? assignedUserId;
   final AssignmentStatus? status;
   final DateTime? startedAt;
@@ -18,11 +21,14 @@ class Assignment extends Equatable {
   // Relations
   final Survey? survey;
   final List<Response>? responses;
+  final List<ResearcherQuota>? researcherQuotas;
+  final List<PhysicalDeviceLog>? physicalDeviceLogs;
 
   const Assignment({
     required this.id,
     this.surveyId,
     this.physicalDeviceId,
+    this.zoneId,
     this.assignedUserId,
     this.status,
     this.startedAt,
@@ -32,6 +38,8 @@ class Assignment extends Equatable {
     this.deletedAt,
     this.survey,
     this.responses,
+    this.researcherQuotas,
+    this.physicalDeviceLogs,
   });
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
@@ -39,6 +47,7 @@ class Assignment extends Equatable {
       id: json['id'] as int? ?? 0,
       surveyId: json['survey_id'],
       physicalDeviceId: json['physical_device_id'],
+      zoneId: json['zone_id'],
       assignedUserId: json['assigned_user_id'],
       status: json['status'] != null
           ? AssignmentStatus.fromJson(json['status'].toString())
@@ -62,6 +71,12 @@ class Assignment extends Equatable {
       responses: (json['responses'] as List?)
           ?.map((e) => Response.fromJson(e))
           .toList(),
+      researcherQuotas: (json['researcher_quotas'] as List?)
+          ?.map((e) => ResearcherQuota.fromJson(e))
+          .toList(),
+      physicalDeviceLogs: (json['physical_device_logs'] as List?)
+          ?.map((e) => PhysicalDeviceLog.fromJson(e))
+          .toList(),
     );
   }
 
@@ -70,6 +85,7 @@ class Assignment extends Equatable {
       'id': id,
       'survey_id': surveyId,
       'physical_device_id': physicalDeviceId,
+      'zone_id': zoneId,
       'assigned_user_id': assignedUserId,
       'status': status?.toJson(),
       'started_at': startedAt?.toIso8601String(),
@@ -79,6 +95,10 @@ class Assignment extends Equatable {
       'deleted_at': deletedAt?.toIso8601String(),
       'survey': survey?.toJson(),
       'responses': responses?.map((e) => e.toJson()).toList(),
+      'researcher_quotas': researcherQuotas?.map((e) => e.toJson()).toList(),
+      'physical_device_logs': physicalDeviceLogs
+          ?.map((e) => e.toJson())
+          .toList(),
     };
   }
 
@@ -87,6 +107,7 @@ class Assignment extends Equatable {
     id,
     surveyId,
     physicalDeviceId,
+    zoneId,
     assignedUserId,
     status,
     startedAt,
@@ -96,5 +117,7 @@ class Assignment extends Equatable {
     deletedAt,
     survey,
     responses,
+    researcherQuotas,
+    physicalDeviceLogs,
   ];
 }

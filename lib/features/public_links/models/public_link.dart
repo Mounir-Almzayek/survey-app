@@ -2,7 +2,23 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import '../../../core/models/survey/survey_model.dart';
 import '../../../core/styles/app_colors.dart';
-import '../../profile/models/user.dart';
+
+/// PublicLinkType enum for different link types
+enum PublicLinkType {
+  standard,
+  shortLived;
+
+  String toJson() => name.toUpperCase();
+
+  static PublicLinkType fromJson(dynamic value) {
+    if (value == null) return PublicLinkType.standard;
+    final String val = value.toString().toUpperCase();
+    return PublicLinkType.values.firstWhere(
+      (e) => e.name.toUpperCase() == val,
+      orElse: () => PublicLinkType.standard,
+    );
+  }
+}
 
 /// Status of a public link
 enum PublicLinkStatus {
@@ -74,14 +90,15 @@ class PublicLink extends Equatable {
   final int ownerUserId;
   final String shortCode;
   final PublicLinkStatus status;
+  final PublicLinkType type;
   final int maxResponses;
   final int maxResponsesPerIp;
   final bool requireLocation;
+  final int? createdByDeviceId;
   final DateTime? expiresAt;
   final DateTime createdAt;
   final DateTime updatedAt;
   final Survey? survey;
-  final User? ownerUser;
 
   const PublicLink({
     required this.id,
@@ -89,14 +106,15 @@ class PublicLink extends Equatable {
     required this.ownerUserId,
     required this.shortCode,
     required this.status,
+    this.type = PublicLinkType.standard,
     required this.maxResponses,
     required this.maxResponsesPerIp,
     required this.requireLocation,
+    this.createdByDeviceId,
     this.expiresAt,
     required this.createdAt,
     required this.updatedAt,
     this.survey,
-    this.ownerUser,
   });
 
   /// Get survey title (convenience getter)
@@ -123,9 +141,11 @@ class PublicLink extends Equatable {
         json['status'] as String? ?? 'ACTIVE',
         isExpired: isExpired,
       ),
+      type: PublicLinkType.fromJson(json['type']),
       maxResponses: json['max_responses'] as int? ?? 0,
       maxResponsesPerIp: json['max_responses_per_ip'] as int? ?? 1,
       requireLocation: json['require_location'] as bool? ?? false,
+      createdByDeviceId: json['created_by_device_id'],
       expiresAt: expiresAt,
       createdAt: DateTime.parse(
         json['created_at'] as String? ?? DateTime.now().toIso8601String(),
@@ -135,9 +155,6 @@ class PublicLink extends Equatable {
       ),
       survey: json['survey'] != null
           ? Survey.fromJson(json['survey'] as Map<String, dynamic>)
-          : null,
-      ownerUser: json['owner_user'] != null
-          ? User.fromJson(json['owner_user'] as Map<String, dynamic>)
           : null,
     );
   }
@@ -150,14 +167,15 @@ class PublicLink extends Equatable {
       'owner_user_id': ownerUserId,
       'short_code': shortCode,
       'status': status.toJson(),
+      'type': type.toJson(),
       'max_responses': maxResponses,
       'max_responses_per_ip': maxResponsesPerIp,
       'require_location': requireLocation,
+      'created_by_device_id': createdByDeviceId,
       'expires_at': expiresAt?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
       'survey': survey?.toJson(),
-      'owner_user': ownerUser?.toJson(),
     };
   }
 
@@ -177,13 +195,14 @@ class PublicLink extends Equatable {
     ownerUserId,
     shortCode,
     status,
+    type,
     maxResponses,
     maxResponsesPerIp,
     requireLocation,
+    createdByDeviceId,
     expiresAt,
     createdAt,
     updatedAt,
     survey,
-    ownerUser,
   ];
 }

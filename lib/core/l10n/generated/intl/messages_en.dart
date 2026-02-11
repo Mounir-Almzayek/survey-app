@@ -65,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Active Responses"),
         "active_surveys": MessageLookupByLibrary.simpleMessage("Active"),
         "active_tasks": MessageLookupByLibrary.simpleMessage("Active Tasks"),
+        "age_group": MessageLookupByLibrary.simpleMessage("Age Group"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("Allow location access"),
         "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
@@ -75,6 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "avg": MessageLookupByLibrary.simpleMessage("Avg."),
         "back_to_assignments":
             MessageLookupByLibrary.simpleMessage("Back to Assignments"),
+        "boundedDevice": MessageLookupByLibrary.simpleMessage("Bounded Device"),
         "browser": MessageLookupByLibrary.simpleMessage("Browser"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "camera_permission_required": MessageLookupByLibrary.simpleMessage(
@@ -117,6 +119,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to delete this survey draft?"),
         "delete_draft_title":
             MessageLookupByLibrary.simpleMessage("Delete Draft"),
+        "demographics_title":
+            MessageLookupByLibrary.simpleMessage("Respondent Demographics"),
         "device_already_registered": MessageLookupByLibrary.simpleMessage(
             "This device is already registered"),
         "device_already_registered_desc": MessageLookupByLibrary.simpleMessage(
@@ -178,6 +182,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "from": MessageLookupByLibrary.simpleMessage("From"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
         "gb": MessageLookupByLibrary.simpleMessage("GB"),
+        "gender": MessageLookupByLibrary.simpleMessage("Gender"),
+        "gender_female": MessageLookupByLibrary.simpleMessage("Female"),
+        "gender_male": MessageLookupByLibrary.simpleMessage("Male"),
         "get_started": MessageLookupByLibrary.simpleMessage("Get Started"),
         "grant_permission":
             MessageLookupByLibrary.simpleMessage("Grant Permission"),
@@ -248,6 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "new_response_success": MessageLookupByLibrary.simpleMessage(
             "New response started successfully"),
         "next": MessageLookupByLibrary.simpleMessage("Next"),
+        "noAssignments":
+            MessageLookupByLibrary.simpleMessage("No assignments available"),
+        "noSupervisorAssigned":
+            MessageLookupByLibrary.simpleMessage("No supervisor assigned"),
         "no_active_account": MessageLookupByLibrary.simpleMessage(
             "Don\'t have an active account?"),
         "no_active_responses":
@@ -306,6 +317,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "processor_cores":
             MessageLookupByLibrary.simpleMessage("Processor Cores"),
         "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+        "progress": MessageLookupByLibrary.simpleMessage("Progress"),
         "public_link_not_found":
             MessageLookupByLibrary.simpleMessage("Public link not found"),
         "public_links": MessageLookupByLibrary.simpleMessage("Public Links"),
@@ -373,8 +385,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Screen Resolution"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "sections_count": m15,
+        "select_age_group":
+            MessageLookupByLibrary.simpleMessage("Select Age Group"),
         "select_date": MessageLookupByLibrary.simpleMessage("Select Date"),
         "select_file": MessageLookupByLibrary.simpleMessage("Select File"),
+        "select_gender": MessageLookupByLibrary.simpleMessage("Select Gender"),
         "select_language":
             MessageLookupByLibrary.simpleMessage("Select Language"),
         "send_code": MessageLookupByLibrary.simpleMessage("Send Code"),
@@ -394,6 +409,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("Storage permission denied"),
         "submit": MessageLookupByLibrary.simpleMessage("Submit"),
+        "supervisor": MessageLookupByLibrary.simpleMessage("Supervisor"),
         "survey_availability":
             MessageLookupByLibrary.simpleMessage("Survey Availability"),
         "survey_code_placeholder":
@@ -419,6 +435,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Enter the email of the researcher who will receive the device. A verification code will be sent to both users."),
         "transfer_initiated_successfully": MessageLookupByLibrary.simpleMessage(
             "Transfer initiated successfully"),
+        "unboundedDevice":
+            MessageLookupByLibrary.simpleMessage("Unbounded Device"),
         "upcoming_surveys": MessageLookupByLibrary.simpleMessage("Upcoming"),
         "upload_failed": MessageLookupByLibrary.simpleMessage("Upload failed"),
         "upload_file": MessageLookupByLibrary.simpleMessage("Upload File"),

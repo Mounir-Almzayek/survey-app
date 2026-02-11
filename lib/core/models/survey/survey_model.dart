@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import '../../enums/survey_enums.dart';
 import 'section_model.dart';
 import 'conditional_logic_model.dart';
+import 'report_configuration_model.dart';
 
 class Survey extends Equatable {
   final int id;
@@ -13,11 +14,12 @@ class Survey extends Equatable {
   final DateTime? availabilityEndAt;
   final int? maxResponses;
   final bool? gpsRequired;
-  final String? lang;
+  final String lang;
   final int? minimumResponseTimeMinutes;
   final String? greetingMessage;
-  final String? goodbyeMessage;
+  final String? goodbayMessage;
   final String? tagsCsv;
+  final int? samplingScopeId;
   final DateTime? willPublishAt;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -26,6 +28,7 @@ class Survey extends Equatable {
 
   final List<Section>? sections;
   final List<ConditionalLogic>? conditionalLogics;
+  final List<ReportConfiguration>? reportConfigurations;
 
   const Survey({
     required this.id,
@@ -37,11 +40,12 @@ class Survey extends Equatable {
     this.availabilityEndAt,
     this.maxResponses,
     this.gpsRequired,
-    this.lang,
+    required this.lang,
     this.minimumResponseTimeMinutes,
     this.greetingMessage,
-    this.goodbyeMessage,
+    this.goodbayMessage,
     this.tagsCsv,
+    this.samplingScopeId,
     this.willPublishAt,
     this.createdAt,
     this.updatedAt,
@@ -49,6 +53,7 @@ class Survey extends Equatable {
     this.localResponseIds,
     this.sections,
     this.conditionalLogics,
+    this.reportConfigurations,
   });
 
   Survey copyWith({
@@ -73,6 +78,7 @@ class Survey extends Equatable {
     List<int>? localResponseIds,
     List<Section>? sections,
     List<ConditionalLogic>? conditionalLogics,
+    List<ReportConfiguration>? reportConfigurations,
   }) {
     return Survey(
       id: id ?? this.id,
@@ -88,7 +94,7 @@ class Survey extends Equatable {
       minimumResponseTimeMinutes:
           minimumResponseTimeMinutes ?? this.minimumResponseTimeMinutes,
       greetingMessage: greetingMessage ?? this.greetingMessage,
-      goodbyeMessage: goodbyeMessage ?? this.goodbyeMessage,
+      goodbayMessage: goodbayMessage ?? this.goodbayMessage,
       tagsCsv: tagsCsv ?? this.tagsCsv,
       willPublishAt: willPublishAt ?? this.willPublishAt,
       createdAt: createdAt ?? this.createdAt,
@@ -97,6 +103,7 @@ class Survey extends Equatable {
       localResponseIds: localResponseIds ?? this.localResponseIds,
       sections: sections ?? this.sections,
       conditionalLogics: conditionalLogics ?? this.conditionalLogics,
+      reportConfigurations: reportConfigurations ?? this.reportConfigurations,
     );
   }
 
@@ -117,12 +124,12 @@ class Survey extends Equatable {
           : null,
       maxResponses: json['max_responses'] as int?,
       gpsRequired: json['gps_required'] as bool?,
-      lang: json['lang'] as String?,
+      lang: json['lang'] as String,
       minimumResponseTimeMinutes: json['minimum_response_time_minutes'] as int?,
       greetingMessage: json['greeting_message'] as String?,
-      goodbyeMessage:
-          (json['goodbay_message'] ?? json['goodbye_message']) as String?,
+      goodbayMessage: json['goodbay_message'] as String?,
       tagsCsv: json['tags_csv'] as String?,
+      samplingScopeId: json['sampling_scope_id'] as int?,
       willPublishAt: json['will_publish_at'] != null
           ? DateTime.tryParse(json['will_publish_at'] as String)
           : null,
@@ -139,10 +146,13 @@ class Survey extends Equatable {
           ?.map((e) => e as int)
           .toList(),
       sections: (json['sections'] as List?)
-          ?.map((e) => Section.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => Section.fromJson(e))
           .toList(),
       conditionalLogics: (json['conditional_logics'] as List?)
-          ?.map((e) => ConditionalLogic.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => ConditionalLogic.fromJson(e))
+          .toList(),
+      reportConfigurations: (json['report_configurations'] as List?)
+          ?.map((e) => ReportConfiguration.fromJson(e))
           .toList(),
     );
   }
@@ -161,8 +171,9 @@ class Survey extends Equatable {
       'lang': lang,
       'minimum_response_time_minutes': minimumResponseTimeMinutes,
       'greeting_message': greetingMessage,
-      'goodbay_message': goodbyeMessage,
+      'goodbay_message': goodbayMessage,
       'tags_csv': tagsCsv,
+      'sampling_scope_id': samplingScopeId,
       'will_publish_at': willPublishAt?.toIso8601String(),
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
@@ -170,6 +181,9 @@ class Survey extends Equatable {
       'local_response_ids': localResponseIds,
       'sections': sections?.map((e) => e.toJson()).toList(),
       'conditional_logics': conditionalLogics?.map((e) => e.toJson()).toList(),
+      'report_configurations': reportConfigurations
+          ?.map((e) => e.toJson())
+          .toList(),
     };
   }
 
@@ -187,7 +201,7 @@ class Survey extends Equatable {
     lang,
     minimumResponseTimeMinutes,
     greetingMessage,
-    goodbyeMessage,
+    goodbayMessage,
     tagsCsv,
     willPublishAt,
     createdAt,
@@ -196,5 +210,6 @@ class Survey extends Equatable {
     localResponseIds,
     sections,
     conditionalLogics,
+    reportConfigurations,
   ];
 }

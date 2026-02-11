@@ -9,10 +9,12 @@ import '../../../core/widgets/error_state_widget.dart';
 import '../../../core/widgets/unified_snackbar.dart';
 import '../../../core/enums/app_language.dart';
 import '../../../core/utils/responsive_layout.dart';
-import '../models/user.dart';
+import '../models/researcher_profile_response_model.dart';
 import '../../language/bloc/language/language_bloc.dart';
 import '../bloc/profile/profile_bloc.dart';
-import 'widgets/profile_info_card.dart';
+import 'widgets/researcher_basic_info_card.dart';
+import 'widgets/supervisor_info_card.dart';
+import 'widgets/assignments_list_card.dart';
 import '../widgets/profile_logout_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -81,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (state.isOffline) _buildOfflineWarning(context),
 
                         // Main Content Grid
-                        _buildProfileContent(context, state.user, locale),
+                        _buildProfileContent(context, state.profile, locale),
 
                         SizedBox(
                           height: 100.h,
@@ -134,30 +136,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileContent(BuildContext context, User user, S locale) {
-    // Even on tablet/desktop, we might want a vertical stack if it's cleaner
-    // or keep the side-by-side if there's enough room.
-    // For "mobile style always", let's stick to vertical mostly but maybe side-by-side on very wide desktop.
+  Widget _buildProfileContent(
+    BuildContext context,
+    ResearcherProfileResponseModel profile,
+    S locale,
+  ) {
+    // final isMobile = ResponsiveLayout.isMobile(context); // Not used anymore
+
     if (ResponsiveLayout.isDesktop(context)) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(flex: 1, child: ProfileInfoCard(user: user)),
-          const SizedBox(width: 40),
-          Expanded(flex: 2, child: _buildMenuSection(context, locale)),
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                ResearcherBasicInfoCard(user: profile.user),
+                SizedBox(height: 20.h),
+                SupervisorInfoCard(supervisor: profile.supervisor),
+              ],
+            ),
+          ),
+          SizedBox(width: 40.w),
+          Expanded(
+            flex: 2,
+            child: AssignmentsListCard(assignments: profile.assignments),
+          ),
         ],
       );
     }
+
     return Column(
       children: [
-        ProfileInfoCard(user: user),
+        ResearcherBasicInfoCard(user: profile.user),
         SizedBox(height: 20.h),
-        _buildMenuSection(context, locale),
+        SupervisorInfoCard(supervisor: profile.supervisor),
+        SizedBox(height: 20.h),
+        AssignmentsListCard(assignments: profile.assignments),
+        SizedBox(height: 20.h),
+        _buildSettingsSection(context, locale),
       ],
     );
   }
 
-  Widget _buildMenuSection(BuildContext context, S locale) {
+  Widget _buildSettingsSection(BuildContext context, S locale) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,

@@ -65,16 +65,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("الاستجابات النشطة"),
         "active_surveys": MessageLookupByLibrary.simpleMessage("نشطة"),
         "active_tasks": MessageLookupByLibrary.simpleMessage("المهام النشطة"),
+        "age_group": MessageLookupByLibrary.simpleMessage("الفئة العمرية"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("السماح بالوصول إلى الموقع"),
         "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
-        "assignments": MessageLookupByLibrary.simpleMessage("المهام"),
+        "assignments": MessageLookupByLibrary.simpleMessage("التكليفات"),
         "availability_period": m1,
         "available_surveys":
             MessageLookupByLibrary.simpleMessage("الاستبيانات المتاحة"),
         "avg": MessageLookupByLibrary.simpleMessage("المعدل"),
         "back_to_assignments":
             MessageLookupByLibrary.simpleMessage("العودة للمهام"),
+        "boundedDevice": MessageLookupByLibrary.simpleMessage("جهاز مركز"),
         "browser": MessageLookupByLibrary.simpleMessage("المتصفح"),
         "camera": MessageLookupByLibrary.simpleMessage("الكاميرا"),
         "camera_permission_required": MessageLookupByLibrary.simpleMessage(
@@ -116,6 +118,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "هل أنت متأكد من رغبتك في حذف مسودة الاستطلاع هذه؟"),
         "delete_draft_title":
             MessageLookupByLibrary.simpleMessage("حذف المسودة"),
+        "demographics_title":
+            MessageLookupByLibrary.simpleMessage("بيانات المستجيب"),
         "device_already_registered":
             MessageLookupByLibrary.simpleMessage("هذا الجهاز مسجل مسبقاً"),
         "device_already_registered_desc": MessageLookupByLibrary.simpleMessage(
@@ -177,6 +181,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "from": MessageLookupByLibrary.simpleMessage("من"),
         "gallery": MessageLookupByLibrary.simpleMessage("المعرض"),
         "gb": MessageLookupByLibrary.simpleMessage("جيجابايت"),
+        "gender": MessageLookupByLibrary.simpleMessage("الجنس"),
+        "gender_female": MessageLookupByLibrary.simpleMessage("أنثى"),
+        "gender_male": MessageLookupByLibrary.simpleMessage("ذكر"),
         "get_started": MessageLookupByLibrary.simpleMessage("ابدأ الآن"),
         "grant_permission": MessageLookupByLibrary.simpleMessage("منح الإذن"),
         "hide_details": MessageLookupByLibrary.simpleMessage("إخفاء التفاصيل"),
@@ -246,6 +253,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "new_response_success":
             MessageLookupByLibrary.simpleMessage("تم بدء رد جديد بنجاح"),
         "next": MessageLookupByLibrary.simpleMessage("التالي"),
+        "noAssignments":
+            MessageLookupByLibrary.simpleMessage("لا توجد تكليفات متاحة"),
+        "noSupervisorAssigned":
+            MessageLookupByLibrary.simpleMessage("لم يتم تعيين مشرف"),
         "no_active_account":
             MessageLookupByLibrary.simpleMessage("ليس لديك حساب مفعل؟"),
         "no_active_responses":
@@ -305,6 +316,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "processor_cores":
             MessageLookupByLibrary.simpleMessage("أنوية المعالج"),
         "profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
+        "progress": MessageLookupByLibrary.simpleMessage("التقدم"),
         "public_link_not_found":
             MessageLookupByLibrary.simpleMessage("الرابط العام غير موجود"),
         "public_links": MessageLookupByLibrary.simpleMessage("الروابط العامة"),
@@ -374,8 +386,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "screen_resolution": MessageLookupByLibrary.simpleMessage("دقة الشاشة"),
         "search": MessageLookupByLibrary.simpleMessage("بحث"),
         "sections_count": m15,
+        "select_age_group":
+            MessageLookupByLibrary.simpleMessage("اختر الفئة العمرية"),
         "select_date": MessageLookupByLibrary.simpleMessage("اختر التاريخ"),
         "select_file": MessageLookupByLibrary.simpleMessage("اختر ملف"),
+        "select_gender": MessageLookupByLibrary.simpleMessage("اختر الجنس"),
         "select_language": MessageLookupByLibrary.simpleMessage("اختر اللغة"),
         "send_code": MessageLookupByLibrary.simpleMessage("إرسال الرمز"),
         "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
@@ -393,6 +408,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "storage_permission_denied":
             MessageLookupByLibrary.simpleMessage("تم رفض إذن التخزين"),
         "submit": MessageLookupByLibrary.simpleMessage("إرسال"),
+        "supervisor": MessageLookupByLibrary.simpleMessage("المشرف"),
         "survey_availability":
             MessageLookupByLibrary.simpleMessage("توفر الاستبيانات"),
         "survey_code_placeholder":
@@ -420,6 +436,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "أدخل البريد الإلكتروني للباحث الذي سيستلم الجهاز. سيتم إرسال رمز التحقق لكلا المستخدمين."),
         "transfer_initiated_successfully":
             MessageLookupByLibrary.simpleMessage("تم بدء عملية النقل بنجاح"),
+        "unboundedDevice": MessageLookupByLibrary.simpleMessage("جهاز شخصي"),
         "upcoming_surveys": MessageLookupByLibrary.simpleMessage("قادمة"),
         "upload_failed": MessageLookupByLibrary.simpleMessage("فشل الرفع"),
         "upload_file": MessageLookupByLibrary.simpleMessage("رفع ملف"),

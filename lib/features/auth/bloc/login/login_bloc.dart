@@ -5,13 +5,11 @@ import '../../../../core/utils/device_info_util.dart';
 import '../../../../core/utils/async_runner.dart';
 import '../../../../core/services/device_bound_key_service.dart';
 import '../../../device_registration/repository/device_cookie_repository.dart';
-import '../../../profile/models/user.dart';
 import '../../models/researcher_login_initiate_request.dart';
 import '../../models/researcher_login_initiate_response.dart';
 import '../../models/researcher_login_verify_request.dart';
 import '../../models/researcher_login_verify_response.dart';
 import '../../repository/auth_repository.dart';
-import '../../repository/auth_local_repository.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -187,25 +185,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         }
 
         // Fetch the user profile that was saved by AuthRepository.verifyResearcherLogin
-        final user = await AuthLocalRepository.getUser();
-
         if (!emit.isDone) {
           emit(
             LoginSuccess(
-              user:
-                  user ??
-                  User(
-                    id: 0,
-                    name: response.userName,
-                    email: state.email,
-                    createdAt: '',
-                    updatedAt: '',
-                    userTypes: response.userTypes
-                        .map(
-                          (t) => UserType(id: 0, name: t, enName: t, arName: t),
-                        )
-                        .toList(),
-                  ),
               token: response.accessToken,
               email: state.email,
               password: state.password,

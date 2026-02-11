@@ -22,15 +22,9 @@ class LoginInitiateSuccess extends LoginState {
 }
 
 class LoginSuccess extends LoginState {
-  final User user;
   final String token;
 
-  LoginSuccess({
-    required this.user,
-    required this.token,
-    super.email,
-    super.password,
-  });
+  LoginSuccess({required this.token, super.email, super.password});
 }
 
 class LoginFailure extends LoginState {

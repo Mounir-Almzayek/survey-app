@@ -1,7 +1,5 @@
 import 'auth_local_repository.dart';
 import 'auth_online_repository.dart';
-import '../../profile/repository/profile_online_repository.dart';
-import '../../profile/models/user.dart';
 import '../models/email_verification_request.dart';
 import '../models/resend_verification_request.dart';
 import '../models/forgot_password_request.dart';
@@ -30,25 +28,6 @@ class AuthRepository {
 
     // 1. Save token locally first (needed for authorized requests)
     await AuthLocalRepository.saveToken(response.accessToken);
-
-    // 2. Fetch full user profile from /auth/me
-    try {
-      final user = await ProfileOnlineRepository.getProfile();
-      await AuthLocalRepository.saveUser(user);
-    } catch (e) {
-      // Create a partial user if profile fetch fails
-      final partialUser = User(
-        id: 0,
-        name: response.userName,
-        email: request.email,
-        createdAt: '',
-        updatedAt: '',
-        userTypes: response.userTypes
-            .map((t) => UserType(id: 0, name: t, enName: t, arName: t))
-            .toList(),
-      );
-      await AuthLocalRepository.saveUser(partialUser);
-    }
 
     return response;
   }
