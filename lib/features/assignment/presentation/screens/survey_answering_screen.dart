@@ -12,6 +12,8 @@ import '../../../../core/widgets/unified_snackbar.dart';
 import '../widgets/demographics_dialog.dart';
 
 import '../../../../core/enums/survey_enums.dart';
+import '../../../../core/l10n/generated/l10n.dart';
+import '../../../device_location/service/location_service.dart';
 import '../../bloc/start_response/start_response_bloc.dart' as start;
 
 class SurveyAnsweringScreen extends StatelessWidget {
@@ -119,8 +121,47 @@ class SurveyAnsweringScreen extends StatelessWidget {
               if (result != null && context.mounted) {
                 final gender = result['gender'] as Gender;
                 final ageGroup = result['ageGroup'] as AgeGroup;
+                Map<String, double>? locationMap;
 
-                // Trigger starting a new response online/offline
+                if (state.survey!.gpsRequired == true) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (ctx) => PopScope(
+                      canPop: false,
+                      child: AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const LoadingWidget(),
+                            SizedBox(height: 16),
+                            Text(S.of(context).getting_location),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                  try {
+                    final deviceLocation =
+                        await LocationService.getCurrentLocation();
+                    if (!context.mounted) return;
+                    Navigator.of(context).pop(context);
+                    locationMap = {
+                      'latitude': deviceLocation.latitude,
+                      'longitude': deviceLocation.longitude,
+                    };
+                  } catch (_) {
+                    if (context.mounted) {
+                      Navigator.of(context).pop(context);
+                      UnifiedSnackbar.error(
+                        context,
+                        message: S.of(context).location_required,
+                      );
+                    }
+                    return;
+                  }
+                }
+
                 context.read<start.StartResponseBloc>().add(
                   start.UpdateSurveyId(state.survey!.id),
                 );
@@ -130,6 +171,11 @@ class SurveyAnsweringScreen extends StatelessWidget {
                 context.read<start.StartResponseBloc>().add(
                   start.UpdateAgeGroup(ageGroup),
                 );
+                if (locationMap != null) {
+                  context.read<start.StartResponseBloc>().add(
+                    start.UpdateLocation(locationMap),
+                  );
+                }
                 context.read<start.StartResponseBloc>().add(
                   start.StartSurveyResponse(),
                 );

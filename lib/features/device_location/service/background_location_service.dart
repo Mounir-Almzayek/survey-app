@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../../../../features/auth/repository/auth_local_repository.dart';
 import '../../../../features/profile/repository/profile_repository.dart';
-import '../../../../core/utils/app_exception.dart';
 import '../models/device_location.dart';
 import '../models/location_update_request.dart';
 import '../repository/device_location_online_repository.dart';
@@ -99,36 +98,8 @@ class BackgroundLocationService {
       // Remove from pending if it was there
       await DeviceLocationLocalRepository.removePendingLocation(location);
     } catch (e) {
-      // Check if error indicates warning or outside zone
-      bool isZoneViolation = false;
-
-      if (e is AppException) {
-        if (e.statusCode == 403) {
-          isZoneViolation = true;
-        }
-      }
-
-      final errorMessage = e.toString().toLowerCase();
-      if (isZoneViolation ||
-          errorMessage.contains('warning') ||
-          errorMessage.contains('outside') ||
-          errorMessage.contains('zone') ||
-          errorMessage.contains('forbidden') ||
-          errorMessage.contains('ممنوع') ||
-          errorMessage.contains('محظور')) {
-        if (kDebugMode) {
-          print('Warning or outside zone detected: $errorMessage');
-        }
-
-        // Stop tracking immediately
-        await stop();
-
-        // Notify UI
-        _zoneViolationController.add(e.toString());
-      } else {
-        // Save to pending for retry later only for non-zone errors
-        await DeviceLocationLocalRepository.savePendingLocation(location);
-      }
+      // Save to pending for retry later only for non-zone errors
+      await DeviceLocationLocalRepository.savePendingLocation(location);
     }
   }
 

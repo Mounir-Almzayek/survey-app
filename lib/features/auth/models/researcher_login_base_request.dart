@@ -25,7 +25,7 @@ abstract class ResearcherLoginBaseRequest {
     'os': os,
     'browser': browser,
     'device_token': deviceToken,
-    if (deviceKeyId != null) 'deviceKeyId': deviceKeyId,
+    if (deviceKeyId != null) 'deviceKeyId': "deviceKeyId",
     'fingerprint': fingerprint.toJson(),
   };
 }

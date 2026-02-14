@@ -55,6 +55,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(title) => "Survey Link: ${title}";
 
+  static String m17(minutes) =>
+      "Survey will be available for ${minutes} minutes";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activate": MessageLookupByLibrary.simpleMessage("Activate"),
@@ -104,7 +107,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "cookie_based_method_description": MessageLookupByLibrary.simpleMessage(
             "Cookie-based method will be used for device registration"),
         "copy_link": MessageLookupByLibrary.simpleMessage("Copy Link"),
+        "create_link": MessageLookupByLibrary.simpleMessage("Link"),
+        "create_short_link":
+            MessageLookupByLibrary.simpleMessage("Create Short Link"),
+        "create_short_lived_link":
+            MessageLookupByLibrary.simpleMessage("Create Short-Lived Link"),
         "created_at_colon": m4,
+        "creating_link": MessageLookupByLibrary.simpleMessage("Creating…"),
         "custody": MessageLookupByLibrary.simpleMessage("Custody"),
         "custody_status_cancelled":
             MessageLookupByLibrary.simpleMessage("Cancelled"),
@@ -165,6 +174,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_with_message": m7,
         "expired_surveys": MessageLookupByLibrary.simpleMessage("Expired"),
         "expires_at": MessageLookupByLibrary.simpleMessage("Expires At"),
+        "expiry": MessageLookupByLibrary.simpleMessage("Expiry"),
         "failed_pick_image": MessageLookupByLibrary.simpleMessage(
             "Failed to pick image, please try again later!"),
         "failed_to_save_image":
@@ -185,7 +195,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "gender": MessageLookupByLibrary.simpleMessage("Gender"),
         "gender_female": MessageLookupByLibrary.simpleMessage("Female"),
         "gender_male": MessageLookupByLibrary.simpleMessage("Male"),
+        "generate_link": MessageLookupByLibrary.simpleMessage("Generate Link"),
         "get_started": MessageLookupByLibrary.simpleMessage("Get Started"),
+        "getting_location":
+            MessageLookupByLibrary.simpleMessage("Getting your location…"),
         "grant_permission":
             MessageLookupByLibrary.simpleMessage("Grant Permission"),
         "hide_details": MessageLookupByLibrary.simpleMessage("Hide Details"),
@@ -213,6 +226,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "link_copied":
             MessageLookupByLibrary.simpleMessage("Link copied to clipboard"),
         "link_device": MessageLookupByLibrary.simpleMessage("Link Device"),
+        "link_ready": MessageLookupByLibrary.simpleMessage("Ready"),
+        "link_validity_duration":
+            MessageLookupByLibrary.simpleMessage("Link validity duration"),
+        "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "local_responses_count": m10,
         "location_permission_denied":
             MessageLookupByLibrary.simpleMessage("Location permission denied"),
@@ -224,6 +241,9 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Location permission required"),
         "location_required":
             MessageLookupByLibrary.simpleMessage("Location Required"),
+        "location_required_for_short_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Location permission is required to create the link"),
         "location_tracking_started":
             MessageLookupByLibrary.simpleMessage("Location tracking started"),
         "location_tracking_stopped":
@@ -248,6 +268,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "max_responses": MessageLookupByLibrary.simpleMessage("Max Responses"),
         "max_touch_points":
             MessageLookupByLibrary.simpleMessage("Maximum Touch Points"),
+        "minutes": MessageLookupByLibrary.simpleMessage("minutes"),
         "minutes_count": m11,
         "nationality": MessageLookupByLibrary.simpleMessage("Nationality"),
         "new_password": MessageLookupByLibrary.simpleMessage("New Password"),
@@ -396,6 +417,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share_link": MessageLookupByLibrary.simpleMessage("Share"),
         "share_link_subject": m16,
+        "short_link": MessageLookupByLibrary.simpleMessage("Short Link"),
+        "short_links": MessageLookupByLibrary.simpleMessage("Short Links"),
+        "short_lived_link_section":
+            MessageLookupByLibrary.simpleMessage("Short-Lived Link"),
         "show_less": MessageLookupByLibrary.simpleMessage("Show less"),
         "show_qr_code": MessageLookupByLibrary.simpleMessage("Show QR Code"),
         "start_location_tracking":
@@ -412,6 +437,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supervisor": MessageLookupByLibrary.simpleMessage("Supervisor"),
         "survey_availability":
             MessageLookupByLibrary.simpleMessage("Survey Availability"),
+        "survey_available_for_duration": m17,
         "survey_code_placeholder":
             MessageLookupByLibrary.simpleMessage("e.g. ABC-123"),
         "survey_completed":

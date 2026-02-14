@@ -10,6 +10,7 @@ import '../../models/researcher_login_initiate_response.dart';
 import '../../models/researcher_login_verify_request.dart';
 import '../../models/researcher_login_verify_response.dart';
 import '../../repository/auth_repository.dart';
+import '../../repository/auth_local_repository.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -81,6 +82,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // Save device cookie if present
         if (response.cookie != null && response.cookie!.isNotEmpty) {
           await DeviceCookieRepository.saveDeviceCookie(response.cookie!);
+        }
+
+        // Unbounded auth: backend returned accessToken directly (no verify step)
+        if (response.isUnboundAuth && response.accessToken != null) {
+          await AuthLocalRepository.saveToken(response.accessToken!);
+          if (!emit.isDone) {
+            emit(
+              LoginSuccess(
+                token: response.accessToken!,
+                email: state.email,
+                password: state.password,
+              ),
+            );
+          }
+          return;
         }
 
         if (!emit.isDone) {

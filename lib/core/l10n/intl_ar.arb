@@ -7,13 +7,13 @@
   "login_message": "يرجى تسجيل الدخول",
   "email": "البريد الإلكتروني",
   "password": "كلمة المرور",
-  "login_success": "تم تسجيل الدخول بنجاح",
+  "login_success": "تم تسجيل الدخول بنجاح", 
   "no_user_name": "يرجى إدخال البريد الإلكتروني",
   "no_password": "يرجى إدخال كلمة المرور",
   "ok": "موافق",
   "home": "الرئيسية",
   "surveys": "الاستطلاعات",
-  "custody": "العهدة",
+  "custody": "العهدة", 
   "profile": "الملف الشخصي",
   "notifications": "التنبيهات",
   "settings": "الإعدادات",
@@ -142,6 +142,7 @@
   "qr_code": "رمز QR",
   "close": "إغلاق",
   "location_required": "الموقع مطلوب",
+  "getting_location": "جاري الحصول على موقعك…",
   "verify_custody": "التحقق من العهدة",
   "to_user_email": "البريد الإلكتروني للمستخدم المستقبل",
   "enter_email": "أدخل عنوان البريد الإلكتروني",
@@ -214,6 +215,26 @@
   },
   "view_details": "عرض التفاصيل",
   "survey_link": "رابط الاستطلاع",
+  "create_short_lived_link": "إنشاء رابط قصير الصلاحية",
+  "short_lived_link_section": "رابط قصير الصلاحية",
+  "short_links": "شورت لينكس",
+  "create_short_link": "إنشاء الشورت لينك",
+  "short_link": "الشورت لينك",
+  "expiry": "انتهاء الصلاحية",
+  "link_validity_duration": "المدة المتاحة للرابط",
+  "minutes": "دقيقة",
+  "survey_available_for_duration": "سيكون الاستبيان متاحاً لمدة {minutes} دقيقة",
+  "@survey_available_for_duration": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "generate_link": "توليد الرابط",
+  "link_ready": "الرابط جاهز",
+  "creating_link": "جاري الإنشاء…",
+  "location_required_for_short_link": "يجب تفعيل الموقع لإنشاء الرابط",
   "max_responses": "أقصى عدد للاستجابات",
   "expires_at": "تاريخ الانتهاء",
   "enter_survey_code": "أدخل رمز الاستطلاع",
@@ -396,5 +417,8 @@
   "progress": "التقدم",
   "age_group": "الفئة العمرية",
   "select_gender": "اختر الجنس",
-  "select_age_group": "اختر الفئة العمرية"
+  "select_age_group": "اختر الفئة العمرية",
+  "loading": "جاري التحميل...",
+  "link_ready": "جاهز",
+  "create_link": "رابط"
 }

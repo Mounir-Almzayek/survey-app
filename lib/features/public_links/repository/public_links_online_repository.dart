@@ -1,5 +1,6 @@
 import '../../../data/network/api_request.dart';
 import '../models/public_link.dart';
+import '../models/short_lived_link_result.dart';
 import '../models/validated_public_link.dart';
 
 /// Repository for public links online operations
@@ -41,5 +42,23 @@ class PublicLinksOnlineRepository {
     final data = response.data['data'] ?? response.data;
 
     return ValidatedPublicLink.fromJson(data as Map<String, dynamic>);
+  }
+
+  /// Create a short-lived public link for proxy location capture.
+  /// POST /researcher/public-link/short-lived
+  /// [body] must contain survey_id and expires_at (ISO string); typically from [CreateShortLivedLinkRequest.toJson].
+  static Future<ShortLivedLinkResult> createShortLived({
+    required Map<String, dynamic> body,
+  }) async {
+    final apiRequest = APIRequest(
+      path: '/researcher/public-link/short-lived',
+      method: HTTPMethod.post,
+      body: body,
+      authorizationOption: AuthorizationOption.authorized,
+    );
+
+    final response = await apiRequest.send();
+    final data = response.data['data'] ?? response.data;
+    return ShortLivedLinkResult.fromJson(data as Map<String, dynamic>);
   }
 }

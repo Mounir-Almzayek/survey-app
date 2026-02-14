@@ -212,13 +212,17 @@ class PhysicalDeviceZone extends Equatable {
   ];
 }
 
-/// PhysicalDeviceLog Model - Device tracking and logging
+/// PhysicalDeviceLog Model - Device tracking and logging (matches backend schema)
 class PhysicalDeviceLog extends Equatable {
   final int id;
   final int physicalDeviceId;
-  final String logType;
-  final String? description;
-  final Map<String, dynamic>? metadata;
+  final int? assignmentId;
+  final PhysicalDeviceLogEventType eventType;
+  final double latitude;
+  final double longitude;
+  final String? status;
+  final String? message;
+  final Map<String, dynamic>? meta;
   final DateTime createdAt;
 
   // Relations
@@ -227,20 +231,32 @@ class PhysicalDeviceLog extends Equatable {
   const PhysicalDeviceLog({
     required this.id,
     required this.physicalDeviceId,
-    required this.logType,
-    this.description,
-    this.metadata,
+    this.assignmentId,
+    required this.eventType,
+    required this.latitude,
+    required this.longitude,
+    this.status,
+    this.message,
+    this.meta,
     required this.createdAt,
     this.physicalDevice,
   });
 
   factory PhysicalDeviceLog.fromJson(Map<String, dynamic> json) {
+    final lat = json['latitude'];
+    final lon = json['longitude'];
     return PhysicalDeviceLog(
       id: json['id'] as int? ?? 0,
       physicalDeviceId: json['physical_device_id'] as int? ?? 0,
-      logType: json['log_type'] as String? ?? '',
-      description: json['description'],
-      metadata: json['metadata'] as Map<String, dynamic>?,
+      assignmentId: json['assignment_id'] as int?,
+      eventType: json['event_type'] != null
+          ? PhysicalDeviceLogEventType.fromJson(json['event_type'])
+          : PhysicalDeviceLogEventType.other,
+      latitude: lat != null ? (lat is num ? lat.toDouble() : double.tryParse(lat.toString()) ?? 0.0) : 0.0,
+      longitude: lon != null ? (lon is num ? lon.toDouble() : double.tryParse(lon.toString()) ?? 0.0) : 0.0,
+      status: json['status'] as String?,
+      message: json['message'] as String?,
+      meta: json['meta'] as Map<String, dynamic>?,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'].toString())
           : DateTime.now(),
@@ -254,9 +270,13 @@ class PhysicalDeviceLog extends Equatable {
     return {
       'id': id,
       'physical_device_id': physicalDeviceId,
-      'log_type': logType,
-      'description': description,
-      'metadata': metadata,
+      'assignment_id': assignmentId,
+      'event_type': eventType.toJson(),
+      'latitude': latitude,
+      'longitude': longitude,
+      'status': status,
+      'message': message,
+      'meta': meta,
       'created_at': createdAt.toIso8601String(),
       'physical_device': physicalDevice?.toJson(),
     };
@@ -266,9 +286,13 @@ class PhysicalDeviceLog extends Equatable {
   List<Object?> get props => [
     id,
     physicalDeviceId,
-    logType,
-    description,
-    metadata,
+    assignmentId,
+    eventType,
+    latitude,
+    longitude,
+    status,
+    message,
+    meta,
     createdAt,
     physicalDevice,
   ];

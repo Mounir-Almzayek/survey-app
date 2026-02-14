@@ -1400,6 +1400,16 @@ class S {
     );
   }
 
+  /// `Getting your location…`
+  String get getting_location {
+    return Intl.message(
+      'Getting your location…',
+      name: 'getting_location',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Verify Custody`
   String get verify_custody {
     return Intl.message(
@@ -1695,6 +1705,136 @@ class S {
     return Intl.message(
       'Survey Link',
       name: 'survey_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Short-Lived Link`
+  String get create_short_lived_link {
+    return Intl.message(
+      'Create Short-Lived Link',
+      name: 'create_short_lived_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Short-Lived Link`
+  String get short_lived_link_section {
+    return Intl.message(
+      'Short-Lived Link',
+      name: 'short_lived_link_section',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Short Links`
+  String get short_links {
+    return Intl.message(
+      'Short Links',
+      name: 'short_links',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Short Link`
+  String get create_short_link {
+    return Intl.message(
+      'Create Short Link',
+      name: 'create_short_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Short Link`
+  String get short_link {
+    return Intl.message(
+      'Short Link',
+      name: 'short_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expiry`
+  String get expiry {
+    return Intl.message(
+      'Expiry',
+      name: 'expiry',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Link validity duration`
+  String get link_validity_duration {
+    return Intl.message(
+      'Link validity duration',
+      name: 'link_validity_duration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `minutes`
+  String get minutes {
+    return Intl.message(
+      'minutes',
+      name: 'minutes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Survey will be available for {minutes} minutes`
+  String survey_available_for_duration(int minutes) {
+    return Intl.message(
+      'Survey will be available for $minutes minutes',
+      name: 'survey_available_for_duration',
+      desc: '',
+      args: [minutes],
+    );
+  }
+
+  /// `Generate Link`
+  String get generate_link {
+    return Intl.message(
+      'Generate Link',
+      name: 'generate_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ready`
+  String get link_ready {
+    return Intl.message(
+      'Ready',
+      name: 'link_ready',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Creating…`
+  String get creating_link {
+    return Intl.message(
+      'Creating…',
+      name: 'creating_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location permission is required to create the link`
+  String get location_required_for_short_link {
+    return Intl.message(
+      'Location permission is required to create the link',
+      name: 'location_required_for_short_link',
       desc: '',
       args: [],
     );
@@ -2785,6 +2925,26 @@ class S {
     return Intl.message(
       'Select Age Group',
       name: 'select_age_group',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading...`
+  String get loading {
+    return Intl.message(
+      'Loading...',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Link`
+  String get create_link {
+    return Intl.message(
+      'Link',
+      name: 'create_link',
       desc: '',
       args: [],
     );

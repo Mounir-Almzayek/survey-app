@@ -7,12 +7,23 @@ class ResearcherLoginInitiateResponse {
   final String method;
   final DeviceBoundKeyLoginOptions? deviceBoundKeyOptions;
   final String? cookie;
+  /// Present when backend returns unbounded auth (login complete without verify).
+  final String? accessToken;
+  final String? userName;
+  final List<String>? userTypes;
 
   ResearcherLoginInitiateResponse({
     required this.method,
     this.deviceBoundKeyOptions,
     this.cookie,
+    this.accessToken,
+    this.userName,
+    this.userTypes,
   });
+
+  /// True when backend returned accessToken directly (unbounded assignment).
+  bool get isUnboundAuth =>
+      accessToken != null && accessToken!.isNotEmpty;
 
   /// Get login method enum
   LoginMethod get loginMethod {
@@ -36,6 +47,20 @@ class ResearcherLoginInitiateResponse {
   }
 
   factory ResearcherLoginInitiateResponse.fromJson(Map<String, dynamic> json) {
+    // Unbounded auth: backend returns { accessToken, user_name, user_types, unbound_auth: true } at root
+    final unboundAuth = json['unbound_auth'] == true;
+    final token = json['accessToken'] as String? ?? json['access_token'] as String?;
+    if (unboundAuth && token != null && token.isNotEmpty) {
+      return ResearcherLoginInitiateResponse(
+        method: '',
+        accessToken: token,
+        userName: json['user_name'] as String?,
+        userTypes: (json['user_types'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList(),
+      );
+    }
+
     final data = json['data'] as Map<String, dynamic>? ?? json;
     String method = json['method'] ?? data['method'] ?? '';
     final optionsData = json['options'] ?? data['options'];

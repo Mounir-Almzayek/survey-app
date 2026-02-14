@@ -1,13 +1,10 @@
 import 'package:equatable/equatable.dart';
-import '../../enums/survey_enums.dart';
 
 class AnswerItem extends Equatable {
   final int id;
   final int? responseId;
   final int? questionId;
   final String? value;
-  final AnswerItemStatus? status;
-  final String? rejectionReason;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? deletedAt;
@@ -17,8 +14,6 @@ class AnswerItem extends Equatable {
     this.responseId,
     this.questionId,
     this.value,
-    this.status,
-    this.rejectionReason,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
@@ -30,10 +25,6 @@ class AnswerItem extends Equatable {
       responseId: json['response_id'],
       questionId: json['question_id'],
       value: json['value'],
-      status: json['status'] != null
-          ? AnswerItemStatus.fromJson(json['status'])
-          : null,
-      rejectionReason: json['rejection_reason'],
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString())
           : null,
@@ -52,8 +43,6 @@ class AnswerItem extends Equatable {
       'response_id': responseId,
       'question_id': questionId,
       'value': value,
-      'status': status?.toJson(),
-      'rejection_reason': rejectionReason,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'deleted_at': deletedAt?.toIso8601String(),
@@ -66,8 +55,6 @@ class AnswerItem extends Equatable {
     responseId,
     questionId,
     value,
-    status,
-    rejectionReason,
     createdAt,
     updatedAt,
     deletedAt,

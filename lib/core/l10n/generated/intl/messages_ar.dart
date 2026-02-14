@@ -55,6 +55,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m16(title) => "رابط الاستطلاع: ${title}";
 
+  static String m17(minutes) => "سيكون الاستبيان متاحاً لمدة ${minutes} دقيقة";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activate": MessageLookupByLibrary.simpleMessage("تفعيل"),
@@ -103,7 +105,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "cookie_based_method_description": MessageLookupByLibrary.simpleMessage(
             "سيتم استخدام طريقة قائمة على الكوكيز لتسجيل الجهاز"),
         "copy_link": MessageLookupByLibrary.simpleMessage("نسخ الرابط"),
+        "create_link": MessageLookupByLibrary.simpleMessage("رابط"),
+        "create_short_link":
+            MessageLookupByLibrary.simpleMessage("إنشاء الشورت لينك"),
+        "create_short_lived_link":
+            MessageLookupByLibrary.simpleMessage("إنشاء رابط قصير الصلاحية"),
         "created_at_colon": m4,
+        "creating_link": MessageLookupByLibrary.simpleMessage("جاري الإنشاء…"),
         "custody": MessageLookupByLibrary.simpleMessage("العهدة"),
         "custody_status_cancelled":
             MessageLookupByLibrary.simpleMessage("ملغي"),
@@ -163,6 +171,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_with_message": m7,
         "expired_surveys": MessageLookupByLibrary.simpleMessage("منتهية"),
         "expires_at": MessageLookupByLibrary.simpleMessage("تاريخ الانتهاء"),
+        "expiry": MessageLookupByLibrary.simpleMessage("انتهاء الصلاحية"),
         "failed_pick_image": MessageLookupByLibrary.simpleMessage(
             "فشل في اختيار الصورة، يرجى المحاولة لاحقاً!"),
         "failed_to_save_image":
@@ -184,7 +193,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "gender": MessageLookupByLibrary.simpleMessage("الجنس"),
         "gender_female": MessageLookupByLibrary.simpleMessage("أنثى"),
         "gender_male": MessageLookupByLibrary.simpleMessage("ذكر"),
+        "generate_link": MessageLookupByLibrary.simpleMessage("توليد الرابط"),
         "get_started": MessageLookupByLibrary.simpleMessage("ابدأ الآن"),
+        "getting_location":
+            MessageLookupByLibrary.simpleMessage("جاري الحصول على موقعك…"),
         "grant_permission": MessageLookupByLibrary.simpleMessage("منح الإذن"),
         "hide_details": MessageLookupByLibrary.simpleMessage("إخفاء التفاصيل"),
         "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
@@ -210,6 +222,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "link_copied":
             MessageLookupByLibrary.simpleMessage("تم نسخ الرابط إلى الحافظة"),
         "link_device": MessageLookupByLibrary.simpleMessage("ربط الجهاز"),
+        "link_ready": MessageLookupByLibrary.simpleMessage("جاهز"),
+        "link_validity_duration":
+            MessageLookupByLibrary.simpleMessage("المدة المتاحة للرابط"),
+        "loading": MessageLookupByLibrary.simpleMessage("جاري التحميل..."),
         "local_responses_count": m10,
         "location_permission_denied":
             MessageLookupByLibrary.simpleMessage("تم رفض إذن الموقع"),
@@ -220,6 +236,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("إذن الموقع مطلوب"),
         "location_required":
             MessageLookupByLibrary.simpleMessage("الموقع مطلوب"),
+        "location_required_for_short_link":
+            MessageLookupByLibrary.simpleMessage(
+                "يجب تفعيل الموقع لإنشاء الرابط"),
         "location_tracking_started":
             MessageLookupByLibrary.simpleMessage("تم بدء تتبع الموقع"),
         "location_tracking_stopped":
@@ -245,6 +264,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("أقصى عدد للاستجابات"),
         "max_touch_points":
             MessageLookupByLibrary.simpleMessage("نقاط اللمس القصوى"),
+        "minutes": MessageLookupByLibrary.simpleMessage("دقيقة"),
         "minutes_count": m11,
         "nationality": MessageLookupByLibrary.simpleMessage("الجنسية"),
         "new_password":
@@ -396,6 +416,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
         "share_link": MessageLookupByLibrary.simpleMessage("مشاركة"),
         "share_link_subject": m16,
+        "short_link": MessageLookupByLibrary.simpleMessage("الشورت لينك"),
+        "short_links": MessageLookupByLibrary.simpleMessage("شورت لينكس"),
+        "short_lived_link_section":
+            MessageLookupByLibrary.simpleMessage("رابط قصير الصلاحية"),
         "show_less": MessageLookupByLibrary.simpleMessage("عرض أقل"),
         "show_qr_code": MessageLookupByLibrary.simpleMessage("عرض رمز QR"),
         "start_location_tracking":
@@ -411,6 +435,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "supervisor": MessageLookupByLibrary.simpleMessage("المشرف"),
         "survey_availability":
             MessageLookupByLibrary.simpleMessage("توفر الاستبيانات"),
+        "survey_available_for_duration": m17,
         "survey_code_placeholder":
             MessageLookupByLibrary.simpleMessage("مثال: ABC-123"),
         "survey_completed":

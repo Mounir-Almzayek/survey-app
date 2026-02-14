@@ -16,11 +16,11 @@ class Survey extends Equatable {
   final bool? gpsRequired;
   final String lang;
   final int? minimumResponseTimeMinutes;
+  final int? maxResponseTimeMinutes;
   final String? greetingMessage;
   final String? goodbayMessage;
   final String? tagsCsv;
   final int? samplingScopeId;
-  final DateTime? willPublishAt;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? deletedAt;
@@ -42,11 +42,11 @@ class Survey extends Equatable {
     this.gpsRequired,
     required this.lang,
     this.minimumResponseTimeMinutes,
+    this.maxResponseTimeMinutes,
     this.greetingMessage,
     this.goodbayMessage,
     this.tagsCsv,
     this.samplingScopeId,
-    this.willPublishAt,
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
@@ -68,10 +68,10 @@ class Survey extends Equatable {
     bool? gpsRequired,
     String? lang,
     int? minimumResponseTimeMinutes,
+    int? maxResponseTimeMinutes,
     String? greetingMessage,
     String? goodbyeMessage,
     String? tagsCsv,
-    DateTime? willPublishAt,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? deletedAt,
@@ -93,10 +93,11 @@ class Survey extends Equatable {
       lang: lang ?? this.lang,
       minimumResponseTimeMinutes:
           minimumResponseTimeMinutes ?? this.minimumResponseTimeMinutes,
+      maxResponseTimeMinutes:
+          maxResponseTimeMinutes ?? this.maxResponseTimeMinutes,
       greetingMessage: greetingMessage ?? this.greetingMessage,
       goodbayMessage: goodbayMessage ?? this.goodbayMessage,
       tagsCsv: tagsCsv ?? this.tagsCsv,
-      willPublishAt: willPublishAt ?? this.willPublishAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -124,15 +125,13 @@ class Survey extends Equatable {
           : null,
       maxResponses: json['max_responses'] as int?,
       gpsRequired: json['gps_required'] as bool?,
-      lang: json['lang'] as String,
+      lang: json['lang'] as String? ?? 'en',
       minimumResponseTimeMinutes: json['minimum_response_time_minutes'] as int?,
+      maxResponseTimeMinutes: json['max_response_time_minutes'] as int?,
       greetingMessage: json['greeting_message'] as String?,
       goodbayMessage: json['goodbay_message'] as String?,
       tagsCsv: json['tags_csv'] as String?,
       samplingScopeId: json['sampling_scope_id'] as int?,
-      willPublishAt: json['will_publish_at'] != null
-          ? DateTime.tryParse(json['will_publish_at'] as String)
-          : null,
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'] as String)
           : null,
@@ -170,11 +169,11 @@ class Survey extends Equatable {
       'gps_required': gpsRequired,
       'lang': lang,
       'minimum_response_time_minutes': minimumResponseTimeMinutes,
+      'max_response_time_minutes': maxResponseTimeMinutes,
       'greeting_message': greetingMessage,
       'goodbay_message': goodbayMessage,
       'tags_csv': tagsCsv,
       'sampling_scope_id': samplingScopeId,
-      'will_publish_at': willPublishAt?.toIso8601String(),
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'deleted_at': deletedAt?.toIso8601String(),
@@ -200,10 +199,10 @@ class Survey extends Equatable {
     gpsRequired,
     lang,
     minimumResponseTimeMinutes,
+    maxResponseTimeMinutes,
     greetingMessage,
     goodbayMessage,
     tagsCsv,
-    willPublishAt,
     createdAt,
     updatedAt,
     deletedAt,

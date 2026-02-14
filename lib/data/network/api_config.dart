@@ -24,4 +24,9 @@ class APIConfig {
     }
     return "$baseUrl$imagePath";
   }
+
+  /// Base URL for the survey frontend (public survey links open in browser).
+  /// Used to build short-lived links with locale and path: base/survey/{shortCode}.
+  static const String surveyFrontendBaseUrl =
+      'https://survey-frontend.system2030.com/ar';
 }

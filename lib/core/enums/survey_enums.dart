@@ -83,22 +83,6 @@ enum ResponseLogEventType {
   }
 }
 
-enum AnswerItemStatus {
-  accepted,
-  rejected;
-
-  String toJson() => name.toUpperCase();
-
-  static AnswerItemStatus fromJson(dynamic value) {
-    if (value == null) return AnswerItemStatus.accepted;
-    final String val = value.toString().toUpperCase();
-    return AnswerItemStatus.values.firstWhere(
-      (e) => e.name.toUpperCase() == val,
-      orElse: () => AnswerItemStatus.accepted,
-    );
-  }
-}
-
 enum ConditionOperator {
   eq,
   neq,
@@ -312,6 +296,24 @@ enum PhysicalDeviceStatus {
     return PhysicalDeviceStatus.values.firstWhere(
       (e) => e.name.toUpperCase() == val,
       orElse: () => PhysicalDeviceStatus.pending,
+    );
+  }
+}
+
+/// PhysicalDeviceLogEventType enum for device log entries
+enum PhysicalDeviceLogEventType {
+  location,
+  status,
+  other;
+
+  String toJson() => name.toUpperCase();
+
+  static PhysicalDeviceLogEventType fromJson(dynamic value) {
+    if (value == null) return PhysicalDeviceLogEventType.other;
+    final String val = value.toString().toUpperCase();
+    return PhysicalDeviceLogEventType.values.firstWhere(
+      (e) => e.name.toUpperCase() == val,
+      orElse: () => PhysicalDeviceLogEventType.other,
     );
   }
 }
