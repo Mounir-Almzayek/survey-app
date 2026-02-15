@@ -15,7 +15,8 @@ class ListAssignmentsResponse {
     return ListAssignmentsResponse(
       success: json['success'] as bool? ?? false,
       message: json['message'] as String? ?? '',
-      surveys: (json['data'] as List?)
+      surveys:
+          (json['data'] as List?)
               ?.map((e) => Survey.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -27,10 +28,7 @@ class GetSurveyAssignmentResponse {
   final bool success;
   final Survey survey;
 
-  GetSurveyAssignmentResponse({
-    required this.success,
-    required this.survey,
-  });
+  GetSurveyAssignmentResponse({required this.success, required this.survey});
 
   factory GetSurveyAssignmentResponse.fromJson(Map<String, dynamic> json) {
     return GetSurveyAssignmentResponse(

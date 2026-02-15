@@ -10,10 +10,12 @@ import '../../../core/widgets/unified_snackbar.dart';
 import '../bloc/custody_list/custody_list_bloc.dart';
 import '../bloc/custody_list/custody_list_event.dart';
 import '../bloc/custody_list/custody_list_state.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../core/routes/app_routes.dart';
 import '../../../core/widgets/infinite_list_view_widget.dart';
 import '../../../core/utils/responsive_layout.dart';
 import 'widgets/custody_card.dart';
-import 'custody_transfer_screen.dart';
 import 'custody_verification_screen.dart';
 
 class CustodyListScreen extends StatefulWidget {
@@ -40,16 +42,11 @@ class _CustodyListScreenState extends State<CustodyListScreen> {
       backgroundColor: AppColors.background,
       floatingActionButton: Padding(
         padding: EdgeInsets.only(
-          bottom: context.responsive(100.h, tablet: 120.h, desktop: 140.h),
+          bottom: context.responsive(100.h, tablet: 120.h, desktop: 5.h),
         ),
         child: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const CustodyTransferScreen(),
-              ),
-            );
+            context.go(Routes.custodyTransferPath);
           },
           backgroundColor: AppColors.primary,
           icon: const Icon(Icons.add_rounded, color: Colors.white),

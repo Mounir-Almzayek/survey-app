@@ -1,15 +1,54 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// API Configuration
 /// Base URL configuration for the system
 class APIConfig {
-  // Production and Debug hosts
-  // Updated with the correct host from the plan
+  // Production and Debug hosts (fallback values)
   static const String _prodHost = "survey-api.system2030.com";
   static const String _debugHost = "survey-api.system2030.com";
 
-  /// Get the current host based on build mode
-  static String get host => kDebugMode ? _debugHost : _prodHost;
+  // Frontend URLs (fallback values)
+  static const String _defaultSurveyFrontendUrl =
+      "https://survey-frontend.system2030.com";
+  static const String _defaultLocale = "ar";
+
+  /// Get the current API host based on environment variables or build mode
+  static String get host {
+    // Try environment variables first
+    if (dotenv.isInitialized) {
+      final envUrl =
+          dotenv.env['API_BASE_URL_${kReleaseMode ? 'PROD' : 'DEV'}'];
+      if (envUrl != null && envUrl.isNotEmpty) {
+        return envUrl.replaceAll('https://', '');
+      }
+    }
+    // Fallback to hardcoded values
+    return kDebugMode ? _debugHost : _prodHost;
+  }
+
+  /// Get the survey frontend base URL
+  static String get surveyFrontendBaseUrl {
+    if (dotenv.isInitialized) {
+      final envUrl = dotenv
+          .env['SURVEY_FRONTEND_BASE_URL_${kReleaseMode ? 'PROD' : 'DEV'}'];
+      if (envUrl != null && envUrl.isNotEmpty) {
+        return envUrl;
+      }
+    }
+    return _defaultSurveyFrontendUrl;
+  }
+
+  /// Get the default locale for survey links
+  static String get defaultLocale {
+    if (dotenv.isInitialized) {
+      final locale = dotenv.env['SURVEY_DEFAULT_LOCALE'];
+      if (locale != null && locale.isNotEmpty) {
+        return locale;
+      }
+    }
+    return _defaultLocale;
+  }
 
   /// Base URL for the API
   static String get baseUrl => "https://$host";
@@ -25,8 +64,20 @@ class APIConfig {
     return "$baseUrl$imagePath";
   }
 
-  /// Base URL for the survey frontend (public survey links open in browser).
-  /// Used to build short-lived links with locale and path: base/survey/{shortCode}.
-  static const String surveyFrontendBaseUrl =
-      'https://survey-frontend.system2030.com/ar';
+  /// Build public survey URL with short code
+  static String buildPublicSurveyUrl(String shortCode, {String? locale}) {
+    final loc = locale ?? defaultLocale;
+    return "$surveyFrontendBaseUrl/$loc/survey/$shortCode";
+  }
+
+  /// Build short-lived survey URL with location parameters
+  static String buildShortLivedSurveyUrl(
+    String shortCode,
+    double latitude,
+    double longitude, {
+    String? locale,
+  }) {
+    final loc = locale ?? defaultLocale;
+    return "$surveyFrontendBaseUrl/$loc/survey/$shortCode?lat=$latitude&lng=$longitude";
+  }
 }

@@ -11,6 +11,7 @@ import '../../features/qr_scanner/presentation/qr_scanner_page.dart';
 import '../../features/assignment/presentation/pages/survey_answering_page.dart';
 import '../../features/assignment/presentation/pages/completed_responses_page.dart';
 import '../../features/assignment/presentation/pages/completed_response_view_page.dart';
+import '../../features/custody/presentation/custody_transfer_screen.dart';
 import '../../core/models/survey/survey_model.dart';
 import 'app_routes.dart';
 
@@ -65,6 +66,10 @@ final appPages = GoRouter(
         final token = state.uri.queryParameters['token'];
         return DeviceRegistrationPage(token: token);
       },
+    ),
+    GoRoute(
+      path: Routes.custodyTransferPath,
+      builder: (context, state) => const CustodyTransferScreen(),
     ),
     GoRoute(
       path: Routes.qrScannerPath,

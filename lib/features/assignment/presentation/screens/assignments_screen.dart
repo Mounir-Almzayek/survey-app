@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/utils/responsive_layout.dart';
+import '../../../../core/widgets/error_state_widget.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../bloc/assignments_list/assignments_list_bloc.dart';
 import '../widgets/assignment_card.dart';
@@ -23,49 +24,10 @@ class AssignmentsScreen extends StatelessWidget {
           }
 
           if (state is AssignmentsListError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: context.adaptiveIcon(50.sp),
-                    color: AppColors.error,
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    s.error_occurred,
-                    style: TextStyle(
-                      fontSize: context.adaptiveFont(16.sp),
-                      color: AppColors.primaryText,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    state.message,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.secondaryText,
-                      fontSize: context.adaptiveFont(12.sp),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () => context.read<AssignmentsListBloc>().add(
-                      LoadAssignments(),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(s.retry),
-                  ),
-                ],
-              ),
+            return ErrorStateWidget(
+              message: state.message,
+              onRetry: () =>
+                  context.read<AssignmentsListBloc>().add(LoadAssignments()),
             );
           }
 
@@ -93,15 +55,31 @@ class AssignmentsScreen extends StatelessWidget {
                     padding: EdgeInsets.all(
                       context.responsive(16.r, tablet: 24.r, desktop: 32.r),
                     ),
-                    itemCount: surveys.length,
-                    separatorBuilder: (context, index) => SizedBox(
-                      height: context.responsive(
-                        12.h,
-                        tablet: 16.h,
-                        desktop: 20.h,
-                      ),
-                    ),
+                    itemCount:
+                        surveys.length + 1, // Add 1 for the bottom spacing
+                    separatorBuilder: (context, index) {
+                      // Don't add separator after the last actual item
+                      if (index == surveys.length - 1)
+                        return const SizedBox.shrink();
+                      return SizedBox(
+                        height: context.responsive(
+                          12.h,
+                          tablet: 16.h,
+                          desktop: 20.h,
+                        ),
+                      );
+                    },
                     itemBuilder: (context, index) {
+                      // Last item is the bottom spacing
+                      if (index == surveys.length) {
+                        return SizedBox(
+                          height: context.responsive(
+                            100.h, // Space for floating bottom bar on mobile
+                            tablet: 120.h,
+                            desktop: 140.h,
+                          ),
+                        );
+                      }
                       return AssignmentCard(survey: surveys[index]);
                     },
                   ),

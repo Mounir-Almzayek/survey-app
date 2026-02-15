@@ -7,15 +7,13 @@ import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/loading_widget.dart';
 import '../../../core/widgets/error_state_widget.dart';
 import '../../../core/widgets/unified_snackbar.dart';
-import '../../../core/enums/app_language.dart';
 import '../../../core/utils/responsive_layout.dart';
 import '../models/researcher_profile_response_model.dart';
-import '../../language/bloc/language/language_bloc.dart';
 import '../bloc/profile/profile_bloc.dart';
 import 'widgets/researcher_basic_info_card.dart';
 import 'widgets/supervisor_info_card.dart';
 import 'widgets/assignments_list_card.dart';
-import '../widgets/profile_logout_dialog.dart';
+import 'widgets/profile_settings_section.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -160,7 +158,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SizedBox(width: 40.w),
           Expanded(
             flex: 2,
-            child: AssignmentsListCard(assignments: profile.assignments),
+            child: Column(
+              children: [
+                AssignmentsListCard(assignments: profile.assignments),
+                SizedBox(height: 20.h),
+                const ProfileSettingsSection(),
+              ],
+            ),
           ),
         ],
       );
@@ -174,163 +178,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         SizedBox(height: 20.h),
         AssignmentsListCard(assignments: profile.assignments),
         SizedBox(height: 20.h),
-        _buildSettingsSection(context, locale),
+        const ProfileSettingsSection(),
       ],
-    );
-  }
-
-  Widget _buildSettingsSection(BuildContext context, S locale) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _ProfileMenuTile(
-            icon: Icons.language_rounded,
-            title: locale.language,
-            onTap: () => _showLanguageSelection(context),
-          ),
-          const Divider(height: 1),
-          _ProfileMenuTile(
-            icon: Icons.notifications_outlined,
-            title: locale.notifications,
-            onTap: () {},
-          ),
-          const Divider(height: 1),
-          _ProfileMenuTile(
-            icon: Icons.logout_rounded,
-            title: locale.log_out,
-            isDestructive: true,
-            onTap: () => ProfileLogoutDialog.show(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showLanguageSelection(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
-        ),
-        child: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: 12.h),
-              Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: AppColors.border,
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                S.of(context).language,
-                style: TextStyle(
-                  fontSize: context.adaptiveFont(16.sp),
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryText,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              ListTile(
-                leading: const Icon(
-                  Icons.language_rounded,
-                  color: AppColors.primary,
-                ),
-                title: Text(S.of(context).arabic, style: const TextStyle()),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  context.read<LanguageBloc>().add(
-                    const ChangeLanguage(AppLanguage.arabic),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.language_rounded,
-                  color: AppColors.primary,
-                ),
-                title: Text(S.of(context).english, style: const TextStyle()),
-                onTap: () {
-                  Navigator.pop(ctx);
-                  context.read<LanguageBloc>().add(
-                    const ChangeLanguage(AppLanguage.english),
-                  );
-                },
-              ),
-              SizedBox(height: 20.h),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ProfileMenuTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final VoidCallback onTap;
-  final bool isDestructive;
-
-  const _ProfileMenuTile({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-    this.isDestructive = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-      leading: Container(
-        padding: EdgeInsets.all(8.r),
-        decoration: BoxDecoration(
-          color: isDestructive
-              ? AppColors.error.withValues(alpha: 0.1)
-              : AppColors.primary.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Icon(
-          icon,
-          color: isDestructive ? AppColors.error : AppColors.primary,
-          size: context.adaptiveIcon(20.sp),
-        ),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: context.adaptiveFont(13.sp),
-          fontWeight: FontWeight.w500,
-          color: isDestructive ? AppColors.error : AppColors.primaryText,
-        ),
-      ),
-      trailing: Icon(
-        Icons.chevron_right_rounded,
-        size: context.adaptiveIcon(20.sp),
-        color: AppColors.secondaryText.withValues(alpha: 0.5),
-      ),
     );
   }
 }

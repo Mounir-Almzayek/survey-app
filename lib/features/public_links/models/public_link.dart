@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import '../../../core/models/survey/survey_model.dart';
 import '../../../core/styles/app_colors.dart';
+import '../../../data/network/api_config.dart';
 
 /// PublicLinkType enum for different link types
 enum PublicLinkType {
@@ -121,8 +122,7 @@ class PublicLink extends Equatable {
   String get surveyTitle => survey?.title ?? '';
 
   /// Get full URL (computed from shortCode)
-  String get fullUrl =>
-      'https://survey-frontend.system2030.com/ar/survey/$shortCode';
+  String get fullUrl => APIConfig.buildPublicSurveyUrl(shortCode);
 
   /// Create PublicLink from JSON
   factory PublicLink.fromJson(Map<String, dynamic> json) {
