@@ -1,27 +1,40 @@
 import 'package:equatable/equatable.dart';
 import '../../models/device_location.dart';
+import '../../models/location_update_request.dart';
 
 /// States for Device Location Bloc
 abstract class DeviceLocationState extends Equatable {
-  const DeviceLocationState();
+  const DeviceLocationState({this.request});
+
+  final LocationUpdateRequest? request;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [request];
 }
 
 /// Initial state
 class DeviceLocationInitial extends DeviceLocationState {
-  const DeviceLocationInitial();
+  const DeviceLocationInitial({super.request});
 }
 
 /// Loading state
 class DeviceLocationLoading extends DeviceLocationState {
-  const DeviceLocationLoading();
+  const DeviceLocationLoading({super.request});
 }
 
 /// Location tracking started
 class DeviceLocationTrackingStarted extends DeviceLocationState {
-  const DeviceLocationTrackingStarted();
+  const DeviceLocationTrackingStarted({required LocationUpdateRequest request})
+      : super(request: request);
+
+  DeviceLocationTrackingStarted copyWith({LocationUpdateRequest? request}) {
+    return DeviceLocationTrackingStarted(
+      request: request ?? this.request!,
+    );
+  }
+
+  @override
+  List<Object?> get props => [request];
 }
 
 /// Location tracking stopped
@@ -33,10 +46,10 @@ class DeviceLocationTrackingStopped extends DeviceLocationState {
 class DeviceLocationUpdated extends DeviceLocationState {
   final DeviceLocation location;
 
-  const DeviceLocationUpdated(this.location);
+  const DeviceLocationUpdated(this.location, {super.request});
 
   @override
-  List<Object?> get props => [location];
+  List<Object?> get props => [location, request];
 }
 
 /// Location update failed

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +9,8 @@ import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/unified_snackbar.dart';
 import '../../profile/bloc/profile/profile_bloc.dart';
-import '../service/background_location_service.dart';
+import '../bloc/device_location/device_location_bloc.dart';
+import '../bloc/device_location/device_location_state.dart';
 
 class ZoneViolationListener extends StatefulWidget {
   final Widget child;
@@ -22,24 +22,7 @@ class ZoneViolationListener extends StatefulWidget {
 }
 
 class _ZoneViolationListenerState extends State<ZoneViolationListener> {
-  StreamSubscription? _subscription;
   bool _isDialogShowing = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _subscription = BackgroundLocationService().onZoneViolation.listen((
-      message,
-    ) {
-      _showViolationDialog();
-    });
-  }
-
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    super.dispose();
-  }
 
   void _showViolationDialog() {
     if (_isDialogShowing) return;
@@ -155,7 +138,14 @@ class _ZoneViolationListenerState extends State<ZoneViolationListener> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ProfileBloc, ProfileState>(
+    return BlocListener<DeviceLocationBloc, DeviceLocationState>(
+      listenWhen: (prev, curr) => curr is DeviceLocationWarningLogout,
+      listener: (context, state) {
+        if (state is DeviceLocationWarningLogout) {
+          _showViolationDialog();
+        }
+      },
+      child: BlocListener<ProfileBloc, ProfileState>(
       listener: (context, state) {
         final navigatorContext = Pages.navigatorKey.currentContext;
         if (state is ProfileLogoutSuccess) {
@@ -171,7 +161,8 @@ class _ZoneViolationListenerState extends State<ZoneViolationListener> {
           }
         }
       },
-      child: widget.child,
+        child: widget.child,
+      ),
     );
   }
 }

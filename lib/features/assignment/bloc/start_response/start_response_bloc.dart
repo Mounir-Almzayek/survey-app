@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/enums/survey_enums.dart';
+import '../../../../core/services/device_local_metadata_service.dart';
 import '../../models/start_response_model.dart';
 import '../../models/start_response_request_model.dart';
 import '../../repository/assignment_repository.dart';
@@ -94,6 +95,12 @@ class StartResponseBloc extends Bloc<StartResponseEvent, StartResponseState> {
           request.surveyId,
           response.response.id,
         );
+        // Persist assignment ID for location updates (last assignment interacted with)
+        if (response.response.assignmentId != null) {
+          await DeviceLocalMetadataService().saveAssignmentId(
+            response.response.assignmentId,
+          );
+        }
         if (!emit.isDone) {
           emit(StartResponseSuccess(response, request: request));
         }
@@ -104,6 +111,12 @@ class StartResponseBloc extends Bloc<StartResponseEvent, StartResponseState> {
           request.surveyId,
           response.response.id,
         );
+        // Persist assignment ID for location updates (last assignment interacted with)
+        if (response.response.assignmentId != null) {
+          await DeviceLocalMetadataService().saveAssignmentId(
+            response.response.assignmentId,
+          );
+        }
         if (!emit.isDone) {
           emit(StartResponseSuccess(response, request: request));
         }

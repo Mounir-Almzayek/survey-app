@@ -6,17 +6,15 @@ class DeviceLocationOnlineRepository {
   /// Update device location
   ///
   /// Parameters:
-  /// - [deviceId]: The device ID
-  /// - [request]: Location update request with latitude, longitude, and optional assignment_id
+  /// - [request]: Location update request with latitude, longitude, optional device_id, and optional assignment_id
   ///
   /// Returns: Future that completes when location is updated
   /// Throws: Exception if update fails
   static Future<void> updateDeviceLocation({
-    required int deviceId,
     required LocationUpdateRequest request,
   }) async {
     final apiRequest = APIRequest(
-      path: '/researcher/device-location/devices/$deviceId/location',
+      path: '/researcher/device-location/location',
       method: HTTPMethod.post,
       body: request.toJson(),
       authorizationOption: AuthorizationOption.authorized,

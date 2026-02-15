@@ -6,7 +6,6 @@ import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/custom_app_bar.dart';
 import '../../../core/utils/responsive_layout.dart';
-import '../../../core/services/device_local_metadata_service.dart';
 import '../../assignment/presentation/pages/assignments_page.dart';
 import '../../home/presentation/home_page.dart';
 import '../../profile/presentation/profile_page.dart';
@@ -38,21 +37,8 @@ class _MainScreenState extends State<MainScreen> {
     _startLocationTracking();
   }
 
-  Future<void> _startLocationTracking() async {
-    final metadataService = DeviceLocalMetadataService();
-    final deviceId = await metadataService.getPhysicalDeviceId();
-    if (deviceId == null) return;
-
-    final assignmentId = await metadataService.getAssignmentId();
-
-    if (mounted) {
-      context.read<DeviceLocationBloc>().add(
-        StartLocationTrackingEvent(
-          deviceId: deviceId,
-          assignmentId: assignmentId,
-        ),
-      );
-    }
+  void _startLocationTracking() {
+    context.read<DeviceLocationBloc>().add(const StartLocationTrackingEvent());
   }
 
   @override

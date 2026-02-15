@@ -1,7 +1,9 @@
+import '../models/login_method_type.dart';
 import '../../../core/services/hive_service.dart';
 
 class AuthLocalRepository {
   static const String _tokenKey = 'token';
+  static const String _loginMethodKey = 'login_method';
 
   /// Retrieve saved token
   static Future<String> retrieveToken() async {
@@ -16,8 +18,25 @@ class AuthLocalRepository {
     await HiveService.saveData(_tokenKey, token);
   }
 
+  /// Save login method (challenge vs email-only)
+  static Future<void> saveLoginMethod(LoginMethodType type) async {
+    await HiveService.saveData(_loginMethodKey, type.name);
+  }
+
+  /// Get login method used for current session (null when not logged in)
+  static Future<LoginMethodType?> getLoginMethod() async {
+    final value = await HiveService.getData(_loginMethodKey) as String?;
+    if (value == null || value.isEmpty) return null;
+    return switch (value) {
+      'challenge' => LoginMethodType.challenge,
+      'emailOnly' => LoginMethodType.emailOnly,
+      _ => null,
+    };
+  }
+
   /// Clear authentication-related data
   static Future<void> clearAuthData() async {
     await HiveService.deleteData(_tokenKey);
+    await HiveService.deleteData(_loginMethodKey);
   }
 }

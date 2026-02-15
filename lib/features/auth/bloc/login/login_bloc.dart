@@ -5,6 +5,7 @@ import '../../../../core/utils/device_info_util.dart';
 import '../../../../core/utils/async_runner.dart';
 import '../../../../core/services/device_bound_key_service.dart';
 import '../../../device_registration/repository/device_cookie_repository.dart';
+import '../../models/login_method_type.dart';
 import '../../models/researcher_login_initiate_request.dart';
 import '../../models/researcher_login_initiate_response.dart';
 import '../../models/researcher_login_verify_request.dart';
@@ -87,6 +88,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // Unbounded auth: backend returned accessToken directly (no verify step)
         if (response.isUnboundAuth && response.accessToken != null) {
           await AuthLocalRepository.saveToken(response.accessToken!);
+          await AuthLocalRepository.saveLoginMethod(LoginMethodType.emailOnly);
           if (!emit.isDone) {
             emit(
               LoginSuccess(
@@ -199,6 +201,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (response.cookie != null && response.cookie!.isNotEmpty) {
           await DeviceCookieRepository.saveDeviceCookie(response.cookie!);
         }
+
+        await AuthLocalRepository.saveLoginMethod(LoginMethodType.challenge);
 
         // Fetch the user profile that was saved by AuthRepository.verifyResearcherLogin
         if (!emit.isDone) {

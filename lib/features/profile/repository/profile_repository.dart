@@ -1,3 +1,4 @@
+import '../../auth/repository/auth_repository.dart';
 import 'profile_local_repository.dart';
 import 'profile_online_repository.dart';
 import '../models/researcher_profile_response_model.dart';
@@ -33,6 +34,7 @@ class ProfileRepository {
       // Even if online logout fails, we clear local data
     } finally {
       await ProfileLocalRepository.clearProfileData();
+      await AuthRepository.logout();
     }
   }
 }

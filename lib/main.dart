@@ -11,6 +11,7 @@ import 'core/services/app_info_service.dart';
 import 'core/queue/services/request_queue_manager.dart';
 import 'core/queue/presentation/queue_status_listener.dart';
 import 'core/styles/app_theme.dart';
+import 'features/device_location/bloc/device_location/device_location_bloc.dart';
 import 'features/language/bloc/language/language_bloc.dart';
 import 'features/profile/bloc/profile/profile_bloc.dart';
 import 'features/device_location/presentation/location_permission_gate.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => LanguageBloc()..add(const LoadLanguage())),
         BlocProvider(create: (_) => ProfileBloc()),
+        BlocProvider(create: (_) => DeviceLocationBloc()),
       ],
       child: BlocBuilder<LanguageBloc, LanguageState>(
         builder: (context, state) {
