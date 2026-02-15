@@ -3,6 +3,7 @@ import '../../enums/survey_enums.dart';
 import 'section_model.dart';
 import 'conditional_logic_model.dart';
 import 'report_configuration_model.dart';
+import 'assignment_model.dart';
 
 class Survey extends Equatable {
   final int id;
@@ -29,6 +30,7 @@ class Survey extends Equatable {
   final List<Section>? sections;
   final List<ConditionalLogic>? conditionalLogics;
   final List<ReportConfiguration>? reportConfigurations;
+  final List<Assignment>? assignments;
 
   const Survey({
     required this.id,
@@ -54,6 +56,7 @@ class Survey extends Equatable {
     this.sections,
     this.conditionalLogics,
     this.reportConfigurations,
+    this.assignments,
   });
 
   Survey copyWith({
@@ -79,6 +82,7 @@ class Survey extends Equatable {
     List<Section>? sections,
     List<ConditionalLogic>? conditionalLogics,
     List<ReportConfiguration>? reportConfigurations,
+    List<Assignment>? assignments,
   }) {
     return Survey(
       id: id ?? this.id,
@@ -105,6 +109,7 @@ class Survey extends Equatable {
       sections: sections ?? this.sections,
       conditionalLogics: conditionalLogics ?? this.conditionalLogics,
       reportConfigurations: reportConfigurations ?? this.reportConfigurations,
+      assignments: assignments ?? this.assignments,
     );
   }
 
@@ -153,6 +158,9 @@ class Survey extends Equatable {
       reportConfigurations: (json['report_configurations'] as List?)
           ?.map((e) => ReportConfiguration.fromJson(e))
           .toList(),
+      assignments: (json['assignments'] as List?)
+          ?.map((e) => Assignment.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 
@@ -183,6 +191,7 @@ class Survey extends Equatable {
       'report_configurations': reportConfigurations
           ?.map((e) => e.toJson())
           .toList(),
+      'assignments': assignments?.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -210,5 +219,6 @@ class Survey extends Equatable {
     sections,
     conditionalLogics,
     reportConfigurations,
+    assignments,
   ];
 }

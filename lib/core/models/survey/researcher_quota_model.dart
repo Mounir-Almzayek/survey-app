@@ -10,6 +10,8 @@ class ResearcherQuota extends Equatable {
   final AgeGroup ageGroup;
   final int target;
   final int progress;
+  final int collected;
+  final num progressPercent;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -23,10 +25,40 @@ class ResearcherQuota extends Equatable {
     required this.ageGroup,
     required this.target,
     this.progress = 0,
+    this.collected = 0,
+    this.progressPercent = 0,
     required this.createdAt,
     required this.updatedAt,
     this.assignment,
   });
+
+  ResearcherQuota copyWith({
+    int? id,
+    int? assignmentId,
+    Gender? gender,
+    AgeGroup? ageGroup,
+    int? target,
+    int? progress,
+    int? collected,
+    num? progressPercent,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Assignment? assignment,
+  }) {
+    return ResearcherQuota(
+      id: id ?? this.id,
+      assignmentId: assignmentId ?? this.assignmentId,
+      gender: gender ?? this.gender,
+      ageGroup: ageGroup ?? this.ageGroup,
+      target: target ?? this.target,
+      progress: progress ?? this.progress,
+      collected: collected ?? this.collected,
+      progressPercent: progressPercent ?? this.progressPercent,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      assignment: assignment ?? this.assignment,
+    );
+  }
 
   factory ResearcherQuota.fromJson(Map<String, dynamic> json) {
     return ResearcherQuota(
@@ -36,6 +68,8 @@ class ResearcherQuota extends Equatable {
       ageGroup: AgeGroup.fromJson(json['age_group']),
       target: json['target'] as int? ?? 0,
       progress: json['progress'] as int? ?? 0,
+      collected: json['collected'] as int? ?? 0,
+      progressPercent: (json['progress_percent'] as num?) ?? 0,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'].toString())
           : DateTime.now(),
@@ -56,6 +90,8 @@ class ResearcherQuota extends Equatable {
       'age_group': ageGroup.toJson(),
       'target': target,
       'progress': progress,
+      'collected': collected,
+      'progress_percent': progressPercent,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
       'assignment': assignment?.toJson(),
@@ -126,6 +162,8 @@ class ResearcherQuota extends Equatable {
     ageGroup,
     target,
     progress,
+    collected,
+    progressPercent,
     createdAt,
     updatedAt,
     assignment,

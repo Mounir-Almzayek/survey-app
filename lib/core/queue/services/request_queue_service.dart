@@ -39,18 +39,26 @@ class RequestQueueService {
     }
   }
 
-  /// Get all pending requests from the queue
+  /// Get all pending requests from the queue.
+  /// Sorted so start_response runs before section_save (ensures real response ids before section sync).
   static Future<List<RequestQueueItem>> getPendingRequests() async {
     try {
       final box = await _getBox();
       final queue = _getQueue(box);
-      return queue
+      final pending = queue
           .map(
             (item) => RequestQueueItem.fromJson(item as Map<String, dynamic>),
           )
           .where((item) => item.status == QueueItemStatus.pending)
-          .toList()
-        ..sort((a, b) => a.queuedAt.compareTo(b.queuedAt));
+          .toList();
+      pending.sort((a, b) {
+        final aStart = a.metadata?['type'] == 'start_response';
+        final bStart = b.metadata?['type'] == 'start_response';
+        if (aStart && !bStart) return -1;
+        if (!aStart && bStart) return 1;
+        return a.queuedAt.compareTo(b.queuedAt);
+      });
+      return pending;
     } catch (e) {
       return [];
     }

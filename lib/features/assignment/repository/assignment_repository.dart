@@ -4,7 +4,9 @@ import '../../../data/network/api_request.dart';
 import '../../../core/enums/survey_enums.dart';
 import '../../../core/queue/services/request_queue_manager.dart';
 import '../../../core/queue/services/request_queue_service.dart';
+import '../../../core/models/survey/assignment_model.dart';
 import '../../../core/models/survey/response_model.dart' as survey_models;
+import '../../../core/models/survey/researcher_quota_model.dart';
 import '../models/assignment_response_model.dart';
 import '../models/save_section_models.dart';
 import '../models/start_response_model.dart';
@@ -106,6 +108,52 @@ class AssignmentRepository {
     await AssignmentLocalRepository.remapIds(dummyId, realId);
   }
 
+  /// Updates the cached survey's researcher quotas when a response is completed:
+  /// finds the response's demographic from metadata and increments the matching quota locally.
+  static Future<void> _incrementLocalQuotaForCompletedResponse(
+    int responseId,
+  ) async {
+    final meta = await AssignmentLocalRepository.getResponseMetadata(responseId);
+    if (meta == null) return;
+
+    final survey = await AssignmentLocalRepository.getSurveyById(meta.surveyId);
+    if (survey == null ||
+        survey.assignments == null ||
+        survey.assignments!.isEmpty) return;
+
+    for (var a = 0; a < survey.assignments!.length; a++) {
+      final assignment = survey.assignments![a];
+      final quotas = assignment.researcherQuotas;
+      if (quotas == null || quotas.isEmpty) continue;
+
+      final matchIndex = quotas.indexWhere(
+        (q) => q.gender == meta.gender && q.ageGroup == meta.ageGroup,
+      );
+      if (matchIndex == -1) continue;
+
+      final quota = quotas[matchIndex];
+      final newProgress = quota.progress + 1;
+      final newCollected = quota.collected + 1;
+      final newPercent = quota.target > 0
+          ? (newProgress / quota.target * 100).round().clamp(0, 100)
+          : 0;
+
+      final updatedQuota = quota.copyWith(
+        progress: newProgress,
+        collected: newCollected,
+        progressPercent: newPercent,
+      );
+      final newQuotas = List<ResearcherQuota>.from(quotas)
+        ..[matchIndex] = updatedQuota;
+      final updatedAssignment = assignment.copyWith(researcherQuotas: newQuotas);
+      final newAssignments = List<Assignment>.from(survey.assignments!)
+        ..[a] = updatedAssignment;
+      final updatedSurvey = survey.copyWith(assignments: newAssignments);
+      await AssignmentLocalRepository.updateSurvey(updatedSurvey);
+      return;
+    }
+  }
+
   /// Get the APIRequest for saving section answers (used for queuing)
   static APIRequest getSaveSectionAnswersRequest({
     required int responseId,
@@ -167,22 +215,31 @@ class AssignmentRepository {
       // Increment persistent sync counter if this was the final section
       if (result.isComplete) {
         await AssignmentLocalRepository.incrementSyncedResponsesCount();
+        await _incrementLocalQuotaForCompletedResponse(responseId);
       }
     }
 
     return result;
   }
 
-  /// Add save section answers to the offline queue
+  /// Add save section answers to the offline queue.
+  /// When [isCompletingSurvey] is true, local quota is incremented immediately (optimistic update).
   static Future<void> enqueueSaveSectionAnswers({
     required int responseId,
     required SaveSectionRequest saveRequest,
+    bool isCompletingSurvey = false,
   }) async {
     // 1. Mark as unsynced locally
     final localRequest = saveRequest.copyWith(isSynced: false);
     await AssignmentLocalRepository.saveResponseDraft(responseId, localRequest);
 
-    // 2. Add to queue manager
+    // 2. If this save completes the survey offline, increment local quota now (optimistic)
+    if (isCompletingSurvey) {
+      await _incrementLocalQuotaForCompletedResponse(responseId);
+      await AssignmentLocalRepository.markOptimisticQuotaIncremented(responseId);
+    }
+
+    // 3. Add to queue manager
     final apiRequest = getSaveSectionAnswersRequest(
       responseId: responseId,
       saveRequest: saveRequest,
@@ -190,6 +247,7 @@ class AssignmentRepository {
 
     await RequestQueueManager().queueRequest(
       apiRequest,
+      metadata: {'type': 'section_save'},
       onSuccess: (response) async {
         // When successfully synced via queue, update local status
         await AssignmentLocalRepository.saveResponseDraft(
@@ -197,12 +255,18 @@ class AssignmentRepository {
           saveRequest.copyWith(isSynced: true),
         );
 
-        // Check if the response indicates completion to increment sync counter
+        // Check if the response indicates completion to increment sync counter and local quotas
         try {
           if (response.data is Map<String, dynamic>) {
             final result = SaveSectionResponse.fromJson(response.data);
             if (result.success && result.isComplete) {
               await AssignmentLocalRepository.incrementSyncedResponsesCount();
+              // Skip quota increment if we already did it optimistically when user completed offline
+              final alreadyIncremented = await AssignmentLocalRepository
+                  .consumeOptimisticQuotaIncrement(responseId);
+              if (!alreadyIncremented) {
+                await _incrementLocalQuotaForCompletedResponse(responseId);
+              }
             }
           }
         } catch (_) {}

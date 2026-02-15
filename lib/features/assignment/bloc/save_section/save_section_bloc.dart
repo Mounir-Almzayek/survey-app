@@ -266,6 +266,7 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
         await AssignmentRepository.enqueueSaveSectionAnswers(
           responseId: responseId,
           saveRequest: saveRequest!,
+          isCompletingSurvey: event.isCompletingSurvey,
         );
 
         return SaveSectionResponse(

@@ -95,6 +95,13 @@ class StartResponseBloc extends Bloc<StartResponseEvent, StartResponseState> {
           request.surveyId,
           response.response.id,
         );
+        // Link response id to demographic (who we're collecting for) for quota and UI
+        await AssignmentLocalRepository.saveResponseMetadata(
+          response.response.id,
+          request.surveyId,
+          request.gender,
+          request.ageGroup,
+        );
         // Persist assignment ID for location updates (last assignment interacted with)
         if (response.response.assignmentId != null) {
           await DeviceLocalMetadataService().saveAssignmentId(
@@ -110,6 +117,13 @@ class StartResponseBloc extends Bloc<StartResponseEvent, StartResponseState> {
         await AssignmentLocalRepository.linkResponseToSurvey(
           request.surveyId,
           response.response.id,
+        );
+        // Link response id to demographic (remapped to real id when start syncs)
+        await AssignmentLocalRepository.saveResponseMetadata(
+          response.response.id,
+          request.surveyId,
+          request.gender,
+          request.ageGroup,
         );
         // Persist assignment ID for location updates (last assignment interacted with)
         if (response.response.assignmentId != null) {

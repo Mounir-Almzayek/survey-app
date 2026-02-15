@@ -65,6 +65,7 @@ class _AssignmentCardState extends State<AssignmentCard> {
                         ),
                       ),
                     ),
+                    SizedBox(width: 3.w),
                     StatusChip(status: widget.survey.status),
                   ],
                 ),

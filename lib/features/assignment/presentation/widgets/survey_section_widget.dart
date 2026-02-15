@@ -329,7 +329,7 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
 
       // Update answers with filtered ones before submitting
       context.read<SaveSectionBloc>().add(
-        SubmitSection(answers: filteredAnswers),
+        SubmitSection(answers: filteredAnswers, isCompletingSurvey: isLast),
       );
     }
   }

@@ -155,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(width: 40.w),
+          SizedBox(width: 10.w),
           Expanded(
             flex: 2,
             child: Column(

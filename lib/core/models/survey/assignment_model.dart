@@ -80,6 +80,42 @@ class Assignment extends Equatable {
     );
   }
 
+  Assignment copyWith({
+    int? id,
+    int? surveyId,
+    int? physicalDeviceId,
+    int? zoneId,
+    int? assignedUserId,
+    AssignmentStatus? status,
+    DateTime? startedAt,
+    DateTime? endedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+    Survey? survey,
+    List<Response>? responses,
+    List<ResearcherQuota>? researcherQuotas,
+    List<PhysicalDeviceLog>? physicalDeviceLogs,
+  }) {
+    return Assignment(
+      id: id ?? this.id,
+      surveyId: surveyId ?? this.surveyId,
+      physicalDeviceId: physicalDeviceId ?? this.physicalDeviceId,
+      zoneId: zoneId ?? this.zoneId,
+      assignedUserId: assignedUserId ?? this.assignedUserId,
+      status: status ?? this.status,
+      startedAt: startedAt ?? this.startedAt,
+      endedAt: endedAt ?? this.endedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      survey: survey ?? this.survey,
+      responses: responses ?? this.responses,
+      researcherQuotas: researcherQuotas ?? this.researcherQuotas,
+      physicalDeviceLogs: physicalDeviceLogs ?? this.physicalDeviceLogs,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

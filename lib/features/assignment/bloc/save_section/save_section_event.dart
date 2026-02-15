@@ -41,5 +41,8 @@ class RemoveAnswer extends SaveSectionEvent {
 
 class SubmitSection extends SaveSectionEvent {
   final List<AnswerRequest>? answers;
-  SubmitSection({this.answers});
+
+  /// True when this submit is for the last section (completes the survey).
+  final bool isCompletingSurvey;
+  SubmitSection({this.answers, this.isCompletingSurvey = false});
 }
