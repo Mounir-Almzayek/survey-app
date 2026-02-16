@@ -7,6 +7,8 @@ import '../../../core/queue/services/request_queue_service.dart';
 import '../../../core/models/survey/assignment_model.dart';
 import '../../../core/models/survey/response_model.dart' as survey_models;
 import '../../../core/models/survey/researcher_quota_model.dart';
+import '../../profile/models/researcher_profile_response_model.dart';
+import '../../profile/repository/profile_local_repository.dart';
 import '../models/assignment_response_model.dart';
 import '../models/save_section_models.dart';
 import '../models/start_response_model.dart';
@@ -131,6 +133,24 @@ class AssignmentRepository {
       );
       if (matchIndex == -1) continue;
 
+      // Verify the category exists in the researcher's profile for this survey
+      final profile = await ProfileLocalRepository.getResearcherProfile();
+      ResearcherAssignmentModel? profileAssignmentForSurvey;
+      int? profileQuotaIndex;
+      if (profile != null) {
+        final list = profile.assignments
+            .where((a) => a.surveyId == meta.surveyId)
+            .toList();
+        if (list.isEmpty) return;
+        profileAssignmentForSurvey = list.first;
+        final genderStr = meta.gender.toJson().toUpperCase();
+        final ageGroupStr = meta.ageGroup.toJson().toUpperCase();
+        profileQuotaIndex = profileAssignmentForSurvey.quotas.indexWhere((q) =>
+            q.gender.toUpperCase() == genderStr &&
+            q.ageGroup.toUpperCase() == ageGroupStr);
+        if (profileQuotaIndex == -1) return;
+      }
+
       final quota = quotas[matchIndex];
       final newProgress = quota.progress + 1;
       final newCollected = quota.collected + 1;
@@ -150,6 +170,48 @@ class AssignmentRepository {
         ..[a] = updatedAssignment;
       final updatedSurvey = survey.copyWith(assignments: newAssignments);
       await AssignmentLocalRepository.updateSurvey(updatedSurvey);
+
+      // Increment progress (collected) in the profile model locally when category matches
+      if (profile != null &&
+          profileAssignmentForSurvey != null &&
+          profileQuotaIndex != null) {
+        final pq = profileAssignmentForSurvey.quotas[profileQuotaIndex];
+        final newProfileCollected = pq.collected + 1;
+        final newProfileProgressPercent = pq.target > 0
+            ? (newProfileCollected / pq.target * 100).round().clamp(0, 100)
+            : 0;
+        final updatedProfileQuota = ResearcherQuotaModel(
+          gender: pq.gender,
+          ageGroup: pq.ageGroup,
+          target: pq.target,
+          collected: newProfileCollected,
+          progressPercent: newProfileProgressPercent,
+        );
+        final newProfileQuotas =
+            List<ResearcherQuotaModel>.from(profileAssignmentForSurvey.quotas)
+              ..[profileQuotaIndex] = updatedProfileQuota;
+        final updatedProfileAssignment = ResearcherAssignmentModel(
+          id: profileAssignmentForSurvey.id,
+          surveyId: profileAssignmentForSurvey.surveyId,
+          surveyTitle: profileAssignmentForSurvey.surveyTitle,
+          status: profileAssignmentForSurvey.status,
+          type: profileAssignmentForSurvey.type,
+          quotas: newProfileQuotas,
+        );
+        final newProfileAssignments = profile.assignments
+            .map((a) =>
+                a.surveyId == meta.surveyId
+                    ? updatedProfileAssignment
+                    : a)
+            .toList();
+        final updatedProfile = ResearcherProfileResponseModel(
+          user: profile.user,
+          researcher: profile.researcher,
+          supervisor: profile.supervisor,
+          assignments: newProfileAssignments,
+        );
+        await ProfileLocalRepository.saveResearcherProfile(updatedProfile);
+      }
       return;
     }
   }

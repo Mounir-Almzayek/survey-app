@@ -449,6 +449,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "synced_responses":
             MessageLookupByLibrary.simpleMessage("تمت المزامنة"),
         "tap_to_view": MessageLookupByLibrary.simpleMessage("اضغط للعرض"),
+        "target_categories":
+            MessageLookupByLibrary.simpleMessage("الفئات المستهدفة"),
         "thank_you_for_response":
             MessageLookupByLibrary.simpleMessage("شكراً لمشاركتك"),
         "to": MessageLookupByLibrary.simpleMessage("ل"),

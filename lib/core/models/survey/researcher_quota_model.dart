@@ -118,6 +118,14 @@ class ResearcherQuota extends Equatable {
     return 'Not Started';
   }
 
+  /// Opacity (0.0–1.0) for primary color in progress UI based on state.
+  double get progressDisplayAlpha {
+    if (isCompleted) return 1.0;
+    if (isNearlyComplete) return 0.85;
+    if (progress > 0) return 0.65;
+    return 0.45;
+  }
+
   /// Get demographic description
   String get demographicDescription {
     String genderText = gender == Gender.male ? 'Male' : 'Female';

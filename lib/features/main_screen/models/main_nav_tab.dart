@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
 import '../../../core/l10n/generated/l10n.dart';
+import '../../auth/models/login_method_type.dart';
+import 'nav_visibility_context.dart';
 
 /// Main navigation tabs for the app
 enum MainNavTab { home, surveys, custody, profile }
 
 extension MainNavTabX on MainNavTab {
+  /// Whether this tab is visible given the current nav visibility context.
+  /// Extensible: add more conditions per case as needed.
+  bool isVisible(NavVisibilityContext ctx) {
+    switch (this) {
+      case MainNavTab.custody:
+        return ctx.loginMethod != LoginMethodType.emailOnly;
+      case MainNavTab.home:
+      case MainNavTab.surveys:
+      case MainNavTab.profile:
+        return true;
+    }
+  }
+
   IconData get icon {
     switch (this) {
       case MainNavTab.home:
@@ -45,5 +60,6 @@ extension MainNavTabX on MainNavTab {
   }
 }
 
-/// Tabs to show in the bottom navigation bar
-List<MainNavTab> get bottomNavTabs => MainNavTab.values;
+/// Visible tabs for the given context. Single source for drawer, bottom bar, sidebar.
+List<MainNavTab> visibleTabs(NavVisibilityContext ctx) =>
+    MainNavTab.values.where((t) => t.isVisible(ctx)).toList();

@@ -13,7 +13,9 @@ import '../../../core/queue/services/request_queue_service.dart';
 import '../../../core/queue/presentation/queue_session/queue_session_bloc.dart';
 import '../../../core/queue/presentation/queue_summary_dialog.dart';
 import '../bloc/main_navigation/main_navigation_bloc.dart';
+import '../bloc/nav_visibility/nav_visibility_cubit.dart';
 import '../models/main_nav_tab.dart';
+import '../models/nav_visibility_context.dart';
 import '../presentation/widgets/zoom_drawer.dart';
 
 class MainDrawer extends StatefulWidget {
@@ -117,56 +119,75 @@ class _MainDrawerState extends State<MainDrawer>
                           ),
                         ),
                         SizedBox(height: 10.h),
-                        ...MainNavTab.values.asMap().entries.map(
-                          (entry) => _buildAnimatedItem(
-                            entry.key + 1,
-                            _DrawerItem(
-                              icon: entry.value.icon,
-                              title: entry.value.label(locale),
-                              isSelected: false,
-                              isLight: true,
-                              onPressed: () {
-                                ZoomDrawer.of(context)?.close();
-                                context.read<MainNavigationBloc>().add(
-                                  ChangeTab(entry.value),
-                                );
-                              },
-                            ),
-                          ),
+                        BlocBuilder<NavVisibilityCubit, NavVisibilityContext?>(
+                          builder: (context, ctx) {
+                            final tabs = ctx == null
+                                ? MainNavTab.values
+                                : visibleTabs(ctx);
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ...tabs.asMap().entries.map(
+                                  (entry) => _buildAnimatedItem(
+                                    entry.key + 1,
+                                    _DrawerItem(
+                                      icon: entry.value.icon,
+                                      title: entry.value.label(locale),
+                                      isSelected: false,
+                                      isLight: true,
+                                      onPressed: () {
+                                        ZoomDrawer.of(context)?.close();
+                                        context.read<MainNavigationBloc>().add(
+                                          ChangeTab(entry.value),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.h),
                           child: const Divider(color: Colors.white24),
                         ),
-                        _buildAnimatedItem(
-                          MainNavTab.values.length + 2,
-                          _DrawerItem(
-                            icon: Icons.cloud_queue_rounded,
-                            title: locale.queue_summary_title,
-                            isSelected: false,
-                            isLight: true,
-                            onPressed: () async {
-                              ZoomDrawer.of(context)?.close();
-                              final all =
-                                  await RequestQueueService.getAllRequests();
-                              if (all.isEmpty) return;
+                        BlocBuilder<NavVisibilityCubit, NavVisibilityContext?>(
+                          builder: (context, ctx) {
+                            final tabCount = ctx == null
+                                ? MainNavTab.values.length
+                                : visibleTabs(ctx).length;
+                            return _buildAnimatedItem(
+                              tabCount + 2,
+                              _DrawerItem(
+                                icon: Icons.cloud_queue_rounded,
+                                title: locale.queue_summary_title,
+                                isSelected: false,
+                                isLight: true,
+                                onPressed: () async {
+                                  ZoomDrawer.of(context)?.close();
+                                  final all =
+                                      await RequestQueueService.getAllRequests();
+                                  if (all.isEmpty) return;
 
-                              final initialMap = {
-                                for (final item in all) item.id: item,
-                              };
-                              if (context.mounted) {
-                                showDialog(
-                                  context: context,
-                                  builder: (ctx) => BlocProvider(
-                                    create: (_) => QueueSessionBloc(
-                                      initialItems: initialMap,
-                                    ),
-                                    child: const QueueSummaryDialog(),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
+                                  final initialMap = {
+                                    for (final item in all) item.id: item,
+                                  };
+                                  if (context.mounted) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (ctx) => BlocProvider(
+                                        create: (_) => QueueSessionBloc(
+                                          initialItems: initialMap,
+                                        ),
+                                        child: const QueueSummaryDialog(),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                          },
                         ),
                         _buildAnimatedItem(
                           MainNavTab.values.length + 3,

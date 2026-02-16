@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../public_links/bloc/create_short_lived_link/create_short_lived_link_bloc.dart';
 import '../bloc/main_navigation/main_navigation_bloc.dart';
+import '../bloc/nav_visibility/nav_visibility_cubit.dart';
 import '../../profile/bloc/profile/profile_bloc.dart';
 import 'main_screen.dart';
 
@@ -13,6 +14,7 @@ class MainPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => MainNavigationBloc()),
+        BlocProvider(create: (_) => NavVisibilityCubit()),
         BlocProvider(create: (_) => ProfileBloc()),
         BlocProvider(create: (_) => CreateShortLivedLinkBloc()),
       ],

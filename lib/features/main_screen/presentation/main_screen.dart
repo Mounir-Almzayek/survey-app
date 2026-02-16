@@ -14,7 +14,9 @@ import '../../device_location/bloc/device_location/device_location_event.dart';
 import '../../device_location/bloc/device_location/device_location_state.dart';
 import '../../custody/presentation/custody_page.dart';
 import '../bloc/main_navigation/main_navigation_bloc.dart';
+import '../bloc/nav_visibility/nav_visibility_cubit.dart';
 import '../models/main_nav_tab.dart';
+import '../models/nav_visibility_context.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/main_sidebar.dart';
 import 'widgets/floating_bottom_bar.dart';
@@ -53,57 +55,77 @@ class _MainScreenState extends State<MainScreen> {
           },
         ),
       ],
-      child: BlocBuilder<MainNavigationBloc, MainNavigationState>(
-        builder: (context, state) {
-          if (context.shouldShowSideBar) {
-            return Scaffold(
-              body: Row(
-                children: [
-                  MainSidebar(
-                    selectedTab: state.currentTab,
-                    isCollapsed: _isSidebarCollapsed,
-                    onTabChanged: (tab) {
-                      context.read<MainNavigationBloc>().add(ChangeTab(tab));
-                    },
-                  ),
-                  const VerticalDivider(width: 1, thickness: 1),
-                  Expanded(
-                    child: Scaffold(
-                      appBar: CustomAppBar(
-                        title: state.currentTab.label(S.of(context)),
-                        showDrawerButton: false,
-                        actions: [
-                          IconButton(
-                            icon: Icon(
-                              _isSidebarCollapsed
-                                  ? Icons.menu_open_rounded
-                                  : Icons.menu_rounded,
-                              color: AppColors.primary,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isSidebarCollapsed = !_isSidebarCollapsed;
-                              });
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                        ],
+      child: BlocBuilder<NavVisibilityCubit, NavVisibilityContext?>(
+        builder: (context, ctx) {
+          return BlocBuilder<MainNavigationBloc, MainNavigationState>(
+            builder: (context, state) {
+              if (ctx != null) {
+                final visible = visibleTabs(ctx);
+                if (visible.isNotEmpty &&
+                    !visible.contains(state.currentTab)) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (context.mounted) {
+                      context.read<MainNavigationBloc>().add(
+                            ChangeTab(visible.first),
+                          );
+                    }
+                  });
+                }
+              }
+              if (context.shouldShowSideBar) {
+                return Scaffold(
+                  body: Row(
+                    children: [
+                      MainSidebar(
+                        selectedTab: state.currentTab,
+                        isCollapsed: _isSidebarCollapsed,
+                        onTabChanged: (tab) {
+                          context
+                              .read<MainNavigationBloc>()
+                              .add(ChangeTab(tab));
+                        },
                       ),
-                      body: _buildPage(state.currentTab),
-                    ),
+                      const VerticalDivider(width: 1, thickness: 1),
+                      Expanded(
+                        child: Scaffold(
+                          appBar: CustomAppBar(
+                            title: state.currentTab.label(S.of(context)),
+                            showDrawerButton: false,
+                            actions: [
+                              IconButton(
+                                icon: Icon(
+                                  _isSidebarCollapsed
+                                      ? Icons.menu_open_rounded
+                                      : Icons.menu_rounded,
+                                  color: AppColors.primary,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isSidebarCollapsed =
+                                        !_isSidebarCollapsed;
+                                  });
+                                },
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                          ),
+                          body: _buildPage(state.currentTab),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          }
+                );
+              }
 
-          return ZoomDrawer(
-            controller: _drawerController,
-            menuScreen: const MainDrawer(),
-            mainScreen: _MobileLayout(
-              currentTab: state.currentTab,
-              drawerController: _drawerController,
-            ),
+              return ZoomDrawer(
+                controller: _drawerController,
+                menuScreen: const MainDrawer(),
+                mainScreen: _MobileLayout(
+                  currentTab: state.currentTab,
+                  drawerController: _drawerController,
+                ),
+              );
+            },
           );
         },
       ),

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../../core/models/survey/survey_model.dart';
 
 class SurveyStatsModel extends Equatable {
   final int totalSurveys;
@@ -9,6 +10,10 @@ class SurveyStatsModel extends Equatable {
   final int pendingSyncResponses;
   final int syncedResponses;
 
+  final List<Survey> surveysWithQuotas;
+  final Map<String, double> genderProgress;
+  final Map<String, double> ageGroupProgress;
+
   const SurveyStatsModel({
     required this.totalSurveys,
     required this.activeSurveys,
@@ -17,6 +22,9 @@ class SurveyStatsModel extends Equatable {
     required this.draftResponses,
     required this.pendingSyncResponses,
     required this.syncedResponses,
+    this.surveysWithQuotas = const [],
+    this.genderProgress = const {},
+    this.ageGroupProgress = const {},
   });
 
   factory SurveyStatsModel.empty() {
@@ -28,6 +36,9 @@ class SurveyStatsModel extends Equatable {
       draftResponses: 0,
       pendingSyncResponses: 0,
       syncedResponses: 0,
+      surveysWithQuotas: [],
+      genderProgress: {},
+      ageGroupProgress: {},
     );
   }
 
@@ -40,5 +51,8 @@ class SurveyStatsModel extends Equatable {
     draftResponses,
     pendingSyncResponses,
     syncedResponses,
+    surveysWithQuotas,
+    genderProgress,
+    ageGroupProgress,
   ];
 }

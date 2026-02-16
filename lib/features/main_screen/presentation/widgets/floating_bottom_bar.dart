@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/utils/responsive_layout.dart';
+import '../../bloc/nav_visibility/nav_visibility_cubit.dart';
 import '../../models/main_nav_tab.dart';
+import '../../models/nav_visibility_context.dart';
 
 class FloatingBottomBar extends StatelessWidget {
   final MainNavTab currentTab;
@@ -44,16 +47,26 @@ class FloatingBottomBar extends StatelessWidget {
               horizontal: context.responsive(8.w, tablet: 12.w, desktop: 16.w),
               vertical: context.responsive(8.h),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: MainNavTab.values.map((tab) {
-                final isSelected = currentTab == tab;
-                return GestureDetector(
-                  onTap: () => onTabChanged(tab),
-                  behavior: HitTestBehavior.opaque,
-                  child: _AnimatedTabItem(tab: tab, isSelected: isSelected),
+            child: BlocBuilder<NavVisibilityCubit, NavVisibilityContext?>(
+              builder: (context, ctx) {
+                final tabs = ctx == null
+                    ? MainNavTab.values
+                    : visibleTabs(ctx);
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: tabs.map((tab) {
+                    final isSelected = currentTab == tab;
+                    return GestureDetector(
+                      onTap: () => onTabChanged(tab),
+                      behavior: HitTestBehavior.opaque,
+                      child: _AnimatedTabItem(
+                        tab: tab,
+                        isSelected: isSelected,
+                      ),
+                    );
+                  }).toList(),
                 );
-              }).toList(),
+              },
             ),
           ),
         ),

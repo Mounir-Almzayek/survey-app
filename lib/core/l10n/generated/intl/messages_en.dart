@@ -450,6 +450,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sync_status": MessageLookupByLibrary.simpleMessage("Sync Status"),
         "synced_responses": MessageLookupByLibrary.simpleMessage("Synced"),
         "tap_to_view": MessageLookupByLibrary.simpleMessage("Tap to view"),
+        "target_categories":
+            MessageLookupByLibrary.simpleMessage("Target Categories"),
         "thank_you_for_response":
             MessageLookupByLibrary.simpleMessage("Thank you for your response"),
         "to": MessageLookupByLibrary.simpleMessage("To"),

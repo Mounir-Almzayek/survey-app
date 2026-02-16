@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/models/survey/survey_model.dart';
+import '../../bloc/assignments_list/assignments_list_bloc.dart';
 import '../../bloc/survey_navigation/survey_navigation_bloc.dart' as nav;
 import '../../bloc/save_section/save_section_bloc.dart' as save;
 import '../../bloc/start_response/start_response_bloc.dart' as start;
@@ -76,6 +77,9 @@ class SurveyAnsweringPage extends StatelessWidget {
 
                 // 3. Move to the survey steps
                 navBloc.add(nav.StartSurvey());
+
+                // 4. Refresh assignments list so UI stays in sync
+                context.read<AssignmentsListBloc>().add(LoadAssignments());
               }
             },
           ),

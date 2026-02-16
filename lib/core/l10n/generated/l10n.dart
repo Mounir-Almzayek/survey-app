@@ -2750,6 +2750,16 @@ class S {
     );
   }
 
+  /// `Target Categories`
+  String get target_categories {
+    return Intl.message(
+      'Target Categories',
+      name: 'target_categories',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Retry All`
   String get retry_all {
     return Intl.message(

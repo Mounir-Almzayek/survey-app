@@ -11,21 +11,20 @@ class CreateShortLivedLinkRequest {
 
   int get durationMinutes => duration.inMinutes;
 
-  CreateShortLivedLinkRequest copyWith({
-    int? surveyId,
-    Duration? duration,
-  }) {
+  CreateShortLivedLinkRequest copyWith({int? surveyId, Duration? duration}) {
     return CreateShortLivedLinkRequest(
       surveyId: surveyId ?? this.surveyId,
       duration: duration ?? this.duration,
     );
   }
 
-  /// Builds the API body; [expires_at] is computed at call time.
+  /// Builds the API body; [expires_at] is computed at call time as date-only (YYYY-MM-DD) per API schema.
   Map<String, dynamic> toJson() {
-    return {
-      'survey_id': surveyId,
-      'expires_at': DateTime.now().add(duration).toIso8601String(),
-    };
+    final d = DateTime.now().add(duration);
+    return {'survey_id': surveyId, 'expires_at': _toDateOnly(d)};
+  }
+
+  static String _toDateOnly(DateTime d) {
+    return '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
   }
 }

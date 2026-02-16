@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../bloc/assignments_list/assignments_list_bloc.dart';
 import '../../bloc/survey_navigation/survey_navigation_bloc.dart';
 import '../../bloc/save_section/save_section_bloc.dart';
 import '../../repository/assignment_local_repository.dart';
@@ -43,6 +44,7 @@ class SurveyAnsweringScreen extends StatelessWidget {
               );
               await AssignmentLocalRepository.removeResponseDraft(responseId);
             }
+            context.read<AssignmentsListBloc>().add(LoadAssignments());
           },
         ),
         BlocListener<SaveSectionBloc, SaveSectionState>(
@@ -63,6 +65,7 @@ class SurveyAnsweringScreen extends StatelessWidget {
 
               if (state.response.isComplete) {
                 navBloc.add(CompleteSurvey());
+                context.read<AssignmentsListBloc>().add(LoadAssignments());
               } else {
                 navBloc.add(NextSection(answers: answersMap));
               }

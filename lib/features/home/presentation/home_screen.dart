@@ -90,42 +90,27 @@ class HomeScreen extends StatelessWidget {
                       ),
 
                       // Content Section (Stats & Public Links)
+                      // Desktop: single column so all dashboard elements (metrics, survey analysis,
+                      // demographics, availability, sync) appear and scroll; no split that hides content.
                       SliverToBoxAdapter(
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: horizontalPadding,
                           ),
-                          child: context.shouldShowSideBar
-                              ? Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Left side: Large Charts
-                                    Expanded(
-                                      flex: 3,
-                                      child: _buildChartsOnly(context, state),
-                                    ),
-                                    const SizedBox(width: 60),
-                                    // Right side: Metrics Sidebar + Public Links
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        children: [
-                                          _buildMetricsOnly(context, state),
-                                          const SizedBox(height: 32),
-                                          const PublicLinksSection(),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildStatsContent(context, state),
-                                    SizedBox(height: 32.h),
-                                    const PublicLinksSection(),
-                                  ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildStatsContent(context, state),
+                              SizedBox(
+                                height: context.responsive(
+                                  32.h,
+                                  tablet: 40.h,
+                                  desktop: 48.0,
                                 ),
+                              ),
+                              const PublicLinksSection(),
+                            ],
+                          ),
                         ),
                       ),
 
@@ -158,17 +143,4 @@ class HomeScreen extends StatelessWidget {
     return const SizedBox.shrink();
   }
 
-  Widget _buildChartsOnly(BuildContext context, HomeStatsState state) {
-    if (state is HomeStatsLoaded) {
-      return SurveyChartsOnly(stats: state.stats);
-    }
-    return _buildStatsContent(context, state); // Fallback for loading/error
-  }
-
-  Widget _buildMetricsOnly(BuildContext context, HomeStatsState state) {
-    if (state is HomeStatsLoaded) {
-      return SurveyStatsWidget(stats: state.stats, isSidebarLayout: true);
-    }
-    return const SizedBox.shrink(); // Don't show metrics if not loaded
-  }
 }

@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/logo_rectangle.dart';
+import '../bloc/nav_visibility/nav_visibility_cubit.dart';
 import '../models/main_nav_tab.dart';
+import '../models/nav_visibility_context.dart';
 import '../../../core/utils/responsive_layout.dart';
 import '../../language/bloc/language/language_bloc.dart';
 import '../../../core/enums/app_language.dart';
@@ -55,21 +57,28 @@ class MainSidebar extends StatelessWidget {
 
           // Menu Items
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.symmetric(
-                horizontal: context.isDesktop ? 16.0 : 12.w,
-                vertical: context.isDesktop ? 16.0 : 10.h,
-              ),
-              children: MainNavTab.values.map((tab) {
-                final isSelected = selectedTab == tab;
-                return _SidebarItem(
-                  icon: tab.icon,
-                  label: tab.label(locale),
-                  isSelected: isSelected,
-                  isCollapsed: isCollapsed,
-                  onTap: () => onTabChanged(tab),
+            child: BlocBuilder<NavVisibilityCubit, NavVisibilityContext?>(
+              builder: (context, ctx) {
+                final tabs = ctx == null
+                    ? MainNavTab.values
+                    : visibleTabs(ctx);
+                return ListView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.isDesktop ? 16.0 : 12.w,
+                    vertical: context.isDesktop ? 16.0 : 10.h,
+                  ),
+                  children: tabs.map((tab) {
+                    final isSelected = selectedTab == tab;
+                    return _SidebarItem(
+                      icon: tab.icon,
+                      label: tab.label(locale),
+                      isSelected: isSelected,
+                      isCollapsed: isCollapsed,
+                      onTap: () => onTabChanged(tab),
+                    );
+                  }).toList(),
                 );
-              }).toList(),
+              },
             ),
           ),
 
