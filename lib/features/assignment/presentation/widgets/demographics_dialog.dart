@@ -117,25 +117,26 @@ class _DemographicsDialogState extends State<DemographicsDialog> {
   bool get _isValid => _selectedGender != null && _selectedAgeGroup != null;
 
   String _formatAgeGroup(AgeGroup group) {
+    final s = S.of(context);
     switch (group) {
       case AgeGroup.age18_29:
-        return "18-29";
+        return s.age_18_29;
       case AgeGroup.age30_39:
-        return "30-39";
+        return s.age_30_39;
       case AgeGroup.age40_49:
-        return "40-49";
+        return s.age_40_49;
       case AgeGroup.age50_59:
-        return "50-59";
+        return s.age_50_59;
       case AgeGroup.age60_69:
-        return "60-69";
+        return s.age_60_69;
       case AgeGroup.age70_79:
-        return "70-79";
+        return s.age_70_79;
       case AgeGroup.age80_89:
-        return "80-89";
+        return s.age_80_89;
       case AgeGroup.age90_99:
-        return "90-99";
+        return s.age_90_99;
       case AgeGroup.age100Plus:
-        return "100+";
+        return s.age_100_plus;
     }
   }
 }

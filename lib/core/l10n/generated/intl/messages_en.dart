@@ -68,6 +68,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Active Responses"),
         "active_surveys": MessageLookupByLibrary.simpleMessage("Active"),
         "active_tasks": MessageLookupByLibrary.simpleMessage("Active Tasks"),
+        "age_100_plus": MessageLookupByLibrary.simpleMessage("100+"),
+        "age_18_29": MessageLookupByLibrary.simpleMessage("18-29"),
+        "age_30_39": MessageLookupByLibrary.simpleMessage("30-39"),
+        "age_40_49": MessageLookupByLibrary.simpleMessage("40-49"),
+        "age_50_59": MessageLookupByLibrary.simpleMessage("50-59"),
+        "age_60_69": MessageLookupByLibrary.simpleMessage("60-69"),
+        "age_70_79": MessageLookupByLibrary.simpleMessage("70-79"),
+        "age_80_89": MessageLookupByLibrary.simpleMessage("80-89"),
+        "age_90_99": MessageLookupByLibrary.simpleMessage("90-99"),
         "age_group": MessageLookupByLibrary.simpleMessage("Age Group"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("Allow location access"),
@@ -208,6 +217,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "id_number": MessageLookupByLibrary.simpleMessage("ID Number"),
         "image_saved_successfully": MessageLookupByLibrary.simpleMessage(
             "Image saved successfully to gallery"),
+        "in_progress": MessageLookupByLibrary.simpleMessage("In Progress"),
         "in_progress_surveys":
             MessageLookupByLibrary.simpleMessage("In-Progress Surveys"),
         "invalid_email":
@@ -226,10 +236,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "link_copied":
             MessageLookupByLibrary.simpleMessage("Link copied to clipboard"),
         "link_device": MessageLookupByLibrary.simpleMessage("Link Device"),
-        "link_ready": MessageLookupByLibrary.simpleMessage("Ready"),
+        "link_ready": MessageLookupByLibrary.simpleMessage("Link Ready"),
         "link_validity_duration":
             MessageLookupByLibrary.simpleMessage("Link validity duration"),
-        "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "local_responses_count": m10,
         "location_permission_denied":
             MessageLookupByLibrary.simpleMessage("Location permission denied"),
@@ -271,6 +280,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "minutes": MessageLookupByLibrary.simpleMessage("minutes"),
         "minutes_count": m11,
         "nationality": MessageLookupByLibrary.simpleMessage("Nationality"),
+        "nearly_complete":
+            MessageLookupByLibrary.simpleMessage("Nearly Complete"),
         "new_password": MessageLookupByLibrary.simpleMessage("New Password"),
         "new_response": MessageLookupByLibrary.simpleMessage("New Response"),
         "new_response_success": MessageLookupByLibrary.simpleMessage(
@@ -304,6 +315,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_user_name":
             MessageLookupByLibrary.simpleMessage("Please enter your email"),
         "not_available": MessageLookupByLibrary.simpleMessage("Not Available"),
+        "not_started": MessageLookupByLibrary.simpleMessage("Not Started"),
         "notes": MessageLookupByLibrary.simpleMessage("Notes"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
         "offline_drafts":

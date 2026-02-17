@@ -34,6 +34,7 @@ class RequestQueueManager {
     final result = await _connectivity.checkConnectivity();
     _isOnline = !result.contains(ConnectivityResult.none);
 
+    await RequestQueueService.resetStuckAndFailedRequests();
     final initialPending = await RequestQueueService.getPendingRequests();
     _queueStatusController.add(
       QueueStatus(isOnline: _isOnline, queueLength: initialPending.length),
@@ -46,6 +47,7 @@ class RequestQueueManager {
       _isOnline = !result.contains(ConnectivityResult.none);
 
       if (!wasOnline && _isOnline) {
+        await RequestQueueService.resetStuckAndFailedRequests();
         _processQueue();
       }
 

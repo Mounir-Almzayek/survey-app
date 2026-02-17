@@ -16,9 +16,7 @@ class QueueSessionBloc extends Bloc<QueueSessionEvent, QueueSessionState> {
           items: {
             for (final entry in initialItems.entries)
               entry.key: QueueSessionItem(
-                item: entry.value.copyWith(
-                  status: QueueItemStatus.processing,
-                ),
+                item: entry.value,
                 lastResponse: null,
               ),
           },

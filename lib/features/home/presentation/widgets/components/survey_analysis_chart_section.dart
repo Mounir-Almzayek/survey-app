@@ -26,6 +26,24 @@ class _SurveyAnalysisChartSectionState
   Survey? _selectedSurvey;
 
   @override
+  void initState() {
+    super.initState();
+    _selectFirstSurveyIfNeeded();
+  }
+
+  @override
+  void didUpdateWidget(covariant SurveyAnalysisChartSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _selectFirstSurveyIfNeeded();
+  }
+
+  void _selectFirstSurveyIfNeeded() {
+    if (widget.surveys.isNotEmpty && _selectedSurvey == null) {
+      _selectedSurvey = widget.surveys.first;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (widget.surveys.isEmpty) return const SizedBox.shrink();
 
@@ -38,13 +56,6 @@ class _SurveyAnalysisChartSectionState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (_selectedSurvey != null)
-            _buildQuotaChart(context, _selectedSurvey!, s)
-          else
-            _buildPlaceholder(context, s),
-          SizedBox(
-            height: context.responsive(16.h, tablet: 20.h, desktop: 24.0),
-          ),
           CustomDropdownField<Survey>(
             label: s.surveys,
             items: widget.surveys,
@@ -52,6 +63,15 @@ class _SurveyAnalysisChartSectionState
             onChanged: (survey) => setState(() => _selectedSurvey = survey),
             getLabel: (survey) => survey.title ?? 'Survey #${survey.id}',
           ),
+
+          SizedBox(
+            height: context.responsive(16.h, tablet: 20.h, desktop: 24.0),
+          ),
+
+          if (_selectedSurvey != null)
+            _buildQuotaChart(context, _selectedSurvey!, s)
+          else
+            _buildPlaceholder(context, s),
         ],
       ),
     );
@@ -98,7 +118,7 @@ class _SurveyAnalysisChartSectionState
           padding: EdgeInsets.symmetric(vertical: 24.h),
           child: Center(
             child: Text(
-              'No quota data',
+              s.no_data,
               style: TextStyle(
                 fontSize: context.adaptiveFont(13.sp),
                 color: AppColors.secondaryText,
@@ -110,21 +130,21 @@ class _SurveyAnalysisChartSectionState
     }
 
     final chartHeight = context.responsive(
-      220.h,
-      tablet: 260.h,
-      desktop: 320.0,
+      300.h,
+      tablet: 340.h,
+      desktop: 400.0,
     );
     final leftReserved = context.responsive(28.w, tablet: 32.w, desktop: 44.0);
     final bottomReserved = context.responsive(
-      44.h,
-      tablet: 50.h,
-      desktop: 60.0,
+      90.h,
+      tablet: 100.h,
+      desktop: 110.0,
     );
     final barWidth = context.responsive(20.w, tablet: 24.w, desktop: 32.0);
     final fontSizeLabel = context.responsive(
-      9.sp,
-      tablet: 10.sp,
-      desktop: 11.0,
+      10.sp,
+      tablet: 11.sp,
+      desktop: 12.0,
     );
     final fontSizeLeft = context.responsive(
       10.sp,
@@ -136,120 +156,136 @@ class _SurveyAnalysisChartSectionState
       title: s.target_categories,
       icon: Icons.bar_chart_rounded,
       iconColor: AppColors.primary,
-      child: SizedBox(
-        height: chartHeight,
-        child: BarChart(
-          BarChartData(
-            alignment: BarChartAlignment.spaceAround,
-            maxY: 100,
-            barTouchData: BarTouchData(
-              enabled: true,
-              touchTooltipData: BarTouchTooltipData(
-                getTooltipColor: (_) => AppColors.card,
-                getTooltipItem: (group, groupIndex, rod, rodIndex) => null,
-              ),
-            ),
-            titlesData: FlTitlesData(
-              show: true,
-              topTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: bottomReserved,
-                  getTitlesWidget: (value, meta) {
-                    if (value.toInt() >= 0 && value.toInt() < quotas.length) {
-                      final q = quotas[value.toInt()];
-                      final label = _shortLabel(q.demographicDescription);
-                      return SideTitleWidget(
-                        meta: meta,
-                        child: Text(
-                          label,
-                          style: TextStyle(
-                            fontSize: fontSizeLabel,
-                            color: AppColors.secondaryText,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-              ),
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: leftReserved,
-                  getTitlesWidget: (value, meta) {
-                    return Text(
-                      '${value.toInt()}%',
-                      style: TextStyle(
-                        fontSize: fontSizeLeft,
-                        color: AppColors.secondaryText,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    );
-                  },
-                  interval: 25,
-                ),
-              ),
-              rightTitles: const AxisTitles(
-                sideTitles: SideTitles(showTitles: false),
-              ),
-            ),
-            gridData: FlGridData(
-              show: true,
-              drawVerticalLine: false,
-              horizontalInterval: 25,
-              getDrawingHorizontalLine: (value) => FlLine(
-                color: AppColors.border.withOpacity(0.5),
-                strokeWidth: 1,
-              ),
-            ),
-            borderData: FlBorderData(show: false),
-            barGroups: quotas.asMap().entries.map((entry) {
-              final i = entry.key;
-              final q = entry.value;
-              final pct = q.completionPercentage.clamp(0.0, 100.0);
-              return BarChartGroupData(
-                x: i,
-                barRods: [
-                  BarChartRodData(
-                    toY: pct,
-                    color: AppColors.primary.withOpacity(
-                      q.progressDisplayAlpha,
-                    ),
-                    width: barWidth,
-                    borderRadius: BorderRadius.circular(
-                      context.responsive(6.r, desktop: 8.0),
-                    ),
-                    backDrawRodData: BackgroundBarChartRodData(
-                      show: true,
-                      toY: 100,
-                      color: AppColors.muted.withOpacity(0.3),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final minChartWidth = (quotas.length * 68.0)
+              .clamp(68.0, double.infinity)
+              .toDouble();
+          final chartWidth = minChartWidth > constraints.maxWidth
+              ? minChartWidth
+              : constraints.maxWidth;
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SizedBox(
+              width: chartWidth,
+              height: chartHeight,
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: 100,
+                  barTouchData: BarTouchData(
+                    enabled: true,
+                    touchTooltipData: BarTouchTooltipData(
+                      getTooltipColor: (_) => AppColors.card,
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) =>
+                          null,
                     ),
                   ),
-                ],
-                showingTooltipIndicators: [0],
-              );
-            }).toList(),
-          ),
-        ),
+                  titlesData: FlTitlesData(
+                    show: true,
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: bottomReserved,
+                        getTitlesWidget: (value, meta) {
+                          if (value.toInt() >= 0 &&
+                              value.toInt() < quotas.length) {
+                            final q = quotas[value.toInt()];
+                            final label = _shortLabel(
+                              q.localizedDemographicDescription(s),
+                            );
+                            return SideTitleWidget(
+                              meta: meta,
+                              child: RotatedBox(
+                                quarterTurns: 1,
+                                child: Text(
+                                  label,
+                                  style: TextStyle(
+                                    fontSize: fontSizeLabel,
+                                    color: AppColors.secondaryText,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: leftReserved,
+                        getTitlesWidget: (value, meta) {
+                          return Text(
+                            '${value.toInt()}%',
+                            style: TextStyle(
+                              fontSize: fontSizeLeft,
+                              color: AppColors.secondaryText,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        },
+                        interval: 25,
+                      ),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                  ),
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: false,
+                    horizontalInterval: 25,
+                    getDrawingHorizontalLine: (value) => FlLine(
+                      color: AppColors.border.withOpacity(0.5),
+                      strokeWidth: 1,
+                    ),
+                  ),
+                  borderData: FlBorderData(show: false),
+                  barGroups: quotas.asMap().entries.map((entry) {
+                    final i = entry.key;
+                    final q = entry.value;
+                    final pct = q.completionPercentage.clamp(0.0, 100.0);
+                    return BarChartGroupData(
+                      x: i,
+                      barRods: [
+                        BarChartRodData(
+                          toY: pct,
+                          color: AppColors.primary.withOpacity(
+                            q.progressDisplayAlpha,
+                          ),
+                          width: barWidth,
+                          borderRadius: BorderRadius.circular(
+                            context.responsive(6.r, desktop: 8.0),
+                          ),
+                          backDrawRodData: BackgroundBarChartRodData(
+                            show: true,
+                            toY: 100,
+                            color: AppColors.muted.withOpacity(0.3),
+                          ),
+                        ),
+                      ],
+                      showingTooltipIndicators: [0],
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
   String _shortLabel(String demographicDescription) {
-    if (demographicDescription.length <= 12) return demographicDescription;
-    final parts = demographicDescription.split(' ');
-    if (parts.length >= 2) {
-      return '${parts[0]}\n${parts.sublist(1).join(' ')}';
-    }
-    return '${demographicDescription.substring(0, 6)}…';
+    if (demographicDescription.length <= 18) return demographicDescription;
+    return '${demographicDescription.substring(0, 16)}…';
   }
 }

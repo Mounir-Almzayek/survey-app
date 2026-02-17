@@ -157,7 +157,7 @@ class _TargetCategoriesSectionState extends State<TargetCategoriesSection> {
             children: [
               Expanded(
                 child: Text(
-                  quota.demographicDescription,
+                  quota.localizedDemographicDescription(S.of(context)),
                   style: TextStyle(
                     fontSize: context.adaptiveFont(12.sp),
                     fontWeight: FontWeight.w600,

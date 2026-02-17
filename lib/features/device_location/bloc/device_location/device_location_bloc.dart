@@ -27,12 +27,31 @@ class DeviceLocationBloc extends Bloc<DeviceLocationEvent, DeviceLocationState> 
     on<RefreshDeviceIdEvent>(_onRefreshDeviceId);
     on<SendLocationEvent>(_onSendLocation);
     on<RequestLocationPermissionEvent>(_onRequestLocationPermission);
+    on<LocationStreamErrorEvent>(_onLocationStreamError);
   }
 
   Future<void> _onStartLocationTracking(
     StartLocationTrackingEvent event,
     Emitter<DeviceLocationState> emit,
   ) async {
+    // Idempotent: if already tracking, only refresh assignment_id (e.g. after starting another survey)
+    final currentState = state;
+    if (currentState is DeviceLocationTrackingStarted ||
+        currentState is DeviceLocationUpdated) {
+      add(const RefreshAssignmentIdEvent());
+      return;
+    }
+
+    // Check context: need at least assignment_id or device_id to start
+    final assignmentId = await _metadataService.getAssignmentId();
+    final deviceId = await _resolveDeviceId();
+    if (assignmentId == null && deviceId == null) {
+      if (!emit.isDone) {
+        emit(const DeviceLocationWaitingForContext());
+      }
+      return;
+    }
+
     emit(const DeviceLocationLoading());
 
     await _startTrackingRunner.run(
@@ -60,20 +79,16 @@ class DeviceLocationBloc extends Bloc<DeviceLocationEvent, DeviceLocationState> 
         _locationSubscription?.cancel();
         _locationSubscription = LocationService.locationStream.listen(
           (location) {
-            if (!emit.isDone) {
-              add(const RefreshAssignmentIdEvent());
-              add(UpdateCoordinatesEvent(
-                latitude: location.latitude,
-                longitude: location.longitude,
-              ));
-              add(const RefreshDeviceIdEvent());
-              add(const SendLocationEvent());
-            }
+            add(const RefreshAssignmentIdEvent());
+            add(UpdateCoordinatesEvent(
+              latitude: location.latitude,
+              longitude: location.longitude,
+            ));
+            add(const RefreshDeviceIdEvent());
+            add(const SendLocationEvent());
           },
           onError: (error) {
-            if (!emit.isDone) {
-              emit(DeviceLocationError(error.toString()));
-            }
+            add(LocationStreamErrorEvent(error.toString()));
           },
         );
 
@@ -195,6 +210,12 @@ class DeviceLocationBloc extends Bloc<DeviceLocationEvent, DeviceLocationState> 
     final token = await AuthLocalRepository.retrieveToken();
     if (token.isEmpty) return;
 
+    // Backend requires either a valid device_id (with assignment/custody) or an unbounded assignment.
+    // If we have neither, skip the API call to avoid 404 "Physical device not found".
+    if (request.deviceId == null && request.assignmentId == null) {
+      return;
+    }
+
     final location = DeviceLocation(
       latitude: request.latitude,
       longitude: request.longitude,
@@ -240,6 +261,20 @@ class DeviceLocationBloc extends Bloc<DeviceLocationEvent, DeviceLocationState> 
         emit(const DeviceLocationInitial());
       } else {
         emit(const DeviceLocationPermissionDenied());
+      }
+    }
+  }
+
+  Future<void> _onLocationStreamError(
+    LocationStreamErrorEvent event,
+    Emitter<DeviceLocationState> emit,
+  ) async {
+    if (!emit.isDone) {
+      final errorLower = event.error.toLowerCase();
+      if (errorLower.contains('permission')) {
+        emit(const DeviceLocationPermissionDenied());
+      } else {
+        emit(DeviceLocationError(event.error));
       }
     }
   }

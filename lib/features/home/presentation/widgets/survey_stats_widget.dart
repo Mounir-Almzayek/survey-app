@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/widgets/scroll_reveal.dart';
 import '../../models/survey_stats_model.dart';
 import 'demographic_charts.dart';
 import 'components/dashboard_metrics.dart';
@@ -10,10 +11,20 @@ import 'components/sync_status_chart.dart';
 class SurveyStatsWidget extends StatelessWidget {
   final SurveyStatsModel stats;
   final bool isSidebarLayout;
+  final GlobalKey analysisKey;
+  final GlobalKey demographicsKey;
+  final GlobalKey availabilityKey;
+  final GlobalKey metricsKey;
+  final GlobalKey syncKey;
 
   const SurveyStatsWidget({
     super.key,
     required this.stats,
+    required this.analysisKey,
+    required this.demographicsKey,
+    required this.availabilityKey,
+    required this.metricsKey,
+    required this.syncKey,
     this.isSidebarLayout = false,
   });
 
@@ -29,29 +40,49 @@ class SurveyStatsWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. Metric Grid (Actionable Insights)
-        DashboardMetrics(stats: stats),
-        SizedBox(height: 24.h),
-
-        // 2. Survey analysis: select survey + quota bar chart
+        // 1. Survey analysis: select survey + quota bar chart
         if (stats.surveysWithQuotas.isNotEmpty)
-          SurveyAnalysisChartSection(surveys: stats.surveysWithQuotas),
+          ScrollReveal(
+            key: analysisKey,
+            delay: const Duration(milliseconds: 200),
+            child: SurveyAnalysisChartSection(surveys: stats.surveysWithQuotas),
+          ),
 
         if (stats.surveysWithQuotas.isNotEmpty) SizedBox(height: 24.h),
 
-        // 3. Demographic Charts
-        DemographicCharts(
-          genderProgress: stats.genderProgress,
-          ageGroupProgress: stats.ageGroupProgress,
+        // 2. Demographic Charts
+        ScrollReveal(
+          key: demographicsKey,
+          delay: const Duration(milliseconds: 400),
+          child: DemographicCharts(
+            genderProgress: stats.genderProgress,
+            ageGroupProgress: stats.ageGroupProgress,
+          ),
         ),
         SizedBox(height: 24.h),
 
-        // 4. Availability Chart
-        SurveyAvailabilityChart(stats: stats),
+        // 3. Availability Chart
+        ScrollReveal(
+          key: availabilityKey,
+          delay: const Duration(milliseconds: 600),
+          child: SurveyAvailabilityChart(stats: stats),
+        ),
         SizedBox(height: 16.h),
 
+        // 4. Metric Grid (Actionable Insights)
+        ScrollReveal(
+          key: metricsKey,
+          delay: const Duration(milliseconds: 800),
+          child: DashboardMetrics(stats: stats),
+        ),
+        SizedBox(height: 24.h),
+
         // 5. Sync Status Chart
-        SyncStatusChart(stats: stats),
+        ScrollReveal(
+          key: syncKey,
+          delay: const Duration(milliseconds: 1000),
+          child: SyncStatusChart(stats: stats),
+        ),
       ],
     );
   }

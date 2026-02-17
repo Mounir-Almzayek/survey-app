@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../enums/survey_enums.dart';
+import '../../l10n/generated/l10n.dart';
 import 'assignment_model.dart';
 
 /// ResearcherQuota Model - For quota tracking
@@ -118,6 +119,14 @@ class ResearcherQuota extends Equatable {
     return 'Not Started';
   }
 
+  /// Get localized quota status description
+  String localizedStatusDescription(S s) {
+    if (isCompleted) return s.completed;
+    if (isNearlyComplete) return s.nearly_complete;
+    if (progress > 0) return s.in_progress;
+    return s.not_started;
+  }
+
   /// Opacity (0.0–1.0) for primary color in progress UI based on state.
   double get progressDisplayAlpha {
     if (isCompleted) return 1.0;
@@ -129,37 +138,17 @@ class ResearcherQuota extends Equatable {
   /// Get demographic description
   String get demographicDescription {
     String genderText = gender == Gender.male ? 'Male' : 'Female';
-    String ageText = '';
-    switch (ageGroup) {
-      case AgeGroup.age18_29:
-        ageText = '18-29';
-        break;
-      case AgeGroup.age30_39:
-        ageText = '30-39';
-        break;
-      case AgeGroup.age40_49:
-        ageText = '40-49';
-        break;
-      case AgeGroup.age50_59:
-        ageText = '50-59';
-        break;
-      case AgeGroup.age60_69:
-        ageText = '60-69';
-        break;
-      case AgeGroup.age70_79:
-        ageText = '70-79';
-        break;
-      case AgeGroup.age80_89:
-        ageText = '80-89';
-        break;
-      case AgeGroup.age90_99:
-        ageText = '90-99';
-        break;
-      case AgeGroup.age100Plus:
-        ageText = '100+';
-        break;
-    }
+    String ageText = ageGroup
+        .toJson()
+        .replaceAll('AGE_', '')
+        .replaceAll('_', '-')
+        .replaceAll('PLUS', '+');
     return '$genderText ($ageText)';
+  }
+
+  /// Get localized demographic description
+  String localizedDemographicDescription(S s) {
+    return '${gender.localized(s)} (${ageGroup.localized(s)})';
   }
 
   @override

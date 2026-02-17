@@ -5,6 +5,8 @@ import '../../bloc/assignments_list/assignments_list_bloc.dart';
 import '../../bloc/survey_navigation/survey_navigation_bloc.dart' as nav;
 import '../../bloc/save_section/save_section_bloc.dart' as save;
 import '../../bloc/start_response/start_response_bloc.dart' as start;
+import '../../../device_location/bloc/device_location/device_location_bloc.dart';
+import '../../../device_location/bloc/device_location/device_location_event.dart';
 import '../screens/survey_answering_screen.dart';
 
 class SurveyAnsweringPage extends StatelessWidget {
@@ -80,6 +82,9 @@ class SurveyAnsweringPage extends StatelessWidget {
 
                 // 4. Refresh assignments list so UI stays in sync
                 context.read<AssignmentsListBloc>().add(LoadAssignments());
+
+                // 5. Start location tracking if waiting for context (first start) or refresh assignment_id (new survey)
+                context.read<DeviceLocationBloc>().add(const StartLocationTrackingEvent());
               }
             },
           ),

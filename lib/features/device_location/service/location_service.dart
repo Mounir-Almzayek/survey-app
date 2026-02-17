@@ -80,13 +80,12 @@ class LocationService {
           _controller.add(location);
         }
       } catch (e) {
-        // Any failure while reading location will stop tracking to avoid spam
+        // Report error but keep tracking so next tick can retry (transient GPS/network errors)
         if (!_controller.isClosed) {
           _controller.addError(
             Exception('Location tracking error: ${e.toString()}'),
           );
         }
-        await stopLocationTracking();
       }
     });
   }

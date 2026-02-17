@@ -67,11 +67,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("الاستجابات النشطة"),
         "active_surveys": MessageLookupByLibrary.simpleMessage("نشطة"),
         "active_tasks": MessageLookupByLibrary.simpleMessage("المهام النشطة"),
+        "age_100_plus": MessageLookupByLibrary.simpleMessage("100+"),
+        "age_18_29": MessageLookupByLibrary.simpleMessage("18-29"),
+        "age_30_39": MessageLookupByLibrary.simpleMessage("30-39"),
+        "age_40_49": MessageLookupByLibrary.simpleMessage("40-49"),
+        "age_50_59": MessageLookupByLibrary.simpleMessage("50-59"),
+        "age_60_69": MessageLookupByLibrary.simpleMessage("60-69"),
+        "age_70_79": MessageLookupByLibrary.simpleMessage("70-79"),
+        "age_80_89": MessageLookupByLibrary.simpleMessage("80-89"),
+        "age_90_99": MessageLookupByLibrary.simpleMessage("90-99"),
         "age_group": MessageLookupByLibrary.simpleMessage("الفئة العمرية"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("السماح بالوصول إلى الموقع"),
         "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
-        "assignments": MessageLookupByLibrary.simpleMessage("التكليفات"),
+        "assignments": MessageLookupByLibrary.simpleMessage("المهام"),
         "availability_period": m1,
         "available_surveys":
             MessageLookupByLibrary.simpleMessage("الاستبيانات المتاحة"),
@@ -205,6 +214,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "id_number": MessageLookupByLibrary.simpleMessage("رقم الهوية"),
         "image_saved_successfully": MessageLookupByLibrary.simpleMessage(
             "تم حفظ الصورة بنجاح في المعرض"),
+        "in_progress": MessageLookupByLibrary.simpleMessage("قيد التنفيذ"),
         "in_progress_surveys":
             MessageLookupByLibrary.simpleMessage("استبيانات قيد التنفيذ"),
         "invalid_email": MessageLookupByLibrary.simpleMessage(
@@ -222,10 +232,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "link_copied":
             MessageLookupByLibrary.simpleMessage("تم نسخ الرابط إلى الحافظة"),
         "link_device": MessageLookupByLibrary.simpleMessage("ربط الجهاز"),
-        "link_ready": MessageLookupByLibrary.simpleMessage("جاهز"),
+        "link_ready": MessageLookupByLibrary.simpleMessage("الرابط جاهز"),
         "link_validity_duration":
             MessageLookupByLibrary.simpleMessage("المدة المتاحة للرابط"),
-        "loading": MessageLookupByLibrary.simpleMessage("جاري التحميل..."),
         "local_responses_count": m10,
         "location_permission_denied":
             MessageLookupByLibrary.simpleMessage("تم رفض إذن الموقع"),
@@ -267,6 +276,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "minutes": MessageLookupByLibrary.simpleMessage("دقيقة"),
         "minutes_count": m11,
         "nationality": MessageLookupByLibrary.simpleMessage("الجنسية"),
+        "nearly_complete": MessageLookupByLibrary.simpleMessage("شبه مكتمل"),
         "new_password":
             MessageLookupByLibrary.simpleMessage("كلمة المرور الجديدة"),
         "new_response": MessageLookupByLibrary.simpleMessage("رد جديد"),
@@ -301,6 +311,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_user_name": MessageLookupByLibrary.simpleMessage(
             "يرجى إدخال البريد الإلكتروني"),
         "not_available": MessageLookupByLibrary.simpleMessage("غير متاح"),
+        "not_started": MessageLookupByLibrary.simpleMessage("لم يبدأ بعد"),
         "notes": MessageLookupByLibrary.simpleMessage("ملاحظات"),
         "notifications": MessageLookupByLibrary.simpleMessage("التنبيهات"),
         "offline_drafts":

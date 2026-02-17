@@ -52,3 +52,13 @@ class RequestLocationPermissionEvent extends DeviceLocationEvent {
   const RequestLocationPermissionEvent();
 }
 
+/// Error from the location stream (e.g. getCurrentPosition failed). Handled in Bloc to emit state; do not use emit from stream callback.
+class LocationStreamErrorEvent extends DeviceLocationEvent {
+  final String error;
+
+  const LocationStreamErrorEvent(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+

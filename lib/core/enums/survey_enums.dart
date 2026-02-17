@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+import '../l10n/generated/l10n.dart';
+
 enum SurveyStatus {
   draft,
   published,
@@ -422,6 +425,42 @@ enum AgeGroup {
         return AgeGroup.age100Plus;
       default:
         return AgeGroup.age18_29;
+    }
+  }
+
+  String localized(dynamic contextOrS) {
+    final s = contextOrS is S ? contextOrS : S.of(contextOrS as BuildContext);
+    switch (this) {
+      case AgeGroup.age18_29:
+        return s.age_18_29;
+      case AgeGroup.age30_39:
+        return s.age_30_39;
+      case AgeGroup.age40_49:
+        return s.age_40_49;
+      case AgeGroup.age50_59:
+        return s.age_50_59;
+      case AgeGroup.age60_69:
+        return s.age_60_69;
+      case AgeGroup.age70_79:
+        return s.age_70_79;
+      case AgeGroup.age80_89:
+        return s.age_80_89;
+      case AgeGroup.age90_99:
+        return s.age_90_99;
+      case AgeGroup.age100Plus:
+        return s.age_100_plus;
+    }
+  }
+}
+
+extension GenderX on Gender {
+  String localized(dynamic contextOrS) {
+    final s = contextOrS is S ? contextOrS : S.of(contextOrS as BuildContext);
+    switch (this) {
+      case Gender.male:
+        return s.gender_male;
+      case Gender.female:
+        return s.gender_female;
     }
   }
 }

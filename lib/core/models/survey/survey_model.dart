@@ -59,6 +59,17 @@ class Survey extends Equatable {
     this.assignments,
   });
 
+  /// Returns true if survey is published and currently within availability window.
+  bool get isActive {
+    if (status != SurveyStatus.published) return false;
+    final now = DateTime.now();
+    if (availabilityStartAt != null &&
+        availabilityStartAt!.isAfter(now)) return false;
+    if (availabilityEndAt != null &&
+        availabilityEndAt!.isBefore(now)) return false;
+    return true;
+  }
+
   Survey copyWith({
     int? id,
     int? createdByUserId,

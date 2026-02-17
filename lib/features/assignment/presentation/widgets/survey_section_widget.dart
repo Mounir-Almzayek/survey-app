@@ -327,9 +327,13 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
         return true;
       }).toList();
 
-      // Update answers with filtered ones before submitting
+      // Update answers with filtered ones before submitting (sectionId from UI = source of truth)
       context.read<SaveSectionBloc>().add(
-        SubmitSection(answers: filteredAnswers, isCompletingSurvey: isLast),
+        SubmitSection(
+          answers: filteredAnswers,
+          isCompletingSurvey: isLast,
+          sectionId: navState.currentSection!.id,
+        ),
       );
     }
   }

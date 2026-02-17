@@ -77,7 +77,7 @@ class SurveyAnalysisCard extends StatelessWidget {
                   )
                 : Center(
                     child: Text(
-                      "No specific quotas", // TODO: localize if needed
+                      s.no_data,
                       style: TextStyle(color: AppColors.secondaryText),
                     ),
                   ),
@@ -132,7 +132,7 @@ class SurveyAnalysisCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  quota.demographicDescription,
+                  quota.localizedDemographicDescription(s),
                   style: TextStyle(
                     fontSize: context.adaptiveFont(14.sp),
                     fontWeight: FontWeight.w600,

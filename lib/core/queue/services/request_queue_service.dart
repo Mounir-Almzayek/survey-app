@@ -104,6 +104,38 @@ class RequestQueueService {
     } catch (e) {}
   }
 
+  /// Reset processing (stuck) and failed requests to pending for retry.
+  /// Use on app init and when connectivity restores to recover stuck/failed items.
+  static Future<void> resetStuckAndFailedRequests() async {
+    try {
+      final box = await _getBox();
+      final queue = _getQueue(box);
+      bool changed = false;
+
+      for (int i = 0; i < queue.length; i++) {
+        final itemMap = Map<String, dynamic>.from(queue[i] as Map);
+        final status = itemMap['status'] as String?;
+        if (status == QueueItemStatus.processing.name ||
+            status == QueueItemStatus.failed.name) {
+          itemMap['status'] = QueueItemStatus.pending.name;
+          itemMap['retryCount'] = 0;
+          queue[i] = itemMap;
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        await box.put(_queueKey, json.encode(queue));
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint(
+          '[RequestQueueService] resetStuckAndFailedRequests ERROR: $e',
+        );
+      }
+    }
+  }
+
   /// Reset all failed requests to pending
   static Future<void> resetFailedRequests() async {
     try {

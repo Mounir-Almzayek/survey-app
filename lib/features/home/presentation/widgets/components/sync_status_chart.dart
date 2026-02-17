@@ -25,7 +25,7 @@ class SyncStatusChart extends StatelessWidget {
           Expanded(
             flex: 4,
             child: SizedBox(
-              height: 140.h,
+              height: 200.h,
               child: Stack(
                 children: [
                   PieChart(

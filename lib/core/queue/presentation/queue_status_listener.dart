@@ -41,18 +41,16 @@ class _QueueStatusListenerState extends State<QueueStatusListener> {
 
     if (!mounted) return;
 
-    final pending = await RequestQueueService.getPendingRequests();
+    final all = await RequestQueueService.getAllRequests();
     final connectivity = Connectivity();
     final result = await connectivity.checkConnectivity();
     final isOnline = !result.contains(ConnectivityResult.none);
 
-    if (isOnline && pending.isNotEmpty && !_isDialogOpen) {
+    if (isOnline && all.isNotEmpty && !_isDialogOpen) {
       _hadQueuedOnReconnect = true;
       _wasOnline = true;
 
-      final all = await RequestQueueService.getAllRequests();
       final initialMap = {for (final item in all) item.id: item};
-
       _showQueueSummaryDialog(initialItems: initialMap);
     }
   }

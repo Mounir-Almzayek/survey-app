@@ -152,7 +152,7 @@ class _TargetCategoriesCarouselState extends State<TargetCategoriesCarousel> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  quota.demographicDescription,
+                  quota.localizedDemographicDescription(S.of(context)),
                   style: TextStyle(
                     fontSize: context.adaptiveFont(16.sp),
                     fontWeight: FontWeight.w700,

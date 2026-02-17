@@ -17,6 +17,11 @@ class DeviceLocationInitial extends DeviceLocationState {
   const DeviceLocationInitial({super.request});
 }
 
+/// Tracking not started yet; waiting for context (assignment_id or device_id)
+class DeviceLocationWaitingForContext extends DeviceLocationState {
+  const DeviceLocationWaitingForContext();
+}
+
 /// Loading state
 class DeviceLocationLoading extends DeviceLocationState {
   const DeviceLocationLoading({super.request});

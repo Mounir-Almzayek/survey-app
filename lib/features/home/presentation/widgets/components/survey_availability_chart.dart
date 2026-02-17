@@ -20,7 +20,7 @@ class SurveyAvailabilityChart extends StatelessWidget {
       icon: Icons.calendar_month_rounded,
       iconColor: Colors.blue,
       child: SizedBox(
-        height: 180.h,
+        height: 240.h,
         child: BarChart(
           BarChartData(
             alignment: BarChartAlignment.spaceAround,

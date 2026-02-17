@@ -27,10 +27,11 @@ class AssignmentsListBloc
       offlineTask: (_) async {
         final local = await AssignmentLocalRepository.getSurveys();
         if (local.isEmpty) throw Exception("No offline data available");
+        final activeSurveys = local.where((s) => s.isActive).toList();
         return ListAssignmentsResponse(
           success: true,
           message: "Loaded from cache",
-          surveys: local,
+          surveys: activeSurveys,
         );
       },
       checkConnectivity: true,

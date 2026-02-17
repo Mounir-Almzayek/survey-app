@@ -1810,10 +1810,10 @@ class S {
     );
   }
 
-  /// `Ready`
+  /// `Link Ready`
   String get link_ready {
     return Intl.message(
-      'Ready',
+      'Link Ready',
       name: 'link_ready',
       desc: '',
       args: [],
@@ -2940,11 +2940,121 @@ class S {
     );
   }
 
-  /// `Loading...`
-  String get loading {
+  /// `18-29`
+  String get age_18_29 {
     return Intl.message(
-      'Loading...',
-      name: 'loading',
+      '18-29',
+      name: 'age_18_29',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `30-39`
+  String get age_30_39 {
+    return Intl.message(
+      '30-39',
+      name: 'age_30_39',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `40-49`
+  String get age_40_49 {
+    return Intl.message(
+      '40-49',
+      name: 'age_40_49',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `50-59`
+  String get age_50_59 {
+    return Intl.message(
+      '50-59',
+      name: 'age_50_59',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `60-69`
+  String get age_60_69 {
+    return Intl.message(
+      '60-69',
+      name: 'age_60_69',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `70-79`
+  String get age_70_79 {
+    return Intl.message(
+      '70-79',
+      name: 'age_70_79',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `80-89`
+  String get age_80_89 {
+    return Intl.message(
+      '80-89',
+      name: 'age_80_89',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `90-99`
+  String get age_90_99 {
+    return Intl.message(
+      '90-99',
+      name: 'age_90_99',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `100+`
+  String get age_100_plus {
+    return Intl.message(
+      '100+',
+      name: 'age_100_plus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nearly Complete`
+  String get nearly_complete {
+    return Intl.message(
+      'Nearly Complete',
+      name: 'nearly_complete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `In Progress`
+  String get in_progress {
+    return Intl.message(
+      'In Progress',
+      name: 'in_progress',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not Started`
+  String get not_started {
+    return Intl.message(
+      'Not Started',
+      name: 'not_started',
       desc: '',
       args: [],
     );

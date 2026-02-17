@@ -11,10 +11,37 @@ import '../../public_links/presentation/widgets/public_links_section.dart';
 import '../bloc/home_stats/home_stats_bloc.dart';
 import '../bloc/home_stats/home_stats_event.dart';
 import '../bloc/home_stats/home_stats_state.dart';
+import 'widgets/dashboard_floating_menu.dart';
 import 'widgets/survey_stats_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final ScrollController _scrollController;
+
+  // Keys for dashboard sections tracking
+  final _analysisKey = GlobalKey(debugLabel: 'analysis');
+  final _demographicsKey = GlobalKey(debugLabel: 'demographics');
+  final _availabilityKey = GlobalKey(debugLabel: 'availability');
+  final _metricsKey = GlobalKey(debugLabel: 'metrics');
+  final _syncKey = GlobalKey(debugLabel: 'sync');
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,91 +61,129 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: AppColors.background,
         body: BlocBuilder<HomeStatsBloc, HomeStatsState>(
           builder: (context, state) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                context.read<HomeStatsBloc>().add(LoadHomeStats());
-              },
-              displacement: 40.h,
-              color: AppColors.primary,
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1400),
-                  child: CustomScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    slivers: [
-                      // App Bar / Header Section
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            horizontalPadding,
-                            context.responsive(
-                              24.h,
-                              tablet: 40.h,
-                              desktop: 40.0,
-                            ),
-                            horizontalPadding,
-                            context.responsive(
-                              32.h,
-                              tablet: 48.h,
-                              desktop: 40.0,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                s.welcome_back_researcher,
-                                style: TextStyle(
-                                  fontSize: headerFontSize,
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColors.primaryText,
-                                  letterSpacing: -0.5,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                s.home_survey_status_subtitle,
-                                style: TextStyle(
-                                  fontSize: context.adaptiveFont(13.sp),
-                                  color: AppColors.secondaryText,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // Content Section (Stats & Public Links)
-                      // Desktop: single column so all dashboard elements (metrics, survey analysis,
-                      // demographics, availability, sync) appear and scroll; no split that hides content.
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: horizontalPadding,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildStatsContent(context, state),
-                              SizedBox(
-                                height: context.responsive(
-                                  32.h,
+            return Stack(
+              children: [
+                RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<HomeStatsBloc>().add(LoadHomeStats());
+                  },
+                  displacement: 40.h,
+                  color: AppColors.primary,
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1400),
+                      child: CustomScrollView(
+                        controller: _scrollController,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        slivers: [
+                          // App Bar / Header Section
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                horizontalPadding,
+                                context.responsive(
+                                  24.h,
                                   tablet: 40.h,
-                                  desktop: 48.0,
+                                  desktop: 40.0,
+                                ),
+                                horizontalPadding,
+                                context.responsive(
+                                  32.h,
+                                  tablet: 48.h,
+                                  desktop: 40.0,
                                 ),
                               ),
-                              const PublicLinksSection(),
-                            ],
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    s.welcome_back_researcher,
+                                    style: TextStyle(
+                                      fontSize: headerFontSize,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.primaryText,
+                                      letterSpacing: -0.5,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    s.home_survey_status_subtitle,
+                                    style: TextStyle(
+                                      fontSize: context.adaptiveFont(13.sp),
+                                      color: AppColors.secondaryText,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
 
-                      SliverToBoxAdapter(child: SizedBox(height: 180.h)),
-                    ],
+                          // Content Section (Stats & Public Links)
+                          // Desktop: single column so all dashboard elements (metrics, survey analysis,
+                          // demographics, availability, sync) appear and scroll; no split that hides content.
+                          SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: horizontalPadding,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildStatsContent(context, state),
+                                  SizedBox(
+                                    height: context.responsive(
+                                      32.h,
+                                      tablet: 40.h,
+                                      desktop: 48.0,
+                                    ),
+                                  ),
+                                  const PublicLinksSection(),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          SliverToBoxAdapter(child: SizedBox(height: 180.h)),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+
+                // Interactive Floating Navigation Menu
+                if (state is HomeStatsLoaded)
+                  DashboardFloatingMenu(
+                    scrollController: _scrollController,
+                    sections: [
+                      DashboardSectionNode(
+                        key: _analysisKey,
+                        label: s.statistics,
+                        icon: Icons.analytics_outlined,
+                      ),
+                      DashboardSectionNode(
+                        key: _demographicsKey,
+                        label: s.demographics_title,
+                        icon: Icons.people_outline,
+                      ),
+                      DashboardSectionNode(
+                        key: _availabilityKey,
+                        label: s.survey_availability,
+                        icon: Icons.event_available_outlined,
+                      ),
+                      DashboardSectionNode(
+                        key: _metricsKey,
+                        label: s.statistics,
+                        icon: Icons.speed_outlined,
+                      ),
+                      DashboardSectionNode(
+                        key: _syncKey,
+                        label: s.sync_status,
+                        icon: Icons.sync_outlined,
+                      ),
+                    ],
+                  ),
+              ],
             );
           },
         ),
@@ -138,9 +203,15 @@ class HomeScreen extends StatelessWidget {
         onRetry: () => context.read<HomeStatsBloc>().add(LoadHomeStats()),
       );
     } else if (state is HomeStatsLoaded) {
-      return SurveyStatsWidget(stats: state.stats);
+      return SurveyStatsWidget(
+        stats: state.stats,
+        analysisKey: _analysisKey,
+        demographicsKey: _demographicsKey,
+        availabilityKey: _availabilityKey,
+        metricsKey: _metricsKey,
+        syncKey: _syncKey,
+      );
     }
     return const SizedBox.shrink();
   }
-
 }

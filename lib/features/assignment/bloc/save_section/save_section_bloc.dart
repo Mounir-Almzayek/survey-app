@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/save_section_models.dart';
 import '../../repository/assignment_repository.dart';
 import '../../repository/assignment_local_repository.dart';
+import '../../../../core/services/device_local_metadata_service.dart';
 import '../../../../core/utils/async_runner.dart';
 import '../../../../core/utils/survey_validator.dart';
 
@@ -254,6 +255,15 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
       saveRequest = saveRequest.copyWith(answers: event.answers);
     }
 
+    // Use section_id from event (UI at submit time) when valid, else fallback to state
+    final effectiveSectionId = (event.sectionId != null && event.sectionId != 0)
+        ? event.sectionId!
+        : saveRequest.sectionId;
+    saveRequest = saveRequest.copyWith(
+      sectionId: effectiveSectionId,
+      lastReachedSectionId: effectiveSectionId,
+    );
+
     emit(SaveSectionLoading(responseId: responseId, saveRequest: saveRequest));
 
     await _runner.run(
@@ -278,6 +288,9 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
       },
       checkConnectivity: true,
       onSuccess: (response) {
+        if (response.isComplete) {
+          DeviceLocalMetadataService().saveAssignmentId(null);
+        }
         if (!emit.isDone) {
           // The repository already updated the local draft to synced: true
           emit(
@@ -290,6 +303,9 @@ class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
         }
       },
       onOffline: (response) {
+        if (event.isCompletingSurvey) {
+          DeviceLocalMetadataService().saveAssignmentId(null);
+        }
         if (!emit.isDone) {
           emit(
             SaveSectionSuccess(
