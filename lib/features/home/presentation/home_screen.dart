@@ -7,6 +7,7 @@ import '../../../core/styles/app_colors.dart';
 import '../../../core/utils/responsive_layout.dart';
 import '../../../core/widgets/error_state_widget.dart';
 import '../../../core/widgets/loading_widget.dart';
+import '../../assignment/bloc/assignments_list/assignments_list_bloc.dart';
 import '../../public_links/presentation/widgets/public_links_section.dart';
 import '../bloc/home_stats/home_stats_bloc.dart';
 import '../bloc/home_stats/home_stats_event.dart';
@@ -35,6 +36,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<AssignmentsListBloc>().add(LoadAssignments());
+      }
+    });
   }
 
   @override

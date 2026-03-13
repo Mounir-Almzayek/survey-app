@@ -50,6 +50,12 @@ class HiveService {
     await box.delete(key);
   }
 
+  /// Get all keys from the default (home data) box.
+  static Future<List<String>> getDefaultBoxKeys() async {
+    final box = await _getBox();
+    return box.keys.map((e) => e.toString()).toList();
+  }
+
   /// Clear all data from box
   static Future<void> clearBox() async {
     final box = await _getBox();

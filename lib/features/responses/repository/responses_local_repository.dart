@@ -69,4 +69,20 @@ class ResponsesLocalRepository {
       // ignore
     }
   }
+
+  /// Clear all cached responses and response details (e.g. on logout).
+  static Future<void> clearAll() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final keys = prefs.getKeys().toList();
+      for (final key in keys) {
+        if (key.startsWith(_responsesKeyPrefix) ||
+            key.startsWith(_responseDetailsKeyPrefix)) {
+          await prefs.remove(key);
+        }
+      }
+    } catch (_) {
+      // ignore
+    }
+  }
 }

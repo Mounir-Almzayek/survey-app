@@ -36,6 +36,24 @@ class AssignmentStorage {
     } catch (_) {}
   }
 
+  /// Remove all keys that belong to assignment feature (for logout).
+  static Future<void> clearAllAssignmentKeys() async {
+    try {
+      final keys = await HiveService.getDefaultBoxKeys();
+      for (final key in keys) {
+        if (key == AssignmentStorageKeys.surveys ||
+            key == AssignmentStorageKeys.syncedCount ||
+            key == AssignmentStorageKeys.negativeIdCounter ||
+            key == AssignmentStorageKeys.optimisticQuotaIncrementedIds ||
+            key.startsWith('response_draft_') ||
+            key.startsWith('response_metadata_') ||
+            key.startsWith('completed_responses_')) {
+          await HiveService.deleteData(key);
+        }
+      }
+    } catch (_) {}
+  }
+
   static Future<List<String>?> getStringList(String key) async {
     try {
       final value = await HiveService.getData(key);

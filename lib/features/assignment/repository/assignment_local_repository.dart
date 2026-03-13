@@ -137,6 +137,12 @@ class AssignmentLocalRepository {
     await AssignmentStorage.remove(AssignmentStorageKeys.surveys);
   }
 
+  /// Clear all assignment-related data (surveys, drafts, metadata, completed, sync).
+  /// Call on logout so the next account does not see the previous account's data.
+  static Future<void> clearAllForLogout() async {
+    await AssignmentStorage.clearAllAssignmentKeys();
+  }
+
   /// Mark that we already incremented local quota for this response (optimistic).
   /// When queue later syncs with is_complete, we skip increment to avoid double count.
   static Future<void> markOptimisticQuotaIncremented(int responseId) async {

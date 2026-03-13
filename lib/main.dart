@@ -47,7 +47,14 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => DeviceLocationBloc()),
         BlocProvider(create: (_) => AssignmentsListBloc()),
       ],
-      child: BlocBuilder<LanguageBloc, LanguageState>(
+      child: BlocListener<ProfileBloc, ProfileState>(
+        listenWhen: (prev, curr) => curr is ProfileLogoutSuccess,
+        listener: (context, state) {
+          if (state is ProfileLogoutSuccess) {
+            context.read<AssignmentsListBloc>().add(ClearAssignmentsList());
+          }
+        },
+        child: BlocBuilder<LanguageBloc, LanguageState>(
         builder: (context, state) {
           return ScreenUtilInit(
             designSize: const Size(360, 800),
@@ -80,6 +87,7 @@ class MyApp extends StatelessWidget {
             },
           );
         },
+        ),
       ),
     );
   }

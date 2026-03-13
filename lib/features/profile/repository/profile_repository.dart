@@ -1,4 +1,12 @@
 import '../../auth/repository/auth_repository.dart';
+import '../../assignment/repository/assignment_local_repository.dart';
+import '../../custody/repository/custody_local_repository.dart';
+import '../../device_location/repository/device_location_local_repository.dart';
+import '../../device_registration/repository/device_cookie_repository.dart';
+import '../../public_links/repository/public_links_local_repository.dart';
+import '../../responses/repository/responses_local_repository.dart';
+import '../../upload/repository/upload_local_repository.dart';
+import '../../../core/queue/services/request_queue_service.dart';
 import 'profile_local_repository.dart';
 import 'profile_online_repository.dart';
 import '../models/researcher_profile_response_model.dart';
@@ -26,7 +34,8 @@ class ProfileRepository {
     return onlineProfile;
   }
 
-  /// Perform logout (online and local)
+  /// Perform logout (online and local).
+  /// Also clears all user-specific local data so the next account sees a clean state.
   static Future<void> logout() async {
     try {
       await ProfileOnlineRepository.logout();
@@ -35,6 +44,16 @@ class ProfileRepository {
     } finally {
       await ProfileLocalRepository.clearProfileData();
       await AuthRepository.logout();
+      // Clear all data that might belong to the previous account
+      await AssignmentLocalRepository.clearAllForLogout();
+      await RequestQueueService.clearAll();
+      await CustodyLocalRepository.clearCustodyRecords();
+      await UploadLocalRepository.clearPendingUploads();
+      await UploadLocalRepository.clearFailedUploads();
+      await DeviceLocationLocalRepository.clearPendingLocations();
+      await PublicLinksLocalRepository.clearPublicLinks();
+      await ResponsesLocalRepository.clearAll();
+      await DeviceCookieRepository.clearDeviceCookie();
     }
   }
 }

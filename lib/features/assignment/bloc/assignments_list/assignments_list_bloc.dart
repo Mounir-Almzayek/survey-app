@@ -14,6 +14,14 @@ class AssignmentsListBloc
 
   AssignmentsListBloc() : super(AssignmentsListInitial()) {
     on<LoadAssignments>(_onLoadAssignments);
+    on<ClearAssignmentsList>(_onClearAssignmentsList);
+  }
+
+  void _onClearAssignmentsList(
+    ClearAssignmentsList event,
+    Emitter<AssignmentsListState> emit,
+  ) {
+    emit(AssignmentsListInitial());
   }
 
   Future<void> _onLoadAssignments(
