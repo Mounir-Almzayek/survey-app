@@ -18,13 +18,10 @@ class CreateShortLivedLinkRequest {
     );
   }
 
-  /// Builds the API body; [expires_at] is computed at call time as date-only (YYYY-MM-DD) per API schema.
+  /// Builds the API body; [expires_at] is computed at call time as full ISO8601 UTC datetime (e.g. 2026-03-25T08:59:00.000Z).
+  /// This avoids timezone ambiguity between client/device and server.
   Map<String, dynamic> toJson() {
     final d = DateTime.now().add(duration);
-    return {'survey_id': surveyId, 'expires_at': _toDateOnly(d)};
-  }
-
-  static String _toDateOnly(DateTime d) {
-    return '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+    return {'survey_id': surveyId, 'expires_at': d.toUtc().toIso8601String()};
   }
 }
