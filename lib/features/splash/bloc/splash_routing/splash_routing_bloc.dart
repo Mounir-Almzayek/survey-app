@@ -18,6 +18,8 @@ class SplashRoutingBloc extends Bloc<SplashRoutingEvent, SplashRoutingState> {
 
     final isFirstTime = SettingsLocalRepository.isAppOpenedForFirstTime();
     final token = await AuthLocalRepository.retrieveToken();
+    final (shouldVerifyCustody, pendingCustody) =
+        await AuthLocalRepository.getCustodyVerificationState();
 
     SplashDestination dest = SplashDestination.appReady;
     if (isFirstTime) {
@@ -25,6 +27,9 @@ class SplashRoutingBloc extends Bloc<SplashRoutingEvent, SplashRoutingState> {
       SettingsLocalRepository.markAppAsOpened();
     } else if (token.isEmpty) {
       dest = SplashDestination.unregistered;
+    } else if (shouldVerifyCustody && pendingCustody != null) {
+      // User is logged in but has pending custody verification
+      dest = SplashDestination.custodyVerification;
     } else {
       dest = SplashDestination.appReady;
     }

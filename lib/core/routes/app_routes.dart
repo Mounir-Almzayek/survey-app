@@ -19,6 +19,7 @@ class Routes {
   static const String qrScannerPath = '/qr-scanner';
   static const String deviceRegistrationPath = '/device-registration';
   static const String custodyTransferPath = '/custody-transfer';
+  static const String custodyVerificationPath = '/custody-verification';
   static const String surveyAnsweringPath = '/survey-answering';
   static const String completedResponsesPath = '/completed-responses';
   static const String completedResponseViewPath = '/completed-response-view';

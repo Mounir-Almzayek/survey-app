@@ -1,9 +1,12 @@
 import '../models/login_method_type.dart';
 import '../../../core/services/hive_service.dart';
+import '../../../../core/models/pending_custody.dart';
 
 class AuthLocalRepository {
   static const String _tokenKey = 'token';
   static const String _loginMethodKey = 'login_method';
+  static const String _shouldVerifyCustodyKey = 'should_verify_custody';
+  static const String _pendingCustodyKey = 'pending_custody';
 
   /// Retrieve saved token
   static Future<String> retrieveToken() async {
@@ -38,5 +41,43 @@ class AuthLocalRepository {
   static Future<void> clearAuthData() async {
     await HiveService.deleteData(_tokenKey);
     await HiveService.deleteData(_loginMethodKey);
+    await HiveService.deleteData(_shouldVerifyCustodyKey);
+    await HiveService.deleteData(_pendingCustodyKey);
+  }
+
+  /// Save custody verification state
+  static Future<void> saveCustodyVerificationState({
+    required bool shouldVerify,
+    PendingCustody? pendingCustody,
+  }) async {
+    await HiveService.saveData(_shouldVerifyCustodyKey, shouldVerify);
+    if (pendingCustody != null) {
+      await HiveService.saveData(_pendingCustodyKey, pendingCustody.toJson());
+    } else {
+      await HiveService.deleteData(_pendingCustodyKey);
+    }
+  }
+
+  /// Get custody verification state
+  static Future<(bool shouldVerify, PendingCustody? pendingCustody)>
+  getCustodyVerificationState() async {
+    final shouldVerify =
+        await HiveService.getData(_shouldVerifyCustodyKey) as bool? ?? false;
+
+    PendingCustody? pendingCustody;
+    final custodyData = await HiveService.getData(_pendingCustodyKey);
+    if (custodyData != null && custodyData is Map) {
+      // Convert dynamic Map to Map<String, dynamic>
+      final stringKeyedMap = Map<String, dynamic>.from(custodyData);
+      pendingCustody = PendingCustody.fromJson(stringKeyedMap);
+    }
+
+    return (shouldVerify, pendingCustody);
+  }
+
+  /// Clear custody verification state
+  static Future<void> clearCustodyVerificationState() async {
+    await HiveService.deleteData(_shouldVerifyCustodyKey);
+    await HiveService.deleteData(_pendingCustodyKey);
   }
 }

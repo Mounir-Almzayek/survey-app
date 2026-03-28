@@ -10,6 +10,7 @@ import '../../models/researcher_login_initiate_request.dart';
 import '../../models/researcher_login_initiate_response.dart';
 import '../../models/researcher_login_verify_request.dart';
 import '../../models/researcher_login_verify_response.dart';
+import '../../../../core/models/pending_custody.dart';
 import '../../repository/auth_repository.dart';
 import '../../repository/auth_local_repository.dart';
 
@@ -89,12 +90,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (response.isUnboundAuth && response.accessToken != null) {
           await AuthLocalRepository.saveToken(response.accessToken!);
           await AuthLocalRepository.saveLoginMethod(LoginMethodType.emailOnly);
+
+          // Save custody verification state
+          await AuthLocalRepository.saveCustodyVerificationState(
+            shouldVerify: false,
+            pendingCustody: null,
+          );
+
           if (!emit.isDone) {
             emit(
               LoginSuccess(
                 token: response.accessToken!,
                 email: state.email,
                 password: state.password,
+                shouldVerifyCustody: false,
+                pendingCustody: null,
               ),
             );
           }
@@ -204,6 +214,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         await AuthLocalRepository.saveLoginMethod(LoginMethodType.challenge);
 
+        // Save custody verification state
+        await AuthLocalRepository.saveCustodyVerificationState(
+          shouldVerify: response.should_verify_custody,
+          pendingCustody: response.pending_custody,
+        );
+
         // Fetch the user profile that was saved by AuthRepository.verifyResearcherLogin
         if (!emit.isDone) {
           emit(
@@ -211,6 +227,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               token: response.accessToken,
               email: state.email,
               password: state.password,
+              shouldVerifyCustody: response.should_verify_custody,
+              pendingCustody: response.pending_custody,
             ),
           );
         }

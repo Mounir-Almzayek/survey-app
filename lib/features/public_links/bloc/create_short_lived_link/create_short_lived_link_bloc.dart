@@ -42,7 +42,11 @@ class CreateShortLivedLinkBloc
       duration: initialDuration,
     );
     emit(
-      ShortLivedLinkInitial(request: request, maxDurationMinutes: maxMinutes),
+      ShortLivedLinkInitial(
+        request: request,
+        maxDurationMinutes: maxMinutes,
+        surveyLanguage: survey.lang,
+      ),
     );
   }
 
@@ -55,6 +59,7 @@ class CreateShortLivedLinkBloc
       ShortLivedLinkInitial(
         request: request.copyWith(surveyId: event.surveyId),
         maxDurationMinutes: state.maxDurationMinutes,
+        surveyLanguage: state.surveyLanguage,
       ),
     );
   }
@@ -73,6 +78,7 @@ class CreateShortLivedLinkBloc
       ShortLivedLinkInitial(
         request: request.copyWith(duration: duration),
         maxDurationMinutes: maxMinutes,
+        surveyLanguage: state.surveyLanguage,
       ),
     );
   }
@@ -96,6 +102,7 @@ class CreateShortLivedLinkBloc
       ShortLivedLinkLoading(
         request: request,
         maxDurationMinutes: state.maxDurationMinutes,
+        surveyLanguage: state.surveyLanguage,
       ),
     );
 
@@ -128,10 +135,12 @@ class CreateShortLivedLinkBloc
       );
 
       // 3. Build full URL with latitude/longitude for frontend
-      final base = APIConfig.surveyFrontendBaseUrl;
-      final path = '/survey/${result.shortCode}';
-      final query = '?latitude=$lat&longitude=$lng';
-      final fullUrl = '$base$path$query';
+      final fullUrl = APIConfig.buildShortLivedSurveyUrl(
+        result.shortCode,
+        lat,
+        lng,
+        locale: state.surveyLanguage,
+      );
 
       if (!isClosed) {
         emit(
@@ -139,6 +148,9 @@ class CreateShortLivedLinkBloc
             fullUrl: fullUrl,
             shortCode: result.shortCode,
             expiresAt: DateTime.now().add(request.duration),
+            request: request,
+            maxDurationMinutes: state.maxDurationMinutes,
+            surveyLanguage: state.surveyLanguage,
           ),
         );
       }
@@ -150,6 +162,7 @@ class CreateShortLivedLinkBloc
             message,
             request: request,
             maxDurationMinutes: state.maxDurationMinutes,
+            surveyLanguage: state.surveyLanguage,
           ),
         );
       }

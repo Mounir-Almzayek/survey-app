@@ -17,7 +17,7 @@ class SplashError extends SplashRoutingState {
   const SplashError(this.message);
 }
 
-enum SplashDestination { welcome, unregistered, appReady }
+enum SplashDestination { welcome, unregistered, appReady, custodyVerification }
 
 class SplashLoaded extends SplashRoutingState {
   final SplashDestination destination;

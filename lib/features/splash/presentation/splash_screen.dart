@@ -9,6 +9,7 @@ import '../../../core/routes/app_routes.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../core/widgets/logo_rectangle.dart';
 import '../bloc/splash_routing/splash_routing_bloc.dart';
+import '../../auth/repository/auth_local_repository.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -43,12 +44,20 @@ class _SplashScreenState extends State<SplashScreen> {
         }
 
         if (state is SplashLoaded) {
-          final route = () {
+          final route = await () async {
             switch (state.destination) {
               case SplashDestination.welcome:
                 return Routes.welcomePath;
               case SplashDestination.unregistered:
                 return Routes.loginPath;
+              case SplashDestination.custodyVerification:
+                // Get pending custody data and redirect to verification
+                final (_, pendingCustody) =
+                    await AuthLocalRepository.getCustodyVerificationState();
+                if (pendingCustody != null) {
+                  return '${Routes.custodyVerificationPath}?custodyId=${pendingCustody.id}';
+                }
+                return Routes.mainScreenPath; // Fallback
               case SplashDestination.appReady:
                 return Routes.mainScreenPath;
             }

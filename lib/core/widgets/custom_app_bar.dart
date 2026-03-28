@@ -12,6 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final bool centerTitle;
   final VoidCallback? onDrawerPressed;
+  final VoidCallback? onBackPressed;
 
   const CustomAppBar({
     super.key,
@@ -21,6 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.centerTitle = true,
     this.onDrawerPressed,
+    this.onBackPressed,
   });
 
   @override
@@ -80,7 +82,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: AppColors.primary,
           size: context.adaptiveIcon(18.sp),
         ),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
       );
     }
     return null;

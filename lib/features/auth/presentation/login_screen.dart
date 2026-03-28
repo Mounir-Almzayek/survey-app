@@ -117,7 +117,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     context,
                     message: locale.login_success,
                   );
-                  context.pushReplacement(Routes.mainScreenPath);
+
+                  // Check if custody verification is required
+                  if (state.shouldVerifyCustody &&
+                      state.pendingCustody != null) {
+                    context.pushReplacement(
+                      '${Routes.custodyVerificationPath}?custodyId=${state.pendingCustody!.id}',
+                    );
+                  } else {
+                    context.pushReplacement(Routes.mainScreenPath);
+                  }
                 } else if (state is LoginInitiateSuccess) {
                   context.read<LoginBloc>().add(SendVerifyLogin());
                 } else if (state is LoginFailure) {

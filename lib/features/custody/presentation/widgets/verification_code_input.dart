@@ -82,18 +82,24 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            widget.length,
-            (index) => _buildInputField(index),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              widget.length,
+              (index) => _buildInputField(index),
+            ),
           ),
         ),
         if (widget.errorText != null) ...[
           SizedBox(height: 8.h),
           Text(
             widget.errorText!,
-            style: TextStyle(fontSize: context.adaptiveFont(12.sp), color: AppColors.error),
+            style: TextStyle(
+              fontSize: context.adaptiveFont(12.sp),
+              color: AppColors.error,
+            ),
           ),
         ],
       ],
@@ -104,9 +110,9 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
     final isLast = index == widget.length - 1;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4.w),
-      width: 48.w,
-      height: 56.h,
+      margin: EdgeInsets.symmetric(horizontal: 2.w),
+      width: context.responsive(42.w, tablet: 45.w),
+      height: context.responsive(50.h, tablet: 56.h),
       child: TextField(
         controller: _controllers[index],
         focusNode: _focusNodes[index],
@@ -118,7 +124,7 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
           LengthLimitingTextInputFormatter(1),
         ],
         style: TextStyle(
-          fontSize: context.adaptiveFont(24.sp),
+          fontSize: context.adaptiveFont(22.sp),
           fontWeight: FontWeight.bold,
           color: AppColors.primaryText,
         ),

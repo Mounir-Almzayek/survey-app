@@ -23,8 +23,16 @@ class LoginInitiateSuccess extends LoginState {
 
 class LoginSuccess extends LoginState {
   final String token;
+  final bool shouldVerifyCustody;
+  final PendingCustody? pendingCustody;
 
-  LoginSuccess({required this.token, super.email, super.password});
+  LoginSuccess({
+    required this.token,
+    super.email,
+    super.password,
+    this.shouldVerifyCustody = false,
+    this.pendingCustody,
+  });
 }
 
 class LoginFailure extends LoginState {
