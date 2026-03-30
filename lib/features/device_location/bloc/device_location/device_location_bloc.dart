@@ -13,10 +13,12 @@ import 'device_location_event.dart';
 import 'device_location_state.dart';
 
 /// Bloc for managing device location tracking
-class DeviceLocationBloc extends Bloc<DeviceLocationEvent, DeviceLocationState> {
+class DeviceLocationBloc
+    extends Bloc<DeviceLocationEvent, DeviceLocationState> {
   final AsyncRunner<DeviceLocationTrackingStarted?> _startTrackingRunner =
       AsyncRunner<DeviceLocationTrackingStarted?>();
-  final DeviceLocalMetadataService _metadataService = DeviceLocalMetadataService();
+  final DeviceLocalMetadataService _metadataService =
+      DeviceLocalMetadataService();
   StreamSubscription<DeviceLocation>? _locationSubscription;
 
   DeviceLocationBloc() : super(const DeviceLocationInitial()) {
@@ -80,10 +82,12 @@ class DeviceLocationBloc extends Bloc<DeviceLocationEvent, DeviceLocationState> 
         _locationSubscription = LocationService.locationStream.listen(
           (location) {
             add(const RefreshAssignmentIdEvent());
-            add(UpdateCoordinatesEvent(
-              latitude: location.latitude,
-              longitude: location.longitude,
-            ));
+            add(
+              UpdateCoordinatesEvent(
+                latitude: location.latitude,
+                longitude: location.longitude,
+              ),
+            );
             add(const RefreshDeviceIdEvent());
             add(const SendLocationEvent());
           },
@@ -151,7 +155,9 @@ class DeviceLocationBloc extends Bloc<DeviceLocationEvent, DeviceLocationState> 
       if (currentState is DeviceLocationTrackingStarted) {
         emit(currentState.copyWith(request: updatedRequest));
       } else if (currentState is DeviceLocationUpdated) {
-        emit(DeviceLocationUpdated(currentState.location, request: updatedRequest));
+        emit(
+          DeviceLocationUpdated(currentState.location, request: updatedRequest),
+        );
       }
     }
   }
@@ -172,7 +178,9 @@ class DeviceLocationBloc extends Bloc<DeviceLocationEvent, DeviceLocationState> 
       if (currentState is DeviceLocationTrackingStarted) {
         emit(currentState.copyWith(request: updatedRequest));
       } else if (currentState is DeviceLocationUpdated) {
-        emit(DeviceLocationUpdated(currentState.location, request: updatedRequest));
+        emit(
+          DeviceLocationUpdated(currentState.location, request: updatedRequest),
+        );
       }
     }
   }
@@ -194,7 +202,9 @@ class DeviceLocationBloc extends Bloc<DeviceLocationEvent, DeviceLocationState> 
       if (currentState is DeviceLocationTrackingStarted) {
         emit(currentState.copyWith(request: updatedRequest));
       } else if (currentState is DeviceLocationUpdated) {
-        emit(DeviceLocationUpdated(currentState.location, request: updatedRequest));
+        emit(
+          DeviceLocationUpdated(currentState.location, request: updatedRequest),
+        );
       }
     }
   }

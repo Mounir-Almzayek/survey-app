@@ -74,12 +74,28 @@ class SurveyBehaviorManager {
               requirementMap[targetKey] = false;
               break;
             case ActionType.jump:
-              final jumpToId = action.params?['jump_to_section'] ??
+              dynamic jumpToId =
+                  action.params?['jump_to_section'] ??
                   action.params?['jump_to_id'] ??
                   action.params?['target_id'];
-              if (jumpToId != null && action.targetId != null) {
-                jumpMap[action.targetId!] =
-                    int.tryParse(jumpToId.toString()) ?? 0;
+
+              // If params is null, use targetId as the jump destination
+              if (jumpToId == null && action.targetId != null) {
+                jumpToId = action.targetId;
+              }
+
+              if (jumpToId != null) {
+                // For jump actions, we need to find which question triggered this logic
+                // Use the first question from the condition rules as the trigger
+                int? triggerQuestionId;
+                if (sortedRules.isNotEmpty) {
+                  triggerQuestionId = sortedRules[0].questionId;
+                }
+
+                if (triggerQuestionId != null) {
+                  jumpMap[triggerQuestionId] =
+                      int.tryParse(jumpToId.toString()) ?? 0;
+                }
               }
               break;
           }

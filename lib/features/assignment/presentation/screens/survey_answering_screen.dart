@@ -13,7 +13,6 @@ import '../../../../core/widgets/unified_snackbar.dart';
 import '../widgets/demographics_dialog.dart';
 
 import '../../../../core/enums/survey_enums.dart';
-import '../../../../core/l10n/generated/l10n.dart';
 import '../../../device_location/service/location_service.dart';
 import '../../bloc/start_response/start_response_bloc.dart' as start;
 
@@ -63,11 +62,21 @@ class SurveyAnsweringScreen extends StatelessWidget {
               final answers = state.saveRequest?.answers ?? [];
               final answersMap = {for (var a in answers) a.questionId: a.value};
 
+              // Always use local conditional logic, ignore server's next_section
+              navBloc.add(NextSection(answers: answersMap));
+
               if (state.response.isComplete) {
-                navBloc.add(CompleteSurvey());
-                context.read<AssignmentsListBloc>().add(LoadAssignments());
-              } else {
-                navBloc.add(NextSection(answers: answersMap));
+                // If server says complete, but we might still have sections due to conditional logic
+                // Check if we should really complete or continue with conditional navigation
+                Future.delayed(Duration(milliseconds: 100), () {
+                  final currentNavState = navBloc.state;
+                  if (currentNavState.currentStep != SurveyStep.completion) {
+                    // Navigation already handled by conditional logic, don't complete yet
+                    return;
+                  }
+                  navBloc.add(CompleteSurvey());
+                  context.read<AssignmentsListBloc>().add(LoadAssignments());
+                });
               }
             } else if (state is SaveSectionError) {
               UnifiedSnackbar.error(context, message: state.message);
@@ -124,45 +133,19 @@ class SurveyAnsweringScreen extends StatelessWidget {
               if (result != null && context.mounted) {
                 final gender = result['gender'] as Gender;
                 final ageGroup = result['ageGroup'] as AgeGroup;
+                // Always get location if available
                 Map<String, double>? locationMap;
 
-                if (state.survey!.gpsRequired == true) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (ctx) => PopScope(
-                      canPop: false,
-                      child: AlertDialog(
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const LoadingWidget(),
-                            SizedBox(height: 16),
-                            Text(S.of(context).getting_location),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                  try {
-                    final deviceLocation =
-                        await LocationService.getCurrentLocation();
-                    if (!context.mounted) return;
-                    Navigator.of(context).pop(context);
-                    locationMap = {
-                      'latitude': deviceLocation.latitude,
-                      'longitude': deviceLocation.longitude,
-                    };
-                  } catch (_) {
-                    if (context.mounted) {
-                      Navigator.of(context).pop(context);
-                      UnifiedSnackbar.error(
-                        context,
-                        message: S.of(context).location_required,
-                      );
-                    }
-                    return;
-                  }
+                // Try to get location (non-blocking)
+                try {
+                  final deviceLocation =
+                      await LocationService.getCurrentLocation();
+                  locationMap = {
+                    'latitude': deviceLocation.latitude,
+                    'longitude': deviceLocation.longitude,
+                  };
+                } catch (_) {
+                  // Location not available, continue without it
                 }
 
                 context.read<start.StartResponseBloc>().add(

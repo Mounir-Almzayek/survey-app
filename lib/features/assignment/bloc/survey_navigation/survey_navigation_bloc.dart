@@ -161,11 +161,38 @@ class SurveyNavigationBloc
       if (section == null) return;
 
       // 2. Check for Jump logic using the latest jump map
-      final jumpTargetId = currentJumpMap[section.id];
+      // Check for jump from any question that was just answered
+      int? jumpTargetId;
+
+      // First, check if any question in the current section triggers a jump
+      if (section.questions != null) {
+        for (final question in section.questions!) {
+          final targetId = currentJumpMap[question.id];
+          if (targetId != null) {
+            jumpTargetId = targetId;
+            break;
+          }
+        }
+      }
+
+      // If no jump found in current section, check if any answered question triggers a jump
+      if (jumpTargetId == null && event.answers != null) {
+        for (final answeredQuestionId in event.answers!.keys) {
+          final targetId = currentJumpMap[answeredQuestionId];
+          if (targetId != null) {
+            jumpTargetId = targetId;
+            break;
+          }
+        }
+      }
+
       if (jumpTargetId != null) {
+        // Check if jumpTargetId is a section ID or question ID
+        // First, try to find it as a section ID
         final targetIndex = survey.sections!.indexWhere(
           (s) => s.id == jumpTargetId,
         );
+
         if (targetIndex != -1) {
           emit(
             SurveyNavigationUpdated(
@@ -179,6 +206,40 @@ class SurveyNavigationBloc
             ),
           );
           return;
+        }
+
+        // If not found as section ID, try to find the section that contains the target question
+        int? targetSectionId;
+        for (final section in survey.sections!) {
+          if (section.questions != null) {
+            for (final question in section.questions!) {
+              if (question.id == jumpTargetId) {
+                targetSectionId = section.id;
+                break;
+              }
+            }
+            if (targetSectionId != null) break;
+          }
+        }
+
+        if (targetSectionId != null) {
+          final targetIndex = survey.sections!.indexWhere(
+            (s) => s.id == targetSectionId,
+          );
+          if (targetIndex != -1) {
+            emit(
+              SurveyNavigationUpdated(
+                survey: survey,
+                responseId: state.responseId,
+                currentSectionIndex: targetIndex,
+                visibilityMap: currentVisibility,
+                requirementMap: state.requirementMap,
+                jumpMap: currentJumpMap,
+                currentStep: state.currentStep,
+              ),
+            );
+            return;
+          }
         }
       }
 
