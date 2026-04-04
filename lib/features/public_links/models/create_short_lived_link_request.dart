@@ -19,9 +19,6 @@ class CreateShortLivedLinkRequest {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'survey_id': surveyId,
-      'minutes': durationMinutes,
-    };
+    return {'survey_id': surveyId, 'minutes': durationMinutes};
   }
 }
