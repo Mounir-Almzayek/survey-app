@@ -29,7 +29,7 @@ class UpdateShortLinkRequestSurveyId extends CreateShortLivedLinkEvent {
   List<Object?> get props => [surveyId];
 }
 
-/// Update the duration in the current request (expires_at is derived at send time).
+/// Update the duration in the current request ([minutes] sent to API; server sets expiry).
 class UpdateShortLinkRequestDuration extends CreateShortLivedLinkEvent {
   final Duration duration;
 

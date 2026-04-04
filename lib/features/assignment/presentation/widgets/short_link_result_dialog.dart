@@ -14,11 +14,15 @@ class ShortLinkResultDialog extends StatelessWidget {
   final String surveyTitle;
   final DateTime? expiresAt;
 
+  /// Shown when [expiresAt] is null (e.g. server does not return a datetime).
+  final int? validityMinutes;
+
   const ShortLinkResultDialog({
     super.key,
     required this.fullUrl,
     required this.surveyTitle,
     this.expiresAt,
+    this.validityMinutes,
   });
 
   Future<void> _copyLink(BuildContext context) async {
@@ -135,6 +139,16 @@ class ShortLinkResultDialog extends StatelessWidget {
               SizedBox(height: 12.h),
               Text(
                 '${s.expires_at}: ${DateFormat('dd/MM/yyyy HH:mm').format(expiresAt!)}',
+                style: TextStyle(
+                  fontSize: context.adaptiveFont(10.sp),
+                  color: AppColors.secondaryText,
+                ),
+              ),
+            ] else if (validityMinutes != null) ...[
+              SizedBox(height: 12.h),
+              Text(
+                s.survey_available_for_duration(validityMinutes!),
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: context.adaptiveFont(10.sp),
                   color: AppColors.secondaryText,

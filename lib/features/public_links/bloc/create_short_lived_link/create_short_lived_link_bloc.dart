@@ -147,7 +147,7 @@ class CreateShortLivedLinkBloc
           ShortLivedLinkReady(
             fullUrl: fullUrl,
             shortCode: result.shortCode,
-            expiresAt: DateTime.now().add(request.duration),
+            expiresAt: result.expiresAt,
             request: request,
             maxDurationMinutes: state.maxDurationMinutes,
             surveyLanguage: state.surveyLanguage,

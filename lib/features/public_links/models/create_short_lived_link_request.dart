@@ -1,5 +1,5 @@
 /// Request model for creating a short-lived public link.
-/// [expires_at] is derived at call time in [toJson] from [duration].
+/// The API expects [survey_id] and [minutes] (integer); the server computes expiry.
 class CreateShortLivedLinkRequest {
   final int surveyId;
   final Duration duration;
@@ -18,10 +18,10 @@ class CreateShortLivedLinkRequest {
     );
   }
 
-  /// Builds the API body; [expires_at] is computed at call time as full ISO8601 UTC datetime (e.g. 2026-03-25T08:59:00.000Z).
-  /// This avoids timezone ambiguity between client/device and server.
   Map<String, dynamic> toJson() {
-    final d = DateTime.now().add(duration);
-    return {'survey_id': surveyId, 'expires_at': d.toUtc().toIso8601String()};
+    return {
+      'survey_id': surveyId,
+      'minutes': durationMinutes,
+    };
   }
 }

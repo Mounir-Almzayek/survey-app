@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/utils/responsive_layout.dart';
@@ -87,6 +86,7 @@ class _ShortLinkConfigDialogState extends State<ShortLinkConfigDialog> {
               fullUrl: state.fullUrl,
               surveyTitle: widget.survey.title ?? s.short_link,
               expiresAt: state.expiresAt,
+              validityMinutes: state.request?.durationMinutes,
             ),
           );
         }
@@ -200,36 +200,6 @@ class _ShortLinkConfigDialogState extends State<ShortLinkConfigDialog> {
                             : () => _adjustMinutes(context, 1),
                       ),
                     ],
-                  ),
-                  SizedBox(height: 12.h),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.background.withValues(alpha: 0.6),
-                      borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(
-                        color: AppColors.border.withValues(alpha: 0.4),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.schedule_rounded,
-                          size: context.adaptiveIcon(18.sp),
-                          color: AppColors.secondaryText,
-                        ),
-                        SizedBox(width: 10.w),
-                        Expanded(
-                          child: Text(
-                            '${s.expires_at}: ${DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now().add(state.request?.duration ?? const Duration(minutes: 1)))}',
-                            style: TextStyle(
-                              fontSize: context.adaptiveFont(11.sp),
-                              color: AppColors.secondaryText,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                   SizedBox(height: 20.h),
                   if (isLoading)
