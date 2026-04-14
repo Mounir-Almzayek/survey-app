@@ -74,6 +74,9 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
                           ),
                           value: answersMap[question.id],
                           isVisible: behavior.isVisible,
+                          isEditable: !navState.isSectionLocked(
+                            navState.currentSectionIndex,
+                          ),
                           errorText: _errors[question.id],
                           onAnswerChange: (value) {
                             // Sanitize value: Empty strings should be null

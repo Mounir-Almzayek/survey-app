@@ -19,6 +19,8 @@ abstract class SurveyNavigationState {
   final Map<String, bool> requirementMap; // "question_5" or "section_2" -> bool
   final Map<int, int> jumpMap; // Trigger ID -> Target Section ID
   final SurveyStep currentStep;
+  /// Section indices in [survey.sections] that were left after a successful save + forward; answers are read-only when revisiting.
+  final Set<int> lockedSectionIndices;
 
   SurveyNavigationState({
     this.survey,
@@ -28,7 +30,11 @@ abstract class SurveyNavigationState {
     this.requirementMap = const {},
     this.jumpMap = const {},
     this.currentStep = SurveyStep.intro,
+    this.lockedSectionIndices = const {},
   });
+
+  bool isSectionLocked(int sectionIndex) =>
+      lockedSectionIndices.contains(sectionIndex);
 
   Section? get currentSection {
     if (survey == null || survey!.sections == null) return null;
@@ -106,6 +112,7 @@ class SurveyNavigationInitial extends SurveyNavigationState {
     super.requirementMap,
     super.jumpMap,
     super.currentStep,
+    super.lockedSectionIndices,
   });
 }
 
@@ -118,5 +125,6 @@ class SurveyNavigationUpdated extends SurveyNavigationState {
     super.requirementMap,
     super.jumpMap,
     super.currentStep,
+    super.lockedSectionIndices,
   });
 }

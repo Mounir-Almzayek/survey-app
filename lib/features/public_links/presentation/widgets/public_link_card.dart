@@ -1,26 +1,92 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:readmore/readmore.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
 import '../../../../core/utils/responsive_layout.dart';
+import '../../../../data/network/api_config.dart';
+import '../../../device_location/service/location_service.dart';
 import '../../models/public_link.dart';
-import 'qr_code_dialog.dart';
+import 'link_ready_dialog.dart';
 
-class PublicLinkCard extends StatelessWidget {
+class PublicLinkCard extends StatefulWidget {
   final PublicLink publicLink;
   final VoidCallback? onTap;
 
   const PublicLinkCard({super.key, required this.publicLink, this.onTap});
 
   @override
+  State<PublicLinkCard> createState() => _PublicLinkCardState();
+}
+
+class _PublicLinkCardState extends State<PublicLinkCard> {
+  bool _isGenerating = false;
+
+  Future<void> _onGeneratePressed() async {
+    final publicLink = widget.publicLink;
+    final s = S.of(context);
+
+    setState(() => _isGenerating = true);
+    try {
+      final locale = publicLink.survey?.lang;
+      final String fullUrl;
+      if (publicLink.requireLocation) {
+        final hasPermission = await LocationService.hasPermissions();
+        if (!hasPermission) {
+          final granted = await LocationService.requestPermissions();
+          if (!granted) {
+            if (mounted) {
+              UnifiedSnackbar.error(
+                context,
+                message: s.location_required_for_short_link,
+              );
+            }
+            return;
+          }
+        }
+        final location = await LocationService.getCurrentLocation();
+        fullUrl = APIConfig.buildShortLivedSurveyUrl(
+          publicLink.shortCode,
+          location.latitude,
+          location.longitude,
+          locale: locale,
+        );
+      } else {
+        fullUrl = APIConfig.buildPublicSurveyUrl(
+          publicLink.shortCode,
+          locale: locale,
+        );
+      }
+
+      if (!mounted) return;
+      showDialog<void>(
+        context: context,
+        builder: (ctx) => ShortLinkResultDialog(
+          fullUrl: fullUrl,
+          surveyTitle: publicLink.surveyTitle,
+          expiresAt: publicLink.expiresAt,
+        ),
+      );
+    } catch (e) {
+      if (mounted) {
+        final msg = e.toString().replaceFirst('Exception: ', '');
+        UnifiedSnackbar.error(context, message: msg);
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isGenerating = false);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final publicLink = widget.publicLink;
     final status = publicLink.status;
     final s = S.of(context);
-    final url = publicLink.fullUrl;
+    final canGenerate = publicLink.isActive;
 
     return Container(
       padding: EdgeInsets.all(
@@ -41,7 +107,6 @@ class PublicLinkCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Row 1: Title and Status
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -63,7 +128,6 @@ class PublicLinkCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Row 2: Description (Read More)
           if (publicLink.survey?.description != null &&
               publicLink.survey!.description?.isNotEmpty == true)
             Padding(
@@ -93,7 +157,6 @@ class PublicLinkCard extends StatelessWidget {
               ),
             ),
 
-          // Row 3: Details
           Wrap(
             spacing: context.isDesktop ? 20.0 : 16.w,
             runSpacing: 8.h,
@@ -122,7 +185,6 @@ class PublicLinkCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // Row 4: URL and Actions
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -144,37 +206,12 @@ class PublicLinkCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => _launchUrl(context, url),
-                        child: Text(
-                          url,
-                          style: TextStyle(
-                            fontSize: context.adaptiveFont(11.sp),
-                            color: AppColors.primary,
-                            decoration: TextDecoration.underline,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    _ActionButton(
-                      icon: Icons.copy_rounded,
-                      onTap: () => _copyToClipboard(context, url, s),
-                      tooltip: s.copy_link,
-                    ),
-                    const SizedBox(width: 8),
-                    _ActionButton(
-                      icon: Icons.qr_code_2_rounded,
-                      onTap: () =>
-                          _showQRCode(context, url, publicLink.surveyTitle),
-                      tooltip: s.show_qr_code,
-                    ),
-                  ],
+                CustomElevatedButton(
+                  fontSize: context.adaptiveFont(12.sp),
+                  title: s.generate_link,
+                  isLoading: _isGenerating,
+                  disabled: !canGenerate,
+                  onPressed: canGenerate ? _onGeneratePressed : () {},
                 ),
               ],
             ),
@@ -212,41 +249,6 @@ class PublicLinkCard extends StatelessWidget {
       ),
     );
   }
-
-  Future<void> _launchUrl(BuildContext context, String url) async {
-    final uri = Uri.parse(url);
-    try {
-      // First try to check if it's launchable
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        // Fallback: try to launch anyway if it's a web URL, as canLaunchUrl
-        // can sometimes return false on Android 11+ even with queries
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      }
-    } catch (e) {
-      if (context.mounted) {
-        UnifiedSnackbar.error(
-          context,
-          message: "Could not launch URL: ${e.toString()}",
-        );
-      }
-    }
-  }
-
-  Future<void> _copyToClipboard(BuildContext context, String url, S s) async {
-    await Clipboard.setData(ClipboardData(text: url));
-    if (context.mounted) {
-      UnifiedSnackbar.success(context, message: s.link_copied);
-    }
-  }
-
-  void _showQRCode(BuildContext context, String url, String title) {
-    showDialog(
-      context: context,
-      builder: (context) => QRCodeDialog(url: url, surveyTitle: title),
-    );
-  }
 }
 
 class _InfoItem extends StatelessWidget {
@@ -274,41 +276,6 @@ class _InfoItem extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _ActionButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  final String tooltip;
-
-  const _ActionButton({
-    required this.icon,
-    required this.onTap,
-    required this.tooltip,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: tooltip,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8.r),
-        child: Container(
-          padding: EdgeInsets.all(8.r),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Icon(
-            icon,
-            size: context.adaptiveIcon(16.sp),
-            color: AppColors.primary,
-          ),
-        ),
-      ),
     );
   }
 }

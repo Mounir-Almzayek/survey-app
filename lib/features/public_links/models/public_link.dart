@@ -144,7 +144,7 @@ class PublicLink extends Equatable {
       type: PublicLinkType.fromJson(json['type']),
       maxResponses: json['max_responses'] as int? ?? 0,
       maxResponsesPerIp: json['max_responses_per_ip'] as int? ?? 1,
-      requireLocation: json['require_location'] as bool? ?? false,
+      requireLocation: json['require_location'] as bool? ?? true,
       createdByDeviceId: json['created_by_device_id'],
       expiresAt: expiresAt,
       createdAt: DateTime.parse(

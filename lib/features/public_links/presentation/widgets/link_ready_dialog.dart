@@ -8,7 +8,7 @@ import '../../../../core/styles/app_colors.dart';
 import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
 
-/// Dialog showing generated short link: QR code, link text, and copy button.
+/// Dialog showing generated survey link: QR code, link text, and copy button.
 class ShortLinkResultDialog extends StatelessWidget {
   final String fullUrl;
   final String surveyTitle;

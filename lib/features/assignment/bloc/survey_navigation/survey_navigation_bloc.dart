@@ -20,6 +20,11 @@ class SurveyNavigationBloc
     on<CompleteSurvey>(_onCompleteSurvey);
   }
 
+  Set<int> _lockedAfterLeavingCurrentSection() {
+    return Set<int>.from(state.lockedSectionIndices)
+      ..add(state.currentSectionIndex);
+  }
+
   void _onSetSurvey(SetSurvey event, Emitter<SurveyNavigationState> emit) {
     int firstVisibleIndex = 0;
     if (event.survey.sections != null) {
@@ -39,6 +44,7 @@ class SurveyNavigationBloc
         survey: event.survey,
         responseId: event.responseId,
         currentSectionIndex: firstVisibleIndex,
+        lockedSectionIndices: const {},
       ),
     );
   }
@@ -56,6 +62,7 @@ class SurveyNavigationBloc
         requirementMap: state.requirementMap,
         jumpMap: state.jumpMap,
         currentStep: state.currentStep,
+        lockedSectionIndices: state.lockedSectionIndices,
       ),
     );
   }
@@ -68,6 +75,10 @@ class SurveyNavigationBloc
     if (survey != null && survey.sections != null) {
       final index = survey.sections!.indexWhere((s) => s.id == event.sectionId);
       if (index != -1) {
+        final merged = Set<int>.from(state.lockedSectionIndices);
+        for (var i = 0; i < index; i++) {
+          merged.add(i);
+        }
         emit(
           SurveyNavigationUpdated(
             survey: survey,
@@ -77,6 +88,7 @@ class SurveyNavigationBloc
             requirementMap: state.requirementMap,
             jumpMap: state.jumpMap,
             currentStep: SurveyStep.survey,
+            lockedSectionIndices: merged,
           ),
         );
       }
@@ -93,6 +105,7 @@ class SurveyNavigationBloc
         requirementMap: state.requirementMap,
         jumpMap: state.jumpMap,
         currentStep: SurveyStep.survey,
+        lockedSectionIndices: state.lockedSectionIndices,
       ),
     );
   }
@@ -110,6 +123,7 @@ class SurveyNavigationBloc
         requirementMap: state.requirementMap,
         jumpMap: state.jumpMap,
         currentStep: SurveyStep.completion,
+        lockedSectionIndices: state.lockedSectionIndices,
       ),
     );
   }
@@ -135,6 +149,7 @@ class SurveyNavigationBloc
         requirementMap: Map<String, bool>.from(behavior['requirement'] ?? {}),
         jumpMap: Map<int, int>.from(behavior['jump'] ?? {}),
         currentStep: state.currentStep,
+        lockedSectionIndices: state.lockedSectionIndices,
       ),
     );
   }
@@ -159,6 +174,8 @@ class SurveyNavigationBloc
 
       final section = state.currentSection;
       if (section == null) return;
+
+      final locked = _lockedAfterLeavingCurrentSection();
 
       // 2. Check for Jump logic using the latest jump map
       // Check for jump from any question that was just answered
@@ -203,6 +220,7 @@ class SurveyNavigationBloc
               requirementMap: state.requirementMap,
               jumpMap: currentJumpMap,
               currentStep: state.currentStep,
+              lockedSectionIndices: locked,
             ),
           );
           return;
@@ -236,6 +254,7 @@ class SurveyNavigationBloc
                 requirementMap: state.requirementMap,
                 jumpMap: currentJumpMap,
                 currentStep: state.currentStep,
+                lockedSectionIndices: locked,
               ),
             );
             return;
@@ -261,6 +280,7 @@ class SurveyNavigationBloc
               requirementMap: state.requirementMap,
               jumpMap: currentJumpMap,
               currentStep: state.currentStep,
+              lockedSectionIndices: locked,
             ),
           );
           foundNext = true;
@@ -271,6 +291,18 @@ class SurveyNavigationBloc
 
       // 4. Fallback: If no next section found, trigger completion
       if (!foundNext) {
+        emit(
+          SurveyNavigationUpdated(
+            survey: survey,
+            responseId: state.responseId,
+            currentSectionIndex: state.currentSectionIndex,
+            visibilityMap: currentVisibility,
+            requirementMap: state.requirementMap,
+            jumpMap: currentJumpMap,
+            currentStep: state.currentStep,
+            lockedSectionIndices: locked,
+          ),
+        );
         add(CompleteSurvey());
       }
     }
@@ -295,6 +327,7 @@ class SurveyNavigationBloc
               requirementMap: state.requirementMap,
               jumpMap: state.jumpMap,
               currentStep: state.currentStep,
+              lockedSectionIndices: state.lockedSectionIndices,
             ),
           );
           return;
@@ -321,6 +354,7 @@ class SurveyNavigationBloc
             requirementMap: state.requirementMap,
             jumpMap: state.jumpMap,
             currentStep: state.currentStep,
+            lockedSectionIndices: state.lockedSectionIndices,
           ),
         );
       }

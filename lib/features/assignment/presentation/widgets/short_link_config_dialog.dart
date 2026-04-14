@@ -10,7 +10,7 @@ import '../../../public_links/bloc/create_short_lived_link/create_short_lived_li
 import '../../../public_links/bloc/create_short_lived_link/create_short_lived_link_event.dart';
 import '../../../public_links/bloc/create_short_lived_link/create_short_lived_link_state.dart';
 import '../../../../core/models/survey/survey_model.dart';
-import 'short_link_result_dialog.dart';
+import '../../../public_links/presentation/widgets/link_ready_dialog.dart';
 
 /// Dialog to set duration in minutes (default 1 min, from survey model) and generate short link.
 class ShortLinkConfigDialog extends StatefulWidget {
