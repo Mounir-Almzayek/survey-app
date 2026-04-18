@@ -46,7 +46,7 @@ class PublicLinksOnlineRepository {
 
   /// Create a short-lived public link for proxy location capture.
   /// POST /researcher/public-link/short-lived
-  /// [body] must contain survey_id and minutes (int); typically from [CreateShortLivedLinkRequest.toJson].
+  /// [body] is typically [CreateShortLivedLinkRequest.toJson] (`survey_id` only).
   static Future<ShortLivedLinkResult> createShortLived({
     required Map<String, dynamic> body,
   }) async {

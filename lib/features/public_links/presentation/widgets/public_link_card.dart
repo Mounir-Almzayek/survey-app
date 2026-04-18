@@ -66,7 +66,6 @@ class _PublicLinkCardState extends State<PublicLinkCard> {
         builder: (ctx) => ShortLinkResultDialog(
           fullUrl: fullUrl,
           surveyTitle: publicLink.surveyTitle,
-          expiresAt: publicLink.expiresAt,
         ),
       );
     } catch (e) {

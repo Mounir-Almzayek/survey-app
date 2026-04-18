@@ -1,60 +1,41 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-/// API Configuration
-/// Base URL configuration for the system
+import '../../core/config/app_environment.dart';
+
+/// API Configuration — URLs and locale come only from `.env` (no hardcoded fallbacks).
 class APIConfig {
-  // Production and Debug hosts (fallback values)
-  static const String _prodHost = "survey-api.system2030.com";
-  static const String _debugHost = "survey-api.system2030.com";
+  static String _requireEnv(String key) {
+    if (!dotenv.isInitialized) {
+      throw StateError('dotenv is not initialized; call dotenv.load() in main().');
+    }
+    final value = dotenv.env[key];
+    if (value == null || value.trim().isEmpty) {
+      throw StateError('Missing or empty "$key" in .env for env ${AppEnvironment.envKeySuffix}.');
+    }
+    return value.trim();
+  }
 
-  // Frontend URLs (fallback values)
-  static const String _defaultSurveyFrontendUrl =
-      "https://survey-frontend.system2030.com";
-  static const String _defaultLocale = "ar";
-
-  /// Get the current API host based on environment variables or build mode
+  /// Get the current API host based on `.env` and [AppEnvironment.envKeySuffix].
   static String get host {
-    // Try environment variables first
-    if (dotenv.isInitialized) {
-      final envUrl =
-          dotenv.env['API_BASE_URL_${kReleaseMode ? 'PROD' : 'DEV'}'];
-      if (envUrl != null && envUrl.isNotEmpty) {
-        return envUrl.replaceAll('https://', '');
-      }
-    }
-    // Fallback to hardcoded values
-    return kDebugMode ? _debugHost : _prodHost;
+    final envUrl = _requireEnv('API_BASE_URL_${AppEnvironment.envKeySuffix}');
+    return envUrl.replaceAll('https://', '');
   }
 
-  /// Get the survey frontend base URL
+  /// Survey frontend base URL from `.env`.
   static String get surveyFrontendBaseUrl {
-    if (dotenv.isInitialized) {
-      final envUrl = dotenv
-          .env['SURVEY_FRONTEND_BASE_URL_${kReleaseMode ? 'PROD' : 'DEV'}'];
-      if (envUrl != null && envUrl.isNotEmpty) {
-        return envUrl;
-      }
-    }
-    return _defaultSurveyFrontendUrl;
+    return _requireEnv('SURVEY_FRONTEND_BASE_URL_${AppEnvironment.envKeySuffix}');
   }
 
-  /// Get the default locale for survey links
+  /// Default locale for survey links from `.env`.
   static String get defaultLocale {
-    if (dotenv.isInitialized) {
-      final locale = dotenv.env['SURVEY_DEFAULT_LOCALE'];
-      if (locale != null && locale.isNotEmpty) {
-        return locale;
-      }
-    }
-    return _defaultLocale;
+    return _requireEnv('SURVEY_DEFAULT_LOCALE');
   }
 
   /// Base URL for the API
   static String get baseUrl => "https://$host";
 
   /// Full API endpoint URL
-  static String get appAPI => "$baseUrl";
+  static String get appAPI => baseUrl;
 
   /// Get full image URL from a relative path
   static String getFullImageUrl(String imagePath) {

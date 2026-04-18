@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/styles/app_colors.dart';
@@ -12,17 +11,11 @@ import '../../../../core/widgets/unified_snackbar.dart';
 class ShortLinkResultDialog extends StatelessWidget {
   final String fullUrl;
   final String surveyTitle;
-  final DateTime? expiresAt;
-
-  /// Shown when [expiresAt] is null (e.g. server does not return a datetime).
-  final int? validityMinutes;
 
   const ShortLinkResultDialog({
     super.key,
     required this.fullUrl,
     required this.surveyTitle,
-    this.expiresAt,
-    this.validityMinutes,
   });
 
   Future<void> _copyLink(BuildContext context) async {
@@ -135,26 +128,6 @@ class ShortLinkResultDialog extends StatelessWidget {
                 ),
               ),
             ),
-            if (expiresAt != null) ...[
-              SizedBox(height: 12.h),
-              Text(
-                '${s.expires_at}: ${DateFormat('dd/MM/yyyy HH:mm').format(expiresAt!)}',
-                style: TextStyle(
-                  fontSize: context.adaptiveFont(10.sp),
-                  color: AppColors.secondaryText,
-                ),
-              ),
-            ] else if (validityMinutes != null) ...[
-              SizedBox(height: 12.h),
-              Text(
-                s.survey_available_for_duration(validityMinutes!),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: context.adaptiveFont(10.sp),
-                  color: AppColors.secondaryText,
-                ),
-              ),
-            ],
           ],
         ),
       ),

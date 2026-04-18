@@ -1,24 +1,14 @@
-/// Request model for creating a short-lived public link.
-/// The API expects [survey_id] and [minutes] (integer); the server computes expiry.
+/// Request model for creating a public link. Only [survey_id] is sent; server sets policy.
 class CreateShortLivedLinkRequest {
   final int surveyId;
-  final Duration duration;
 
-  const CreateShortLivedLinkRequest({
-    this.surveyId = 0,
-    this.duration = const Duration(minutes: 1),
-  });
+  const CreateShortLivedLinkRequest({this.surveyId = 0});
 
-  int get durationMinutes => duration.inMinutes;
-
-  CreateShortLivedLinkRequest copyWith({int? surveyId, Duration? duration}) {
+  CreateShortLivedLinkRequest copyWith({int? surveyId}) {
     return CreateShortLivedLinkRequest(
       surveyId: surveyId ?? this.surveyId,
-      duration: duration ?? this.duration,
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {'survey_id': surveyId, 'minutes': durationMinutes};
-  }
+  Map<String, dynamic> toJson() => {'survey_id': surveyId};
 }

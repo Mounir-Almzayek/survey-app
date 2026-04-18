@@ -7,16 +7,11 @@ import '../../repository/public_links_online_repository.dart';
 import 'create_short_lived_link_event.dart';
 import 'create_short_lived_link_state.dart';
 
-/// Bloc for creating a short-lived public link with current GPS appended to URL.
+/// Bloc for creating a public link with current GPS appended to URL.
 class CreateShortLivedLinkBloc
     extends Bloc<CreateShortLivedLinkEvent, CreateShortLivedLinkState> {
   CreateShortLivedLinkBloc() : super(const ShortLivedLinkInitial()) {
     on<InitializeShortLinkRequestFromSurvey>(_onInitializeFromSurvey);
-    on<UpdateShortLinkRequestSurveyId>(_onUpdateShortLinkRequestSurveyId);
-    on<UpdateShortLinkRequestDuration>(_onUpdateShortLinkRequestDuration);
-    on<UpdateShortLinkRequestDurationMinutes>(
-      _onUpdateShortLinkRequestDurationMinutes,
-    );
     on<CreateShortLivedLinkRequested>(_onCreateShortLivedLinkRequested);
   }
 
@@ -25,71 +20,12 @@ class CreateShortLivedLinkBloc
     Emitter<CreateShortLivedLinkState> emit,
   ) {
     final survey = event.survey;
-    final now = DateTime.now();
-    int? maxMinutes;
-    Duration initialDuration = const Duration(minutes: 1);
-
-    if (survey.availabilityEndAt != null) {
-      final remaining = survey.availabilityEndAt!.difference(now);
-      if (remaining.inMinutes >= 1) {
-        maxMinutes = remaining.inMinutes;
-        initialDuration = Duration(minutes: 60.clamp(1, maxMinutes));
-      }
-    }
-
-    final request = CreateShortLivedLinkRequest(
-      surveyId: survey.id,
-      duration: initialDuration,
-    );
+    final request = CreateShortLivedLinkRequest(surveyId: survey.id);
     emit(
       ShortLivedLinkInitial(
         request: request,
-        maxDurationMinutes: maxMinutes,
         surveyLanguage: survey.lang,
       ),
-    );
-  }
-
-  void _onUpdateShortLinkRequestSurveyId(
-    UpdateShortLinkRequestSurveyId event,
-    Emitter<CreateShortLivedLinkState> emit,
-  ) {
-    final request = state.request ?? const CreateShortLivedLinkRequest();
-    emit(
-      ShortLivedLinkInitial(
-        request: request.copyWith(surveyId: event.surveyId),
-        maxDurationMinutes: state.maxDurationMinutes,
-        surveyLanguage: state.surveyLanguage,
-      ),
-    );
-  }
-
-  void _onUpdateShortLinkRequestDuration(
-    UpdateShortLinkRequestDuration event,
-    Emitter<CreateShortLivedLinkState> emit,
-  ) {
-    final request = state.request ?? const CreateShortLivedLinkRequest();
-    final maxMinutes = state.maxDurationMinutes;
-    final minutes = maxMinutes != null
-        ? event.duration.inMinutes.clamp(1, maxMinutes)
-        : event.duration.inMinutes.clamp(1, 525600);
-    final duration = Duration(minutes: minutes);
-    emit(
-      ShortLivedLinkInitial(
-        request: request.copyWith(duration: duration),
-        maxDurationMinutes: maxMinutes,
-        surveyLanguage: state.surveyLanguage,
-      ),
-    );
-  }
-
-  void _onUpdateShortLinkRequestDurationMinutes(
-    UpdateShortLinkRequestDurationMinutes event,
-    Emitter<CreateShortLivedLinkState> emit,
-  ) {
-    _onUpdateShortLinkRequestDuration(
-      UpdateShortLinkRequestDuration(Duration(minutes: event.minutes)),
-      emit,
     );
   }
 
@@ -101,13 +37,11 @@ class CreateShortLivedLinkBloc
     emit(
       ShortLivedLinkLoading(
         request: request,
-        maxDurationMinutes: state.maxDurationMinutes,
         surveyLanguage: state.surveyLanguage,
       ),
     );
 
     try {
-      // 1. Get current location (so link has researcher's latest GPS)
       final hasPermission = await LocationService.hasPermissions();
       if (!hasPermission) {
         final granted = await LocationService.requestPermissions();
@@ -117,7 +51,7 @@ class CreateShortLivedLinkBloc
               ShortLivedLinkError(
                 'Location permission is required to create the link',
                 request: request,
-                maxDurationMinutes: state.maxDurationMinutes,
+                surveyLanguage: state.surveyLanguage,
               ),
             );
           }
@@ -129,12 +63,10 @@ class CreateShortLivedLinkBloc
       final lat = location.latitude;
       final lng = location.longitude;
 
-      // 2. Create short-lived link via API using request body from model
       final result = await PublicLinksOnlineRepository.createShortLived(
         body: request.toJson(),
       );
 
-      // 3. Build full URL with latitude/longitude for frontend
       final fullUrl = APIConfig.buildShortLivedSurveyUrl(
         result.shortCode,
         lat,
@@ -147,9 +79,7 @@ class CreateShortLivedLinkBloc
           ShortLivedLinkReady(
             fullUrl: fullUrl,
             shortCode: result.shortCode,
-            expiresAt: result.expiresAt,
             request: request,
-            maxDurationMinutes: state.maxDurationMinutes,
             surveyLanguage: state.surveyLanguage,
           ),
         );
@@ -161,7 +91,6 @@ class CreateShortLivedLinkBloc
           ShortLivedLinkError(
             message,
             request: request,
-            maxDurationMinutes: state.maxDurationMinutes,
             surveyLanguage: state.surveyLanguage,
           ),
         );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../assets/assets.dart';
+import '../config/app_environment.dart';
 import '../utils/responsive_layout.dart';
 
 class LogoRectangle extends StatelessWidget {
@@ -60,7 +61,9 @@ class LogoRectangle extends StatelessWidget {
         ),
         child: Center(
           child: Image.asset(
-            big ? Assets.logo1 : Assets.logo,
+            big
+                ? Assets.logo1
+                : (AppEnvironment.isDevBranding ? Assets.logoRs4it : Assets.logo),
             fit: BoxFit.contain,
           ),
         ),

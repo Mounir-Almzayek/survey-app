@@ -9,10 +9,10 @@ import '../../../../core/widgets/unified_snackbar.dart';
 import '../../../../core/utils/responsive_layout.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../public_links/bloc/create_short_lived_link/create_short_lived_link_bloc.dart';
+import '../../../public_links/bloc/create_short_lived_link/create_short_lived_link_event.dart';
 import '../../../public_links/bloc/create_short_lived_link/create_short_lived_link_state.dart';
 import '../../../public_links/presentation/widgets/qr_code_dialog.dart';
 import '../../../../core/models/survey/survey_model.dart';
-import 'short_link_config_dialog.dart';
 
 /// Section inside assignment card to create and display a short-lived link
 /// with current GPS appended. Same visual style as the link box in PublicLinkCard.
@@ -85,13 +85,9 @@ class _ShortLivedLinkContent extends StatelessWidget {
                 child: CustomElevatedButton(
                   fontSize: context.adaptiveFont(12.sp),
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => BlocProvider.value(
-                        value: context.read<CreateShortLivedLinkBloc>(),
-                        child: ShortLinkConfigDialog(survey: survey),
-                      ),
-                    );
+                    final bloc = context.read<CreateShortLivedLinkBloc>();
+                    bloc.add(InitializeShortLinkRequestFromSurvey(survey));
+                    bloc.add(const CreateShortLivedLinkRequested());
                   },
                   title: s.create_short_link,
                 ),
