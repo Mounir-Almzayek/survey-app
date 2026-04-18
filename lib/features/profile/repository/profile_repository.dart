@@ -34,6 +34,22 @@ class ProfileRepository {
     return onlineProfile;
   }
 
+  /// Clears all session data locally without calling the remote logout endpoint.
+  /// Used when the server already rejected the token (401/403).
+  static Future<void> clearSessionDataLocally() async {
+    await ProfileLocalRepository.clearProfileData();
+    await AuthRepository.logout();
+    await AssignmentLocalRepository.clearAllForLogout();
+    await RequestQueueService.clearAll();
+    await CustodyLocalRepository.clearCustodyRecords();
+    await UploadLocalRepository.clearPendingUploads();
+    await UploadLocalRepository.clearFailedUploads();
+    await DeviceLocationLocalRepository.clearPendingLocations();
+    await PublicLinksLocalRepository.clearPublicLinks();
+    await ResponsesLocalRepository.clearAll();
+    await DeviceCookieRepository.clearDeviceCookie();
+  }
+
   /// Perform logout (online and local).
   /// Also clears all user-specific local data so the next account sees a clean state.
   static Future<void> logout() async {
@@ -42,18 +58,7 @@ class ProfileRepository {
     } catch (_) {
       // Even if online logout fails, we clear local data
     } finally {
-      await ProfileLocalRepository.clearProfileData();
-      await AuthRepository.logout();
-      // Clear all data that might belong to the previous account
-      await AssignmentLocalRepository.clearAllForLogout();
-      await RequestQueueService.clearAll();
-      await CustodyLocalRepository.clearCustodyRecords();
-      await UploadLocalRepository.clearPendingUploads();
-      await UploadLocalRepository.clearFailedUploads();
-      await DeviceLocationLocalRepository.clearPendingLocations();
-      await PublicLinksLocalRepository.clearPublicLinks();
-      await ResponsesLocalRepository.clearAll();
-      await DeviceCookieRepository.clearDeviceCookie();
+      await clearSessionDataLocally();
     }
   }
 }

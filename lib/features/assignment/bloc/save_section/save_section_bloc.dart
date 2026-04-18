@@ -4,6 +4,7 @@ import '../../repository/assignment_repository.dart';
 import '../../repository/assignment_local_repository.dart';
 import '../../../../core/services/device_local_metadata_service.dart';
 import '../../../../core/utils/async_runner.dart';
+import '../../../../core/utils/transient_network_error.dart';
 import '../../../../core/utils/survey_validator.dart';
 
 part 'save_section_event.dart';
@@ -11,7 +12,11 @@ part 'save_section_state.dart';
 
 class SaveSectionBloc extends Bloc<SaveSectionEvent, SaveSectionState> {
   final AsyncRunner<SaveSectionResponse> _runner =
-      AsyncRunner<SaveSectionResponse>();
+      AsyncRunner<SaveSectionResponse>(
+        maxRetryAttempts: 4,
+        retryDelay: const Duration(milliseconds: 600),
+        retryIf: isTransientNetworkFailure,
+      );
 
   SaveSectionBloc() : super(SaveSectionInitial()) {
     on<UpdateResponseId>(_onUpdateResponseId);

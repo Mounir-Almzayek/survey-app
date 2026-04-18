@@ -121,13 +121,14 @@ class SurveyAnsweringScreen extends StatelessWidget {
         return SurveyIntroWidget(
           survey: state.survey!,
           isLoading: isLoading,
+          isNewResponse: state.responseId == null,
           onStart: () async {
             if (state.responseId == null) {
               // Show demographics dialog to collect required data
               final result = await showDialog<Map<String, dynamic>>(
                 context: context,
                 barrierDismissible: false,
-                builder: (context) => const DemographicsDialog(),
+                builder: (context) => DemographicsDialog(survey: state.survey),
               );
 
               if (result != null && context.mounted) {

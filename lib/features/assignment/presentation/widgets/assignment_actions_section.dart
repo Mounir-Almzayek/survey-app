@@ -6,6 +6,7 @@ import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/models/survey/survey_model.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../core/styles/app_colors.dart';
+import '../../../../core/widgets/unified_snackbar.dart';
 import '../../../../core/utils/responsive_layout.dart';
 import '../../../public_links/bloc/create_short_lived_link/create_short_lived_link_bloc.dart';
 import '../../../public_links/bloc/create_short_lived_link/create_short_lived_link_state.dart';
@@ -42,6 +43,13 @@ class AssignmentActionsSection extends StatelessWidget {
                 icon: Icons.play_circle_outline_rounded,
                 label: s.new_response,
                 onTap: () {
+                  if (survey.hasReachedMaxResponses) {
+                    UnifiedSnackbar.error(
+                      context,
+                      message: s.survey_max_responses_reached,
+                    );
+                    return;
+                  }
                   context.push(
                     Routes.surveyAnsweringPath,
                     extra: {'survey': survey, 'responseId': null},

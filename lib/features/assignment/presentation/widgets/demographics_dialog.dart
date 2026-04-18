@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/enums/survey_enums.dart';
 import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/models/survey/survey_model.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/widgets/custom_dropdown_field.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/custom_radio_group_field.dart';
+import '../../../../core/widgets/unified_snackbar.dart';
 import '../../../../core/utils/responsive_layout.dart';
 
 class DemographicsDialog extends StatefulWidget {
-  const DemographicsDialog({super.key});
+  /// When set, blocks confirming a gender/age pair whose quota is already full.
+  final Survey? survey;
+
+  const DemographicsDialog({super.key, this.survey});
 
   @override
   State<DemographicsDialog> createState() => _DemographicsDialogState();
@@ -98,6 +103,20 @@ class _DemographicsDialogState extends State<DemographicsDialog> {
                     title: S.of(context).start_survey,
                     onPressed: _isValid
                         ? () {
+                            final s = widget.survey;
+                            if (s != null &&
+                                s.isDemographicQuotaFull(
+                                  _selectedGender!,
+                                  _selectedAgeGroup!,
+                                )) {
+                              UnifiedSnackbar.error(
+                                context,
+                                message: S
+                                    .of(context)
+                                    .demographic_quota_full_for_category,
+                              );
+                              return;
+                            }
                             Navigator.of(context).pop({
                               'gender': _selectedGender,
                               'ageGroup': _selectedAgeGroup,

@@ -4,6 +4,7 @@ import 'section_model.dart';
 import 'conditional_logic_model.dart';
 import 'report_configuration_model.dart';
 import 'assignment_model.dart';
+import 'researcher_quota_model.dart';
 
 class Survey extends Equatable {
   final int id;
@@ -14,6 +15,8 @@ class Survey extends Equatable {
   final DateTime? availabilityStartAt;
   final DateTime? availabilityEndAt;
   final int? maxResponses;
+  /// Total responses recorded for this survey when provided by the API (`responses_count`).
+  final int? responsesCount;
   final bool? gpsRequired;
   final String lang;
   final int? minimumResponseTimeMinutes;
@@ -41,6 +44,7 @@ class Survey extends Equatable {
     this.availabilityStartAt,
     this.availabilityEndAt,
     this.maxResponses,
+    this.responsesCount,
     this.gpsRequired,
     required this.lang,
     this.minimumResponseTimeMinutes,
@@ -64,10 +68,47 @@ class Survey extends Equatable {
     if (status != SurveyStatus.published) return false;
     final now = DateTime.now();
     if (availabilityStartAt != null &&
-        availabilityStartAt!.isAfter(now)) return false;
+        availabilityStartAt!.isAfter(now)) {
+      return false;
+    }
     if (availabilityEndAt != null &&
-        availabilityEndAt!.isBefore(now)) return false;
+        availabilityEndAt!.isBefore(now)) {
+      return false;
+    }
     return true;
+  }
+
+  /// Best-effort current response count: API `responses_count`, else sum of quota `progress` on the first assignment.
+  int? get totalResponsesForMaxCap {
+    if (responsesCount != null) return responsesCount;
+    final quotas = assignments != null && assignments!.isNotEmpty
+        ? assignments!.first.researcherQuotas
+        : null;
+    if (quotas == null || quotas.isEmpty) return null;
+    return quotas.fold<int>(0, (sum, q) => sum + q.progress);
+  }
+
+  /// True when [maxResponses] is set and we know the current count has reached it.
+  bool get hasReachedMaxResponses {
+    final max = maxResponses;
+    if (max == null || max <= 0) return false;
+    final current = totalResponsesForMaxCap;
+    if (current == null) return false;
+    return current >= max;
+  }
+
+  /// True when a [ResearcherQuota] exists for this demographic and
+  /// [ResearcherQuota.isQuotaFull] is true (uses API `remaining` when present).
+  bool isDemographicQuotaFull(Gender gender, AgeGroup ageGroup) {
+    final quotas = assignments != null && assignments!.isNotEmpty
+        ? assignments!.first.researcherQuotas
+        : null;
+    if (quotas == null || quotas.isEmpty) return false;
+    final i = quotas.indexWhere(
+      (q) => q.gender == gender && q.ageGroup == ageGroup,
+    );
+    if (i == -1) return false;
+    return quotas[i].isQuotaFull;
   }
 
   Survey copyWith({
@@ -79,6 +120,7 @@ class Survey extends Equatable {
     DateTime? availabilityStartAt,
     DateTime? availabilityEndAt,
     int? maxResponses,
+    int? responsesCount,
     bool? gpsRequired,
     String? lang,
     int? minimumResponseTimeMinutes,
@@ -104,6 +146,7 @@ class Survey extends Equatable {
       availabilityStartAt: availabilityStartAt ?? this.availabilityStartAt,
       availabilityEndAt: availabilityEndAt ?? this.availabilityEndAt,
       maxResponses: maxResponses ?? this.maxResponses,
+      responsesCount: responsesCount ?? this.responsesCount,
       gpsRequired: gpsRequired ?? this.gpsRequired,
       lang: lang ?? this.lang,
       minimumResponseTimeMinutes:
@@ -111,7 +154,7 @@ class Survey extends Equatable {
       maxResponseTimeMinutes:
           maxResponseTimeMinutes ?? this.maxResponseTimeMinutes,
       greetingMessage: greetingMessage ?? this.greetingMessage,
-      goodbayMessage: goodbayMessage ?? this.goodbayMessage,
+      goodbayMessage: goodbyeMessage ?? goodbayMessage,
       tagsCsv: tagsCsv ?? this.tagsCsv,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -140,6 +183,7 @@ class Survey extends Equatable {
           ? DateTime.tryParse(json['availability_end_at'] as String)
           : null,
       maxResponses: json['max_responses'] as int?,
+      responsesCount: json['responses_count'] as int?,
       gpsRequired: json['gps_required'] as bool?,
       lang: json['lang'] as String? ?? 'en',
       minimumResponseTimeMinutes: json['minimum_response_time_minutes'] as int?,
@@ -185,6 +229,7 @@ class Survey extends Equatable {
       'availability_start_at': availabilityStartAt?.toIso8601String(),
       'availability_end_at': availabilityEndAt?.toIso8601String(),
       'max_responses': maxResponses,
+      'responses_count': responsesCount,
       'gps_required': gpsRequired,
       'lang': lang,
       'minimum_response_time_minutes': minimumResponseTimeMinutes,
@@ -216,6 +261,7 @@ class Survey extends Equatable {
     availabilityStartAt,
     availabilityEndAt,
     maxResponses,
+    responsesCount,
     gpsRequired,
     lang,
     minimumResponseTimeMinutes,

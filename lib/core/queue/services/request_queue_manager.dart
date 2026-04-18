@@ -43,11 +43,12 @@ class RequestQueueManager {
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen((
       List<ConnectivityResult> result,
     ) async {
-      final wasOnline = _isOnline;
       _isOnline = !result.contains(ConnectivityResult.none);
 
-      if (!wasOnline && _isOnline) {
-        await RequestQueueService.resetStuckAndFailedRequests();
+      if (_isOnline) {
+        if (!_isProcessing) {
+          await RequestQueueService.resetStuckAndFailedRequests();
+        }
         _processQueue();
       }
 
@@ -119,7 +120,11 @@ class RequestQueueManager {
           );
           _successCallbacks.remove(requestId);
           return false;
-        } catch (e) {}
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint('[RequestQueueManager] queueRequest send failed: $e');
+          }
+        }
       } else {
         if (kDebugMode) {
           debugPrint(
@@ -230,7 +235,8 @@ class RequestQueueManager {
             ),
           );
 
-          if (updatedItem.retryCount >= 3) {
+          if (updatedItem.retryCount >=
+              RequestQueueService.maxQueueSendFailuresBeforeDrop) {
             await Future.delayed(const Duration(seconds: 1));
             await RequestQueueService.removeRequest(item.id);
           }
@@ -250,6 +256,29 @@ class RequestQueueManager {
   Future<QueueStatus> getStatus() async {
     final pending = await RequestQueueService.getPendingRequests();
     return QueueStatus(isOnline: _isOnline, queueLength: pending.length);
+  }
+
+  /// After backgrounding, connectivity may not emit; stuck `processing` items
+  /// are otherwise invisible to [getPendingRequests].
+  Future<void> onAppResumed() async {
+    try {
+      final result = await _connectivity.checkConnectivity();
+      _isOnline = !result.contains(ConnectivityResult.none);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('[RequestQueueManager] onAppResumed connectivity check: $e');
+      }
+    }
+
+    await RequestQueueService.resetStuckAndFailedRequests();
+    final pending = await RequestQueueService.getPendingRequests();
+    _queueStatusController.add(
+      QueueStatus(isOnline: _isOnline, queueLength: pending.length),
+    );
+
+    if (_isOnline) {
+      _processQueue();
+    }
   }
 
   void dispose() {

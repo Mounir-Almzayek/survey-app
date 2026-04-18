@@ -15,6 +15,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(ProfileInitial()) {
     on<LoadProfile>(_onLoadProfile);
     on<Logout>(_onLogout);
+    on<SessionInvalidatedByServer>(_onSessionInvalidatedByServer);
   }
 
   Future<void> _onLoadProfile(
@@ -57,5 +58,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (!emit.isDone) emit(ProfileError(error.toString()));
       },
     );
+  }
+
+  void _onSessionInvalidatedByServer(
+    SessionInvalidatedByServer event,
+    Emitter<ProfileState> emit,
+  ) {
+    emit(ProfileLogoutSuccess());
   }
 }

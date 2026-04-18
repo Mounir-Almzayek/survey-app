@@ -15,6 +15,8 @@ class AsyncRunner<T> {
   final Duration retryDelay;
   final bool useExponentialBackoff;
   final Duration? timeout;
+  /// When set, failures only retry if this returns true (e.g. transient network).
+  final bool Function(Object error)? retryIf;
 
   AsyncRunner({
     this.multipleCallsBehavior = MultipleCallsBehavior.abortNew,
@@ -22,6 +24,7 @@ class AsyncRunner<T> {
     this.retryDelay = const Duration(milliseconds: 500),
     this.useExponentialBackoff = true,
     this.timeout,
+    this.retryIf,
   });
 
   CancelableOperation<T>? get currentOperation => _currentOperation;
@@ -98,6 +101,11 @@ class AsyncRunner<T> {
         return newOperation;
       } catch (e) {
         attempt++;
+        if (retryIf != null && !retryIf!(e)) {
+          onError?.call(e);
+          _currentOperation = newOperation;
+          return newOperation;
+        }
         if (attempt > maxRetryAttempts) {
           onError?.call(e);
           _currentOperation = newOperation;

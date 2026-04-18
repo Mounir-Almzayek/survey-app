@@ -1850,6 +1850,26 @@ class S {
     );
   }
 
+  /// `This survey has reached the maximum number of responses. You cannot start a new response.`
+  String get survey_max_responses_reached {
+    return Intl.message(
+      'This survey has reached the maximum number of responses. You cannot start a new response.',
+      name: 'survey_max_responses_reached',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The quota for this category is already filled. Please choose another gender and age group.`
+  String get demographic_quota_full_for_category {
+    return Intl.message(
+      'The quota for this category is already filled. Please choose another gender and age group.',
+      name: 'demographic_quota_full_for_category',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Expires At`
   String get expires_at {
     return Intl.message(
@@ -3067,6 +3087,26 @@ class S {
       name: 'create_link',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `This survey has no sections or questions. It must be set up in the survey admin before responses can be collected.`
+  String get survey_empty_no_sections {
+    return Intl.message(
+      'This survey has no sections or questions. It must be set up in the survey admin before responses can be collected.',
+      name: 'survey_empty_no_sections',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Category responses: {count}`
+  String quota_responses_in_category(int count) {
+    return Intl.message(
+      'Category responses: $count',
+      name: 'quota_responses_in_category',
+      desc: '',
+      args: [count],
     );
   }
 }

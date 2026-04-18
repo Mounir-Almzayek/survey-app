@@ -5,6 +5,8 @@ import 'assignment_model.dart';
 
 /// ResearcherQuota Model - For quota tracking
 class ResearcherQuota extends Equatable {
+  /// Backend quota row id (may mirror [id] when API sends `quota_id`).
+  final int quotaId;
   final int id;
   final int assignmentId;
   final Gender gender;
@@ -13,6 +15,10 @@ class ResearcherQuota extends Equatable {
   final int progress;
   final int collected;
   final num progressPercent;
+  /// When set, reflects the API `remaining` value (authoritative over [target]-[progress]).
+  final int? serverRemaining;
+  /// Optional per-demographic count from API (`responses_count`).
+  final int? responsesCountInCategory;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -20,6 +26,7 @@ class ResearcherQuota extends Equatable {
   final Assignment? assignment;
 
   const ResearcherQuota({
+    this.quotaId = 0,
     required this.id,
     required this.assignmentId,
     required this.gender,
@@ -28,12 +35,15 @@ class ResearcherQuota extends Equatable {
     this.progress = 0,
     this.collected = 0,
     this.progressPercent = 0,
+    this.serverRemaining,
+    this.responsesCountInCategory,
     required this.createdAt,
     required this.updatedAt,
     this.assignment,
   });
 
   ResearcherQuota copyWith({
+    int? quotaId,
     int? id,
     int? assignmentId,
     Gender? gender,
@@ -42,11 +52,16 @@ class ResearcherQuota extends Equatable {
     int? progress,
     int? collected,
     num? progressPercent,
+    int? serverRemaining,
+    bool clearServerRemaining = false,
+    int? responsesCountInCategory,
+    bool clearResponsesCountInCategory = false,
     DateTime? createdAt,
     DateTime? updatedAt,
     Assignment? assignment,
   }) {
     return ResearcherQuota(
+      quotaId: quotaId ?? this.quotaId,
       id: id ?? this.id,
       assignmentId: assignmentId ?? this.assignmentId,
       gender: gender ?? this.gender,
@@ -55,6 +70,10 @@ class ResearcherQuota extends Equatable {
       progress: progress ?? this.progress,
       collected: collected ?? this.collected,
       progressPercent: progressPercent ?? this.progressPercent,
+      serverRemaining: clearServerRemaining ? null : (serverRemaining ?? this.serverRemaining),
+      responsesCountInCategory: clearResponsesCountInCategory
+          ? null
+          : (responsesCountInCategory ?? this.responsesCountInCategory),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       assignment: assignment ?? this.assignment,
@@ -62,15 +81,34 @@ class ResearcherQuota extends Equatable {
   }
 
   factory ResearcherQuota.fromJson(Map<String, dynamic> json) {
+    final idVal = json['id'] as int? ?? json['quota_id'] as int? ?? 0;
+    final quotaIdVal = json['quota_id'] as int? ?? idVal;
+    final targetVal = json['target'] as int? ?? json['limit'] as int? ?? 0;
+    final progressVal = json['progress'] as int? ?? json['used'] as int? ?? 0;
+    final collectedVal =
+        json['collected'] as int? ?? json['used'] as int? ?? progressVal;
+    int? parseOptionalInt(dynamic v) {
+      if (v == null) return null;
+      if (v is int) return v;
+      if (v is num) return v.round();
+      return int.tryParse(v.toString());
+    }
+
+    final serverRem = parseOptionalInt(json['remaining']);
+    final respCount = parseOptionalInt(json['responses_count']);
+
     return ResearcherQuota(
-      id: json['id'] as int? ?? 0,
+      quotaId: quotaIdVal,
+      id: idVal,
       assignmentId: json['assignment_id'] as int? ?? 0,
       gender: Gender.fromJson(json['gender']),
       ageGroup: AgeGroup.fromJson(json['age_group']),
-      target: json['target'] as int? ?? 0,
-      progress: json['progress'] as int? ?? 0,
-      collected: json['collected'] as int? ?? 0,
+      target: targetVal,
+      progress: progressVal,
+      collected: collectedVal,
       progressPercent: (json['progress_percent'] as num?) ?? 0,
+      serverRemaining: serverRem,
+      responsesCountInCategory: respCount,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'].toString())
           : DateTime.now(),
@@ -85,6 +123,7 @@ class ResearcherQuota extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
+      'quota_id': quotaId,
       'id': id,
       'assignment_id': assignmentId,
       'gender': gender.toJson(),
@@ -93,20 +132,41 @@ class ResearcherQuota extends Equatable {
       'progress': progress,
       'collected': collected,
       'progress_percent': progressPercent,
+      if (serverRemaining != null) 'remaining': serverRemaining,
+      if (responsesCountInCategory != null)
+        'responses_count': responsesCountInCategory,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
       'assignment': assignment?.toJson(),
     };
   }
 
-  /// Get remaining quota
-  int get remaining => target - progress;
+  /// Remaining slots: prefers API [serverRemaining] when present.
+  int get remaining {
+    if (serverRemaining != null) return serverRemaining!;
+    if (target <= 0) return 0;
+    final diff = target - progress;
+    return diff < 0 ? 0 : diff;
+  }
+
+  /// True when this demographic bucket cannot accept more responses (server-first).
+  bool get isQuotaFull {
+    if (target <= 0) return false;
+    if (serverRemaining != null) return serverRemaining! <= 0;
+    return progress >= target;
+  }
 
   /// Check if quota is completed
-  bool get isCompleted => progress >= target;
+  bool get isCompleted => isQuotaFull;
 
-  /// Get completion percentage
-  double get completionPercentage => target > 0 ? (progress / target) * 100 : 0;
+  /// Get completion percentage (prefers API [progressPercent] when non-zero).
+  double get completionPercentage {
+    if (target <= 0) return 0;
+    if (progressPercent > 0) {
+      return progressPercent.toDouble().clamp(0, 100);
+    }
+    return ((progress / target) * 100).clamp(0, 100);
+  }
 
   /// Check if quota is nearly complete (>= 80%)
   bool get isNearlyComplete => completionPercentage >= 80;
@@ -153,6 +213,7 @@ class ResearcherQuota extends Equatable {
 
   @override
   List<Object?> get props => [
+    quotaId,
     id,
     assignmentId,
     gender,
@@ -161,6 +222,8 @@ class ResearcherQuota extends Equatable {
     progress,
     collected,
     progressPercent,
+    serverRemaining,
+    responsesCountInCategory,
     createdAt,
     updatedAt,
     assignment,

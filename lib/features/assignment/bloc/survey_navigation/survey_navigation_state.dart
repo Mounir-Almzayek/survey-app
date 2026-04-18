@@ -19,8 +19,13 @@ abstract class SurveyNavigationState {
   final Map<String, bool> requirementMap; // "question_5" or "section_2" -> bool
   final Map<int, int> jumpMap; // Trigger ID -> Target Section ID
   final SurveyStep currentStep;
+
   /// Section indices in [survey.sections] that were left after a successful save + forward; answers are read-only when revisiting.
   final Set<int> lockedSectionIndices;
+
+  /// Section id -> first question id shown when entering that section via a jump to a
+  /// question; questions before it in section order are skipped (hidden / not required).
+  final Map<int, int> jumpEntryQuestionBySectionId;
 
   SurveyNavigationState({
     this.survey,
@@ -31,6 +36,7 @@ abstract class SurveyNavigationState {
     this.jumpMap = const {},
     this.currentStep = SurveyStep.intro,
     this.lockedSectionIndices = const {},
+    this.jumpEntryQuestionBySectionId = const {},
   });
 
   bool isSectionLocked(int sectionIndex) =>
@@ -39,8 +45,9 @@ abstract class SurveyNavigationState {
   Section? get currentSection {
     if (survey == null || survey!.sections == null) return null;
     if (currentSectionIndex < 0 ||
-        currentSectionIndex >= survey!.sections!.length)
+        currentSectionIndex >= survey!.sections!.length) {
       return null;
+    }
     return survey!.sections![currentSectionIndex];
   }
 
@@ -52,9 +59,58 @@ abstract class SurveyNavigationState {
     );
   }
 
-  /// Helper for questions
-  QuestionBehavior getQuestionBehavior(int questionId, {bool defaultRequired = false}) =>
-      getBehavior("question_$questionId", defaultRequired: defaultRequired);
+  Section? _sectionContainingQuestion(int questionId) {
+    if (survey?.sections == null) return null;
+    for (final s in survey!.sections!) {
+      if (s.questions?.any((q) => q.id == questionId) ?? false) return s;
+    }
+    return null;
+  }
+
+  /// True if [questionId] appears before the jump entry question in [sectionId]'s order.
+  bool isSkippedBeforeJumpEntry(int sectionId, int questionId) {
+    final entryQid = jumpEntryQuestionBySectionId[sectionId];
+    if (entryQid == null) return false;
+    Section? section;
+    final sections = survey?.sections;
+    if (sections != null) {
+      for (final s in sections) {
+        if (s.id == sectionId) {
+          section = s;
+          break;
+        }
+      }
+    }
+    if (section == null) return false;
+    final questions = section.questions;
+    if (questions == null) return false;
+    final entryIdx = questions.indexWhere((q) => q.id == entryQid);
+    final qIdx = questions.indexWhere((q) => q.id == questionId);
+    if (entryIdx == -1 || qIdx == -1) return false;
+    return qIdx < entryIdx;
+  }
+
+  /// Whether the current section was entered via a jump to a question inside the section.
+  bool get enteredCurrentSectionViaIntraSectionJump {
+    final section = currentSection;
+    if (section == null) return false;
+    return jumpEntryQuestionBySectionId.containsKey(section.id);
+  }
+
+  /// Helper for questions (respects conditional visibility, requirements, and intra-section jump skip).
+  QuestionBehavior getQuestionBehavior(
+    int questionId, {
+    bool defaultRequired = false,
+  }) {
+    final owner = _sectionContainingQuestion(questionId);
+    if (owner != null && isSkippedBeforeJumpEntry(owner.id, questionId)) {
+      return const QuestionBehavior(isVisible: false, isRequired: false);
+    }
+    return getBehavior(
+      "question_$questionId",
+      defaultRequired: defaultRequired,
+    );
+  }
 
   /// Helper for sections
   QuestionBehavior getSectionBehavior(int sectionId) =>
@@ -75,7 +131,9 @@ abstract class SurveyNavigationState {
 
     return section.questions!.where((q) {
       final key = "question_${q.id}";
-      return isVisible(key);
+      if (!(visibilityMap[key] ?? true)) return false;
+      if (isSkippedBeforeJumpEntry(section.id, q.id)) return false;
+      return true;
     }).toList();
   }
 
@@ -113,6 +171,7 @@ class SurveyNavigationInitial extends SurveyNavigationState {
     super.jumpMap,
     super.currentStep,
     super.lockedSectionIndices,
+    super.jumpEntryQuestionBySectionId,
   });
 }
 
@@ -126,5 +185,6 @@ class SurveyNavigationUpdated extends SurveyNavigationState {
     super.jumpMap,
     super.currentStep,
     super.lockedSectionIndices,
+    super.jumpEntryQuestionBySectionId,
   });
 }

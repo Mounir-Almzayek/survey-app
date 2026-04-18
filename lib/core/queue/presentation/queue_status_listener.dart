@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,8 @@ class QueueStatusListener extends StatefulWidget {
   State<QueueStatusListener> createState() => _QueueStatusListenerState();
 }
 
-class _QueueStatusListenerState extends State<QueueStatusListener> {
+class _QueueStatusListenerState extends State<QueueStatusListener>
+    with WidgetsBindingObserver {
   StreamSubscription<QueueResponse>? _responseSubscription;
   StreamSubscription<QueueStatus>? _statusSubscription;
 
@@ -31,9 +33,17 @@ class _QueueStatusListenerState extends State<QueueStatusListener> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _listenToQueueResponses();
     _listenToQueueStatus();
     _checkInitialQueueStatus();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(RequestQueueManager().onAppResumed());
+    }
   }
 
   Future<void> _checkInitialQueueStatus() async {
@@ -128,6 +138,7 @@ class _QueueStatusListenerState extends State<QueueStatusListener> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _responseSubscription?.cancel();
     _statusSubscription?.cancel();
     super.dispose();

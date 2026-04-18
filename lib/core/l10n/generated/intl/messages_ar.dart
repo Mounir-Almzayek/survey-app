@@ -49,13 +49,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m13(count) => "${count} أسئلة";
 
-  static String m14(id) => "رد رقم: ${id}";
+  static String m14(count) => "استجابات الفئة: ${count}";
 
-  static String m15(count) => "${count} أقسام";
+  static String m15(id) => "رد رقم: ${id}";
 
-  static String m16(title) => "رابط الاستطلاع: ${title}";
+  static String m16(count) => "${count} أقسام";
 
-  static String m17(minutes) => "سيكون الاستبيان متاحاً لمدة ${minutes} دقيقة";
+  static String m17(title) => "رابط الاستطلاع: ${title}";
+
+  static String m18(minutes) => "سيكون الاستبيان متاحاً لمدة ${minutes} دقيقة";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -135,6 +137,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "هل أنت متأكد من رغبتك في حذف مسودة الاستطلاع هذه؟"),
         "delete_draft_title":
             MessageLookupByLibrary.simpleMessage("حذف المسودة"),
+        "demographic_quota_full_for_category":
+            MessageLookupByLibrary.simpleMessage(
+                "اكتملت حصة هذه الفئة. اختر فئة أخرى (جنس / فئة عمرية)."),
         "demographics_title":
             MessageLookupByLibrary.simpleMessage("بيانات المستجيب"),
         "device_already_registered":
@@ -366,6 +371,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("جاري المعالجة"),
         "queue_summary_title":
             MessageLookupByLibrary.simpleMessage("الطلبات المعلقة"),
+        "quota_responses_in_category": m14,
         "ram": MessageLookupByLibrary.simpleMessage("الذاكرة العشوائية"),
         "read_more": MessageLookupByLibrary.simpleMessage("قراءة المزيد"),
         "receive_custody":
@@ -395,7 +401,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("إعادة تعيين كلمة المرور"),
         "response_details_title":
             MessageLookupByLibrary.simpleMessage("تفاصيل الاستجابة"),
-        "response_number": m14,
+        "response_number": m15,
         "response_status_flagged":
             MessageLookupByLibrary.simpleMessage("معلَّمة"),
         "response_status_pending":
@@ -416,7 +422,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ضع رمز QR داخل الإطار للمسح"),
         "screen_resolution": MessageLookupByLibrary.simpleMessage("دقة الشاشة"),
         "search": MessageLookupByLibrary.simpleMessage("بحث"),
-        "sections_count": m15,
+        "sections_count": m16,
         "select_age_group":
             MessageLookupByLibrary.simpleMessage("اختر الفئة العمرية"),
         "select_date": MessageLookupByLibrary.simpleMessage("اختر التاريخ"),
@@ -426,7 +432,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "send_code": MessageLookupByLibrary.simpleMessage("إرسال الرمز"),
         "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
         "share_link": MessageLookupByLibrary.simpleMessage("مشاركة"),
-        "share_link_subject": m16,
+        "share_link_subject": m17,
         "short_link": MessageLookupByLibrary.simpleMessage("الشورت لينك"),
         "short_links": MessageLookupByLibrary.simpleMessage("شورت لينكس"),
         "short_lived_link_section":
@@ -446,12 +452,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "supervisor": MessageLookupByLibrary.simpleMessage("المشرف"),
         "survey_availability":
             MessageLookupByLibrary.simpleMessage("توفر الاستبيانات"),
-        "survey_available_for_duration": m17,
+        "survey_available_for_duration": m18,
         "survey_code_placeholder":
             MessageLookupByLibrary.simpleMessage("مثال: ABC-123"),
         "survey_completed":
             MessageLookupByLibrary.simpleMessage("اكتمل الاستبيان"),
+        "survey_empty_no_sections": MessageLookupByLibrary.simpleMessage(
+            "لا يوجد في هذا الاستبيان أقسام أو أسئلة. يجب إعداده من لوحة الإدارة قبل جمع الاستجابات."),
         "survey_link": MessageLookupByLibrary.simpleMessage("رابط الاستطلاع"),
+        "survey_max_responses_reached": MessageLookupByLibrary.simpleMessage(
+            "وصل هذا الاستبيان إلى الحد الأقصى من الاستجابات. لا يمكن بدء استجابة جديدة."),
         "survey_overview":
             MessageLookupByLibrary.simpleMessage("نظرة عامة على الاستبيانات"),
         "surveys": MessageLookupByLibrary.simpleMessage("الاستطلاعات"),

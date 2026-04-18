@@ -236,6 +236,8 @@
   "creating_link": "Creating…",
   "location_required_for_short_link": "Location permission is required to create the link",
   "max_responses": "Max Responses",
+  "survey_max_responses_reached": "This survey has reached the maximum number of responses. You cannot start a new response.",
+  "demographic_quota_full_for_category": "The quota for this category is already filled. Please choose another gender and age group.",
   "expires_at": "Expires At",
   "enter_survey_code": "Enter Survey Code",
   "survey_code_placeholder": "e.g. ABC-123",
@@ -430,5 +432,14 @@
   "nearly_complete": "Nearly Complete",
   "in_progress": "In Progress",
   "not_started": "Not Started",
-  "create_link": "Link"
+  "create_link": "Link",
+  "survey_empty_no_sections": "This survey has no sections or questions. It must be set up in the survey admin before responses can be collected.",
+  "quota_responses_in_category": "Category responses: {count}",
+  "@quota_responses_in_category": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

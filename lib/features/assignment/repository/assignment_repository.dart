@@ -42,6 +42,17 @@ class AssignmentRepository {
     );
   }
 
+  /// Fetches latest survey (including `researcher_quotas`) from the API and updates cache.
+  /// Preserves [Survey.localResponseIds] via [AssignmentLocalRepository.updateSurvey].
+  static Future<void> refreshCachedSurveyFromApi(int surveyId) async {
+    try {
+      final r = await getSurveyDetails(surveyId);
+      if (r.success) {
+        await AssignmentLocalRepository.updateSurvey(r.survey);
+      }
+    } catch (_) {}
+  }
+
   static Future<StartResponseResponse> startResponse(
     StartResponseRequest request,
   ) async {
@@ -121,7 +132,9 @@ class AssignmentRepository {
     final survey = await AssignmentLocalRepository.getSurveyById(meta.surveyId);
     if (survey == null ||
         survey.assignments == null ||
-        survey.assignments!.isEmpty) return;
+        survey.assignments!.isEmpty) {
+      return;
+    }
 
     for (var a = 0; a < survey.assignments!.length; a++) {
       final assignment = survey.assignments![a];
@@ -162,6 +175,7 @@ class AssignmentRepository {
         progress: newProgress,
         collected: newCollected,
         progressPercent: newPercent,
+        clearServerRemaining: true,
       );
       final newQuotas = List<ResearcherQuota>.from(quotas)
         ..[matchIndex] = updatedQuota;
@@ -186,6 +200,8 @@ class AssignmentRepository {
           target: pq.target,
           collected: newProfileCollected,
           progressPercent: newProfileProgressPercent,
+          remaining: pq.remaining != null ? pq.remaining! - 1 : null,
+          responsesCount: pq.responsesCount,
         );
         final newProfileQuotas =
             List<ResearcherQuotaModel>.from(profileAssignmentForSurvey.quotas)
@@ -278,6 +294,12 @@ class AssignmentRepository {
       if (result.isComplete) {
         await AssignmentLocalRepository.incrementSyncedResponsesCount();
         await _incrementLocalQuotaForCompletedResponse(responseId);
+        final meta = await AssignmentLocalRepository.getResponseMetadata(
+          responseId,
+        );
+        if (meta != null) {
+          await refreshCachedSurveyFromApi(meta.surveyId);
+        }
       }
     }
 
@@ -328,6 +350,12 @@ class AssignmentRepository {
                   .consumeOptimisticQuotaIncrement(responseId);
               if (!alreadyIncremented) {
                 await _incrementLocalQuotaForCompletedResponse(responseId);
+              }
+              final meta = await AssignmentLocalRepository.getResponseMetadata(
+                responseId,
+              );
+              if (meta != null) {
+                await refreshCachedSurveyFromApi(meta.surveyId);
               }
             }
           }

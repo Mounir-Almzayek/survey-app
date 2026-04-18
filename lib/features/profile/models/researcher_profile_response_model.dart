@@ -188,6 +188,8 @@ class ResearcherQuotaModel {
   final int target;
   final int collected;
   final int progressPercent;
+  final int? remaining;
+  final int? responsesCount;
 
   const ResearcherQuotaModel({
     required this.gender,
@@ -195,15 +197,30 @@ class ResearcherQuotaModel {
     required this.target,
     required this.collected,
     required this.progressPercent,
+    this.remaining,
+    this.responsesCount,
   });
 
   factory ResearcherQuotaModel.fromJson(Map<String, dynamic> json) {
+    int? optInt(dynamic v) {
+      if (v == null) return null;
+      if (v is int) return v;
+      if (v is num) return v.round();
+      return int.tryParse(v.toString());
+    }
+
+    final targetVal = json['target'] as int? ?? json['limit'] as int? ?? 0;
+    final collectedVal =
+        json['collected'] as int? ?? json['used'] as int? ?? 0;
+
     return ResearcherQuotaModel(
       gender: json['gender'] as String? ?? '',
       ageGroup: json['age_group'] as String? ?? '',
-      target: json['target'] as int? ?? 0,
-      collected: json['collected'] as int? ?? 0,
+      target: targetVal,
+      collected: collectedVal,
       progressPercent: json['progress_percent'] as int? ?? 0,
+      remaining: optInt(json['remaining']),
+      responsesCount: optInt(json['responses_count']),
     );
   }
 
@@ -214,6 +231,8 @@ class ResearcherQuotaModel {
       'target': target,
       'collected': collected,
       'progress_percent': progressPercent,
+      if (remaining != null) 'remaining': remaining,
+      if (responsesCount != null) 'responses_count': responsesCount,
     };
   }
 }

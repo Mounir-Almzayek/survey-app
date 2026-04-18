@@ -10,12 +10,15 @@ class SurveyIntroWidget extends StatefulWidget {
   final Survey survey;
   final VoidCallback onStart;
   final bool isLoading;
+  /// When false (e.g. resuming a draft), quota-full rules do not block starting.
+  final bool isNewResponse;
 
   const SurveyIntroWidget({
     super.key,
     required this.survey,
     required this.onStart,
     this.isLoading = false,
+    this.isNewResponse = true,
   });
 
   @override
@@ -61,6 +64,8 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
   @override
   Widget build(BuildContext context) {
     final s = S.of(context);
+    final atMaxResponses =
+        widget.isNewResponse && widget.survey.hasReachedMaxResponses;
     final title = widget.survey.title ?? "";
     final intro = widget.survey.greetingMessage ?? "";
 
@@ -207,7 +212,7 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
                               ],
                             ),
                             child: CustomElevatedButton(
-                              onPressed: widget.isLoading
+                              onPressed: widget.isLoading || atMaxResponses
                                   ? null
                                   : widget.onStart,
                               title: s.start_survey.toUpperCase(),
@@ -221,6 +226,23 @@ class _SurveyIntroWidgetState extends State<SurveyIntroWidget>
                           ),
                         ),
                       ),
+
+                      if (atMaxResponses) ...[
+                        SizedBox(height: 12.h),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w),
+                          child: Text(
+                            s.survey_max_responses_reached,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: context.adaptiveFont(13.sp),
+                              color: Colors.red.shade700,
+                              fontWeight: FontWeight.w600,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
 
                       SizedBox(height: context.isPhoneLandscape ? 20.h : 40.h),
                     ],

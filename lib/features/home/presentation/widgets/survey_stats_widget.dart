@@ -5,7 +5,6 @@ import '../../models/survey_stats_model.dart';
 import 'demographic_charts.dart';
 import 'components/dashboard_metrics.dart';
 import 'components/survey_analysis_chart_section.dart';
-import 'components/survey_availability_chart.dart';
 import 'components/sync_status_chart.dart';
 
 class SurveyStatsWidget extends StatelessWidget {
@@ -13,7 +12,6 @@ class SurveyStatsWidget extends StatelessWidget {
   final bool isSidebarLayout;
   final GlobalKey analysisKey;
   final GlobalKey demographicsKey;
-  final GlobalKey availabilityKey;
   final GlobalKey metricsKey;
   final GlobalKey syncKey;
 
@@ -22,7 +20,6 @@ class SurveyStatsWidget extends StatelessWidget {
     required this.stats,
     required this.analysisKey,
     required this.demographicsKey,
-    required this.availabilityKey,
     required this.metricsKey,
     required this.syncKey,
     this.isSidebarLayout = false,
@@ -61,44 +58,20 @@ class SurveyStatsWidget extends StatelessWidget {
         ),
         SizedBox(height: 24.h),
 
-        // 3. Availability Chart
-        ScrollReveal(
-          key: availabilityKey,
-          delay: const Duration(milliseconds: 600),
-          child: SurveyAvailabilityChart(stats: stats),
-        ),
-        SizedBox(height: 16.h),
-
-        // 4. Metric Grid (Actionable Insights)
+        // 3. Metric Grid (Actionable Insights)
         ScrollReveal(
           key: metricsKey,
-          delay: const Duration(milliseconds: 800),
+          delay: const Duration(milliseconds: 600),
           child: DashboardMetrics(stats: stats),
         ),
         SizedBox(height: 24.h),
 
-        // 5. Sync Status Chart
+        // 4. Sync Status Chart
         ScrollReveal(
           key: syncKey,
-          delay: const Duration(milliseconds: 1000),
+          delay: const Duration(milliseconds: 800),
           child: SyncStatusChart(stats: stats),
         ),
-      ],
-    );
-  }
-}
-
-class SurveyChartsOnly extends StatelessWidget {
-  final SurveyStatsModel stats;
-  const SurveyChartsOnly({super.key, required this.stats});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SurveyAvailabilityChart(stats: stats),
-        SizedBox(height: 16.h),
-        SyncStatusChart(stats: stats),
       ],
     );
   }

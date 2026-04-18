@@ -37,6 +37,11 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
       },
       child: BlocBuilder<SurveyNavigationBloc, SurveyNavigationState>(
         builder: (context, navState) {
+          final sections = navState.survey?.sections;
+          if (sections == null || sections.isEmpty) {
+            return _buildEmptySurvey(context, s);
+          }
+
           final currentSection = navState.currentSection;
           if (currentSection == null) return const SizedBox.shrink();
 
@@ -44,6 +49,7 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
             builder: (context, saveState) {
               final answers = saveState.saveRequest?.answers ?? [];
               final answersMap = {for (var a in answers) a.questionId: a.value};
+              final visibleQuestions = navState.visibleQuestions;
 
               return Column(
                 children: [
@@ -59,10 +65,10 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
                   Expanded(
                     child: ListView.separated(
                       padding: EdgeInsets.all(16.r),
-                      itemCount: currentSection.questions?.length ?? 0,
+                      itemCount: visibleQuestions.length,
                       separatorBuilder: (_, __) => SizedBox(height: 20.h),
                       itemBuilder: (context, index) {
-                        final question = currentSection.questions![index];
+                        final question = visibleQuestions[index];
                         final behavior = navState.getQuestionBehavior(
                           question.id,
                           defaultRequired: question.isRequired ?? false,
@@ -117,6 +123,39 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
             },
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildEmptySurvey(BuildContext context, S s) {
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.quiz_outlined,
+              size: 64.sp,
+              color: AppColors.primary.withOpacity(0.45),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              s.survey_empty_no_sections,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: context.adaptiveFont(16.sp),
+                height: 1.45,
+                color: AppColors.primaryText,
+              ),
+            ),
+            SizedBox(height: 32.h),
+            CustomElevatedButton(
+              onPressed: () => Navigator.of(context).maybePop(),
+              title: s.back_to_assignments,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -244,6 +283,8 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
     final isLast = navState.isLastSection;
     final isFirst = navState.isFirstSection;
     final isLoading = saveState is SaveSectionLoading;
+    final canGoBack =
+        !isFirst && !navState.enteredCurrentSectionViaIntraSectionJump;
 
     return Container(
       padding: EdgeInsets.fromLTRB(
@@ -267,7 +308,8 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
         children: [
           if (!isFirst)
             IconButton.filledTonal(
-              onPressed: isLoading ? null : () => _handlePrevious(context),
+              onPressed:
+                  isLoading || !canGoBack ? null : () => _handlePrevious(context),
               icon: Icon(
                 Icons.arrow_back_ios_new_rounded,
                 size: context.adaptiveIcon(20.sp),
@@ -342,8 +384,7 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
   }
 
   bool _validateSection(SurveyNavigationState navState, BuildContext context) {
-    final section = navState.currentSection;
-    if (section == null) return true;
+    if (navState.currentSection == null) return true;
 
     final answers =
         context.read<SaveSectionBloc>().state.saveRequest?.answers ?? [];
@@ -353,12 +394,11 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
     final newErrors = <int, String?>{};
     bool hasError = false;
 
-    for (var question in section.questions ?? []) {
+    for (var question in navState.visibleQuestions) {
       final behavior = navState.getQuestionBehavior(
         question.id,
         defaultRequired: question.isRequired ?? false,
       );
-      if (!behavior.isVisible) continue;
 
       final val = answersMap[question.id];
 

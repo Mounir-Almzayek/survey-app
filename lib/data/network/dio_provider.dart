@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import '../../core/auth/session_invalidation_coordinator.dart';
 import '../../core/utils/app_exception.dart';
 import 'api_config.dart';
 import 'api_request.dart';
@@ -43,13 +44,17 @@ class DioProvider {
           return handler.next(response);
         },
         onError: (error, handler) {
-          if (kDebugMode) {
-            print(
-              "ERROR[${error.response?.statusCode}] => PATH: ${error.requestOptions.path}",
-            );
-            print("ERROR DATA: ${error.response?.data}");
-          }
-          return handler.next(error);
+          SessionInvalidationCoordinator.instance
+              .handleIfNeeded(error)
+              .whenComplete(() {
+            if (kDebugMode) {
+              print(
+                "ERROR[${error.response?.statusCode}] => PATH: ${error.requestOptions.path}",
+              );
+              print("ERROR DATA: ${error.response?.data}");
+            }
+            handler.next(error);
+          });
         },
       ),
     );

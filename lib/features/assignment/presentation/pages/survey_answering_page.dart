@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/models/survey/survey_model.dart';
+import '../../../../core/widgets/unified_snackbar.dart';
 import '../../bloc/assignments_list/assignments_list_bloc.dart';
 import '../../bloc/survey_navigation/survey_navigation_bloc.dart' as nav;
 import '../../bloc/save_section/save_section_bloc.dart' as save;
@@ -58,7 +60,20 @@ class SurveyAnsweringPage extends StatelessWidget {
             },
           ),
           BlocListener<start.StartResponseBloc, start.StartResponseState>(
+            listenWhen: (prev, curr) =>
+                curr is start.StartResponseError ||
+                (curr is start.StartResponseSuccess &&
+                    prev is! start.StartResponseSuccess),
             listener: (context, state) {
+              if (state is start.StartResponseError) {
+                final message = state.isMaxResponsesReached
+                    ? S.of(context).survey_max_responses_reached
+                    : state.isDemographicQuotaFull
+                    ? S.of(context).demographic_quota_full_for_category
+                    : state.message;
+                UnifiedSnackbar.error(context, message: message);
+                return;
+              }
               if (state is start.StartResponseSuccess) {
                 final newId = state.response.response.id;
                 final navBloc = context.read<nav.SurveyNavigationBloc>();
@@ -84,7 +99,9 @@ class SurveyAnsweringPage extends StatelessWidget {
                 context.read<AssignmentsListBloc>().add(LoadAssignments());
 
                 // 5. Start location tracking if waiting for context (first start) or refresh assignment_id (new survey)
-                context.read<DeviceLocationBloc>().add(const StartLocationTrackingEvent());
+                context.read<DeviceLocationBloc>().add(
+                  const StartLocationTrackingEvent(),
+                );
               }
             },
           ),

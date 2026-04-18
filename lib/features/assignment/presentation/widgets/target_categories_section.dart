@@ -193,6 +193,18 @@ class _TargetCategoriesSectionState extends State<TargetCategoriesSection> {
               ),
             ],
           ),
+          if (quota.responsesCountInCategory != null) ...[
+            SizedBox(height: 4.h),
+            Text(
+              S.of(context).quota_responses_in_category(
+                quota.responsesCountInCategory!,
+              ),
+              style: TextStyle(
+                fontSize: context.adaptiveFont(10.sp),
+                color: AppColors.secondaryText,
+              ),
+            ),
+          ],
           const SizedBox(height: 6),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),

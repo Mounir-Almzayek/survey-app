@@ -168,6 +168,18 @@ class _TargetCategoriesCarouselState extends State<TargetCategoriesCarousel> {
                   '${quota.progress} / ${quota.target}',
                   AppColors.secondaryText,
                 ),
+                if (quota.responsesCountInCategory != null) ...[
+                  SizedBox(height: 4.h),
+                  Text(
+                    S.of(context).quota_responses_in_category(
+                      quota.responsesCountInCategory!,
+                    ),
+                    style: TextStyle(
+                      fontSize: context.adaptiveFont(11.sp),
+                      color: AppColors.secondaryText,
+                    ),
+                  ),
+                ],
                 SizedBox(height: 4.h),
                 if (quota.isCompleted)
                   Container(

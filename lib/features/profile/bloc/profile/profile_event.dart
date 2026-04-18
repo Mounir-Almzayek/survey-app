@@ -14,3 +14,8 @@ class LoadProfile extends ProfileEvent {
 class Logout extends ProfileEvent {
   const Logout();
 }
+
+/// Token was rejected by the API; local data is already cleared.
+class SessionInvalidatedByServer extends ProfileEvent {
+  const SessionInvalidatedByServer();
+}

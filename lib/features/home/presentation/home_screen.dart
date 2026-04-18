@@ -28,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // Keys for dashboard sections tracking
   final _analysisKey = GlobalKey(debugLabel: 'analysis');
   final _demographicsKey = GlobalKey(debugLabel: 'demographics');
-  final _availabilityKey = GlobalKey(debugLabel: 'availability');
   final _metricsKey = GlobalKey(debugLabel: 'metrics');
   final _syncKey = GlobalKey(debugLabel: 'sync');
 
@@ -127,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           // Content Section (Stats & Public Links)
                           // Desktop: single column so all dashboard elements (metrics, survey analysis,
-                          // demographics, availability, sync) appear and scroll; no split that hides content.
+                          // demographics, sync) appear and scroll; no split that hides content.
                           SliverToBoxAdapter(
                             child: Padding(
                               padding: EdgeInsets.symmetric(
@@ -173,11 +172,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: Icons.people_outline,
                       ),
                       DashboardSectionNode(
-                        key: _availabilityKey,
-                        label: s.survey_availability,
-                        icon: Icons.event_available_outlined,
-                      ),
-                      DashboardSectionNode(
                         key: _metricsKey,
                         label: s.statistics,
                         icon: Icons.speed_outlined,
@@ -213,7 +207,6 @@ class _HomeScreenState extends State<HomeScreen> {
         stats: state.stats,
         analysisKey: _analysisKey,
         demographicsKey: _demographicsKey,
-        availabilityKey: _availabilityKey,
         metricsKey: _metricsKey,
         syncKey: _syncKey,
       );

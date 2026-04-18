@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/utils/survey_behavior_manager.dart';
+import '../../../../core/utils/survey_jump_entry_helper.dart';
 import 'survey_navigation_event.dart';
 import 'survey_navigation_state.dart';
 
@@ -45,6 +46,7 @@ class SurveyNavigationBloc
         responseId: event.responseId,
         currentSectionIndex: firstVisibleIndex,
         lockedSectionIndices: const {},
+        jumpEntryQuestionBySectionId: const {},
       ),
     );
   }
@@ -63,6 +65,7 @@ class SurveyNavigationBloc
         jumpMap: state.jumpMap,
         currentStep: state.currentStep,
         lockedSectionIndices: state.lockedSectionIndices,
+        jumpEntryQuestionBySectionId: state.jumpEntryQuestionBySectionId,
       ),
     );
   }
@@ -89,6 +92,7 @@ class SurveyNavigationBloc
             jumpMap: state.jumpMap,
             currentStep: SurveyStep.survey,
             lockedSectionIndices: merged,
+            jumpEntryQuestionBySectionId: state.jumpEntryQuestionBySectionId,
           ),
         );
       }
@@ -106,6 +110,7 @@ class SurveyNavigationBloc
         jumpMap: state.jumpMap,
         currentStep: SurveyStep.survey,
         lockedSectionIndices: state.lockedSectionIndices,
+        jumpEntryQuestionBySectionId: state.jumpEntryQuestionBySectionId,
       ),
     );
   }
@@ -124,6 +129,7 @@ class SurveyNavigationBloc
         jumpMap: state.jumpMap,
         currentStep: SurveyStep.completion,
         lockedSectionIndices: state.lockedSectionIndices,
+        jumpEntryQuestionBySectionId: state.jumpEntryQuestionBySectionId,
       ),
     );
   }
@@ -140,6 +146,12 @@ class SurveyNavigationBloc
       answers: event.answers,
     );
 
+    final jumpMap = Map<int, int>.from(behavior['jump'] ?? {});
+    final jumpEntry = SurveyJumpEntryHelper.computeJumpEntryMap(
+      survey: survey,
+      jumpMap: jumpMap,
+    );
+
     emit(
       SurveyNavigationUpdated(
         survey: survey,
@@ -147,9 +159,10 @@ class SurveyNavigationBloc
         currentSectionIndex: state.currentSectionIndex,
         visibilityMap: Map<String, bool>.from(behavior['visibility'] ?? {}),
         requirementMap: Map<String, bool>.from(behavior['requirement'] ?? {}),
-        jumpMap: Map<int, int>.from(behavior['jump'] ?? {}),
+        jumpMap: jumpMap,
         currentStep: state.currentStep,
         lockedSectionIndices: state.lockedSectionIndices,
+        jumpEntryQuestionBySectionId: jumpEntry,
       ),
     );
   }
@@ -157,8 +170,8 @@ class SurveyNavigationBloc
   void _onNextSection(NextSection event, Emitter<SurveyNavigationState> emit) {
     final survey = state.survey;
     if (survey != null && survey.sections != null) {
-      // 1. If answers provided, recalculate behavior first to ensure current state is up-to-date
       Map<String, bool> currentVisibility = state.visibilityMap;
+      Map<String, bool> currentRequirement = state.requirementMap;
       Map<int, int> currentJumpMap = state.jumpMap;
 
       if (event.answers != null) {
@@ -169,6 +182,9 @@ class SurveyNavigationBloc
         currentVisibility = Map<String, bool>.from(
           behavior['visibility'] ?? {},
         );
+        currentRequirement = Map<String, bool>.from(
+          behavior['requirement'] ?? {},
+        );
         currentJumpMap = Map<int, int>.from(behavior['jump'] ?? {});
       }
 
@@ -177,11 +193,8 @@ class SurveyNavigationBloc
 
       final locked = _lockedAfterLeavingCurrentSection();
 
-      // 2. Check for Jump logic using the latest jump map
-      // Check for jump from any question that was just answered
       int? jumpTargetId;
 
-      // First, check if any question in the current section triggers a jump
       if (section.questions != null) {
         for (final question in section.questions!) {
           final targetId = currentJumpMap[question.id];
@@ -192,7 +205,6 @@ class SurveyNavigationBloc
         }
       }
 
-      // If no jump found in current section, check if any answered question triggers a jump
       if (jumpTargetId == null && event.answers != null) {
         for (final answeredQuestionId in event.answers!.keys) {
           final targetId = currentJumpMap[answeredQuestionId];
@@ -204,35 +216,40 @@ class SurveyNavigationBloc
       }
 
       if (jumpTargetId != null) {
-        // Check if jumpTargetId is a section ID or question ID
-        // First, try to find it as a section ID
         final targetIndex = survey.sections!.indexWhere(
           (s) => s.id == jumpTargetId,
         );
 
         if (targetIndex != -1) {
+          final destSection = survey.sections![targetIndex];
+          final jumpEntry = Map<int, int>.from(
+            SurveyJumpEntryHelper.computeJumpEntryMap(
+              survey: survey,
+              jumpMap: currentJumpMap,
+            ),
+          )..remove(destSection.id);
           emit(
             SurveyNavigationUpdated(
               survey: survey,
               responseId: state.responseId,
               currentSectionIndex: targetIndex,
               visibilityMap: currentVisibility,
-              requirementMap: state.requirementMap,
+              requirementMap: currentRequirement,
               jumpMap: currentJumpMap,
               currentStep: state.currentStep,
               lockedSectionIndices: locked,
+              jumpEntryQuestionBySectionId: jumpEntry,
             ),
           );
           return;
         }
 
-        // If not found as section ID, try to find the section that contains the target question
         int? targetSectionId;
-        for (final section in survey.sections!) {
-          if (section.questions != null) {
-            for (final question in section.questions!) {
+        for (final sec in survey.sections!) {
+          if (sec.questions != null) {
+            for (final question in sec.questions!) {
               if (question.id == jumpTargetId) {
-                targetSectionId = section.id;
+                targetSectionId = sec.id;
                 break;
               }
             }
@@ -241,20 +258,25 @@ class SurveyNavigationBloc
         }
 
         if (targetSectionId != null) {
-          final targetIndex = survey.sections!.indexWhere(
+          final targetIdx = survey.sections!.indexWhere(
             (s) => s.id == targetSectionId,
           );
-          if (targetIndex != -1) {
+          if (targetIdx != -1) {
+            final jumpEntry = SurveyJumpEntryHelper.computeJumpEntryMap(
+              survey: survey,
+              jumpMap: currentJumpMap,
+            );
             emit(
               SurveyNavigationUpdated(
                 survey: survey,
                 responseId: state.responseId,
-                currentSectionIndex: targetIndex,
+                currentSectionIndex: targetIdx,
                 visibilityMap: currentVisibility,
-                requirementMap: state.requirementMap,
+                requirementMap: currentRequirement,
                 jumpMap: currentJumpMap,
                 currentStep: state.currentStep,
                 lockedSectionIndices: locked,
+                jumpEntryQuestionBySectionId: jumpEntry,
               ),
             );
             return;
@@ -262,25 +284,31 @@ class SurveyNavigationBloc
         }
       }
 
-      // 3. Find next visible section
       int nextIndex = state.currentSectionIndex + 1;
       bool foundNext = false;
       while (nextIndex < survey.sections!.length) {
-        final section = survey.sections![nextIndex];
+        final nextSec = survey.sections![nextIndex];
         final bool isSectionVisible =
-            currentVisibility["section_${section.id}"] ?? true;
+            currentVisibility["section_${nextSec.id}"] ?? true;
 
         if (isSectionVisible) {
+          final jumpEntry = Map<int, int>.from(
+            SurveyJumpEntryHelper.computeJumpEntryMap(
+              survey: survey,
+              jumpMap: currentJumpMap,
+            ),
+          )..remove(nextSec.id);
           emit(
             SurveyNavigationUpdated(
               survey: survey,
               responseId: state.responseId,
               currentSectionIndex: nextIndex,
               visibilityMap: currentVisibility,
-              requirementMap: state.requirementMap,
+              requirementMap: currentRequirement,
               jumpMap: currentJumpMap,
               currentStep: state.currentStep,
               lockedSectionIndices: locked,
+              jumpEntryQuestionBySectionId: jumpEntry,
             ),
           );
           foundNext = true;
@@ -289,7 +317,6 @@ class SurveyNavigationBloc
         nextIndex++;
       }
 
-      // 4. Fallback: If no next section found, trigger completion
       if (!foundNext) {
         emit(
           SurveyNavigationUpdated(
@@ -297,10 +324,11 @@ class SurveyNavigationBloc
             responseId: state.responseId,
             currentSectionIndex: state.currentSectionIndex,
             visibilityMap: currentVisibility,
-            requirementMap: state.requirementMap,
+            requirementMap: currentRequirement,
             jumpMap: currentJumpMap,
             currentStep: state.currentStep,
             lockedSectionIndices: locked,
+            jumpEntryQuestionBySectionId: state.jumpEntryQuestionBySectionId,
           ),
         );
         add(CompleteSurvey());
@@ -328,6 +356,7 @@ class SurveyNavigationBloc
               jumpMap: state.jumpMap,
               currentStep: state.currentStep,
               lockedSectionIndices: state.lockedSectionIndices,
+              jumpEntryQuestionBySectionId: state.jumpEntryQuestionBySectionId,
             ),
           );
           return;
@@ -345,6 +374,9 @@ class SurveyNavigationBloc
         // If target section is hidden, don't go there
         if (!state.isVisible("section_${section.id}")) return;
 
+        final jumpEntry = Map<int, int>.from(state.jumpEntryQuestionBySectionId)
+          ..remove(section.id);
+
         emit(
           SurveyNavigationUpdated(
             survey: survey,
@@ -355,6 +387,7 @@ class SurveyNavigationBloc
             jumpMap: state.jumpMap,
             currentStep: state.currentStep,
             lockedSectionIndices: state.lockedSectionIndices,
+            jumpEntryQuestionBySectionId: jumpEntry,
           ),
         );
       }

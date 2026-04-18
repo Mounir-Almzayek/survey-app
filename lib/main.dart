@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'core/auth/session_invalidation_coordinator.dart';
 import 'core/l10n/generated/l10n.dart';
 import 'core/routes/app_pages.dart';
 import 'core/services/hive_service.dart';
@@ -18,6 +19,7 @@ import 'features/language/bloc/language/language_bloc.dart';
 import 'features/profile/bloc/profile/profile_bloc.dart';
 import 'features/device_location/presentation/location_permission_gate.dart';
 import 'features/device_location/presentation/zone_violation_listener.dart';
+import 'features/profile/services/profile_session_invalidation_policy.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,8 +37,30 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      SessionInvalidationCoordinator.instance.configure(
+        policy: const ProfileSessionInvalidationPolicy(),
+        afterCleared: () {
+          final ctx = Pages.navigatorKey.currentContext;
+          if (ctx != null && ctx.mounted) {
+            ctx.read<ProfileBloc>().add(const SessionInvalidatedByServer());
+          }
+        },
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -21,5 +21,15 @@ class StartResponseSuccess extends StartResponseState {
 
 class StartResponseError extends StartResponseState {
   final String message;
-  StartResponseError(this.message, {super.request});
+  /// When true, the UI should show the localized `survey_max_responses_reached` string.
+  final bool isMaxResponsesReached;
+  /// When true, the UI should show the localized demographic quota string.
+  final bool isDemographicQuotaFull;
+
+  StartResponseError(
+    this.message, {
+    super.request,
+    this.isMaxResponsesReached = false,
+    this.isDemographicQuotaFull = false,
+  });
 }

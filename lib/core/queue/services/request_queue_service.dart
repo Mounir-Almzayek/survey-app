@@ -8,6 +8,9 @@ import '../models/request_queue_item.dart';
 class RequestQueueService {
   static const String _queueKey = 'queued_requests';
 
+  /// Must match drop logic in [RequestQueueManager] (remove after this many failures).
+  static const int maxQueueSendFailuresBeforeDrop = 3;
+
   /// Initialize queue service
   static Future<void> init() async {
     await HiveService.init();
@@ -39,7 +42,7 @@ class RequestQueueService {
     }
   }
 
-  /// Get all pending requests from the queue.
+  /// Pending and retryable failed requests (failed with retryCount below drop threshold).
   /// Sorted so start_response runs before section_save (ensures real response ids before section sync).
   static Future<List<RequestQueueItem>> getPendingRequests() async {
     try {
@@ -49,7 +52,12 @@ class RequestQueueService {
           .map(
             (item) => RequestQueueItem.fromJson(item as Map<String, dynamic>),
           )
-          .where((item) => item.status == QueueItemStatus.pending)
+          .where(
+            (item) =>
+                item.status == QueueItemStatus.pending ||
+                (item.status == QueueItemStatus.failed &&
+                    item.retryCount < maxQueueSendFailuresBeforeDrop),
+          )
           .toList();
       pending.sort((a, b) {
         final aStart = a.metadata?['type'] == 'start_response';
@@ -104,8 +112,8 @@ class RequestQueueService {
     } catch (e) {}
   }
 
-  /// Reset processing (stuck) and failed requests to pending for retry.
-  /// Use on app init and when connectivity restores to recover stuck/failed items.
+  /// Reset stuck `processing` items to `pending` (e.g. after crash or killed request).
+  /// Failed items stay `failed` and are picked up by [getPendingRequests] until dropped.
   static Future<void> resetStuckAndFailedRequests() async {
     try {
       final box = await _getBox();
@@ -115,8 +123,7 @@ class RequestQueueService {
       for (int i = 0; i < queue.length; i++) {
         final itemMap = Map<String, dynamic>.from(queue[i] as Map);
         final status = itemMap['status'] as String?;
-        if (status == QueueItemStatus.processing.name ||
-            status == QueueItemStatus.failed.name) {
+        if (status == QueueItemStatus.processing.name) {
           itemMap['status'] = QueueItemStatus.pending.name;
           itemMap['retryCount'] = 0;
           queue[i] = itemMap;

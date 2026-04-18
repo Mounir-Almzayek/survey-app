@@ -49,13 +49,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m13(count) => "${count} Questions";
 
-  static String m14(id) => "Response ID: ${id}";
+  static String m14(count) => "Category responses: ${count}";
 
-  static String m15(count) => "${count} Sections";
+  static String m15(id) => "Response ID: ${id}";
 
-  static String m16(title) => "Survey Link: ${title}";
+  static String m16(count) => "${count} Sections";
 
-  static String m17(minutes) =>
+  static String m17(title) => "Survey Link: ${title}";
+
+  static String m18(minutes) =>
       "Survey will be available for ${minutes} minutes";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -137,6 +139,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to delete this survey draft?"),
         "delete_draft_title":
             MessageLookupByLibrary.simpleMessage("Delete Draft"),
+        "demographic_quota_full_for_category": MessageLookupByLibrary.simpleMessage(
+            "The quota for this category is already filled. Please choose another gender and age group."),
         "demographics_title":
             MessageLookupByLibrary.simpleMessage("Respondent Demographics"),
         "device_already_registered": MessageLookupByLibrary.simpleMessage(
@@ -367,6 +371,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Processing"),
         "queue_summary_title":
             MessageLookupByLibrary.simpleMessage("Queued requests"),
+        "quota_responses_in_category": m14,
         "ram": MessageLookupByLibrary.simpleMessage("RAM"),
         "read_more": MessageLookupByLibrary.simpleMessage("Read more"),
         "receive_custody":
@@ -396,7 +401,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Reset Password"),
         "response_details_title":
             MessageLookupByLibrary.simpleMessage("Response details"),
-        "response_number": m14,
+        "response_number": m15,
         "response_status_flagged":
             MessageLookupByLibrary.simpleMessage("Flagged"),
         "response_status_pending":
@@ -417,7 +422,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "screen_resolution":
             MessageLookupByLibrary.simpleMessage("Screen Resolution"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
-        "sections_count": m15,
+        "sections_count": m16,
         "select_age_group":
             MessageLookupByLibrary.simpleMessage("Select Age Group"),
         "select_date": MessageLookupByLibrary.simpleMessage("Select Date"),
@@ -428,7 +433,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "send_code": MessageLookupByLibrary.simpleMessage("Send Code"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share_link": MessageLookupByLibrary.simpleMessage("Share"),
-        "share_link_subject": m16,
+        "share_link_subject": m17,
         "short_link": MessageLookupByLibrary.simpleMessage("Short Link"),
         "short_links": MessageLookupByLibrary.simpleMessage("Short Links"),
         "short_lived_link_section":
@@ -449,12 +454,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "supervisor": MessageLookupByLibrary.simpleMessage("Supervisor"),
         "survey_availability":
             MessageLookupByLibrary.simpleMessage("Survey Availability"),
-        "survey_available_for_duration": m17,
+        "survey_available_for_duration": m18,
         "survey_code_placeholder":
             MessageLookupByLibrary.simpleMessage("e.g. ABC-123"),
         "survey_completed":
             MessageLookupByLibrary.simpleMessage("Survey Completed"),
+        "survey_empty_no_sections": MessageLookupByLibrary.simpleMessage(
+            "This survey has no sections or questions. It must be set up in the survey admin before responses can be collected."),
         "survey_link": MessageLookupByLibrary.simpleMessage("Survey Link"),
+        "survey_max_responses_reached": MessageLookupByLibrary.simpleMessage(
+            "This survey has reached the maximum number of responses. You cannot start a new response."),
         "survey_overview":
             MessageLookupByLibrary.simpleMessage("Survey Overview"),
         "surveys": MessageLookupByLibrary.simpleMessage("Surveys"),
