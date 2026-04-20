@@ -24,6 +24,7 @@ class Routes {
   static const String surveyDeepLinkPath = '/survey-deep-link';
   static const String completedResponsesPath = '/completed-responses';
   static const String completedResponseViewPath = '/completed-response-view';
+  static const String publicLinkAnsweringPath = '/public-link-answering';
 
   // Route names
   static const String notifications = 'notifications';

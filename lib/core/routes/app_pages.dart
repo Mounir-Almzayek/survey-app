@@ -16,6 +16,8 @@ import '../../features/deep_linking/models/device_registration_args.dart';
 import '../../features/deep_linking/models/survey_deep_link_args.dart';
 import '../../features/custody/presentation/custody_transfer_page.dart';
 import '../../features/custody/presentation/custody_verification_page.dart';
+import '../../features/public_links/models/public_link_answering_args.dart';
+import '../../features/public_links/presentation/public_link_answering_page.dart';
 import '../../core/models/survey/survey_model.dart';
 import 'app_routes.dart';
 
@@ -127,6 +129,17 @@ final appPages = GoRouter(
         final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
         final responseId = extra['responseId'] as int;
         return CompletedResponseViewPage(responseId: responseId);
+      },
+    ),
+    GoRoute(
+      path: Routes.publicLinkAnsweringPath,
+      builder: (context, state) {
+        final args = state.extra as PublicLinkAnsweringArgs;
+        return PublicLinkAnsweringPage(
+          shortCode: args.shortCode,
+          surveyTitle: args.surveyTitle,
+          requireLocation: args.requireLocation,
+        );
       },
     ),
   ],
