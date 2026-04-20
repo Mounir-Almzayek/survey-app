@@ -32,6 +32,29 @@ android {
         versionName = flutter.versionName
     }
 
+    flavorDimensions += "env"
+    productFlavors {
+        create("dev") {
+            dimension = "env"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            manifestPlaceholders["deepLinkHost"] = "dev.survey-frontend.system2030.com"
+            manifestPlaceholders["appLabelSuffix"] = " Dev"
+        }
+        create("staging") {
+            dimension = "env"
+            applicationIdSuffix = ".staging"
+            versionNameSuffix = "-staging"
+            manifestPlaceholders["deepLinkHost"] = "staging.survey-frontend.system2030.com"
+            manifestPlaceholders["appLabelSuffix"] = " Staging"
+        }
+        create("prod") {
+            dimension = "env"
+            manifestPlaceholders["deepLinkHost"] = "survey-frontend.system2030.com"
+            manifestPlaceholders["appLabelSuffix"] = ""
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.

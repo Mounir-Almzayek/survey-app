@@ -152,6 +152,22 @@ flutter test
 flutter test integration_test/
 ```
 
+## Running per environment
+
+Each environment (dev / staging / prod) needs the matching `--flavor` and `--dart-define=DEEP_LINK_HOST` values so deep links validate against the correct host.
+
+```
+flutter run --flavor dev     --dart-define=DEEP_LINK_HOST=dev.survey-frontend.system2030.com
+flutter run --flavor staging --dart-define=DEEP_LINK_HOST=staging.survey-frontend.system2030.com
+flutter run --flavor prod    --dart-define=DEEP_LINK_HOST=survey-frontend.system2030.com
+```
+
+For release builds, substitute `run` with `build apk` / `build appbundle`.
+
+### Prerequisite for Universal/App Links
+
+The frontend team must host `/.well-known/assetlinks.json` (Android) and `/.well-known/apple-app-site-association` (iOS) at each environment domain with the matching application/bundle IDs and SHA256 fingerprints before `autoVerify` will succeed.
+
 ## 📄 License
 
 This project is proprietary software for King Abdulaziz Center.
