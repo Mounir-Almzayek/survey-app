@@ -1,0 +1,2 @@
+#include "Generated.xcconfig"
+DEEP_LINK_HOST = staging.survey-frontend.system2030.com
