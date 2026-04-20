@@ -8,8 +8,13 @@ import 'device_registration_screen.dart';
 
 class DeviceRegistrationPage extends StatelessWidget {
   final String? token;
+  final bool fromDeepLink;
 
-  const DeviceRegistrationPage({super.key, this.token});
+  const DeviceRegistrationPage({
+    super.key,
+    this.token,
+    this.fromDeepLink = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +36,10 @@ class DeviceRegistrationPage extends StatelessWidget {
         BlocProvider(create: (context) => ValidateTokenBloc()),
         BlocProvider(create: (context) => CompleteRegistrationBloc()),
       ],
-      child: DeviceRegistrationScreen(token: registrationToken),
+      child: DeviceRegistrationScreen(
+        token: registrationToken,
+        fromDeepLink: fromDeepLink,
+      ),
     );
   }
 }

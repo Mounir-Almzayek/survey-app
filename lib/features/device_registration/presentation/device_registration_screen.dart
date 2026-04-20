@@ -28,8 +28,13 @@ import 'widgets/registration_action_section.dart';
 
 class DeviceRegistrationScreen extends StatefulWidget {
   final String token;
+  final bool fromDeepLink;
 
-  const DeviceRegistrationScreen({super.key, required this.token});
+  const DeviceRegistrationScreen({
+    super.key,
+    required this.token,
+    this.fromDeepLink = false,
+  });
 
   @override
   State<DeviceRegistrationScreen> createState() =>
