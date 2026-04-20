@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -14,12 +15,17 @@ import 'core/queue/services/request_queue_manager.dart';
 import 'core/queue/presentation/queue_status_listener.dart';
 import 'core/styles/app_theme.dart';
 import 'features/assignment/bloc/assignments_list/assignments_list_bloc.dart';
+import 'features/assignment/state/survey_in_progress_notifier.dart';
 import 'features/device_location/bloc/device_location/device_location_bloc.dart';
 import 'features/language/bloc/language/language_bloc.dart';
 import 'features/profile/bloc/profile/profile_bloc.dart';
 import 'features/device_location/presentation/location_permission_gate.dart';
 import 'features/device_location/presentation/zone_violation_listener.dart';
 import 'features/profile/services/profile_session_invalidation_policy.dart';
+import 'features/deep_linking/bloc/deep_link_bloc.dart';
+import 'features/deep_linking/bloc/deep_link_event.dart';
+import 'features/deep_linking/presentation/deep_link_listener.dart';
+import 'features/deep_linking/service/deep_link_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +51,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late final DeepLinkService _deepLinkService;
+  late final DeepLinkBloc _deepLinkBloc;
+  late final _LifecycleObserver _lifecycleObserver;
+  late final StreamSubscription<void> _streamSub;
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +71,37 @@ class _MyAppState extends State<MyApp> {
         },
       );
     });
+
+    _deepLinkService = DeepLinkService();
+    _deepLinkBloc = DeepLinkBloc(
+      isSurveyInProgress: () => SurveyInProgressNotifier.instance.value,
+    );
+
+    WidgetsBinding.instance.addObserver(
+      _lifecycleObserver = _LifecycleObserver(
+        onResumed: () async {
+          final uri = await _deepLinkService.refreshOnResume();
+          if (uri != null) {
+            _deepLinkBloc.add(DeepLinkReceived(uri));
+          }
+        },
+      ),
+    );
+
+    _deepLinkService.initialLink().then((uri) {
+      if (uri != null) _deepLinkBloc.add(DeepLinkReceived(uri));
+    });
+
+    _streamSub = _deepLinkService.linkStream
+        .listen((uri) => _deepLinkBloc.add(DeepLinkReceived(uri)));
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(_lifecycleObserver);
+    _streamSub.cancel();
+    _deepLinkBloc.close();
+    super.dispose();
   }
 
   @override
@@ -70,6 +112,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (_) => ProfileBloc()),
         BlocProvider(create: (_) => DeviceLocationBloc()),
         BlocProvider(create: (_) => AssignmentsListBloc()),
+        BlocProvider.value(value: _deepLinkBloc),
       ],
       child: BlocListener<ProfileBloc, ProfileState>(
         listenWhen: (prev, curr) => curr is ProfileLogoutSuccess,
@@ -103,8 +146,10 @@ class _MyAppState extends State<MyApp> {
                   final content = QueueStatusListener(
                     child: child ?? const SizedBox.shrink(),
                   );
-                  return ZoneViolationListener(
-                    child: LocationPermissionGate(child: content),
+                  return DeepLinkListener(
+                    child: ZoneViolationListener(
+                      child: LocationPermissionGate(child: content),
+                    ),
                   );
                 },
               );
@@ -114,5 +159,18 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
+  }
+}
+
+class _LifecycleObserver extends WidgetsBindingObserver {
+  final Future<void> Function() onResumed;
+
+  _LifecycleObserver({required this.onResumed});
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      onResumed();
+    }
   }
 }
