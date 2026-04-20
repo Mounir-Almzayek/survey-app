@@ -9,16 +9,36 @@ import '../../bloc/save_section/save_section_bloc.dart' as save;
 import '../../bloc/start_response/start_response_bloc.dart' as start;
 import '../../../device_location/bloc/device_location/device_location_bloc.dart';
 import '../../../device_location/bloc/device_location/device_location_event.dart';
+import '../../state/survey_in_progress_notifier.dart';
 import '../screens/survey_answering_screen.dart';
 
-class SurveyAnsweringPage extends StatelessWidget {
+class SurveyAnsweringPage extends StatefulWidget {
   final Survey survey;
   final int? responseId;
 
   const SurveyAnsweringPage({super.key, required this.survey, this.responseId});
 
   @override
+  State<SurveyAnsweringPage> createState() => _SurveyAnsweringPageState();
+}
+
+class _SurveyAnsweringPageState extends State<SurveyAnsweringPage> {
+  @override
+  void initState() {
+    super.initState();
+    SurveyInProgressNotifier.instance.value = true;
+  }
+
+  @override
+  void dispose() {
+    SurveyInProgressNotifier.instance.value = false;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final survey = widget.survey;
+    final responseId = widget.responseId;
     return MultiBlocProvider(
       providers: [
         BlocProvider(
