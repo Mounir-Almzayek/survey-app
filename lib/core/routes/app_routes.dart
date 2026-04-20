@@ -21,6 +21,7 @@ class Routes {
   static const String custodyTransferPath = '/custody-transfer';
   static const String custodyVerificationPath = '/custody-verification';
   static const String surveyAnsweringPath = '/survey-answering';
+  static const String surveyDeepLinkPath = '/survey-deep-link';
   static const String completedResponsesPath = '/completed-responses';
   static const String completedResponseViewPath = '/completed-response-view';
 
