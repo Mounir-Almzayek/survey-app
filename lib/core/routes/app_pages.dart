@@ -11,6 +11,9 @@ import '../../features/qr_scanner/presentation/qr_scanner_page.dart';
 import '../../features/assignment/presentation/pages/survey_answering_page.dart';
 import '../../features/assignment/presentation/pages/completed_responses_page.dart';
 import '../../features/assignment/presentation/pages/completed_response_view_page.dart';
+import '../../features/assignment/presentation/pages/survey_deep_link_page.dart';
+import '../../features/deep_linking/models/device_registration_args.dart';
+import '../../features/deep_linking/models/survey_deep_link_args.dart';
 import '../../features/custody/presentation/custody_transfer_page.dart';
 import '../../features/custody/presentation/custody_verification_page.dart';
 import '../../core/models/survey/survey_model.dart';
@@ -64,6 +67,13 @@ final appPages = GoRouter(
     GoRoute(
       path: Routes.deviceRegistrationPath,
       builder: (context, state) {
+        final args = state.extra;
+        if (args is DeviceRegistrationArgs) {
+          return DeviceRegistrationPage(
+            token: args.token,
+            fromDeepLink: args.fromDeepLink,
+          );
+        }
         final token = state.uri.queryParameters['token'];
         return DeviceRegistrationPage(token: token);
       },
@@ -85,6 +95,13 @@ final appPages = GoRouter(
         final returnCodeOnly =
             state.uri.queryParameters['returnCodeOnly'] == 'true';
         return QrScannerPage(returnCodeOnly: returnCodeOnly);
+      },
+    ),
+    GoRoute(
+      path: Routes.surveyDeepLinkPath,
+      builder: (context, state) {
+        final args = state.extra as SurveyDeepLinkArgs;
+        return SurveyDeepLinkPage(shortCode: args.shortCode);
       },
     ),
     GoRoute(
