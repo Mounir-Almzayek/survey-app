@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/models/survey/section_model.dart';
-import '../../../../core/models/survey/conditional_logic_model.dart';
 import '../../../../core/utils/survey_behavior_manager.dart';
 import '../../models/public_link_start_result.dart';
 import '../../repository/public_links_online_repository.dart';
