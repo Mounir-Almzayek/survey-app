@@ -201,10 +201,11 @@ void main() {
     );
 
     // 5. SubmitCurrentSection: required question unanswered -> errors, no submit
+    var submitCalled = false;
     blocTest<PublicLinkAnsweringBloc, PublicLinkAnsweringState>(
       'SubmitCurrentSection with unanswered required question sets errors',
       build: () {
-        var submitted = false;
+        submitCalled = false;
         return _bloc(
           starter: _successStarter,
           sectionSubmitter: ({
@@ -213,7 +214,7 @@ void main() {
             required sectionId,
             required answers,
           }) async {
-            submitted = true;
+            submitCalled = true;
             return _continueSectionSubmitter(
               shortCode: shortCode,
               responseId: responseId,
@@ -235,6 +236,7 @@ void main() {
         isA<PublicLinkAnsweringSection>()
             .having((s) => s.errors, 'errors', isNotEmpty),
       ],
+      verify: (_) => expect(submitCalled, isFalse),
     );
 
     // 6. SubmitCurrentSection: answered, backend returns next section
