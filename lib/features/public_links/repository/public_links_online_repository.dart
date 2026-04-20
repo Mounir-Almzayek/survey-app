@@ -44,6 +44,22 @@ class PublicLinksOnlineRepository {
     return ValidatedPublicLink.fromJson(data as Map<String, dynamic>);
   }
 
+  /// Public (unauthenticated) survey resolution by short code.
+  /// Used by the deep-link flow: GET /public-link/:short_code
+  static Future<ValidatedPublicLink> getPublicSurveyByShortCode(
+    String shortCode,
+  ) async {
+    final apiRequest = APIRequest(
+      path: '/public-link/$shortCode',
+      method: HTTPMethod.get,
+      authorizationOption: AuthorizationOption.unauthorized,
+    );
+
+    final response = await apiRequest.send();
+    final data = response.data['data'] ?? response.data;
+    return ValidatedPublicLink.fromJson(data as Map<String, dynamic>);
+  }
+
   /// Create a short-lived public link for proxy location capture.
   /// POST /researcher/public-link/short-lived
   /// [body] is typically [CreateShortLivedLinkRequest.toJson] (`survey_id` only).
