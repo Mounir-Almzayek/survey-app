@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/routes/app_routes.dart';
+import '../../../../features/public_links/models/public_link_answering_args.dart';
 import '../../bloc/survey_by_short_code/survey_by_short_code_bloc.dart';
 import '../../bloc/survey_by_short_code/survey_by_short_code_event.dart';
 import '../../bloc/survey_by_short_code/survey_by_short_code_state.dart';
@@ -11,14 +14,9 @@ import '../../bloc/survey_by_short_code/survey_by_short_code_state.dart';
 /// (unauthenticated GET /public-link/:short_code), and renders:
 ///
 ///  - Spinner while Idle | Loading.
-///  - Survey preview (title + greeting) on Loaded. A "Start Survey" button is
-///    shown but navigating into the answering flow requires a dedicated
-///    public-link answering screen (POST /public-link/:short_code/start returns
-///    only the first section, not a full Survey object). That screen is not yet
-///    implemented; the button therefore shows a placeholder message.
-///    TODO(deep-link): implement PublicLinkAnsweringPage that drives the
-///    server-side section-by-section flow
-///    (POST /public-link/:short_code/responses/:response_id/sections/:section_id).
+///  - Survey preview (title + greeting) on Loaded. The "Start Survey" button
+///    navigates to [PublicLinkAnsweringPage] which drives the server-side
+///    section-by-section flow.
 ///  - Error view with Retry on Error. Offline errors auto-retry on reconnect
 ///    (handled inside [SurveyByShortCodeBloc]).
 ///
@@ -109,17 +107,12 @@ class _LoadedBody extends StatelessWidget {
             ],
             FilledButton(
               onPressed: () {
-                // TODO(deep-link): replace with navigation to
-                // PublicLinkAnsweringPage once it is implemented.
-                // The backend's POST /public-link/:short_code/start returns
-                // only the first section (not a full Survey), so
-                // SurveyAnsweringPage cannot be reused directly.
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Survey answering via public link is not yet available '
-                      'in this version.',
-                    ),
+                context.push(
+                  Routes.publicLinkAnsweringPath,
+                  extra: PublicLinkAnsweringArgs(
+                    shortCode: shortCode,
+                    surveyTitle: link.surveyTitle,
+                    requireLocation: link.requireLocation,
                   ),
                 );
               },
