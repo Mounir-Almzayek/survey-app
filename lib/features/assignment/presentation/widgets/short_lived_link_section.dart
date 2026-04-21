@@ -189,7 +189,7 @@ class _ShortLivedLinkContent extends StatelessWidget {
       if (context.mounted) {
         UnifiedSnackbar.error(
           context,
-          message: 'Could not launch URL: ${e.toString()}',
+          message: S.of(context).could_not_launch_url(e.toString()),
         );
       }
     }

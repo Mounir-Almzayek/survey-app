@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/routes/app_routes.dart';
 import '../../../../features/public_links/models/public_link_answering_args.dart';
 import '../../bloc/survey_by_short_code/survey_by_short_code_bloc.dart';
@@ -113,10 +114,11 @@ class _LoadedBody extends StatelessWidget {
                     shortCode: shortCode,
                     surveyTitle: link.surveyTitle,
                     requireLocation: link.requireLocation,
+                    goodbyeMessage: link.goodbyeMessage,
                   ),
                 );
               },
-              child: const Text('Start Survey'),
+              child: Text(S.of(context).start_survey),
             ),
           ],
         ),
@@ -132,10 +134,11 @@ class _ErrorBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = S.of(context);
     final message = switch (kind) {
-      SurveyFetchErrorKind.offline => 'No internet connection',
-      SurveyFetchErrorKind.notFound => 'Survey not found',
-      SurveyFetchErrorKind.serverError => 'Something went wrong',
+      SurveyFetchErrorKind.offline => s.no_internet_connection,
+      SurveyFetchErrorKind.notFound => s.survey_not_found,
+      SurveyFetchErrorKind.serverError => s.something_went_wrong,
     };
 
     return Center(
@@ -154,7 +157,7 @@ class _ErrorBody extends StatelessWidget {
               onPressed: () => context
                   .read<SurveyByShortCodeBloc>()
                   .add(const RetrySurveyFetch()),
-              child: const Text('Retry'),
+              child: Text(s.retry),
             ),
           ],
         ),

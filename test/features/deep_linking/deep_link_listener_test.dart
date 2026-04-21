@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:king_abdulaziz_center_survey_app/core/l10n/generated/l10n.dart';
 import 'package:king_abdulaziz_center_survey_app/core/routes/app_routes.dart';
 import 'package:king_abdulaziz_center_survey_app/features/deep_linking/bloc/deep_link_bloc.dart';
 import 'package:king_abdulaziz_center_survey_app/features/deep_linking/bloc/deep_link_event.dart';
 import 'package:king_abdulaziz_center_survey_app/features/deep_linking/config/deep_link_config.dart';
 import 'package:king_abdulaziz_center_survey_app/features/deep_linking/presentation/deep_link_listener.dart';
 
+import '../../helpers/test_env.dart';
+
 void main() {
+  loadTestEnv();
+
+  // Preload the S translations so the discard dialog (which calls S.of) can
+  // resolve keys once the test tree registers S.delegate.
+  setUpAll(() async {
+    await S.load(const Locale('en'));
+  });
+
   testWidgets('AwaitingDiscardConfirmation shows discard dialog', (tester) async {
     final bloc = DeepLinkBloc(isSurveyInProgress: () => true);
     final host = DeepLinkConfig.expectedHost;
@@ -39,7 +50,12 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MaterialApp.router(routerConfig: router),
+      MaterialApp.router(
+        routerConfig: router,
+        locale: const Locale('en'),
+        supportedLocales: const [Locale('en'), Locale('ar')],
+        localizationsDelegates: const [S.delegate],
+      ),
     );
     // Pump enough frames for the initial GoRouter route to build.
     await tester.pump();
@@ -62,7 +78,7 @@ void main() {
     await tester.pump();
     await tester.pump();
 
-    expect(find.text('Discard current survey?'), findsOneWidget);
+    expect(find.text(S.current.discard_survey_title), findsOneWidget);
 
     await bloc.close();
   });

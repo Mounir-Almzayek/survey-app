@@ -48,3 +48,5 @@ app.*.map.json
 /survey-system/
 /survey-system-doc/
 /survey-system-frontend-new/
+
+.env

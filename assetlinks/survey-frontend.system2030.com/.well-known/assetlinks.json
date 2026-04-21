@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.rs4it.king_abdulaziz_center_survey_app",
+      "sha256_cert_fingerprints": [
+        "16:4C:1C:0C:9D:D4:18:4A:AD:EE:0B:EE:DA:C1:ED:28:93:6E:C5:42:29:D1:5A:07:1E:E8:21:6E:2A:AB:2E:EB",
+        "14:3F:35:FB:78:09:7C:7A:26:86:35:28:71:D9:7B:E0:4C:AD:74:E7:D7:89:D7:A6:F1:64:3E:39:7B:D3:2B:A6"
+      ]
+    }
+  }
+]

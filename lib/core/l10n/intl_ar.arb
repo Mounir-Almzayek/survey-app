@@ -442,5 +442,29 @@
         "type": "int"
       }
     }
+  },
+  "continue_button": "متابعة",
+  "thank_you": "شكراً لك",
+  "response_not_accepted": "لم يُقبل الرد",
+  "response_submitted_successfully": "تم إرسال ردك بنجاح.",
+  "back_to_home": "العودة إلى الرئيسية",
+  "no_internet_connection": "لا يوجد اتصال بالإنترنت",
+  "something_went_wrong": "حدث خطأ ما",
+  "network_error": "خطأ في الشبكة",
+  "location_required_for_survey": "الموقع الجغرافي مطلوب لهذا الاستبيان",
+  "discard_survey_title": "تجاهل الاستبيان الحالي؟",
+  "discard_survey_message": "لديك استبيان قيد التنفيذ. سيؤدي فتح الاستبيان الجديد إلى تجاهل الحالي.",
+  "discard": "تجاهل",
+  "survey_not_found": "الاستبيان غير موجود",
+  "link_status_active": "نشط",
+  "link_status_disabled": "معطّل",
+  "link_status_expired": "منتهي الصلاحية",
+  "could_not_launch_url": "تعذّر فتح الرابط: {error}",
+  "@could_not_launch_url": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

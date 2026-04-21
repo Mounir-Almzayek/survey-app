@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../utils/json_parser.dart';
+
 class QuestionOption extends Equatable {
   final int id;
   final int? questionId;
@@ -19,12 +21,14 @@ class QuestionOption extends Equatable {
 
   factory QuestionOption.fromJson(Map<String, dynamic> json) {
     return QuestionOption(
-      id: json['id'],
-      questionId: json['question_id'],
-      label: json['label'],
-      value: json['value'],
-      order: json['order'],
-      isDefault: json['is_default'],
+      id: JsonParser.asInt(json['id']),
+      questionId: JsonParser.asIntOrNull(json['question_id']),
+      label: JsonParser.asStringOrNull(json['label']),
+      value: JsonParser.asStringOrNull(json['value']),
+      order: JsonParser.asIntOrNull(json['order']),
+      isDefault: json['is_default'] is bool
+          ? json['is_default'] as bool
+          : null,
     );
   }
 

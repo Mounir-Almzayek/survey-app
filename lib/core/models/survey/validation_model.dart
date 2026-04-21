@@ -1,6 +1,19 @@
 import 'package:equatable/equatable.dart';
-import '../../enums/survey_enums.dart';
 
+import '../../enums/survey_enums.dart';
+import '../../utils/json_parser.dart';
+
+/// Validation rule definition (e.g. "Minimum Length", "Email format").
+///
+/// Backend `value_fields` is an **array of field-spec objects**, e.g.
+/// ```json
+/// "value_fields": [
+///   {"type": "positive_integer", "field": "min", "ar_title": "..."}
+/// ]
+/// ```
+/// — typing this as `Map<String, dynamic>?` causes a runtime
+/// `List<dynamic> is not a subtype of Map<String, dynamic>?` error on
+/// implicit assignment, which is what we hit before this fix.
 class Validation extends Equatable {
   final int id;
   final ValidationType type;
@@ -10,7 +23,11 @@ class Validation extends Equatable {
   final String? enContent;
   final String? arContent;
   final bool? needsValue;
-  final Map<String, dynamic>? valueFields;
+
+  /// Specs for the parameter inputs of this rule (one entry per param,
+  /// e.g. `min`/`max`). Empty when the rule has no configurable params.
+  final List<Map<String, dynamic>> valueFields;
+
   final bool? isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -25,7 +42,7 @@ class Validation extends Equatable {
     this.enContent,
     this.arContent,
     this.needsValue,
-    this.valueFields,
+    this.valueFields = const [],
     this.isActive,
     this.createdAt,
     this.updatedAt,
@@ -34,27 +51,24 @@ class Validation extends Equatable {
 
   factory Validation.fromJson(Map<String, dynamic> json) {
     return Validation(
-      id: json['id'],
+      id: JsonParser.asInt(json['id']),
       type: json['type'] != null
           ? ValidationType.fromJson(json['type'])
           : ValidationType.questions,
-      validation: json['validation'],
-      enTitle: json['en_title'],
-      arTitle: json['ar_title'],
-      enContent: json['en_content'],
-      arContent: json['ar_content'],
-      needsValue: json['needs_value'],
-      valueFields: json['value_fields'],
-      isActive: json['is_active'],
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.tryParse(json['updated_at'].toString())
-          : null,
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.tryParse(json['deleted_at'].toString())
-          : null,
+      validation: JsonParser.asStringOrNull(json['validation']),
+      enTitle: JsonParser.asStringOrNull(json['en_title']),
+      arTitle: JsonParser.asStringOrNull(json['ar_title']),
+      enContent: JsonParser.asStringOrNull(json['en_content']),
+      arContent: JsonParser.asStringOrNull(json['ar_content']),
+      needsValue: json['needs_value'] is bool ? json['needs_value'] as bool : null,
+      valueFields: JsonParser.parseList<Map<String, dynamic>>(
+        json['value_fields'],
+        (m) => m,
+      ),
+      isActive: json['is_active'] is bool ? json['is_active'] as bool : null,
+      createdAt: JsonParser.asDateTimeOrNull(json['created_at']),
+      updatedAt: JsonParser.asDateTimeOrNull(json['updated_at']),
+      deletedAt: JsonParser.asDateTimeOrNull(json['deleted_at']),
     );
   }
 
@@ -78,18 +92,18 @@ class Validation extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    type,
-    validation,
-    enTitle,
-    arTitle,
-    enContent,
-    arContent,
-    needsValue,
-    valueFields,
-    isActive,
-    createdAt,
-    updatedAt,
-    deletedAt,
-  ];
+        id,
+        type,
+        validation,
+        enTitle,
+        arTitle,
+        enContent,
+        arContent,
+        needsValue,
+        valueFields,
+        isActive,
+        createdAt,
+        updatedAt,
+        deletedAt,
+      ];
 }

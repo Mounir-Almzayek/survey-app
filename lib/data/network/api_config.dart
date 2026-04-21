@@ -61,4 +61,14 @@ class APIConfig {
     final loc = locale ?? defaultLocale;
     return "$surveyFrontendBaseUrl/$loc/survey/$shortCode?lat=$latitude&lng=$longitude";
   }
+
+  /// Build device-registration deep link for a given token.
+  ///
+  /// Uses the env-selected frontend host and [SURVEY_DEFAULT_LOCALE] (or an
+  /// explicit [locale] override). Shape: `<base>/<locale>/device-registration?token=<token>`.
+  static String buildDeviceRegistrationUrl(String token, {String? locale}) {
+    final loc = locale ?? defaultLocale;
+    final encoded = Uri.encodeQueryComponent(token);
+    return "$surveyFrontendBaseUrl/$loc/device-registration?token=$encoded";
+  }
 }

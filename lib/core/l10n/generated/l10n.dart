@@ -3109,6 +3109,176 @@ class S {
       args: [count],
     );
   }
+
+  /// `Continue`
+  String get continue_button {
+    return Intl.message(
+      'Continue',
+      name: 'continue_button',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thank you`
+  String get thank_you {
+    return Intl.message(
+      'Thank you',
+      name: 'thank_you',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Response Not Accepted`
+  String get response_not_accepted {
+    return Intl.message(
+      'Response Not Accepted',
+      name: 'response_not_accepted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your response has been submitted successfully.`
+  String get response_submitted_successfully {
+    return Intl.message(
+      'Your response has been submitted successfully.',
+      name: 'response_submitted_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back to Home`
+  String get back_to_home {
+    return Intl.message(
+      'Back to Home',
+      name: 'back_to_home',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No internet connection`
+  String get no_internet_connection {
+    return Intl.message(
+      'No internet connection',
+      name: 'no_internet_connection',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Something went wrong`
+  String get something_went_wrong {
+    return Intl.message(
+      'Something went wrong',
+      name: 'something_went_wrong',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network error`
+  String get network_error {
+    return Intl.message(
+      'Network error',
+      name: 'network_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Location is required for this survey`
+  String get location_required_for_survey {
+    return Intl.message(
+      'Location is required for this survey',
+      name: 'location_required_for_survey',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Discard current survey?`
+  String get discard_survey_title {
+    return Intl.message(
+      'Discard current survey?',
+      name: 'discard_survey_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have a survey in progress. Opening the new survey will discard the current one.`
+  String get discard_survey_message {
+    return Intl.message(
+      'You have a survey in progress. Opening the new survey will discard the current one.',
+      name: 'discard_survey_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Discard`
+  String get discard {
+    return Intl.message(
+      'Discard',
+      name: 'discard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Survey not found`
+  String get survey_not_found {
+    return Intl.message(
+      'Survey not found',
+      name: 'survey_not_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active`
+  String get link_status_active {
+    return Intl.message(
+      'Active',
+      name: 'link_status_active',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Disabled`
+  String get link_status_disabled {
+    return Intl.message(
+      'Disabled',
+      name: 'link_status_disabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expired`
+  String get link_status_expired {
+    return Intl.message(
+      'Expired',
+      name: 'link_status_expired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Could not launch URL: {error}`
+  String could_not_launch_url(String error) {
+    return Intl.message(
+      'Could not launch URL: $error',
+      name: 'could_not_launch_url',
+      desc: '',
+      args: [error],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -23,6 +23,44 @@
           "other_platform_oauth_client": []
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222223158660:android:deaddeaddeaddeaddeaddead",
+        "android_client_info": {
+          "package_name": "com.rs4it.king_abdulaziz_center_survey_app.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtKnKOF04YQug5gLUHo0p96sJY0nn_yCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222223158660:android:beefbeefbeefbeefbeefbeef",
+        "android_client_info": {
+          "package_name": "com.rs4it.king_abdulaziz_center_survey_app.staging"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtKnKOF04YQug5gLUHo0p96sJY0nn_yCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"

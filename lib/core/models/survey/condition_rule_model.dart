@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+
 import '../../enums/survey_enums.dart';
+import '../../utils/json_parser.dart';
 
 class ConditionRule extends Equatable {
   final int id;
@@ -26,9 +28,9 @@ class ConditionRule extends Equatable {
 
   factory ConditionRule.fromJson(Map<String, dynamic> json) {
     return ConditionRule(
-      id: json['id'],
-      conditionalLogicId: json['conditional_logic_id'],
-      questionId: json['question_id'],
+      id: JsonParser.asInt(json['id']),
+      conditionalLogicId: JsonParser.asIntOrNull(json['conditional_logic_id']),
+      questionId: JsonParser.asIntOrNull(json['question_id']),
       operator: json['operator'] != null
           ? ConditionOperator.fromJson(json['operator'])
           : null,
@@ -36,13 +38,9 @@ class ConditionRule extends Equatable {
       joinType: json['join_type'] != null
           ? ConditionJoinType.fromJson(json['join_type'])
           : null,
-      order: json['order'],
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.tryParse(json['updated_at'].toString())
-          : null,
+      order: JsonParser.asIntOrNull(json['order']),
+      createdAt: JsonParser.asDateTimeOrNull(json['created_at']),
+      updatedAt: JsonParser.asDateTimeOrNull(json['updated_at']),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../enums/survey_enums.dart';
+import '../../utils/json_parser.dart';
 import 'question_option_model.dart';
 import 'question_row_model.dart';
 import 'question_validation_model.dart';
@@ -38,31 +39,30 @@ class Question extends Equatable {
 
   factory Question.fromJson(Map<String, dynamic> json) {
     return Question(
-      id: json['id'],
-      sectionId: json['section_id'],
+      id: JsonParser.asInt(json['id']),
+      sectionId: JsonParser.asIntOrNull(json['section_id']),
       type: json['type'] != null ? QuestionType.fromJson(json['type']) : null,
-      label: json['label'],
-      helpText: json['help_text'],
-      isRequired: json['is_required'],
-      order: json['order'],
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())
+      label: JsonParser.asStringOrNull(json['label']),
+      helpText: JsonParser.asStringOrNull(json['help_text']),
+      isRequired: json['is_required'] is bool
+          ? json['is_required'] as bool
           : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.tryParse(json['updated_at'].toString())
-          : null,
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.tryParse(json['deleted_at'].toString())
-          : null,
-      questionOptions: (json['question_options'] as List?)
-          ?.map((e) => QuestionOption.fromJson(e))
-          .toList(),
-      questionRows: (json['question_rows'] as List?)
-          ?.map((e) => QuestionRow.fromJson(e))
-          .toList(),
-      questionValidations: (json['question_validations'] as List?)
-          ?.map((e) => QuestionValidation.fromJson(e))
-          .toList(),
+      order: JsonParser.asIntOrNull(json['order']),
+      createdAt: JsonParser.asDateTimeOrNull(json['created_at']),
+      updatedAt: JsonParser.asDateTimeOrNull(json['updated_at']),
+      deletedAt: JsonParser.asDateTimeOrNull(json['deleted_at']),
+      questionOptions: JsonParser.parseList(
+        json['question_options'],
+        QuestionOption.fromJson,
+      ),
+      questionRows: JsonParser.parseList(
+        json['question_rows'],
+        QuestionRow.fromJson,
+      ),
+      questionValidations: JsonParser.parseList(
+        json['question_validations'],
+        QuestionValidation.fromJson,
+      ),
     );
   }
 

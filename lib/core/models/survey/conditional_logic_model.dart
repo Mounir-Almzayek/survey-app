@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+
+import '../../utils/json_parser.dart';
 import 'condition_rule_model.dart';
 import 'condition_action_model.dart';
 
@@ -28,23 +30,21 @@ class ConditionalLogic extends Equatable {
 
   factory ConditionalLogic.fromJson(Map<String, dynamic> json) {
     return ConditionalLogic(
-      id: json['id'],
-      surveyId: json['survey_id'],
-      name: json['name'],
-      enabled: json['enabled'],
-      order: json['order'],
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.tryParse(json['updated_at'].toString())
-          : null,
-      conditionRules: (json['condition_rules'] as List?)
-          ?.map((e) => ConditionRule.fromJson(e))
-          .toList(),
-      actions: (json['actions'] as List?)
-          ?.map((e) => ConditionAction.fromJson(e))
-          .toList(),
+      id: JsonParser.asInt(json['id']),
+      surveyId: JsonParser.asIntOrNull(json['survey_id']),
+      name: JsonParser.asStringOrNull(json['name']),
+      enabled: json['enabled'] is bool ? json['enabled'] as bool : null,
+      order: JsonParser.asIntOrNull(json['order']),
+      createdAt: JsonParser.asDateTimeOrNull(json['created_at']),
+      updatedAt: JsonParser.asDateTimeOrNull(json['updated_at']),
+      conditionRules: JsonParser.parseList(
+        json['condition_rules'],
+        ConditionRule.fromJson,
+      ),
+      actions: JsonParser.parseList(
+        json['actions'],
+        ConditionAction.fromJson,
+      ),
     );
   }
 

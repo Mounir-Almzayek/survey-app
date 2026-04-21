@@ -441,5 +441,29 @@
         "type": "int"
       }
     }
+  },
+  "continue_button": "Continue",
+  "thank_you": "Thank you",
+  "response_not_accepted": "Response Not Accepted",
+  "response_submitted_successfully": "Your response has been submitted successfully.",
+  "back_to_home": "Back to Home",
+  "no_internet_connection": "No internet connection",
+  "something_went_wrong": "Something went wrong",
+  "network_error": "Network error",
+  "location_required_for_survey": "Location is required for this survey",
+  "discard_survey_title": "Discard current survey?",
+  "discard_survey_message": "You have a survey in progress. Opening the new survey will discard the current one.",
+  "discard": "Discard",
+  "survey_not_found": "Survey not found",
+  "link_status_active": "Active",
+  "link_status_disabled": "Disabled",
+  "link_status_expired": "Expired",
+  "could_not_launch_url": "Could not launch URL: {error}",
+  "@could_not_launch_url": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

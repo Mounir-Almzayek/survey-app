@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../core/models/survey/question_model.dart';
-import '../../../core/routes/app_routes.dart';
-import '../../../core/utils/survey_behavior_manager.dart';
-import '../../../core/widgets/survey/survey_question_renderer.dart';
+import '../../../core/l10n/generated/l10n.dart';
+import '../../../core/widgets/unified_snackbar.dart';
 import '../../../features/assignment/presentation/widgets/demographics_dialog.dart';
+import '../../../features/assignment/state/survey_in_progress_notifier.dart';
 import '../../../features/device_location/service/location_service.dart';
 import '../bloc/answering/public_link_answering_bloc.dart';
 import '../bloc/answering/public_link_answering_event.dart';
 import '../bloc/answering/public_link_answering_state.dart';
+import 'widgets/answering_completion_view.dart';
+import 'widgets/answering_error_view.dart';
+import 'widgets/answering_loading_view.dart';
+import 'widgets/answering_section_view.dart';
 
+/// Entry point for the public-link answering flow.
+///
+/// Owned by the deep-link path. Drives the demographics dialog, optional
+/// location capture, and the section-by-section flow served by the backend.
 class PublicLinkAnsweringPage extends StatelessWidget {
   final String shortCode;
   final String surveyTitle;
   final bool requireLocation;
+
+  /// Survey-author goodbye copy surfaced on the completion screen. Empty when
+  /// the survey didn't define one — UI falls back to a default thank-you.
+  final String goodbyeMessage;
 
   const PublicLinkAnsweringPage({
     super.key,
     required this.shortCode,
     required this.surveyTitle,
     required this.requireLocation,
+    this.goodbyeMessage = '',
   });
 
   @override
@@ -31,22 +42,26 @@ class PublicLinkAnsweringPage extends StatelessWidget {
       child: _PublicLinkAnsweringView(
         surveyTitle: surveyTitle,
         requireLocation: requireLocation,
+        goodbyeMessage: goodbyeMessage,
       ),
     );
   }
 }
 
 // ---------------------------------------------------------------------------
-// View – owns the Demographics bootstrap and delegates to the right sub-widget
+// View – owns the demographics bootstrap and the in-progress flag for deep
+// link gating, and delegates rendering to the right view per state.
 // ---------------------------------------------------------------------------
 
 class _PublicLinkAnsweringView extends StatefulWidget {
   final String surveyTitle;
   final bool requireLocation;
+  final String goodbyeMessage;
 
   const _PublicLinkAnsweringView({
     required this.surveyTitle,
     required this.requireLocation,
+    required this.goodbyeMessage,
   });
 
   @override
@@ -58,8 +73,16 @@ class _PublicLinkAnsweringViewState extends State<_PublicLinkAnsweringView> {
   @override
   void initState() {
     super.initState();
-    // Show demographics dialog on the next frame so the scaffold is ready.
+    // Mark a survey as in progress so DeepLinkBloc can gate any incoming link
+    // with a "discard current?" prompt instead of silently navigating away.
+    SurveyInProgressNotifier.instance.value = true;
     WidgetsBinding.instance.addPostFrameCallback((_) => _bootstrap());
+  }
+
+  @override
+  void dispose() {
+    SurveyInProgressNotifier.instance.value = false;
+    super.dispose();
   }
 
   Future<void> _bootstrap() async {
@@ -75,7 +98,6 @@ class _PublicLinkAnsweringViewState extends State<_PublicLinkAnsweringView> {
     if (!mounted) return;
 
     if (result == null) {
-      // User dismissed without picking -> go back
       Navigator.of(context).pop();
       return;
     }
@@ -91,10 +113,9 @@ class _PublicLinkAnsweringViewState extends State<_PublicLinkAnsweringView> {
         location = (latitude: loc.latitude, longitude: loc.longitude);
       } catch (_) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Location is required for this survey'),
-          ),
+        UnifiedSnackbar.error(
+          context,
+          message: S.of(context).location_required_for_survey,
         );
         Navigator.of(context).pop();
         return;
@@ -117,234 +138,25 @@ class _PublicLinkAnsweringViewState extends State<_PublicLinkAnsweringView> {
           PublicLinkAnsweringInitial() ||
           PublicLinkAnsweringCollectingDemographics() ||
           PublicLinkAnsweringStarting() =>
-            _LoadingScaffold(title: widget.surveyTitle),
-          PublicLinkAnsweringSection s => _SectionScaffold(
+            AnsweringLoadingView(surveyTitle: widget.surveyTitle),
+          PublicLinkAnsweringSection s => AnsweringSectionView(
               state: s,
               surveyTitle: widget.surveyTitle,
             ),
-          PublicLinkAnsweringCompleted c => _CompletedScaffold(state: c),
-          PublicLinkAnsweringError e => _ErrorScaffold(
-              state: e,
+          PublicLinkAnsweringCompleted c => AnsweringCompletionView(
+              rejectionReason: c.rejectionReason,
+              goodbyeMessage: widget.goodbyeMessage,
+            ),
+          PublicLinkAnsweringError e => AnsweringErrorView(
+              kind: e.kind,
+              fallbackMessage: e.message,
               surveyTitle: widget.surveyTitle,
+              onRetry: () => context
+                  .read<PublicLinkAnsweringBloc>()
+                  .add(const Retry()),
             ),
         };
       },
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Loading scaffold
-// ---------------------------------------------------------------------------
-
-class _LoadingScaffold extends StatelessWidget {
-  final String title;
-
-  const _LoadingScaffold({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: const Center(child: CircularProgressIndicator()),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Section scaffold
-// ---------------------------------------------------------------------------
-
-class _SectionScaffold extends StatelessWidget {
-  final PublicLinkAnsweringSection state;
-  final String surveyTitle;
-
-  const _SectionScaffold({required this.state, required this.surveyTitle});
-
-  @override
-  Widget build(BuildContext context) {
-    final behavior = SurveyBehaviorManager.calculateBehavior(
-      logics: state.conditionalLogics,
-      answers: state.answers,
-    );
-    final visibilityMap =
-        behavior['visibility'] as Map<String, bool>? ?? {};
-
-    bool isVisible(int id) => visibilityMap['question_$id'] ?? true;
-
-    final visibleQuestions = (state.section.questions ?? <Question>[])
-        .where((q) => isVisible(q.id))
-        .toList();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(surveyTitle),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(4),
-          child: const LinearProgressIndicator(),
-        ),
-      ),
-      body: Column(
-        children: [
-          // Section title
-          if (state.section.title != null && state.section.title!.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Text(
-                state.section.title!,
-                style: Theme.of(context).textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-          // Questions
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: visibleQuestions.length,
-              itemBuilder: (context, index) {
-                final q = visibleQuestions[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: SurveyQuestionRenderer(
-                    question: q,
-                    value: state.answers[q.id],
-                    onAnswerChange: (val) => context
-                        .read<PublicLinkAnsweringBloc>()
-                        .add(AnswerChanged(questionId: q.id, value: val)),
-                    errorText: state.errors[q.id],
-                    isVisible: true,
-                    isEditable: !state.submitting,
-                  ),
-                );
-              },
-            ),
-          ),
-          // Bottom bar
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: FilledButton(
-                onPressed: state.submitting
-                    ? null
-                    : () => context
-                        .read<PublicLinkAnsweringBloc>()
-                        .add(const SubmitCurrentSection()),
-                child: state.submitting
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                    : const Text('Continue'),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Completed scaffold
-// ---------------------------------------------------------------------------
-
-class _CompletedScaffold extends StatelessWidget {
-  final PublicLinkAnsweringCompleted state;
-
-  const _CompletedScaffold({required this.state});
-
-  @override
-  Widget build(BuildContext context) {
-    final hasRejection = state.rejectionReason != null &&
-        state.rejectionReason!.isNotEmpty;
-
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  hasRejection ? 'Response Not Accepted' : 'Thank you',
-                  style: Theme.of(context).textTheme.headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                if (hasRejection)
-                  Text(
-                    state.rejectionReason!,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  )
-                else
-                  Text(
-                    'Your response has been submitted successfully.',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                const SizedBox(height: 32),
-                FilledButton(
-                  onPressed: () => context.go(Routes.splashPath),
-                  child: const Text('Back to home'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Error scaffold
-// ---------------------------------------------------------------------------
-
-class _ErrorScaffold extends StatelessWidget {
-  final PublicLinkAnsweringError state;
-  final String surveyTitle;
-
-  const _ErrorScaffold({required this.state, required this.surveyTitle});
-
-  @override
-  Widget build(BuildContext context) {
-    final message = switch (state.kind) {
-      PublicLinkAnsweringErrorKind.offline => 'No internet connection',
-      PublicLinkAnsweringErrorKind.server => 'Something went wrong',
-      PublicLinkAnsweringErrorKind.unknown => state.message,
-    };
-
-    return Scaffold(
-      appBar: AppBar(title: Text(surveyTitle)),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                message,
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              OutlinedButton(
-                onPressed: () => context
-                    .read<PublicLinkAnsweringBloc>()
-                    .add(const Retry()),
-                child: const Text('Retry'),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

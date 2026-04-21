@@ -1,11 +1,19 @@
 import 'package:equatable/equatable.dart';
+
+import '../../utils/json_parser.dart';
 import 'validation_model.dart';
 
+/// Per-question instance of a [Validation] rule, with the concrete parameter
+/// values supplied for that question (e.g. `{"min": 10}`).
 class QuestionValidation extends Equatable {
   final int id;
   final int? questionId;
   final int? validationId;
-  final Map<String, dynamic>? values;
+
+  /// Parameter values for the validation (e.g. `{"min": 10, "max": 100}`).
+  /// Object on the wire — defended against rogue list/scalar shapes.
+  final Map<String, dynamic> values;
+
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final Validation? validation;
@@ -14,7 +22,7 @@ class QuestionValidation extends Equatable {
     required this.id,
     this.questionId,
     this.validationId,
-    this.values,
+    this.values = const {},
     this.createdAt,
     this.updatedAt,
     this.validation,
@@ -22,19 +30,16 @@ class QuestionValidation extends Equatable {
 
   factory QuestionValidation.fromJson(Map<String, dynamic> json) {
     return QuestionValidation(
-      id: json['id'],
-      questionId: json['question_id'],
-      validationId: json['validation_id'],
-      values: json['values'],
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.tryParse(json['updated_at'].toString())
-          : null,
-      validation: json['validation'] != null
-          ? Validation.fromJson(json['validation'])
-          : null,
+      id: JsonParser.asInt(json['id']),
+      questionId: JsonParser.asIntOrNull(json['question_id']),
+      validationId: JsonParser.asIntOrNull(json['validation_id']),
+      values: JsonParser.asMap(json['values']),
+      createdAt: JsonParser.asDateTimeOrNull(json['created_at']),
+      updatedAt: JsonParser.asDateTimeOrNull(json['updated_at']),
+      validation: JsonParser.parseObject(
+        json['validation'],
+        Validation.fromJson,
+      ),
     );
   }
 
@@ -52,12 +57,12 @@ class QuestionValidation extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    questionId,
-    validationId,
-    values,
-    createdAt,
-    updatedAt,
-    validation,
-  ];
+        id,
+        questionId,
+        validationId,
+        values,
+        createdAt,
+        updatedAt,
+        validation,
+      ];
 }

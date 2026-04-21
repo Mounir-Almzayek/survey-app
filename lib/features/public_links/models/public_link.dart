@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/models/survey/survey_model.dart';
 import '../../../core/styles/app_colors.dart';
 import '../../../data/network/api_config.dart';
@@ -30,11 +31,11 @@ enum PublicLinkStatus {
   String get label {
     switch (this) {
       case PublicLinkStatus.active:
-        return 'Active';
+        return S.current.link_status_active;
       case PublicLinkStatus.disabled:
-        return 'Disabled';
+        return S.current.link_status_disabled;
       case PublicLinkStatus.expired:
-        return 'Expired';
+        return S.current.link_status_expired;
     }
   }
 

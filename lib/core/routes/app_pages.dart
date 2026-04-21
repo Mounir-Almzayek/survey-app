@@ -12,8 +12,10 @@ import '../../features/assignment/presentation/pages/survey_answering_page.dart'
 import '../../features/assignment/presentation/pages/completed_responses_page.dart';
 import '../../features/assignment/presentation/pages/completed_response_view_page.dart';
 import '../../features/assignment/presentation/pages/survey_deep_link_page.dart';
+import '../../features/deep_linking/models/deep_link.dart';
 import '../../features/deep_linking/models/device_registration_args.dart';
 import '../../features/deep_linking/models/survey_deep_link_args.dart';
+import '../../features/deep_linking/service/deep_link_parser.dart';
 import '../../features/custody/presentation/custody_transfer_page.dart';
 import '../../features/custody/presentation/custody_verification_page.dart';
 import '../../features/public_links/models/public_link_answering_args.dart';
@@ -31,6 +33,35 @@ class Pages {
 final appPages = GoRouter(
   navigatorKey: Pages.navigatorKey,
   initialLocation: Routes.splashPath,
+  redirect: (context, state) {
+    // Android App Links / iOS Universal Links are delivered by the framework
+    // as absolute URLs (e.g. "https://host/ar/device-registration?token=...").
+    // GoRouter can't match those against its internal paths and throws
+    // "no routes for location". Parse the URL with DeepLinkParser and rewrite
+    // to the matching internal path; internal navigations (no scheme) pass
+    // through untouched.
+    final uri = state.uri;
+    if (!uri.hasScheme) return null;
+
+    final link = DeepLinkParser.parse(uri);
+    switch (link) {
+      case RegisterDeviceLink(:final token):
+        return Uri(
+          path: Routes.deviceRegistrationPath,
+          queryParameters: {
+            'token': token,
+            'fromDeepLink': 'true',
+          },
+        ).toString();
+      case SurveyLink(:final shortCode):
+        return Uri(
+          path: Routes.surveyDeepLinkPath,
+          queryParameters: {'shortCode': shortCode},
+        ).toString();
+      case UnknownLink():
+        return Routes.splashPath;
+    }
+  },
   routes: [
     GoRoute(
       path: Routes.splashPath,
@@ -77,7 +108,12 @@ final appPages = GoRouter(
           );
         }
         final token = state.uri.queryParameters['token'];
-        return DeviceRegistrationPage(token: token);
+        final fromDeepLink =
+            state.uri.queryParameters['fromDeepLink'] == 'true';
+        return DeviceRegistrationPage(
+          token: token,
+          fromDeepLink: fromDeepLink,
+        );
       },
     ),
     GoRoute(
@@ -102,8 +138,12 @@ final appPages = GoRouter(
     GoRoute(
       path: Routes.surveyDeepLinkPath,
       builder: (context, state) {
-        final args = state.extra as SurveyDeepLinkArgs;
-        return SurveyDeepLinkPage(shortCode: args.shortCode);
+        final args = state.extra;
+        if (args is SurveyDeepLinkArgs) {
+          return SurveyDeepLinkPage(shortCode: args.shortCode);
+        }
+        final shortCode = state.uri.queryParameters['shortCode'] ?? '';
+        return SurveyDeepLinkPage(shortCode: shortCode);
       },
     ),
     GoRoute(
@@ -139,6 +179,7 @@ final appPages = GoRouter(
           shortCode: args.shortCode,
           surveyTitle: args.surveyTitle,
           requireLocation: args.requireLocation,
+          goodbyeMessage: args.goodbyeMessage,
         );
       },
     ),

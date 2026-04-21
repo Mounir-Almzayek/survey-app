@@ -1,9 +1,31 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
     id("com.google.gms.google-services")
+}
+
+// Load the Flutter project's `.env` at configure time so that the App Links host
+// declared in AndroidManifest stays in sync with SURVEY_FRONTEND_BASE_URL_<ENV>.
+val dotenv = Properties().apply {
+    val envFile = rootProject.file("../.env")
+    if (envFile.exists()) {
+        FileInputStream(envFile).use { load(it) }
+    }
+}
+
+fun envHost(key: String, fallback: String): String {
+    val raw = dotenv.getProperty(key)?.trim().orEmpty()
+    if (raw.isEmpty()) return fallback
+    return raw
+        .removePrefix("https://")
+        .removePrefix("http://")
+        .substringBefore('/')
+        .substringBefore(':')
 }
 
 android {
@@ -38,19 +60,22 @@ android {
             dimension = "env"
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
-            manifestPlaceholders["deepLinkHost"] = "dev.survey-frontend.system2030.com"
+            manifestPlaceholders["deepLinkHost"] =
+                envHost("SURVEY_FRONTEND_BASE_URL_DEV", "survey-front-internal.system2030.com")
             manifestPlaceholders["appLabelSuffix"] = " Dev"
         }
         create("staging") {
             dimension = "env"
             applicationIdSuffix = ".staging"
             versionNameSuffix = "-staging"
-            manifestPlaceholders["deepLinkHost"] = "staging.survey-frontend.system2030.com"
+            manifestPlaceholders["deepLinkHost"] =
+                envHost("SURVEY_FRONTEND_BASE_URL_STAGING", "survey-front-internal.system2030.com")
             manifestPlaceholders["appLabelSuffix"] = " Staging"
         }
         create("prod") {
             dimension = "env"
-            manifestPlaceholders["deepLinkHost"] = "survey-frontend.system2030.com"
+            manifestPlaceholders["deepLinkHost"] =
+                envHost("SURVEY_FRONTEND_BASE_URL_PROD", "survey-frontend.system2030.com")
             manifestPlaceholders["appLabelSuffix"] = ""
         }
     }

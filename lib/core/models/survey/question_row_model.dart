@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../utils/json_parser.dart';
+
 class QuestionRow extends Equatable {
   final int id;
   final int? questionId;
@@ -23,20 +25,14 @@ class QuestionRow extends Equatable {
 
   factory QuestionRow.fromJson(Map<String, dynamic> json) {
     return QuestionRow(
-      id: json['id'],
-      questionId: json['question_id'],
-      label: json['label'],
-      value: json['value'],
-      order: json['order'],
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.tryParse(json['updated_at'].toString())
-          : null,
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.tryParse(json['deleted_at'].toString())
-          : null,
+      id: JsonParser.asInt(json['id']),
+      questionId: JsonParser.asIntOrNull(json['question_id']),
+      label: JsonParser.asStringOrNull(json['label']),
+      value: JsonParser.asStringOrNull(json['value']),
+      order: JsonParser.asIntOrNull(json['order']),
+      createdAt: JsonParser.asDateTimeOrNull(json['created_at']),
+      updatedAt: JsonParser.asDateTimeOrNull(json['updated_at']),
+      deletedAt: JsonParser.asDateTimeOrNull(json['deleted_at']),
     );
   }
 
@@ -55,13 +51,13 @@ class QuestionRow extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    questionId,
-    label,
-    value,
-    order,
-    createdAt,
-    updatedAt,
-    deletedAt,
-  ];
+        id,
+        questionId,
+        label,
+        value,
+        order,
+        createdAt,
+        updatedAt,
+        deletedAt,
+      ];
 }

@@ -26,7 +26,7 @@ class SurveyValidator {
 
         final enTitle = (validation.enTitle ?? '').toLowerCase();
         final arTitle = (validation.arTitle ?? '');
-        final values = qv.values ?? {};
+        final values = qv.values;
 
         // 1. Manual Logical Validation (Safer than pure Regex for ranges)
         bool handledLogically = false;

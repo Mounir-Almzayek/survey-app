@@ -39,21 +39,36 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
+                <!-- Host is injected per flavor via manifestPlaceholders["deepLinkHost"],
+                     which build.gradle.kts derives from SURVEY_FRONTEND_BASE_URL_<ENV>
+                     in the project-root .env. No hardcoded domain here. -->
+                <!-- Legacy (register-device) paths, kept for backward compatibility. -->
                 <data android:scheme="https"
                       android:host="${deepLinkHost}"
                       android:pathPrefix="/register-device"/>
                 <data android:scheme="https"
                       android:host="${deepLinkHost}"
-                      android:pathPrefix="/survey"/>
-                <data android:scheme="https"
-                      android:host="${deepLinkHost}"
                       android:pathPrefix="/ar/register-device"/>
                 <data android:scheme="https"
                       android:host="${deepLinkHost}"
-                      android:pathPrefix="/ar/survey"/>
+                      android:pathPrefix="/en/register-device"/>
+                <!-- Canonical (device-registration) paths. -->
                 <data android:scheme="https"
                       android:host="${deepLinkHost}"
-                      android:pathPrefix="/en/register-device"/>
+                      android:pathPrefix="/device-registration"/>
+                <data android:scheme="https"
+                      android:host="${deepLinkHost}"
+                      android:pathPrefix="/ar/device-registration"/>
+                <data android:scheme="https"
+                      android:host="${deepLinkHost}"
+                      android:pathPrefix="/en/device-registration"/>
+                <!-- Survey short-link paths. -->
+                <data android:scheme="https"
+                      android:host="${deepLinkHost}"
+                      android:pathPrefix="/survey"/>
+                <data android:scheme="https"
+                      android:host="${deepLinkHost}"
+                      android:pathPrefix="/ar/survey"/>
                 <data android:scheme="https"
                       android:host="${deepLinkHost}"
                       android:pathPrefix="/en/survey"/>

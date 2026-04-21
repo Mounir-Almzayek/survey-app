@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+
 import '../../enums/survey_enums.dart';
+import '../../utils/json_parser.dart';
 
 class ConditionAction extends Equatable {
   final int id;
@@ -26,23 +28,19 @@ class ConditionAction extends Equatable {
 
   factory ConditionAction.fromJson(Map<String, dynamic> json) {
     return ConditionAction(
-      id: json['id'],
-      conditionalLogicId: json['conditional_logic_id'],
+      id: JsonParser.asInt(json['id']),
+      conditionalLogicId: JsonParser.asIntOrNull(json['conditional_logic_id']),
       targetType: json['target_type'] != null
           ? ActionTargetType.fromJson(json['target_type'])
           : null,
-      targetId: json['target_id'],
+      targetId: JsonParser.asIntOrNull(json['target_id']),
       actionType: json['action_type'] != null
           ? ActionType.fromJson(json['action_type'])
           : null,
-      params: json['params'],
-      order: json['order'],
-      createdAt: json['created_at'] != null
-          ? DateTime.tryParse(json['created_at'].toString())
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.tryParse(json['updated_at'].toString())
-          : null,
+      params: JsonParser.asMapOrNull(json['params']),
+      order: JsonParser.asIntOrNull(json['order']),
+      createdAt: JsonParser.asDateTimeOrNull(json['created_at']),
+      updatedAt: JsonParser.asDateTimeOrNull(json['updated_at']),
     );
   }
 

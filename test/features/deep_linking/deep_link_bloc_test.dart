@@ -5,7 +5,10 @@ import 'package:king_abdulaziz_center_survey_app/features/deep_linking/bloc/deep
 import 'package:king_abdulaziz_center_survey_app/features/deep_linking/bloc/deep_link_state.dart';
 import 'package:king_abdulaziz_center_survey_app/features/deep_linking/config/deep_link_config.dart';
 
+import '../../helpers/test_env.dart';
+
 void main() {
+  loadTestEnv();
   final host = DeepLinkConfig.expectedHost;
 
   DeepLinkBloc make({bool surveyInProgress = false}) => DeepLinkBloc(

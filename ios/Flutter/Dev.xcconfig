@@ -1,2 +1,4 @@
 #include "Generated.xcconfig"
-DEEP_LINK_HOST = dev.survey-frontend.system2030.com
+// Keep in sync with SURVEY_FRONTEND_BASE_URL_DEV in the project-root .env.
+// Used by Runner.entitlements (applinks:$(DEEP_LINK_HOST)).
+DEEP_LINK_HOST = survey-front-internal.system2030.com

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../data/network/api_config.dart';
 import '../../../device_location/service/location_service.dart';
 import '../../models/create_short_lived_link_request.dart';
@@ -49,7 +50,7 @@ class CreateShortLivedLinkBloc
           if (!isClosed) {
             emit(
               ShortLivedLinkError(
-                'Location permission is required to create the link',
+                S.current.location_required_for_short_link,
                 request: request,
                 surveyLanguage: state.surveyLanguage,
               ),

@@ -1,9 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../core/l10n/generated/l10n.dart';
+import '../../../../core/models/survey/section_model.dart';
 import '../../../../core/utils/survey_behavior_manager.dart';
+import '../../../../core/utils/survey_validator.dart';
 import '../../models/public_link_start_result.dart';
 import '../../repository/public_links_online_repository.dart';
+import '../../utils/section_defaults_resolver.dart';
 import 'public_link_answering_event.dart';
 import 'public_link_answering_state.dart';
 
@@ -69,11 +74,21 @@ class PublicLinkAnsweringBloc
         ageGroup: event.ageGroup,
         location: event.location,
       );
+      // A survey with no sections is finished the moment we start it —
+      // skip straight to completion instead of trying to render a null
+      // section.
+      final firstSection = result.firstSection;
+      if (firstSection == null) {
+        emit(const PublicLinkAnsweringCompleted(status: 'SUBMITTED'));
+        return;
+      }
       emit(
         PublicLinkAnsweringSection(
           responseId: result.responseId,
-          section: result.firstSection,
-          answers: const {},
+          section: firstSection,
+          sectionNumber: 1,
+          answers: SectionDefaultsResolver.defaultsFor(firstSection),
+          priorAnswers: const {},
           conditionalLogics: result.conditionalLogics,
           errors: const {},
         ),
@@ -81,7 +96,7 @@ class PublicLinkAnsweringBloc
     } on DioException catch (e) {
       emit(PublicLinkAnsweringError(
         kind: _dioKind(e),
-        message: e.message ?? 'Network error',
+        message: e.message ?? S.current.network_error,
       ));
     } catch (e) {
       emit(PublicLinkAnsweringError(
@@ -98,10 +113,13 @@ class PublicLinkAnsweringBloc
     final s = state;
     if (s is! PublicLinkAnsweringSection) return;
 
-    final newAnswers = Map<int, dynamic>.from(s.answers)
-      ..[event.questionId] = event.value;
+    // Empty strings are normalized to null so required-checks behave consistently.
+    final sanitized = SurveyValidator.sanitizeValue(event.value);
 
-    // Clear error for this question
+    final newAnswers = Map<int, dynamic>.from(s.answers)
+      ..[event.questionId] = sanitized;
+
+    // Clear error for this question — user is editing.
     final newErrors = Map<int, String>.from(s.errors)
       ..remove(event.questionId);
 
@@ -115,32 +133,45 @@ class PublicLinkAnsweringBloc
     final s = state;
     if (s is! PublicLinkAnsweringSection) return;
 
-    // ---- Validate required visible questions ----
+    // ---- Validate required + custom rules on visible questions ----
+    // Logic must see ALL answers (current + prior) because cross-section
+    // rules reference earlier sections' choices, just like the web does.
+    final mergedAnswers = s.mergedAnswers;
     final behavior = SurveyBehaviorManager.calculateBehavior(
       logics: s.conditionalLogics,
-      answers: s.answers,
+      answers: mergedAnswers,
     );
     final visibilityMap = behavior['visibility'] as Map<String, bool>? ?? {};
     final requirementMap = behavior['requirement'] as Map<String, bool>? ?? {};
 
-    bool isQuestionVisible(int id) {
-      // If conditional logic explicitly marks it, use that; default to visible.
-      return visibilityMap['question_$id'] ?? true;
-    }
+    bool isQuestionVisible(int id) =>
+        visibilityMap['question_$id'] ?? true;
 
-    bool isQuestionRequired(int qId, bool baseRequired) {
-      // Conditional logic may override the base requirement.
-      return requirementMap['question_$qId'] ?? baseRequired;
-    }
+    bool isQuestionRequired(int qId, bool baseRequired) =>
+        requirementMap['question_$qId'] ?? baseRequired;
 
+    final locale = Intl.defaultLocale ?? 'en';
     final errors = <int, String>{};
-    for (final q in s.section.questions ?? <dynamic>[]) {
+    for (final q in s.section.questions ?? []) {
       if (!isQuestionVisible(q.id)) continue;
       final required = isQuestionRequired(q.id, q.isRequired ?? false);
-      if (!required) continue;
       final val = s.answers[q.id];
-      if (val == null || (val is String && val.trim().isEmpty)) {
-        errors[q.id] = 'This field is required';
+
+      // 1. Required check
+      if (required && SurveyValidator.isValueEmpty(val)) {
+        errors[q.id] = S.current.field_required;
+        continue;
+      }
+
+      // 2. Custom validations (length / numeric range / regex)
+      final validationErrors = SurveyValidator.validateQuestion(
+        question: q,
+        value: val,
+        locale: locale,
+        isRequired: required,
+      );
+      if (validationErrors.isNotEmpty) {
+        errors[q.id] = validationErrors.join('\n');
       }
     }
 
@@ -152,9 +183,12 @@ class PublicLinkAnsweringBloc
     // ---- Submit to backend ----
     emit(s.copyWith(submitting: true, errors: const {}));
 
-    final answerPayload = s.answers.entries.map((e) {
-      return (questionId: e.key, value: e.value);
-    }).toList();
+    // Send only this section's visible answers — never include prior
+    // sections' answers (the backend already has them).
+    final answerPayload = s.answers.entries
+        .where((e) => isQuestionVisible(e.key))
+        .map((e) => (questionId: e.key, value: e.value))
+        .toList();
 
     try {
       final result = await _sectionSubmitter(
@@ -169,25 +203,30 @@ class PublicLinkAnsweringBloc
           status: result.status,
           rejectionReason: result.rejectionReason,
         ));
-      } else {
-        final nextSection = result.nextSection;
-        if (nextSection == null) {
-          // Defensive: treat missing next_section as completion
-          emit(const PublicLinkAnsweringCompleted());
-        } else {
-          emit(PublicLinkAnsweringSection(
-            responseId: s.responseId,
-            section: nextSection,
-            answers: const {},
-            conditionalLogics: s.conditionalLogics,
-            errors: const {},
-          ));
-        }
+        return;
       }
+
+      final nextSection = result.nextSection;
+      if (nextSection == null) {
+        // Defensive: treat missing next_section as completion.
+        emit(const PublicLinkAnsweringCompleted());
+        return;
+      }
+
+      // Roll the just-submitted section's answers into priorAnswers and
+      // start the new section with its defaults pre-applied.
+      final nextPrior = _foldIntoPrior(s.priorAnswers, s.answers);
+      emit(_buildSectionState(
+        responseId: s.responseId,
+        section: nextSection,
+        sectionNumber: s.sectionNumber + 1,
+        priorAnswers: nextPrior,
+        conditionalLogics: s.conditionalLogics,
+      ));
     } on DioException catch (e) {
       emit(PublicLinkAnsweringError(
         kind: _dioKind(e),
-        message: e.message ?? 'Network error',
+        message: e.message ?? S.current.network_error,
       ));
     } catch (e) {
       emit(PublicLinkAnsweringError(
@@ -208,6 +247,36 @@ class PublicLinkAnsweringBloc
   // -------------------------------------------------------------------------
   // Helpers
   // -------------------------------------------------------------------------
+
+  /// Folds `current` answers into the immutable `prior` map, returning a
+  /// fresh map. Used when leaving a section so subsequent logic can see
+  /// the full answer history.
+  static Map<int, dynamic> _foldIntoPrior(
+    Map<int, dynamic> prior,
+    Map<int, dynamic> current,
+  ) =>
+      <int, dynamic>{...prior, ...current};
+
+  /// Builds the section state for [section] with defaults pre-filled, so
+  /// the user lands on a section that already reflects `is_default: true`
+  /// option choices.
+  static PublicLinkAnsweringSection _buildSectionState({
+    required int responseId,
+    required Section section,
+    required int sectionNumber,
+    required Map<int, dynamic> priorAnswers,
+    required List conditionalLogics,
+  }) {
+    return PublicLinkAnsweringSection(
+      responseId: responseId,
+      section: section,
+      sectionNumber: sectionNumber,
+      answers: SectionDefaultsResolver.defaultsFor(section),
+      priorAnswers: priorAnswers,
+      conditionalLogics: conditionalLogics.cast(),
+      errors: const {},
+    );
+  }
 
   static PublicLinkAnsweringErrorKind _dioKind(DioException e) {
     if (e.type == DioExceptionType.connectionError ||
