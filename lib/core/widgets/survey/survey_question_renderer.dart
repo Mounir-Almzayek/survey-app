@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../models/survey/question_model.dart';
 import '../../enums/survey_enums.dart';
+import '../../validation/live_validation_controller.dart';
+import '../../validation/rule_registry.dart';
 import 'survey_text_field.dart';
 import 'survey_radio_field.dart';
 import 'survey_checkbox_field.dart';
@@ -14,7 +16,7 @@ import 'survey_gps_field.dart';
 import 'survey_grid_field.dart';
 import 'survey_phone_field.dart';
 
-class SurveyQuestionRenderer extends StatelessWidget {
+class SurveyQuestionRenderer extends StatefulWidget {
   final Question question;
   final dynamic value;
   final ValueChanged<dynamic> onAnswerChange;
@@ -33,134 +35,170 @@ class SurveyQuestionRenderer extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    if (!isVisible || question.type == null) return const SizedBox.shrink();
+  State<SurveyQuestionRenderer> createState() => _SurveyQuestionRendererState();
+}
 
-    switch (question.type!) {
+class _SurveyQuestionRendererState extends State<SurveyQuestionRenderer> {
+  final Map<int, LiveValidationController> _controllers = {};
+
+  LiveValidationController _controllerFor(Question q) =>
+      _controllers.putIfAbsent(
+        q.id,
+        () => LiveValidationController(
+          question: q,
+          locale: Localizations.localeOf(context).languageCode,
+        ),
+      );
+
+  @override
+  void dispose() {
+    for (final c in _controllers.values) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final q = widget.question;
+    if (!widget.isVisible || q.type == null) return const SizedBox.shrink();
+
+    switch (q.type!) {
       case QuestionType.textShort:
         return SurveyTextField(
-          question: question,
-          value: value as String?,
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          value: widget.value as String?,
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
+          inputFormatters: RuleRegistry.formattersFor(q),
+          validationController: _controllerFor(q),
         );
       case QuestionType.textLong:
         return SurveyTextField(
-          question: question,
-          value: value as String?,
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
+          question: q,
+          value: widget.value as String?,
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
           isLongText: true,
-          isEditable: isEditable,
+          isEditable: widget.isEditable,
+          inputFormatters: RuleRegistry.formattersFor(q),
+          validationController: _controllerFor(q),
         );
       case QuestionType.number:
         return SurveyNumberField(
-          question: question,
-          value: value?.toString(),
-          onChanged: (val) => onAnswerChange(num.tryParse(val)),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          value: widget.value?.toString(),
+          onChanged: (val) => widget.onAnswerChange(num.tryParse(val)),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
+          inputFormatters: RuleRegistry.formattersFor(q),
+          validationController: _controllerFor(q),
         );
       case QuestionType.radio:
         return SurveyRadioField(
-          question: question,
-          selectedValue: value as String?,
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          selectedValue: widget.value as String?,
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
         );
       case QuestionType.checkbox:
         return SurveyCheckboxField(
-          question: question,
-          selectedValues: value is List ? List<String>.from(value) : [],
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          selectedValues:
+              widget.value is List ? List<String>.from(widget.value) : [],
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
         );
       case QuestionType.dropdown:
         return SurveyDropdownField(
-          question: question,
-          selectedValue: value as String?,
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          selectedValue: widget.value as String?,
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
         );
       case QuestionType.date:
       case QuestionType.time:
       case QuestionType.datetime:
         return SurveyDateField(
-          question: question,
-          value: value as String?,
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          value: widget.value as String?,
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
         );
       case QuestionType.file:
         return SurveyFileField(
-          question: question,
-          value: value as String?,
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          value: widget.value as String?,
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
         );
       case QuestionType.rating:
         return SurveyRatingField(
-          question: question,
-          value: value is int
-              ? value
-              : (value != null ? int.tryParse(value.toString()) : null),
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          value: widget.value is int
+              ? widget.value
+              : (widget.value != null
+                  ? int.tryParse(widget.value.toString())
+                  : null),
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
         );
       case QuestionType.slider:
         return SurveySliderField(
-          question: question,
-          value: value is num
-              ? (value as num).toDouble()
-              : (value != null ? double.tryParse(value.toString()) : null),
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          value: widget.value is num
+              ? (widget.value as num).toDouble()
+              : (widget.value != null
+                  ? double.tryParse(widget.value.toString())
+                  : null),
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
         );
       case QuestionType.gps:
         return SurveyGpsField(
-          question: question,
-          value: value is Map ? value : null,
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          value: widget.value is Map ? widget.value : null,
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
         );
       case QuestionType.singleSelectGrid:
       case QuestionType.multiSelectGrid:
         return SurveyGridField(
-          question: question,
-          value: value is Map ? value : null,
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          value: widget.value is Map ? widget.value : null,
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
         );
       case QuestionType.phoneNumber:
         return SurveyPhoneField(
-          question: question,
-          value: value as String?,
-          onChanged: (val) => onAnswerChange(val),
-          errorText: errorText,
-          isVisible: isVisible,
-          isEditable: isEditable,
+          question: q,
+          value: widget.value as String?,
+          onChanged: (val) => widget.onAnswerChange(val),
+          errorText: widget.errorText,
+          isVisible: widget.isVisible,
+          isEditable: widget.isEditable,
         );
     }
   }
