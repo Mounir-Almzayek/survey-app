@@ -36,7 +36,7 @@ Give the Flutter answering flow a live per-field validation UX that mirrors the 
 - **Debounce 350 ms.** On-blur flushes the debounce immediately.
 - **Error visibility gating** — no error shows on a pristine field; errors appear after the first user edit, or after a submit attempt (required-empty case).
 - **Submit-time errors win.** When the bloc emits `errorText`, it overrides any live error.
-- **Error message source** — always `validation.arContent` / `validation.enContent` from the backend. Parameterised rules (min/max/range length & value, min/max letters) interpolate the numeric parameter into the message.
+- **Error message source** — always `validation.arContent` / `validation.enContent` from the backend. Parameterised rules (min/max/range length & value, min/max letters) append the numeric bound in parentheses (see §2 message strategy). No new ARB strings.
 
 ## Dispatch decision (locked) — Approach B: Hybrid chain
 
@@ -112,7 +112,10 @@ abstract class Rule {
 **Shape notes:**
 - `value` is a normalized `String`. Non-string question types (file, gps, grid, multi-select, date, rating) bypass the registry entirely; they keep type-specific validation in `SurveyValidator.isValueEmpty` and the bloc.
 - `params` is `qv.values` from `QuestionValidation`. Rules that need `min`/`max` pull them with a small helper (see §4).
-- Error messages come from `validation.arContent` / `validation.enContent` by default. Parameterised rules override to interpolate (e.g. `"الحد الأدنى 3 أحرف"`).
+- **Error message strategy:**
+  - Non-parameterised rules (the 17 without `needsValue`): use `validation.arContent` / `validation.enContent` verbatim.
+  - Parameterised rules (the 8 with `needsValue: true` — ids 6, 7, 8, 9, 10, 19, 20, 21): the backend's content strings do **not** embed the parameter (e.g. `arContent` is `يجب أن تحتوي القيمة على الحد الأدنى من المحارف` with no number). To show the actual bound to the user, the rule appends the parameter in parentheses: `"${validation.arContent} ($min)"` → `يجب أن تحتوي القيمة على الحد الأدنى من المحارف (3)`. No new ARB strings are introduced; the backend string stays authoritative for wording, the rule only tacks on the numeric parameter.
+  - `RawRegexRule` (tier-3 fallback): `arContent` / `enContent` verbatim with no interpolation (we don't know the rule's semantics).
 - Sync return type. No rule needs async.
 
 ## 3. `RuleRegistry` and dispatch chain
@@ -320,7 +323,7 @@ Additive changes only — no breaking signatures.
 ### `SurveyQuestionRenderer` (`lib/core/widgets/survey/survey_question_renderer.dart`)
 
 - State holds `Map<int, LiveValidationController> _controllers`.
-- For each visible text-input question type, pass `formatters: RuleRegistry.formattersFor(q)` and `validationController: _controllerFor(q)` into the field widget.
+- For each visible text-input question type, pass `inputFormatters: RuleRegistry.formattersFor(q)` and `validationController: _controllerFor(q)` into the field widget.
 - On build, prune controllers whose questions are no longer in the visible list.
 - Subscribes to a new `Stream<void>` on the bloc state (see §7) and calls `c.markSubmitAttempted()` on every controller when submit is attempted.
 
@@ -378,8 +381,12 @@ Hard caps installed at the keyboard:
 | 11 | Letters Only                | `CharWhitelistFormatter(r'[؀-ٰٟ-ۿa-zA-Z]')` |
 | 12 | Letters and Spaces Only     | `CharWhitelistFormatter(r'[؀-ٰٟ-ۿa-zA-Z ]')` |
 | 17 | No Spaces                   | `NoSpacesFormatter()` |
-| 22 | Arabic Text Only            | `CharWhitelistFormatter(arabicScriptPattern)` |
+| 22 | Arabic Text Only            | `CharWhitelistFormatter(r'[؀-ۿ٠-٩\s‌‍\x21-\x7E]')` |
 | 23 | English Text Only           | `CharWhitelistFormatter(r'[\x00-\x7F]')` |
+
+Ranges above mirror the backend regexes in `survey-system/prisma/seeders/validations.ts`. The Arabic-script ones (ids 11/12) exclude `٠-٩` (Arabic-Indic digits `٠-٩`) to match the backend's negative lookahead; the Arabic Text Only rule (id 22) *includes* them because the backend regex does.
+
+**Rewrite the literal Arabic ranges on ids 11/12 as explicit escapes during implementation** (`r'[؀-ٰٟ-ۿa-zA-Z]'` and the spaces variant). The spec uses literal code-point characters in those two rows for brevity; the implementation plan must translate them to escapes so intent is unambiguous and the source file stays ASCII-safe.
 
 No formatter (validation runs live, no keystroke blocking): ids 6, 9, 13, 14, 15, 16, 18, 19, 20, 21, 24, 25. Blocking characters mid-email or mid-URL is worse UX than a live error.
 
