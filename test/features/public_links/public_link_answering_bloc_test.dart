@@ -9,7 +9,9 @@ import 'package:king_abdulaziz_center_survey_app/core/models/survey/condition_ru
 import 'package:king_abdulaziz_center_survey_app/core/models/survey/conditional_logic_model.dart';
 import 'package:king_abdulaziz_center_survey_app/core/models/survey/question_model.dart';
 import 'package:king_abdulaziz_center_survey_app/core/models/survey/question_option_model.dart';
+import 'package:king_abdulaziz_center_survey_app/core/models/survey/question_validation_model.dart';
 import 'package:king_abdulaziz_center_survey_app/core/models/survey/section_model.dart';
+import 'package:king_abdulaziz_center_survey_app/core/models/survey/validation_model.dart';
 import 'package:king_abdulaziz_center_survey_app/features/public_links/bloc/answering/public_link_answering_bloc.dart';
 import 'package:king_abdulaziz_center_survey_app/features/public_links/bloc/answering/public_link_answering_event.dart'
     hide Retry;
@@ -576,6 +578,84 @@ void main() {
       verify: (bloc) {
         expect(bloc.state, isA<PublicLinkAnsweringCompleted>());
       },
+    );
+  });
+
+  group('validation: registry dispatch + submit-attempt counter', () {
+    final minLengthQuestion = Question(
+      id: 7,
+      type: QuestionType.textShort,
+      label: 'Name',
+      isRequired: true,
+      questionValidations: [
+        QuestionValidation(
+          id: 1,
+          questionId: 7,
+          validationId: 6,
+          values: const {'min': 5},
+          validation: Validation(
+            id: 6,
+            type: ValidationType.questions,
+            validation: r'^.{min,}$',
+            enTitle: 'Minimum Length',
+            arTitle: 'الحد الأدنى للمحارف',
+            enContent: 'Value must have a minimum number of characters',
+            arContent: 'يجب أن تحتوي القيمة على الحد الأدنى من المحارف',
+            needsValue: true,
+            isActive: true,
+          ),
+        ),
+      ],
+    );
+
+    final sectionMinLength = Section(
+      id: 11,
+      title: 'Section MinLength',
+      questions: [minLengthQuestion],
+    );
+
+    blocTest<PublicLinkAnsweringBloc, PublicLinkAnsweringState>(
+      'min-length violation produces backend-content error with bound appended',
+      build: () => _bloc(),
+      seed: () => PublicLinkAnsweringSection(
+        responseId: 100,
+        section: sectionMinLength,
+        sectionNumber: 1,
+        answers: const {7: 'abc'},
+        conditionalLogics: const [],
+        errors: const {},
+      ),
+      act: (b) => b.add(const SubmitCurrentSection()),
+      expect: () => [
+        // Bloc runs validation under Intl.defaultLocale ('en' here), so the
+        // emitted error comes from enContent, with the min bound appended.
+        isA<PublicLinkAnsweringSection>()
+            .having((s) => s.submitAttemptCount, 'submitAttemptCount', 1)
+            .having(
+              (s) => s.errors[7],
+              'errors[7]',
+              allOf(contains('Value must have'), contains('5')),
+            ),
+      ],
+    );
+
+    blocTest<PublicLinkAnsweringBloc, PublicLinkAnsweringState>(
+      'required-empty submit surfaces field_required and bumps the counter',
+      build: () => _bloc(),
+      seed: () => PublicLinkAnsweringSection(
+        responseId: 100,
+        section: sectionMinLength,
+        sectionNumber: 1,
+        answers: const {},
+        conditionalLogics: const [],
+        errors: const {},
+      ),
+      act: (b) => b.add(const SubmitCurrentSection()),
+      expect: () => [
+        isA<PublicLinkAnsweringSection>()
+            .having((s) => s.submitAttemptCount, 'submitAttemptCount', 1)
+            .having((s) => s.errors[7], 'errors[7]', isNotNull),
+      ],
     );
   });
 }
