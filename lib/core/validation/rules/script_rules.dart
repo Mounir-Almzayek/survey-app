@@ -1,0 +1,68 @@
+import 'package:flutter/services.dart';
+
+import '../../models/survey/validation_model.dart';
+import '../input_formatters/char_whitelist_formatter.dart';
+import '../rule.dart';
+
+String _msg(Validation v, String locale) =>
+    (locale == 'ar' ? v.arContent : v.enContent) ?? '';
+
+bool _match(String pattern, String value) {
+  try {
+    return RegExp(pattern, unicode: true).hasMatch(value);
+  } catch (_) {
+    return false;
+  }
+}
+
+class ArabicOnlyRule extends Rule {
+  @override
+  int get id => 22;
+  @override
+  String get debugName => 'Arabic Text Only';
+
+  // Char whitelist — wider than the validation regex (accepts any
+  // Arabic block char, digit, ASCII punctuation) because the formatter
+  // can't enforce the "must contain >=1 Arabic letter" lookahead.
+  static final RegExp _char =
+      RegExp('[؀-ۿ٠-٩\\s‌‍\\x21-\\x7E]');
+
+  @override
+  RuleResult validate({
+    required String value,
+    required Map<String, dynamic> params,
+    required Validation validation,
+    required String locale,
+  }) {
+    final ok = _match(validation.validation ?? '', value);
+    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+  }
+
+  @override
+  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
+      [CharWhitelistFormatter(_char)];
+}
+
+class EnglishOnlyRule extends Rule {
+  @override
+  int get id => 23;
+  @override
+  String get debugName => 'English Text Only';
+
+  static final RegExp _char = RegExp(r'[\x00-\x7F]');
+
+  @override
+  RuleResult validate({
+    required String value,
+    required Map<String, dynamic> params,
+    required Validation validation,
+    required String locale,
+  }) {
+    final ok = _match(validation.validation ?? '', value);
+    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+  }
+
+  @override
+  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
+      [CharWhitelistFormatter(_char)];
+}
