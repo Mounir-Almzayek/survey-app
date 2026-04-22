@@ -47,7 +47,13 @@ class SectionDefaultsResolver {
         if (values.isNotEmpty) result[q.id] = values;
       } else {
         final firstValue = defaults.first.value;
-        if (firstValue != null) result[q.id] = firstValue;
+        if (firstValue == null) continue;
+        if (q.type == QuestionType.rating) {
+          final n = int.tryParse(firstValue);
+          if (n != null) result[q.id] = n;
+        } else {
+          result[q.id] = firstValue;
+        }
       }
     }
 
