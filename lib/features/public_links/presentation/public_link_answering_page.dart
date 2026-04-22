@@ -9,6 +9,7 @@ import '../../../features/device_location/service/location_service.dart';
 import '../bloc/answering/public_link_answering_bloc.dart';
 import '../bloc/answering/public_link_answering_event.dart';
 import '../bloc/answering/public_link_answering_state.dart';
+import '../../../features/upload/bloc/upload/upload_bloc.dart' as upload;
 import 'widgets/answering_completion_view.dart';
 import 'widgets/answering_error_view.dart';
 import 'widgets/answering_loading_view.dart';
@@ -37,8 +38,15 @@ class PublicLinkAnsweringPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<PublicLinkAnsweringBloc>(
-      create: (_) => PublicLinkAnsweringBloc(shortCode: shortCode),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PublicLinkAnsweringBloc>(
+          create: (_) => PublicLinkAnsweringBloc(shortCode: shortCode),
+        ),
+        BlocProvider<upload.UploadBloc>(
+          create: (_) => upload.UploadBloc(),
+        ),
+      ],
       child: _PublicLinkAnsweringView(
         surveyTitle: surveyTitle,
         requireLocation: requireLocation,

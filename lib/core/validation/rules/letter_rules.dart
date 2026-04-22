@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 
+import '../../l10n/generated/l10n.dart';
 import '../../models/survey/validation_model.dart';
 import '../input_formatters/char_whitelist_formatter.dart';
 import '../param_helpers.dart';
@@ -9,12 +10,6 @@ import '../rule.dart';
 // which live in ٠-ٯ) or Latin letter.
 final RegExp _letter = RegExp('[؀-ٰٟ-ۿa-zA-Z]');
 final RegExp _letterOrSpace = RegExp('[؀-ٰٟ-ۿa-zA-Z ]');
-
-String _base(Validation v, String locale) =>
-    (locale == 'ar' ? v.arContent : v.enContent) ?? '';
-
-String _withBound(Validation v, String locale, int bound) =>
-    '${_base(v, locale)} ($bound)'.trim();
 
 bool _match(String pattern, String value) {
   try {
@@ -43,7 +38,7 @@ class MinLettersRule extends Rule {
     final ok = _match(pattern, value);
     return ok
         ? const RuleResult.valid()
-        : RuleResult.invalid(_withBound(validation, locale, min));
+        : RuleResult.invalid(S.current.validation_min_letters(min.toString()));
   }
 }
 
@@ -66,7 +61,7 @@ class MaxLettersRule extends Rule {
     final ok = _match(pattern, value);
     return ok
         ? const RuleResult.valid()
-        : RuleResult.invalid(_withBound(validation, locale, max));
+        : RuleResult.invalid(S.current.validation_max_letters(max.toString()));
   }
 
   @override
@@ -93,12 +88,15 @@ class LettersOnlyRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_base(validation, locale));
+    return ok
+        ? const RuleResult.valid()
+        : RuleResult.invalid(S.current.validation_letters_only);
   }
 
   @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
-      [CharWhitelistFormatter(_letter)];
+  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
+    CharWhitelistFormatter(_letter),
+  ];
 }
 
 class LettersAndSpacesRule extends Rule {
@@ -115,10 +113,13 @@ class LettersAndSpacesRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_base(validation, locale));
+    return ok
+        ? const RuleResult.valid()
+        : RuleResult.invalid(S.current.validation_letters_and_spaces);
   }
 
   @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
-      [CharWhitelistFormatter(_letterOrSpace)];
+  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
+    CharWhitelistFormatter(_letterOrSpace),
+  ];
 }

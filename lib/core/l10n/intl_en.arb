@@ -467,5 +467,92 @@
         "type": "String"
       }
     }
-  }
+  },
+  "validation_number": "Enter a valid number",
+  "validation_positive_number": "Enter a positive number",
+  "validation_integer": "Enter a whole number (no decimals)",
+  "validation_decimal": "Enter a decimal number",
+  "validation_decimal_2places": "Enter a number with exactly 2 decimal places",
+  "validation_min_length": "Must be at least {min} characters",
+  "@validation_min_length": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_length": "Must not exceed {max} characters",
+  "@validation_max_length": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_length_range": "Length must be between {min} and {max} characters",
+  "@validation_length_range": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_min_letters": "At least {min} letters",
+  "@validation_min_letters": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_letters": "At most {max} letters",
+  "@validation_max_letters": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_letters_only": "Letters only (no digits or symbols)",
+  "validation_letters_and_spaces": "Letters and spaces only",
+  "validation_alphanumeric": "Letters and numbers only",
+  "validation_alphanumeric_with_spaces": "Letters, numbers, and spaces only",
+  "validation_email": "Enter a valid email address",
+  "validation_url": "Enter a valid URL",
+  "validation_no_spaces": "Spaces are not allowed",
+  "validation_no_special_chars": "Special characters are not allowed",
+  "validation_min_value": "Minimum value: {min}",
+  "@validation_min_value": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_value": "Maximum value: {max}",
+  "@validation_max_value": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_value_range": "Value must be between {min} and {max}",
+  "@validation_value_range": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_arabic_only": "Arabic text only",
+  "validation_english_only": "English text only",
+  "validation_min_8_chars": "At least 8 characters",
+  "validation_strong_password": "Password must be 8+ characters with uppercase, lowercase, digit, and symbol"
 }

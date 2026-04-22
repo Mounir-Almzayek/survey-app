@@ -35,12 +35,12 @@ class SurveyDateField extends StatelessWidget {
         absorbing: !isEditable,
         child: Opacity(
           opacity: isEditable ? 1.0 : 0.6,
-      child: CustomDatePickerField(
-        label: "", // Handled by SurveyQuestionCard
-        selectedDate: value,
+          child: CustomDatePickerField(
+            label: "", // Handled by SurveyQuestionCard
+            selectedDate: value,
             onDateSelected: isEditable ? onChanged : (_) {},
-        pickTime: question.type == QuestionType.datetime ||
-            question.type == QuestionType.time,
+            pickTime: question.type == QuestionType.datetime,
+            onlyTime: question.type == QuestionType.time,
           ),
         ),
       ),

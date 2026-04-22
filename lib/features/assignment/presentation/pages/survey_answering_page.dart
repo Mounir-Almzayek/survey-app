@@ -7,6 +7,7 @@ import '../../bloc/assignments_list/assignments_list_bloc.dart';
 import '../../bloc/survey_navigation/survey_navigation_bloc.dart' as nav;
 import '../../bloc/save_section/save_section_bloc.dart' as save;
 import '../../bloc/start_response/start_response_bloc.dart' as start;
+import '../../../upload/bloc/upload/upload_bloc.dart' as upload;
 import '../../../device_location/bloc/device_location/device_location_bloc.dart';
 import '../../../device_location/bloc/device_location/device_location_event.dart';
 import '../../state/survey_in_progress_notifier.dart';
@@ -51,6 +52,7 @@ class _SurveyAnsweringPageState extends State<SurveyAnsweringPage> {
               save.SaveSectionBloc()..add(save.UpdateResponseId(responseId)),
         ),
         BlocProvider(create: (context) => start.StartResponseBloc()),
+        BlocProvider(create: (context) => upload.UploadBloc()),
       ],
       child: MultiBlocListener(
         listeners: [

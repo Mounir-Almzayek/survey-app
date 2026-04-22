@@ -1,12 +1,7 @@
+import '../../l10n/generated/l10n.dart';
 import '../../models/survey/validation_model.dart';
 import '../param_helpers.dart';
 import '../rule.dart';
-
-String _base(Validation v, String locale) =>
-    (locale == 'ar' ? v.arContent : v.enContent) ?? '';
-
-String _withBound(Validation v, String locale, num bound) =>
-    '${_base(v, locale)} ($bound)'.trim();
 
 /// Parse a string that may contain Arabic-Indic digits into a double.
 double? _toNumber(String s) {
@@ -17,6 +12,11 @@ double? _toNumber(String s) {
   );
   return double.tryParse(translated);
 }
+
+/// Formats a bound for display: 3.0 → "3", 3.5 → "3.5". Keeps whole-number
+/// bounds clean (backend often sends them as doubles).
+String _fmt(num n) =>
+    n == n.truncate() ? n.toInt().toString() : n.toString();
 
 class MinValueRule extends Rule {
   @override
@@ -34,10 +34,10 @@ class MinValueRule extends Rule {
     final min = paramDouble(params, 'min');
     if (min == null) return const RuleResult.valid();
     final parsed = _toNumber(value);
-    if (parsed == null) return RuleResult.invalid(_base(validation, locale));
-    return parsed >= min
-        ? const RuleResult.valid()
-        : RuleResult.invalid(_withBound(validation, locale, min));
+    if (parsed == null || parsed < min) {
+      return RuleResult.invalid(S.current.validation_min_value(_fmt(min)));
+    }
+    return const RuleResult.valid();
   }
 }
 
@@ -57,10 +57,10 @@ class MaxValueRule extends Rule {
     final max = paramDouble(params, 'max');
     if (max == null) return const RuleResult.valid();
     final parsed = _toNumber(value);
-    if (parsed == null) return RuleResult.invalid(_base(validation, locale));
-    return parsed <= max
-        ? const RuleResult.valid()
-        : RuleResult.invalid(_withBound(validation, locale, max));
+    if (parsed == null || parsed > max) {
+      return RuleResult.invalid(S.current.validation_max_value(_fmt(max)));
+    }
+    return const RuleResult.valid();
   }
 }
 
@@ -80,12 +80,33 @@ class ValueRangeRule extends Rule {
     final min = paramDouble(params, 'min');
     final max = paramDouble(params, 'max');
     final parsed = _toNumber(value);
-    if (parsed == null) return RuleResult.invalid(_base(validation, locale));
+    // Non-numeric input under a Value Range rule falls back to the
+    // narrowest applicable message — range if both bounds, else the
+    // single-sided bound message.
+    if (parsed == null) {
+      if (min != null && max != null) {
+        return RuleResult.invalid(
+          S.current.validation_value_range(_fmt(min), _fmt(max)),
+        );
+      }
+      if (min != null) {
+        return RuleResult.invalid(S.current.validation_min_value(_fmt(min)));
+      }
+      if (max != null) {
+        return RuleResult.invalid(S.current.validation_max_value(_fmt(max)));
+      }
+      return RuleResult.invalid(S.current.validation_number);
+    }
+    if (min != null && max != null && (parsed < min || parsed > max)) {
+      return RuleResult.invalid(
+        S.current.validation_value_range(_fmt(min), _fmt(max)),
+      );
+    }
     if (min != null && parsed < min) {
-      return RuleResult.invalid(_withBound(validation, locale, min));
+      return RuleResult.invalid(S.current.validation_min_value(_fmt(min)));
     }
     if (max != null && parsed > max) {
-      return RuleResult.invalid(_withBound(validation, locale, max));
+      return RuleResult.invalid(S.current.validation_max_value(_fmt(max)));
     }
     return const RuleResult.valid();
   }

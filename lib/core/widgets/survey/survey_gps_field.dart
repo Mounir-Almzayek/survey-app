@@ -8,8 +8,8 @@ import 'survey_question_card.dart';
 /// receives a JSON object identical to the web frontend's payload.
 class SurveyGpsField extends StatelessWidget {
   final Question question;
-  final Map? value; // {'latitude': double, 'longitude': double}
-  final ValueChanged<Map<String, double>?> onChanged;
+  final Map? value; // {'latitude': [double], 'longitude': [double]}
+  final ValueChanged<Map<String, dynamic>?> onChanged;
   final String? errorText;
   final bool isVisible;
   final bool isEditable;
@@ -27,9 +27,18 @@ class SurveyGpsField extends StatelessWidget {
   LatLng? get _latLng {
     final v = value;
     if (v == null) return null;
-    final lat = v['latitude'];
-    final lng = v['longitude'];
-    if (lat is num && lng is num) return LatLng(lat.toDouble(), lng.toDouble());
+    var lat = v['latitude'];
+    var lng = v['longitude'];
+
+    // Handle array format from backend
+    if (lat is List && lat.isNotEmpty) lat = lat.first;
+    if (lng is List && lng.isNotEmpty) lng = lng.first;
+
+    // Support both numbers and strings (some routes return/expect strings)
+    final latNum = lat is num ? lat.toDouble() : double.tryParse(lat.toString());
+    final lngNum = lng is num ? lng.toDouble() : double.tryParse(lng.toString());
+
+    if (latNum != null && lngNum != null) return LatLng(latNum, lngNum);
     return null;
   }
 
@@ -50,7 +59,10 @@ class SurveyGpsField extends StatelessWidget {
           if (ll == null) {
             onChanged(null);
           } else {
-            onChanged({'latitude': ll.latitude, 'longitude': ll.longitude});
+            onChanged({
+              'latitude': [ll.latitude.toString()],
+              'longitude': [ll.longitude.toString()],
+            });
           }
         },
       ),

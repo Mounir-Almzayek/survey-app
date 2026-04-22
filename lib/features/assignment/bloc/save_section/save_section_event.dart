@@ -47,5 +47,9 @@ class SubmitSection extends SaveSectionEvent {
 
   /// Current section id from UI at submit time (source of truth to avoid section_id: 0).
   final int? sectionId;
-  SubmitSection({this.answers, this.isCompletingSurvey = false, this.sectionId});
+  SubmitSection({
+    this.answers,
+    this.isCompletingSurvey = false,
+    this.sectionId,
+  });
 }

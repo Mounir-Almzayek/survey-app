@@ -13,6 +13,7 @@ class CustomDatePickerField extends StatelessWidget {
   final DateTime? maxDate;
   final bool isRequired;
   final bool pickTime;
+  final bool onlyTime;
 
   const CustomDatePickerField({
     super.key,
@@ -23,6 +24,7 @@ class CustomDatePickerField extends StatelessWidget {
     this.maxDate,
     this.isRequired = false,
     this.pickTime = false,
+    this.onlyTime = false,
   });
 
   @override
@@ -71,7 +73,9 @@ class CustomDatePickerField extends StatelessWidget {
                   ),
                 ),
                 Icon(
-                  Icons.calendar_today_rounded,
+                  onlyTime
+                      ? Icons.access_time_rounded
+                      : Icons.calendar_today_rounded,
                   size: context.adaptiveIcon(18.sp),
                   color: AppColors.primary,
                 ),
@@ -114,31 +118,42 @@ class CustomDatePickerField extends StatelessWidget {
       }
     }
 
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppColors.primary,
-              onPrimary: AppColors.brightWhite,
-              surface: AppColors.brightWhite,
-              onSurface: AppColors.primaryText,
+    DateTime? pickedDate;
+    if (!onlyTime) {
+      pickedDate = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: firstDate,
+        lastDate: lastDate,
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: AppColors.primary,
+                onPrimary: AppColors.brightWhite,
+                surface: AppColors.brightWhite,
+                onSurface: AppColors.primaryText,
+              ),
+              textTheme: Theme.of(context).textTheme,
             ),
-            textTheme: Theme.of(context).textTheme,
-          ),
-          child: child!,
-        );
-      },
-    );
+            child: child!,
+          );
+        },
+      );
+      if (pickedDate == null) return;
+    } else {
+      pickedDate = DateTime.now();
+    }
 
-    if (picked != null && context.mounted) {
-      DateTime finalDateTime = picked;
-      if (pickTime) {
-        final TimeOfDay initialTime = TimeOfDay.fromDateTime(DateTime.now());
+    if (context.mounted) {
+      DateTime finalDateTime = pickedDate;
+      if (pickTime || onlyTime) {
+        final TimeOfDay initialTime = (selectedDate != null && onlyTime)
+            ? TimeOfDay(
+                hour: int.tryParse(selectedDate!.split(':')[0]) ?? 0,
+                minute: int.tryParse(selectedDate!.split(':')[1]) ?? 0)
+            : TimeOfDay.fromDateTime(DateTime.now());
+
         final TimeOfDay? pickedTime = await showTimePicker(
           context: context,
           initialTime: initialTime,
@@ -159,20 +174,29 @@ class CustomDatePickerField extends StatelessWidget {
         );
         if (pickedTime != null) {
           finalDateTime = DateTime(
-            picked.year,
-            picked.month,
-            picked.day,
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
             pickedTime.hour,
             pickedTime.minute,
           );
+        } else if (onlyTime) {
+          return; // Cancelled time picking for onlyTime
         }
       }
 
       if (context.mounted) {
         String two(int v) => v.toString().padLeft(2, '0');
-        final String formatted = pickTime
-            ? '${finalDateTime.year}-${two(finalDateTime.month)}-${two(finalDateTime.day)} ${two(finalDateTime.hour)}:${two(finalDateTime.minute)}:00'
-            : '${finalDateTime.year}-${two(finalDateTime.month)}-${two(finalDateTime.day)}';
+        String formatted;
+        if (onlyTime) {
+          formatted = '${two(finalDateTime.hour)}:${two(finalDateTime.minute)}:00';
+        } else if (pickTime) {
+          formatted =
+              '${finalDateTime.year}-${two(finalDateTime.month)}-${two(finalDateTime.day)} ${two(finalDateTime.hour)}:${two(finalDateTime.minute)}:00';
+        } else {
+          formatted =
+              '${finalDateTime.year}-${two(finalDateTime.month)}-${two(finalDateTime.day)}';
+        }
         onDateSelected(formatted);
       }
     }

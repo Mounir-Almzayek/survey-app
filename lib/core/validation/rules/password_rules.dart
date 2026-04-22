@@ -1,8 +1,7 @@
+import '../../l10n/generated/l10n.dart';
 import '../../models/survey/validation_model.dart';
 import '../rule.dart';
 
-String _msg(Validation v, String locale) =>
-    (locale == 'ar' ? v.arContent : v.enContent) ?? '';
 
 bool _match(String pattern, String value) {
   try {
@@ -26,6 +25,6 @@ class StrongPasswordRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+    return ok ? const RuleResult.valid() : RuleResult.invalid(S.current.validation_strong_password);
   }
 }

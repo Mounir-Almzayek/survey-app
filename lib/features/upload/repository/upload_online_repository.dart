@@ -11,7 +11,7 @@ class UploadOnlineRepository {
   }) async {
     try {
       final formData = FormData.fromMap({
-        'image': await MultipartFile.fromFile(
+        'file': await MultipartFile.fromFile(
           file.file.path,
           filename: file.fileName ?? file.file.name,
         ),
@@ -24,13 +24,6 @@ class UploadOnlineRepository {
         bodyType: BodyType.formData,
         authorizationOption: AuthorizationOption.authorized,
       );
-
-      // Handle progress if callback provided
-      if (onProgress != null) {
-        // Note: APIRequest doesn't support progress callback directly
-        // This would need to be implemented using Dio directly
-        // For now, we'll use the standard APIRequest
-      }
 
       final response = await apiRequest.send();
 
@@ -49,10 +42,12 @@ class UploadOnlineRepository {
   }) async {
     try {
       final formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(
-          file.file.path,
-          filename: file.fileName ?? file.file.name,
-        ),
+        'files': [
+          await MultipartFile.fromFile(
+            file.file.path,
+            filename: file.fileName ?? file.file.name,
+          )
+        ],
       });
 
       final apiRequest = APIRequest(
@@ -65,8 +60,11 @@ class UploadOnlineRepository {
 
       final response = await apiRequest.send();
 
-      // Extract URL from response
+      // Extract path from first file in the array (backend returns success and files array)
       final data = response.data['data'] ?? response.data;
+      if (data['files'] != null && (data['files'] as List).isNotEmpty) {
+        return data['files'][0]['path'] ?? '';
+      }
       return data['path'] ?? data['url'] ?? data['fileUrl'] ?? '';
     } catch (e) {
       throw Exception('Failed to upload file: ${e.toString()}');

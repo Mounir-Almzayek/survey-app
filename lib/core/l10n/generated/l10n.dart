@@ -3299,6 +3299,256 @@ class S {
       args: [error],
     );
   }
+
+  /// `Enter a valid number`
+  String get validation_number {
+    return Intl.message(
+      'Enter a valid number',
+      name: 'validation_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a positive number`
+  String get validation_positive_number {
+    return Intl.message(
+      'Enter a positive number',
+      name: 'validation_positive_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a whole number (no decimals)`
+  String get validation_integer {
+    return Intl.message(
+      'Enter a whole number (no decimals)',
+      name: 'validation_integer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a decimal number`
+  String get validation_decimal {
+    return Intl.message(
+      'Enter a decimal number',
+      name: 'validation_decimal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a number with exactly 2 decimal places`
+  String get validation_decimal_2places {
+    return Intl.message(
+      'Enter a number with exactly 2 decimal places',
+      name: 'validation_decimal_2places',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Must be at least {min} characters`
+  String validation_min_length(String min) {
+    return Intl.message(
+      'Must be at least $min characters',
+      name: 'validation_min_length',
+      desc: '',
+      args: [min],
+    );
+  }
+
+  /// `Must not exceed {max} characters`
+  String validation_max_length(String max) {
+    return Intl.message(
+      'Must not exceed $max characters',
+      name: 'validation_max_length',
+      desc: '',
+      args: [max],
+    );
+  }
+
+  /// `Length must be between {min} and {max} characters`
+  String validation_length_range(String min, String max) {
+    return Intl.message(
+      'Length must be between $min and $max characters',
+      name: 'validation_length_range',
+      desc: '',
+      args: [min, max],
+    );
+  }
+
+  /// `At least {min} letters`
+  String validation_min_letters(String min) {
+    return Intl.message(
+      'At least $min letters',
+      name: 'validation_min_letters',
+      desc: '',
+      args: [min],
+    );
+  }
+
+  /// `At most {max} letters`
+  String validation_max_letters(String max) {
+    return Intl.message(
+      'At most $max letters',
+      name: 'validation_max_letters',
+      desc: '',
+      args: [max],
+    );
+  }
+
+  /// `Letters only (no digits or symbols)`
+  String get validation_letters_only {
+    return Intl.message(
+      'Letters only (no digits or symbols)',
+      name: 'validation_letters_only',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Letters and spaces only`
+  String get validation_letters_and_spaces {
+    return Intl.message(
+      'Letters and spaces only',
+      name: 'validation_letters_and_spaces',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Letters and numbers only`
+  String get validation_alphanumeric {
+    return Intl.message(
+      'Letters and numbers only',
+      name: 'validation_alphanumeric',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Letters, numbers, and spaces only`
+  String get validation_alphanumeric_with_spaces {
+    return Intl.message(
+      'Letters, numbers, and spaces only',
+      name: 'validation_alphanumeric_with_spaces',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a valid email address`
+  String get validation_email {
+    return Intl.message(
+      'Enter a valid email address',
+      name: 'validation_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a valid URL`
+  String get validation_url {
+    return Intl.message(
+      'Enter a valid URL',
+      name: 'validation_url',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Spaces are not allowed`
+  String get validation_no_spaces {
+    return Intl.message(
+      'Spaces are not allowed',
+      name: 'validation_no_spaces',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Special characters are not allowed`
+  String get validation_no_special_chars {
+    return Intl.message(
+      'Special characters are not allowed',
+      name: 'validation_no_special_chars',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minimum value: {min}`
+  String validation_min_value(String min) {
+    return Intl.message(
+      'Minimum value: $min',
+      name: 'validation_min_value',
+      desc: '',
+      args: [min],
+    );
+  }
+
+  /// `Maximum value: {max}`
+  String validation_max_value(String max) {
+    return Intl.message(
+      'Maximum value: $max',
+      name: 'validation_max_value',
+      desc: '',
+      args: [max],
+    );
+  }
+
+  /// `Value must be between {min} and {max}`
+  String validation_value_range(String min, String max) {
+    return Intl.message(
+      'Value must be between $min and $max',
+      name: 'validation_value_range',
+      desc: '',
+      args: [min, max],
+    );
+  }
+
+  /// `Arabic text only`
+  String get validation_arabic_only {
+    return Intl.message(
+      'Arabic text only',
+      name: 'validation_arabic_only',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English text only`
+  String get validation_english_only {
+    return Intl.message(
+      'English text only',
+      name: 'validation_english_only',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `At least 8 characters`
+  String get validation_min_8_chars {
+    return Intl.message(
+      'At least 8 characters',
+      name: 'validation_min_8_chars',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password must be 8+ characters with uppercase, lowercase, digit, and symbol`
+  String get validation_strong_password {
+    return Intl.message(
+      'Password must be 8+ characters with uppercase, lowercase, digit, and symbol',
+      name: 'validation_strong_password',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

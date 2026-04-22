@@ -61,9 +61,12 @@ class LogoRectangle extends StatelessWidget {
         ),
         child: Center(
           child: Image.asset(
-            big
-                ? Assets.logo1
-                : (AppEnvironment.isDevBranding ? Assets.logoRs4it : Assets.logo),
+            // Dev builds always use the RS4IT mark regardless of size, so
+            // splash + app bar + sidebar all show it consistently. Other
+            // flavors use the production logos sized to the slot.
+            AppEnvironment.isDevBranding
+                ? Assets.logoRs4it
+                : (big ? Assets.logo1 : Assets.logo),
             fit: BoxFit.contain,
           ),
         ),

@@ -95,7 +95,9 @@ class APIRequest {
 
     switch (bodyType) {
       case BodyType.formData:
-        body = FormData.fromMap(body);
+        if (body is! FormData && body is Map<String, dynamic>) {
+          body = FormData.fromMap(body);
+        }
         break;
       case BodyType.data:
         break;

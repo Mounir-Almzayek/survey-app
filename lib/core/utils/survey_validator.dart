@@ -38,8 +38,12 @@ class SurveyValidator {
     if (value is List) return value.isEmpty;
     if (value is Map) {
       if (value.containsKey('latitude') && value.containsKey('longitude')) {
-        final lat = value['latitude'];
-        final lng = value['longitude'];
+        var lat = value['latitude'];
+        var lng = value['longitude'];
+
+        if (lat is List && lat.isNotEmpty) lat = lat.first;
+        if (lng is List && lng.isNotEmpty) lng = lng.first;
+
         return lat == null ||
             lng == null ||
             (lat is num && lat.isNaN) ||
@@ -65,7 +69,9 @@ class SurveyValidator {
     try {
       final parsed = PhoneNumber.parse(value);
       if (parsed.isValid()) return null;
-    } catch (_) {/* fall through */}
+    } catch (_) {
+      /* fall through */
+    }
     // locale param retained for signature stability; S.current resolves
     // to the active locale at call time.
     return S.current.invalid_phone_number;
@@ -81,9 +87,11 @@ class SurveyValidator {
     if (value == null) return '';
     if (value is List) return value.join(',');
     if (value is Map) {
-      if (value.containsKey('latitude') && value.containsKey('longitude')) {
-        return '${value['latitude']},${value['longitude']}';
-      }
+      var lat = value['latitude'];
+      var lng = value['longitude'];
+      if (lat is List && lat.isNotEmpty) lat = lat.first;
+      if (lng is List && lng.isNotEmpty) lng = lng.first;
+      if (lat != null && lng != null) return '$lat,$lng';
       return value.toString();
     }
     return value.toString();

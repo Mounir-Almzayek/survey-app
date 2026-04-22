@@ -69,6 +69,36 @@ void main() {
       expect(errs.length, 2);
       expect(errs[0], contains('Value must be a number'));
     });
+
+    test('unknown-id Value Range validation disambiguates via qv.values', () {
+      // Simulates backend sending a Value Range rule under an id that's not
+      // in the client registry (re-seed / tenant-specific id). Without params
+      // disambiguation, fingerprint routes to NumberRule and "11" passes —
+      // the exact user-reported bug.
+      final unknownRange = Validation(
+        id: 9999,
+        type: ValidationType.questions,
+        validation: r'^[-+]?[0-9٠-٩]+(\.[0-9٠-٩]+)?$',
+        enTitle: 'Value Range',
+        arTitle: 'نطاق القيمة',
+        enContent: 'Value must be in range',
+        arContent: 'يجب أن تكون القيمة ضمن النطاق',
+        isActive: true,
+      );
+      final q = _q(qvs: [
+        QuestionValidation(
+          id: 1, questionId: 1, validationId: 9999,
+          values: const {'min': 3, 'max': 10},
+          validation: unknownRange,
+        ),
+      ]);
+      final errs = RuleRegistry.validateAll(
+        question: q, normalizedValue: '11', locale: 'en',
+      );
+      expect(errs, isNotEmpty,
+          reason: '11 is out of range 3-10, must produce an error');
+      expect(errs.first, contains('10'));
+    });
   });
 
   group('formattersFor', () {

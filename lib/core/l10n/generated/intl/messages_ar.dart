@@ -61,6 +61,23 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m19(minutes) => "سيكون الاستبيان متاحاً لمدة ${minutes} دقيقة";
 
+  static String m20(min, max) =>
+      "طول النص يجب أن يكون بين ${min} و ${max} أحرف";
+
+  static String m21(max) => "يجب ألا يتجاوز النص ${max} حرفاً";
+
+  static String m22(max) => "يجب ألا تتجاوز ${max} أحرف";
+
+  static String m23(max) => "أقصى قيمة مسموحة: ${max}";
+
+  static String m24(min) => "يجب ألا يقل النص عن ${min} حرفاً";
+
+  static String m25(min) => "يجب إدخال ${min} أحرف على الأقل";
+
+  static String m26(min) => "أقل قيمة مسموحة: ${min}";
+
+  static String m27(min, max) => "القيمة يجب أن تكون بين ${min} و ${max}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activate": MessageLookupByLibrary.simpleMessage("تفعيل"),
@@ -527,6 +544,48 @@ class MessageLookup extends MessageLookupByLibrary {
         "uploading": MessageLookupByLibrary.simpleMessage("جاري الرفع..."),
         "use_my_current_location":
             MessageLookupByLibrary.simpleMessage("استخدام موقعي الحالي"),
+        "validation_alphanumeric":
+            MessageLookupByLibrary.simpleMessage("أحرف وأرقام فقط"),
+        "validation_alphanumeric_with_spaces":
+            MessageLookupByLibrary.simpleMessage("أحرف وأرقام ومسافات فقط"),
+        "validation_arabic_only":
+            MessageLookupByLibrary.simpleMessage("أدخل نصاً عربياً فقط"),
+        "validation_decimal":
+            MessageLookupByLibrary.simpleMessage("أدخل رقماً عشرياً"),
+        "validation_decimal_2places": MessageLookupByLibrary.simpleMessage(
+            "أدخل رقماً بخانتين عشريتين بالضبط"),
+        "validation_email": MessageLookupByLibrary.simpleMessage(
+            "أدخل بريداً إلكترونياً صحيحاً"),
+        "validation_english_only":
+            MessageLookupByLibrary.simpleMessage("أدخل نصاً إنجليزياً فقط"),
+        "validation_integer": MessageLookupByLibrary.simpleMessage(
+            "أدخل عدداً صحيحاً بدون فاصلة"),
+        "validation_length_range": m20,
+        "validation_letters_and_spaces":
+            MessageLookupByLibrary.simpleMessage("أحرف ومسافات فقط"),
+        "validation_letters_only": MessageLookupByLibrary.simpleMessage(
+            "أدخل أحرفاً فقط (بدون أرقام أو رموز)"),
+        "validation_max_length": m21,
+        "validation_max_letters": m22,
+        "validation_max_value": m23,
+        "validation_min_8_chars":
+            MessageLookupByLibrary.simpleMessage("يجب ألا تقل عن 8 محارف"),
+        "validation_min_length": m24,
+        "validation_min_letters": m25,
+        "validation_min_value": m26,
+        "validation_no_spaces":
+            MessageLookupByLibrary.simpleMessage("لا يُسمح بالمسافات"),
+        "validation_no_special_chars":
+            MessageLookupByLibrary.simpleMessage("لا يُسمح بالرموز الخاصة"),
+        "validation_number":
+            MessageLookupByLibrary.simpleMessage("أدخل رقماً صحيحاً"),
+        "validation_positive_number":
+            MessageLookupByLibrary.simpleMessage("أدخل رقماً موجباً"),
+        "validation_strong_password": MessageLookupByLibrary.simpleMessage(
+            "كلمة المرور: 8 محارف على الأقل، تتضمن حرفاً كبيراً وصغيراً ورقماً ورمزاً خاصاً"),
+        "validation_url":
+            MessageLookupByLibrary.simpleMessage("أدخل رابطاً صحيحاً"),
+        "validation_value_range": m27,
         "verification_code": MessageLookupByLibrary.simpleMessage("رمز التحقق"),
         "verification_code_resent": MessageLookupByLibrary.simpleMessage(
             "تم إعادة إرسال رمز التحقق بنجاح"),

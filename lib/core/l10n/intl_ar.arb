@@ -468,5 +468,92 @@
         "type": "String"
       }
     }
-  }
+  },
+  "validation_number": "أدخل رقماً صحيحاً",
+  "validation_positive_number": "أدخل رقماً موجباً",
+  "validation_integer": "أدخل عدداً صحيحاً بدون فاصلة",
+  "validation_decimal": "أدخل رقماً عشرياً",
+  "validation_decimal_2places": "أدخل رقماً بخانتين عشريتين بالضبط",
+  "validation_min_length": "يجب ألا يقل النص عن {min} حرفاً",
+  "@validation_min_length": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_length": "يجب ألا يتجاوز النص {max} حرفاً",
+  "@validation_max_length": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_length_range": "طول النص يجب أن يكون بين {min} و {max} أحرف",
+  "@validation_length_range": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_min_letters": "يجب إدخال {min} أحرف على الأقل",
+  "@validation_min_letters": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_letters": "يجب ألا تتجاوز {max} أحرف",
+  "@validation_max_letters": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_letters_only": "أدخل أحرفاً فقط (بدون أرقام أو رموز)",
+  "validation_letters_and_spaces": "أحرف ومسافات فقط",
+  "validation_alphanumeric": "أحرف وأرقام فقط",
+  "validation_alphanumeric_with_spaces": "أحرف وأرقام ومسافات فقط",
+  "validation_email": "أدخل بريداً إلكترونياً صحيحاً",
+  "validation_url": "أدخل رابطاً صحيحاً",
+  "validation_no_spaces": "لا يُسمح بالمسافات",
+  "validation_no_special_chars": "لا يُسمح بالرموز الخاصة",
+  "validation_min_value": "أقل قيمة مسموحة: {min}",
+  "@validation_min_value": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_value": "أقصى قيمة مسموحة: {max}",
+  "@validation_max_value": {
+    "placeholders": {
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_value_range": "القيمة يجب أن تكون بين {min} و {max}",
+  "@validation_value_range": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_arabic_only": "أدخل نصاً عربياً فقط",
+  "validation_english_only": "أدخل نصاً إنجليزياً فقط",
+  "validation_min_8_chars": "يجب ألا تقل عن 8 محارف",
+  "validation_strong_password": "كلمة المرور: 8 محارف على الأقل، تتضمن حرفاً كبيراً وصغيراً ورقماً ورمزاً خاصاً"
 }

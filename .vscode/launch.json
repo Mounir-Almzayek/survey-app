@@ -2,10 +2,25 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "survey app",
+      "name": "survey app (dev)",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": ["--flavor", "dev", "--dart-define=ENV=dev"]
+    },
+    {
+      "name": "survey app (staging)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["--flavor", "staging", "--dart-define=ENV=staging"]
+    },
+    {
+      "name": "survey app (prod)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["--flavor", "prod", "--dart-define=ENV=prod"]
     }
   ]
 }

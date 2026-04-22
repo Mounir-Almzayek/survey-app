@@ -1,15 +1,11 @@
 import 'package:flutter/services.dart';
 
+import '../../l10n/generated/l10n.dart';
 import '../../models/survey/validation_model.dart';
 import '../input_formatters/decimal_places_formatter.dart';
 import '../input_formatters/digits_and_sign_formatter.dart';
 import '../input_formatters/digits_only_formatter.dart';
 import '../rule.dart';
-
-String _msg(Validation v, String locale) =>
-    (locale == 'ar' ? v.arContent : v.enContent) ??
-    (locale == 'ar' ? v.arTitle : v.enTitle) ??
-    'Validation error';
 
 bool _match(String pattern, String value) {
   try {
@@ -33,12 +29,15 @@ class NumberRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+    return ok
+        ? const RuleResult.valid()
+        : RuleResult.invalid(S.current.validation_number);
   }
 
   @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
-      [DigitsAndSignFormatter(allowDecimal: true)];
+  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
+    DigitsAndSignFormatter(allowDecimal: true),
+  ];
 }
 
 class PositiveNumberRule extends Rule {
@@ -55,12 +54,15 @@ class PositiveNumberRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+    return ok
+        ? const RuleResult.valid()
+        : RuleResult.invalid(S.current.validation_positive_number);
   }
 
   @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
-      [DigitsOnlyFormatter()];
+  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
+    DigitsOnlyFormatter(),
+  ];
 }
 
 class IntegerRule extends Rule {
@@ -77,12 +79,15 @@ class IntegerRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+    return ok
+        ? const RuleResult.valid()
+        : RuleResult.invalid(S.current.validation_integer);
   }
 
   @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
-      [DigitsAndSignFormatter(allowDecimal: false)];
+  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
+    DigitsAndSignFormatter(allowDecimal: false),
+  ];
 }
 
 class DecimalNumberRule extends Rule {
@@ -99,12 +104,15 @@ class DecimalNumberRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+    return ok
+        ? const RuleResult.valid()
+        : RuleResult.invalid(S.current.validation_decimal);
   }
 
   @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
-      [DigitsAndSignFormatter(allowDecimal: true)];
+  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
+    DigitsAndSignFormatter(allowDecimal: true),
+  ];
 }
 
 class Decimal2PlacesRule extends Rule {
@@ -121,12 +129,14 @@ class Decimal2PlacesRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+    return ok
+        ? const RuleResult.valid()
+        : RuleResult.invalid(S.current.validation_decimal_2places);
   }
 
   @override
   List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
-        DigitsAndSignFormatter(allowDecimal: true),
-        DecimalPlacesFormatter(2),
-      ];
+    DigitsAndSignFormatter(allowDecimal: true),
+    DecimalPlacesFormatter(2),
+  ];
 }

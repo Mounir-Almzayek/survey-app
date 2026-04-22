@@ -62,6 +62,23 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m19(minutes) =>
       "Survey will be available for ${minutes} minutes";
 
+  static String m20(min, max) =>
+      "Length must be between ${min} and ${max} characters";
+
+  static String m21(max) => "Must not exceed ${max} characters";
+
+  static String m22(max) => "At most ${max} letters";
+
+  static String m23(max) => "Maximum value: ${max}";
+
+  static String m24(min) => "Must be at least ${min} characters";
+
+  static String m25(min) => "At least ${min} letters";
+
+  static String m26(min) => "Minimum value: ${min}";
+
+  static String m27(min, max) => "Value must be between ${min} and ${max}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "activate": MessageLookupByLibrary.simpleMessage("Activate"),
@@ -527,6 +544,49 @@ class MessageLookup extends MessageLookupByLibrary {
         "uploading": MessageLookupByLibrary.simpleMessage("Uploading..."),
         "use_my_current_location":
             MessageLookupByLibrary.simpleMessage("Use my current location"),
+        "validation_alphanumeric":
+            MessageLookupByLibrary.simpleMessage("Letters and numbers only"),
+        "validation_alphanumeric_with_spaces":
+            MessageLookupByLibrary.simpleMessage(
+                "Letters, numbers, and spaces only"),
+        "validation_arabic_only":
+            MessageLookupByLibrary.simpleMessage("Arabic text only"),
+        "validation_decimal":
+            MessageLookupByLibrary.simpleMessage("Enter a decimal number"),
+        "validation_decimal_2places": MessageLookupByLibrary.simpleMessage(
+            "Enter a number with exactly 2 decimal places"),
+        "validation_email":
+            MessageLookupByLibrary.simpleMessage("Enter a valid email address"),
+        "validation_english_only":
+            MessageLookupByLibrary.simpleMessage("English text only"),
+        "validation_integer": MessageLookupByLibrary.simpleMessage(
+            "Enter a whole number (no decimals)"),
+        "validation_length_range": m20,
+        "validation_letters_and_spaces":
+            MessageLookupByLibrary.simpleMessage("Letters and spaces only"),
+        "validation_letters_only": MessageLookupByLibrary.simpleMessage(
+            "Letters only (no digits or symbols)"),
+        "validation_max_length": m21,
+        "validation_max_letters": m22,
+        "validation_max_value": m23,
+        "validation_min_8_chars":
+            MessageLookupByLibrary.simpleMessage("At least 8 characters"),
+        "validation_min_length": m24,
+        "validation_min_letters": m25,
+        "validation_min_value": m26,
+        "validation_no_spaces":
+            MessageLookupByLibrary.simpleMessage("Spaces are not allowed"),
+        "validation_no_special_chars": MessageLookupByLibrary.simpleMessage(
+            "Special characters are not allowed"),
+        "validation_number":
+            MessageLookupByLibrary.simpleMessage("Enter a valid number"),
+        "validation_positive_number":
+            MessageLookupByLibrary.simpleMessage("Enter a positive number"),
+        "validation_strong_password": MessageLookupByLibrary.simpleMessage(
+            "Password must be 8+ characters with uppercase, lowercase, digit, and symbol"),
+        "validation_url":
+            MessageLookupByLibrary.simpleMessage("Enter a valid URL"),
+        "validation_value_range": m27,
         "verification_code":
             MessageLookupByLibrary.simpleMessage("Verification Code"),
         "verification_code_resent": MessageLookupByLibrary.simpleMessage(

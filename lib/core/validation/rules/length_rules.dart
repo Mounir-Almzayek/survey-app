@@ -1,14 +1,9 @@
 import 'package:flutter/services.dart';
 
+import '../../l10n/generated/l10n.dart';
 import '../../models/survey/validation_model.dart';
 import '../param_helpers.dart';
 import '../rule.dart';
-
-String _base(Validation v, String locale) =>
-    (locale == 'ar' ? v.arContent : v.enContent) ?? '';
-
-String _withBound(Validation v, String locale, int bound) =>
-    '${_base(v, locale)} ($bound)'.trim();
 
 class MinLengthRule extends Rule {
   @override
@@ -27,7 +22,7 @@ class MinLengthRule extends Rule {
     if (min == null) return const RuleResult.valid();
     return value.length >= min
         ? const RuleResult.valid()
-        : RuleResult.invalid(_withBound(validation, locale, min));
+        : RuleResult.invalid(S.current.validation_min_length(min.toString()));
   }
 }
 
@@ -48,7 +43,7 @@ class MaxLengthRule extends Rule {
     if (max == null) return const RuleResult.valid();
     return value.length <= max
         ? const RuleResult.valid()
-        : RuleResult.invalid(_withBound(validation, locale, max));
+        : RuleResult.invalid(S.current.validation_max_length(max.toString()));
   }
 
   @override
@@ -74,10 +69,14 @@ class LengthRangeRule extends Rule {
     final min = paramInt(params, 'min');
     final max = paramInt(params, 'max');
     if (min != null && value.length < min) {
-      return RuleResult.invalid(_withBound(validation, locale, min));
+      return RuleResult.invalid(
+        S.current.validation_min_length(min.toString()),
+      );
     }
     if (max != null && value.length > max) {
-      return RuleResult.invalid(_withBound(validation, locale, max));
+      return RuleResult.invalid(
+        S.current.validation_max_length(max.toString()),
+      );
     }
     return const RuleResult.valid();
   }
@@ -104,6 +103,6 @@ class MinEightCharsRule extends Rule {
   }) {
     return value.length >= 8
         ? const RuleResult.valid()
-        : RuleResult.invalid(_base(validation, locale));
+        : RuleResult.invalid(S.current.validation_min_length('8'));
   }
 }

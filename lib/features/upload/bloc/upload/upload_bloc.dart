@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/utils/async_runner.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../models/upload_progress.dart';
 import '../../repository/upload_online_repository.dart';
 import '../../repository/upload_local_repository.dart';
@@ -7,16 +8,11 @@ import '../../service/file_picker_service.dart';
 import 'upload_event.dart';
 import 'upload_state.dart';
 
-/// Bloc for managing file uploads
+/// Bloc for managing file uploads with support for multiple concurrent survey questions.
 class UploadBloc extends Bloc<UploadEvent, UploadState> {
-  final AsyncRunner<String> _uploadImageRunner = AsyncRunner<String>();
-  final AsyncRunner<String> _uploadFileRunner = AsyncRunner<String>();
-  final AsyncRunner<List<String>> _uploadMultipleImagesRunner =
-      AsyncRunner<List<String>>();
-  final AsyncRunner<List<String>> _uploadMultipleFilesRunner =
-      AsyncRunner<List<String>>();
-
   UploadBloc() : super(const UploadInitial()) {
+    on<PickAndUploadImageEvent>(_onPickAndUploadImage);
+    on<PickAndUploadFileEvent>(_onPickAndUploadFile);
     on<PickImageEvent>(_onPickImage);
     on<PickMultipleImagesEvent>(_onPickMultipleImages);
     on<PickFileEvent>(_onPickFile);
@@ -31,11 +27,41 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     on<RemoveUploadedFileEvent>(_onRemoveUploadedFile);
   }
 
+  Future<void> _onPickAndUploadImage(
+    PickAndUploadImageEvent event,
+    Emitter<UploadState> emit,
+  ) async {
+    emit(UploadPicking(uploads: state.uploads, questionId: event.questionId));
+
+    final file = await FilePickerService.pickImage(source: event.source);
+    if (file != null) {
+      add(UploadImageEvent(questionId: event.questionId, file: file));
+    } else {
+      emit(UploadInitial(uploads: state.uploads));
+    }
+  }
+
+  Future<void> _onPickAndUploadFile(
+    PickAndUploadFileEvent event,
+    Emitter<UploadState> emit,
+  ) async {
+    emit(UploadPicking(uploads: state.uploads, questionId: event.questionId));
+
+    final file = await FilePickerService.pickFile(
+      allowedExtensions: event.allowedExtensions,
+    );
+    if (file != null) {
+      add(UploadFileEvent(questionId: event.questionId, file: file));
+    } else {
+      emit(UploadInitial(uploads: state.uploads));
+    }
+  }
+
   Future<void> _onPickImage(
     PickImageEvent event,
     Emitter<UploadState> emit,
   ) async {
-    emit(const UploadPicking());
+    emit(UploadPicking(uploads: state.uploads, questionId: event.questionId));
 
     try {
       final file = await FilePickerService.pickImage(
@@ -46,12 +72,18 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
       );
 
       if (file != null) {
-        emit(UploadFilePicked(file: file));
+        emit(
+          UploadFilePicked(
+            uploads: state.uploads,
+            questionId: event.questionId,
+            file: file,
+          ),
+        );
       } else {
-        emit(const UploadInitial());
+        emit(UploadInitial(uploads: state.uploads));
       }
     } catch (e) {
-      emit(UploadError(message: e.toString()));
+      emit(UploadError(uploads: state.uploads, message: e.toString()));
     }
   }
 
@@ -59,7 +91,7 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     PickMultipleImagesEvent event,
     Emitter<UploadState> emit,
   ) async {
-    emit(const UploadPicking());
+    emit(UploadPicking(uploads: state.uploads, questionId: event.questionId));
 
     try {
       final files = await FilePickerService.pickMultipleImages(
@@ -69,12 +101,19 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
       );
 
       if (files.isNotEmpty) {
-        emit(UploadFilePicked(file: files.first, multipleFiles: files));
+        emit(
+          UploadFilePicked(
+            uploads: state.uploads,
+            questionId: event.questionId,
+            file: files.first,
+            multipleFiles: files,
+          ),
+        );
       } else {
-        emit(const UploadInitial());
+        emit(UploadInitial(uploads: state.uploads));
       }
     } catch (e) {
-      emit(UploadError(message: e.toString()));
+      emit(UploadError(uploads: state.uploads, message: e.toString()));
     }
   }
 
@@ -82,7 +121,7 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     PickFileEvent event,
     Emitter<UploadState> emit,
   ) async {
-    emit(const UploadPicking());
+    emit(UploadPicking(uploads: state.uploads, questionId: event.questionId));
 
     try {
       final file = await FilePickerService.pickFile(
@@ -91,12 +130,18 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
       );
 
       if (file != null) {
-        emit(UploadFilePicked(file: file));
+        emit(
+          UploadFilePicked(
+            uploads: state.uploads,
+            questionId: event.questionId,
+            file: file,
+          ),
+        );
       } else {
-        emit(const UploadInitial());
+        emit(UploadInitial(uploads: state.uploads));
       }
     } catch (e) {
-      emit(UploadError(message: e.toString()));
+      emit(UploadError(uploads: state.uploads, message: e.toString()));
     }
   }
 
@@ -104,7 +149,7 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     PickMultipleFilesEvent event,
     Emitter<UploadState> emit,
   ) async {
-    emit(const UploadPicking());
+    emit(UploadPicking(uploads: state.uploads, questionId: event.questionId));
 
     try {
       final files = await FilePickerService.pickMultipleFiles(
@@ -113,12 +158,19 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
       );
 
       if (files.isNotEmpty) {
-        emit(UploadFilePicked(file: files.first, multipleFiles: files));
+        emit(
+          UploadFilePicked(
+            uploads: state.uploads,
+            questionId: event.questionId,
+            file: files.first,
+            multipleFiles: files,
+          ),
+        );
       } else {
-        emit(const UploadInitial());
+        emit(UploadInitial(uploads: state.uploads));
       }
     } catch (e) {
-      emit(UploadError(message: e.toString()));
+      emit(UploadError(uploads: state.uploads, message: e.toString()));
     }
   }
 
@@ -127,77 +179,83 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     Emitter<UploadState> emit,
   ) async {
     final progress = UploadProgress(
-      uploadId: event.file.id,
+      uploadId: event.questionId.toString(),
       file: event.file,
       status: UploadStatus.uploading,
       progress: 0.0,
     );
 
-    emit(UploadUploading(progress: progress));
+    final updatedUploads = Map<int, UploadProgress>.from(state.uploads);
+    updatedUploads[event.questionId] = progress;
 
-    await _uploadImageRunner.run(
-      onlineTask: (_) async {
-        // Save to local storage for offline support
-        await UploadLocalRepository.savePendingUpload(progress);
-
-        final url = await UploadOnlineRepository.uploadImage(
-          file: event.file,
-          onProgress: (sent, total) {
-            final newProgress = progress.copyWith(progress: sent / total);
-            if (!emit.isDone) {
-              emit(UploadUploading(progress: newProgress));
-            }
-          },
-        );
-
-        return url;
-      },
-      offlineTask: (_) async {
-        // Save to local storage for offline support
-        await UploadLocalRepository.savePendingUpload(progress);
-        throw Exception('No internet connection');
-      },
-      checkConnectivity: true,
-      onStart: () {
-        if (!emit.isDone) {
-          emit(UploadUploading(progress: progress));
-        }
-      },
-      onSuccess: (url) async {
-        final completedProgress = progress.copyWith(
-          status: UploadStatus.completed,
-          uploadedUrl: url,
-          progress: 1.0,
-          completedAt: DateTime.now(),
-        );
-
-        // Remove from pending
-        await UploadLocalRepository.removePendingUpload(event.file.id);
-
-        if (!emit.isDone) {
-          emit(UploadCompleted(progress: completedProgress, uploadedUrl: url));
-        }
-      },
-      onError: (error) async {
-        final failedProgress = progress.copyWith(
-          status: UploadStatus.failed,
-          error: error.toString(),
-        );
-
-        // Save to failed uploads
-        await UploadLocalRepository.saveFailedUpload(failedProgress);
-        await UploadLocalRepository.removePendingUpload(event.file.id);
-
-        if (!emit.isDone) {
-          emit(UploadFailed(progress: failedProgress, error: error.toString()));
-        }
-      },
-      onCancel: () {
-        if (!emit.isDone) {
-          emit(UploadCancelled(uploadId: event.file.id));
-        }
-      },
+    emit(
+      UploadUploading(
+        uploads: updatedUploads,
+        questionId: event.questionId,
+        progress: progress,
+      ),
     );
+
+    try {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        throw Exception('No internet connection');
+      }
+
+      await UploadLocalRepository.savePendingUpload(progress);
+
+      final url = await UploadOnlineRepository.uploadImage(
+        file: event.file,
+        onProgress: (sent, total) {
+          // Progress placeholder
+        },
+      );
+
+      final completedProgress = progress.copyWith(
+        status: UploadStatus.completed,
+        uploadedUrl: url,
+        progress: 1.0,
+        completedAt: DateTime.now(),
+      );
+
+      final currentUploads = Map<int, UploadProgress>.from(state.uploads);
+      currentUploads[event.questionId] = completedProgress;
+
+      await UploadLocalRepository.removePendingUpload(
+        event.questionId.toString(),
+      );
+
+      emit(
+        UploadCompleted(
+          uploads: currentUploads,
+          questionId: event.questionId,
+          progress: completedProgress,
+          uploadedUrl: url,
+        ),
+      );
+    } catch (e) {
+      final failedProgress = progress.copyWith(
+        status: UploadStatus.failed,
+        error: e.toString(),
+      );
+
+      final currentUploads = Map<int, UploadProgress>.from(state.uploads);
+      currentUploads[event.questionId] = failedProgress;
+
+      await UploadLocalRepository.saveFailedUpload(failedProgress);
+      await UploadLocalRepository.removePendingUpload(
+        event.questionId.toString(),
+      );
+
+      emit(
+        UploadFailed(
+          uploads: currentUploads,
+          questionId: event.questionId,
+          progress: failedProgress,
+          error: e.toString(),
+        ),
+      );
+    }
   }
 
   Future<void> _onUploadFile(
@@ -205,161 +263,139 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     Emitter<UploadState> emit,
   ) async {
     final progress = UploadProgress(
-      uploadId: event.file.id,
+      uploadId: event.questionId.toString(),
       file: event.file,
       status: UploadStatus.uploading,
       progress: 0.0,
     );
 
-    emit(UploadUploading(progress: progress));
+    final updatedUploads = Map<int, UploadProgress>.from(state.uploads);
+    updatedUploads[event.questionId] = progress;
 
-    await _uploadFileRunner.run(
-      onlineTask: (_) async {
-        await UploadLocalRepository.savePendingUpload(progress);
-
-        final url = await UploadOnlineRepository.uploadFile(
-          file: event.file,
-          onProgress: (sent, total) {
-            final newProgress = progress.copyWith(progress: sent / total);
-            if (!emit.isDone) {
-              emit(UploadUploading(progress: newProgress));
-            }
-          },
-        );
-
-        return url;
-      },
-      offlineTask: (_) async {
-        await UploadLocalRepository.savePendingUpload(progress);
-        throw Exception('No internet connection');
-      },
-      checkConnectivity: true,
-      onStart: () {
-        if (!emit.isDone) {
-          emit(UploadUploading(progress: progress));
-        }
-      },
-      onSuccess: (url) async {
-        final completedProgress = progress.copyWith(
-          status: UploadStatus.completed,
-          uploadedUrl: url,
-          progress: 1.0,
-          completedAt: DateTime.now(),
-        );
-
-        await UploadLocalRepository.removePendingUpload(event.file.id);
-
-        if (!emit.isDone) {
-          emit(UploadCompleted(progress: completedProgress, uploadedUrl: url));
-        }
-      },
-      onError: (error) async {
-        final failedProgress = progress.copyWith(
-          status: UploadStatus.failed,
-          error: error.toString(),
-        );
-
-        await UploadLocalRepository.saveFailedUpload(failedProgress);
-        await UploadLocalRepository.removePendingUpload(event.file.id);
-
-        if (!emit.isDone) {
-          emit(UploadFailed(progress: failedProgress, error: error.toString()));
-        }
-      },
-      onCancel: () {
-        if (!emit.isDone) {
-          emit(UploadCancelled(uploadId: event.file.id));
-        }
-      },
+    emit(
+      UploadUploading(
+        uploads: updatedUploads,
+        questionId: event.questionId,
+        progress: progress,
+      ),
     );
+
+    try {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult.contains(ConnectivityResult.none)) {
+        throw Exception('No internet connection');
+      }
+
+      await UploadLocalRepository.savePendingUpload(progress);
+
+      final url = await UploadOnlineRepository.uploadFile(
+        file: event.file,
+        onProgress: (sent, total) {
+          // Progress placeholder
+        },
+      );
+
+      final completedProgress = progress.copyWith(
+        status: UploadStatus.completed,
+        uploadedUrl: url,
+        progress: 1.0,
+        completedAt: DateTime.now(),
+      );
+
+      final currentUploads = Map<int, UploadProgress>.from(state.uploads);
+      currentUploads[event.questionId] = completedProgress;
+
+      await UploadLocalRepository.removePendingUpload(
+        event.questionId.toString(),
+      );
+
+      emit(
+        UploadCompleted(
+          uploads: currentUploads,
+          questionId: event.questionId,
+          progress: completedProgress,
+          uploadedUrl: url,
+        ),
+      );
+    } catch (e) {
+      final failedProgress = progress.copyWith(
+        status: UploadStatus.failed,
+        error: e.toString(),
+      );
+
+      final currentUploads = Map<int, UploadProgress>.from(state.uploads);
+      currentUploads[event.questionId] = failedProgress;
+
+      await UploadLocalRepository.saveFailedUpload(failedProgress);
+      await UploadLocalRepository.removePendingUpload(
+        event.questionId.toString(),
+      );
+
+      emit(
+        UploadFailed(
+          uploads: currentUploads,
+          questionId: event.questionId,
+          progress: failedProgress,
+          error: e.toString(),
+        ),
+      );
+    }
   }
 
   Future<void> _onUploadMultipleImages(
     UploadMultipleImagesEvent event,
     Emitter<UploadState> emit,
   ) async {
-    await _uploadMultipleImagesRunner.run(
-      onlineTask: (_) async {
-        return await UploadOnlineRepository.uploadMultipleImages(
-          files: event.files,
-          onProgress: (index, sent, total) {
-            // Handle progress for each file
-          },
-        );
-      },
-      checkConnectivity: true,
-      onSuccess: (urls) {
-        if (!emit.isDone) {
-          emit(UploadMultipleCompleted(uploadedUrls: urls));
-        }
-      },
-      onError: (error) {
-        if (!emit.isDone) {
-          emit(UploadError(message: error.toString()));
-        }
-      },
-    );
+    try {
+      final urls = await UploadOnlineRepository.uploadMultipleImages(
+        files: event.files,
+      );
+      emit(UploadMultipleCompleted(uploads: state.uploads, uploadedUrls: urls));
+    } catch (e) {
+      emit(UploadError(uploads: state.uploads, message: e.toString()));
+    }
   }
 
   Future<void> _onUploadMultipleFiles(
     UploadMultipleFilesEvent event,
     Emitter<UploadState> emit,
   ) async {
-    await _uploadMultipleFilesRunner.run(
-      onlineTask: (_) async {
-        return await UploadOnlineRepository.uploadMultipleFiles(
-          files: event.files,
-          onProgress: (index, sent, total) {
-            // Handle progress for each file
-          },
-        );
-      },
-      checkConnectivity: true,
-      onSuccess: (urls) {
-        if (!emit.isDone) {
-          emit(UploadMultipleCompleted(uploadedUrls: urls));
-        }
-      },
-      onError: (error) {
-        if (!emit.isDone) {
-          emit(UploadError(message: error.toString()));
-        }
-      },
-    );
+    try {
+      final urls = await UploadOnlineRepository.uploadMultipleFiles(
+        files: event.files,
+      );
+      emit(UploadMultipleCompleted(uploads: state.uploads, uploadedUrls: urls));
+    } catch (e) {
+      emit(UploadError(uploads: state.uploads, message: e.toString()));
+    }
   }
 
   Future<void> _onCancelUpload(
     CancelUploadEvent event,
     Emitter<UploadState> emit,
   ) async {
-    // Cancel any running upload operations
-    _uploadImageRunner.cancel();
-    _uploadFileRunner.cancel();
-    _uploadMultipleImagesRunner.cancel();
-    _uploadMultipleFilesRunner.cancel();
+    final currentUploads = Map<int, UploadProgress>.from(state.uploads);
+    currentUploads.remove(event.questionId);
 
-    await UploadLocalRepository.removePendingUpload(event.uploadId);
-    if (!emit.isDone) {
-      emit(UploadCancelled(uploadId: event.uploadId));
-    }
+    await UploadLocalRepository.removePendingUpload(
+      event.questionId.toString(),
+    );
+    emit(
+      UploadCancelled(uploads: currentUploads, questionId: event.questionId),
+    );
   }
 
   Future<void> _onRetryUpload(
     RetryUploadEvent event,
     Emitter<UploadState> emit,
   ) async {
-    // Get failed upload and retry
-    final failed = await UploadLocalRepository.getFailedUploads();
-    final upload = failed.firstWhere(
-      (u) => u.uploadId == event.uploadId,
-      orElse: () => throw Exception('Upload not found'),
-    );
-
-    // Retry upload
-    if (upload.file.isImage) {
-      add(UploadImageEvent(file: upload.file));
-    } else {
-      add(UploadFileEvent(file: upload.file));
+    final upload = state.uploads[event.questionId];
+    if (upload != null) {
+      if (upload.file.isImage) {
+        add(UploadImageEvent(questionId: event.questionId, file: upload.file));
+      } else {
+        add(UploadFileEvent(questionId: event.questionId, file: upload.file));
+      }
     }
   }
 
@@ -376,7 +412,11 @@ class UploadBloc extends Bloc<UploadEvent, UploadState> {
     RemoveUploadedFileEvent event,
     Emitter<UploadState> emit,
   ) async {
-    await UploadLocalRepository.removePendingUpload(event.uploadId);
-    emit(const UploadInitial());
+    final currentUploads = Map<int, UploadProgress>.from(state.uploads);
+    currentUploads.remove(event.questionId);
+    await UploadLocalRepository.removePendingUpload(
+      event.questionId.toString(),
+    );
+    emit(UploadInitial(uploads: currentUploads));
   }
 }

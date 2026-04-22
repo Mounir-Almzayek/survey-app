@@ -1,8 +1,6 @@
+import '../../l10n/generated/l10n.dart';
 import '../../models/survey/validation_model.dart';
 import '../rule.dart';
-
-String _msg(Validation v, String locale) =>
-    (locale == 'ar' ? v.arContent : v.enContent) ?? '';
 
 bool _match(String pattern, String value) {
   try {
@@ -26,7 +24,9 @@ class AlphanumericRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+    return ok
+        ? const RuleResult.valid()
+        : RuleResult.invalid(S.current.validation_alphanumeric);
   }
 }
 
@@ -44,7 +44,9 @@ class AlphanumericWithSpacesRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+    return ok
+        ? const RuleResult.valid()
+        : RuleResult.invalid(S.current.validation_alphanumeric_with_spaces);
   }
 }
 
@@ -62,6 +64,8 @@ class NoSpecialCharsRule extends Rule {
     required String locale,
   }) {
     final ok = _match(validation.validation ?? '', value);
-    return ok ? const RuleResult.valid() : RuleResult.invalid(_msg(validation, locale));
+    return ok
+        ? const RuleResult.valid()
+        : RuleResult.invalid(S.current.validation_no_special_chars);
   }
 }

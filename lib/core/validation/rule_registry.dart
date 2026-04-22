@@ -57,7 +57,7 @@ class RuleRegistry {
     for (final qv in qvs) {
       final v = qv.validation;
       if (v == null || v.isActive == false) continue;
-      final rule = lookup(v);
+      final rule = RuleLookup.resolve(v, _byId, params: qv.values);
       if (rule == null) continue;
       final r = rule.validate(
         value: normalizedValue,
