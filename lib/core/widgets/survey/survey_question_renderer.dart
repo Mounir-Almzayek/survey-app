@@ -150,7 +150,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           isEditable: isEditable,
         );
       case QuestionType.phoneNumber:
-        // Placeholder: will be replaced by SurveyPhoneField in Task 7.
+        // TODO(Task 7): replace with SurveyPhoneField once the widget lands.
         return SurveyTextField(
           question: question,
           value: value as String?,
