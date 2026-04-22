@@ -62,6 +62,11 @@ class PublicLinkAnsweringSection extends PublicLinkAnsweringState {
   final Map<int, String> errors;
   final bool submitting;
 
+  /// Monotonic counter incremented on every [SubmitCurrentSection] event.
+  /// Watched by the renderer to flip live-validation controllers into
+  /// "submit attempted" mode so previously-cached errors render.
+  final int submitAttemptCount;
+
   const PublicLinkAnsweringSection({
     required this.responseId,
     required this.section,
@@ -71,6 +76,7 @@ class PublicLinkAnsweringSection extends PublicLinkAnsweringState {
     this.priorAnswers = const {},
     this.sectionNumber = 1,
     this.submitting = false,
+    this.submitAttemptCount = 0,
   });
 
   /// Union of [priorAnswers] (immutable) and [answers] (current section,
@@ -90,6 +96,7 @@ class PublicLinkAnsweringSection extends PublicLinkAnsweringState {
     List<ConditionalLogic>? conditionalLogics,
     Map<int, String>? errors,
     bool? submitting,
+    int? submitAttemptCount,
   }) {
     return PublicLinkAnsweringSection(
       responseId: responseId ?? this.responseId,
@@ -100,6 +107,7 @@ class PublicLinkAnsweringSection extends PublicLinkAnsweringState {
       conditionalLogics: conditionalLogics ?? this.conditionalLogics,
       errors: errors ?? this.errors,
       submitting: submitting ?? this.submitting,
+      submitAttemptCount: submitAttemptCount ?? this.submitAttemptCount,
     );
   }
 
@@ -113,6 +121,7 @@ class PublicLinkAnsweringSection extends PublicLinkAnsweringState {
         conditionalLogics,
         errors,
         submitting,
+        submitAttemptCount,
       ];
 }
 

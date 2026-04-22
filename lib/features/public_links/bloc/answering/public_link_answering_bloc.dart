@@ -133,6 +133,11 @@ class PublicLinkAnsweringBloc
     final s = state;
     if (s is! PublicLinkAnsweringSection) return;
 
+    // Bump on every submit attempt; included in every emit below so the
+    // renderer's didUpdateWidget can flip live-validation controllers into
+    // "submit attempted" mode without needing a separate state emission.
+    final newAttemptCount = s.submitAttemptCount + 1;
+
     // ---- Validate required + custom rules on visible questions ----
     // Logic must see ALL answers (current + prior) because cross-section
     // rules reference earlier sections' choices, just like the web does.
@@ -176,12 +181,16 @@ class PublicLinkAnsweringBloc
     }
 
     if (errors.isNotEmpty) {
-      emit(s.copyWith(errors: errors));
+      emit(s.copyWith(errors: errors, submitAttemptCount: newAttemptCount));
       return;
     }
 
     // ---- Submit to backend ----
-    emit(s.copyWith(submitting: true, errors: const {}));
+    emit(s.copyWith(
+      submitting: true,
+      errors: const {},
+      submitAttemptCount: newAttemptCount,
+    ));
 
     // Send only this section's visible answers — never include prior
     // sections' answers (the backend already has them).

@@ -84,6 +84,7 @@ class AnsweringSectionView extends StatelessWidget {
                   isVisible: true,
                   isEditable: !state.submitting,
                   errorText: state.errors[q.id],
+                  submitAttemptCount: state.submitAttemptCount,
                   onAnswerChange: (value) => context
                       .read<PublicLinkAnsweringBloc>()
                       .add(AnswerChanged(questionId: q.id, value: value)),

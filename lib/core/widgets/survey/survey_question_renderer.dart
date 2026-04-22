@@ -24,6 +24,11 @@ class SurveyQuestionRenderer extends StatefulWidget {
   final bool isVisible;
   final bool isEditable;
 
+  /// Monotonic counter from the bloc — every time it changes, the renderer
+  /// flips its live-validation controllers into "submit attempted" mode so
+  /// previously-cached errors render without the user re-touching the field.
+  final int submitAttemptCount;
+
   const SurveyQuestionRenderer({
     super.key,
     required this.question,
@@ -32,6 +37,7 @@ class SurveyQuestionRenderer extends StatefulWidget {
     this.errorText,
     this.isVisible = true,
     this.isEditable = true,
+    this.submitAttemptCount = 0,
   });
 
   @override
@@ -40,6 +46,7 @@ class SurveyQuestionRenderer extends StatefulWidget {
 
 class _SurveyQuestionRendererState extends State<SurveyQuestionRenderer> {
   final Map<int, LiveValidationController> _controllers = {};
+  int _lastSubmitAttempt = 0;
 
   LiveValidationController _controllerFor(Question q) =>
       _controllers.putIfAbsent(
@@ -49,6 +56,17 @@ class _SurveyQuestionRendererState extends State<SurveyQuestionRenderer> {
           locale: Localizations.localeOf(context).languageCode,
         ),
       );
+
+  @override
+  void didUpdateWidget(SurveyQuestionRenderer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.submitAttemptCount != _lastSubmitAttempt) {
+      _lastSubmitAttempt = widget.submitAttemptCount;
+      for (final c in _controllers.values) {
+        c.markSubmitAttempted();
+      }
+    }
+  }
 
   @override
   void dispose() {
