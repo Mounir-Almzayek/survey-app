@@ -109,7 +109,7 @@ class SurveyQuestionCard extends StatelessWidget {
                 final values = qv.values;
                 String displayText = title;
 
-                if (values != null && values.isNotEmpty) {
+                if (values.isNotEmpty) {
                   final min = values['min'];
                   final max = values['max'];
                   if (min != null && max != null) {
