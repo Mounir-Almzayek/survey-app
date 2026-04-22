@@ -76,6 +76,10 @@ dependencies:
   url_launcher: ^6.3.2
   fl_chart: ^1.1.1
   smooth_page_indicator: ^1.1.0
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  intl_phone_field: ^3.2.0
+  phone_numbers_parser: ^9.0.8
 
 dev_dependencies:
   flutter_test:

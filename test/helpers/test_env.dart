@@ -14,6 +14,9 @@ void loadTestEnv({
   String surveyFrontendDev = 'https://survey-front-internal.system2030.com',
   String surveyFrontendStaging = 'https://survey-front-internal.system2030.com',
   String defaultLocale = 'ar',
+  String mapTileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  String mapDefaultLat = '24.72169',
+  String mapDefaultLng = '46.75702',
 }) {
   dotenv.testLoad(fileInput: '''
 APP_ENV=$appEnv
@@ -24,5 +27,8 @@ SURVEY_FRONTEND_BASE_URL_PROD=$surveyFrontendProd
 SURVEY_FRONTEND_BASE_URL_DEV=$surveyFrontendDev
 SURVEY_FRONTEND_BASE_URL_STAGING=$surveyFrontendStaging
 SURVEY_DEFAULT_LOCALE=$defaultLocale
+MAP_TILE_URL=$mapTileUrl
+MAP_DEFAULT_LAT=$mapDefaultLat
+MAP_DEFAULT_LNG=$mapDefaultLng
 ''');
 }

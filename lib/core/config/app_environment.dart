@@ -47,4 +47,30 @@ class AppEnvironment {
         return 'DEV';
     }
   }
+
+  /// Tile URL template for the map picker. Defaults to OpenStreetMap.
+  static String get mapTileUrl {
+    if (!dotenv.isInitialized) return _defaultMapTileUrl;
+    final v = dotenv.env['MAP_TILE_URL']?.trim();
+    return (v == null || v.isEmpty) ? _defaultMapTileUrl : v;
+  }
+
+  /// Default map centre (Riyadh) when no value is known.
+  static ({double latitude, double longitude}) get mapDefaultLatLng {
+    double parseOr(String? s, double fallback) {
+      if (s == null) return fallback;
+      return double.tryParse(s.trim()) ?? fallback;
+    }
+
+    final lat = dotenv.isInitialized
+        ? parseOr(dotenv.env['MAP_DEFAULT_LAT'], 24.72169)
+        : 24.72169;
+    final lng = dotenv.isInitialized
+        ? parseOr(dotenv.env['MAP_DEFAULT_LNG'], 46.75702)
+        : 46.75702;
+    return (latitude: lat, longitude: lng);
+  }
+
+  static const String _defaultMapTileUrl =
+      'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 }
