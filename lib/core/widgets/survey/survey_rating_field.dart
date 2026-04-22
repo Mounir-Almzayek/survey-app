@@ -25,6 +25,22 @@ class SurveyRatingField extends StatelessWidget {
     this.isEditable = true,
   });
 
+  int _effectiveMax() {
+    final vs = question.questionValidations;
+    if (vs != null) {
+      for (final qv in vs) {
+        final m = qv.values['max'];
+        if (m is int && m > 0) return m;
+        if (m is num && m > 0) return m.toInt();
+        if (m is String) {
+          final parsed = int.tryParse(m);
+          if (parsed != null && parsed > 0) return parsed;
+        }
+      }
+    }
+    return maxRating;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SurveyQuestionCard(
@@ -36,7 +52,7 @@ class SurveyRatingField extends StatelessWidget {
       validations: question.questionValidations,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(maxRating, (index) {
+        children: List.generate(_effectiveMax(), (index) {
           final starValue = index + 1;
           final isSelected = value != null && starValue <= value!;
           return GestureDetector(
