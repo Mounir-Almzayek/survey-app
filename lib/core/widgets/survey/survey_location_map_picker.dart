@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import '../../config/app_environment.dart';
+import '../../l10n/generated/l10n.dart';
 import '../../styles/app_colors.dart';
 
 /// Reusable map picker with optional "use my current location" button.
@@ -147,7 +148,7 @@ class _SurveyLocationMapPickerState extends State<SurveyLocationMapPicker> {
               key: const ValueKey('map-use-my-location'),
               onPressed: _useMyLocation,
               icon: const Icon(Icons.my_location_rounded),
-              label: const Text('Use my current location'),
+              label: Text(S.of(context).use_my_current_location),
             ),
           ),
         ],

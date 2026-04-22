@@ -236,6 +236,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("In-Progress Surveys"),
         "invalid_email":
             MessageLookupByLibrary.simpleMessage("Invalid email address"),
+        "invalid_phone_number":
+            MessageLookupByLibrary.simpleMessage("Invalid phone number"),
         "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
             "Invalid QR code. Please try again."),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
@@ -523,6 +525,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("File uploaded successfully"),
         "uploaded": MessageLookupByLibrary.simpleMessage("Uploaded"),
         "uploading": MessageLookupByLibrary.simpleMessage("Uploading..."),
+        "use_my_current_location":
+            MessageLookupByLibrary.simpleMessage("Use my current location"),
         "verification_code":
             MessageLookupByLibrary.simpleMessage("Verification Code"),
         "verification_code_resent": MessageLookupByLibrary.simpleMessage(

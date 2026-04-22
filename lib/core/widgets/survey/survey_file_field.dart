@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../l10n/generated/l10n.dart';
 import '../../models/survey/question_model.dart';
 import '../../styles/app_colors.dart';
 import '../../../features/upload/models/upload_file.dart';
@@ -150,7 +151,7 @@ class _SurveyFileFieldState extends State<SurveyFileField> {
                   onPressed: _localPreview == null
                       ? null
                       : () => _upload(_localPreview!),
-                  child: const Text('Retry'),
+                  child: Text(S.of(context).retry),
                 ),
               ],
             ),

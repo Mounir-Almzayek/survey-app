@@ -1,6 +1,7 @@
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 import '../enums/survey_enums.dart';
+import '../l10n/generated/l10n.dart';
 import '../models/survey/question_model.dart';
 
 class SurveyValidator {
@@ -205,7 +206,9 @@ class SurveyValidator {
       final parsed = PhoneNumber.parse(value);
       if (parsed.isValid()) return null;
     } catch (_) {/* fall through */}
-    return locale == 'ar' ? 'رقم الهاتف غير صحيح' : 'Invalid phone number';
+    // locale param retained for signature stability; S.current resolves
+    // to the active locale at call time.
+    return S.current.invalid_phone_number;
   }
 
   /// Sanitizes value: Returns null if string is empty

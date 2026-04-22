@@ -1,7 +1,15 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:king_abdulaziz_center_survey_app/core/l10n/generated/l10n.dart';
 import 'package:king_abdulaziz_center_survey_app/core/utils/survey_validator.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() async {
+    await S.load(const Locale('en'));
+  });
+
   group('SurveyValidator.isValueEmpty (grid)', () {
     test('empty map is empty', () {
       expect(SurveyValidator.isValueEmpty(<String, String>{}), isTrue);

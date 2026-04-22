@@ -235,6 +235,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("استبيانات قيد التنفيذ"),
         "invalid_email": MessageLookupByLibrary.simpleMessage(
             "عنوان بريد إلكتروني غير صحيح"),
+        "invalid_phone_number":
+            MessageLookupByLibrary.simpleMessage("رقم الهاتف غير صحيح"),
         "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
             "رمز QR غير صالح. يرجى المحاولة مرة أخرى."),
         "language": MessageLookupByLibrary.simpleMessage("اللغة"),
@@ -523,6 +525,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("تم رفع الملف بنجاح"),
         "uploaded": MessageLookupByLibrary.simpleMessage("تم الرفع"),
         "uploading": MessageLookupByLibrary.simpleMessage("جاري الرفع..."),
+        "use_my_current_location":
+            MessageLookupByLibrary.simpleMessage("استخدام موقعي الحالي"),
         "verification_code": MessageLookupByLibrary.simpleMessage("رمز التحقق"),
         "verification_code_resent": MessageLookupByLibrary.simpleMessage(
             "تم إعادة إرسال رمز التحقق بنجاح"),

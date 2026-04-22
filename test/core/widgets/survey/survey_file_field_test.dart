@@ -3,10 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:king_abdulaziz_center_survey_app/core/enums/survey_enums.dart';
+import 'package:king_abdulaziz_center_survey_app/core/l10n/generated/l10n.dart';
 import 'package:king_abdulaziz_center_survey_app/core/models/survey/question_model.dart';
 import 'package:king_abdulaziz_center_survey_app/core/widgets/survey/survey_file_field.dart';
 
 Widget _wrap(Widget child) => MaterialApp(
+      localizationsDelegates: const [S.delegate],
       home: ScreenUtilInit(
         designSize: const Size(375, 812),
         child: Scaffold(body: child),

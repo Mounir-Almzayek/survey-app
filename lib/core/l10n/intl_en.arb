@@ -141,6 +141,8 @@
   "show_qr_code": "Show QR Code",
   "qr_code": "QR Code",
   "close": "Close",
+  "use_my_current_location": "Use my current location",
+  "invalid_phone_number": "Invalid phone number",
   "location_required": "Location Required",
   "getting_location": "Getting your location…",
   "verify_custody": "Verify Custody",

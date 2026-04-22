@@ -141,6 +141,8 @@
   "show_qr_code": "عرض رمز QR",
   "qr_code": "رمز QR",
   "close": "إغلاق",
+  "use_my_current_location": "استخدام موقعي الحالي",
+  "invalid_phone_number": "رقم الهاتف غير صحيح",
   "location_required": "الموقع مطلوب",
   "getting_location": "جاري الحصول على موقعك…",
   "verify_custody": "التحقق من العهدة",

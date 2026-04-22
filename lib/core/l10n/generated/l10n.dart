@@ -1390,6 +1390,26 @@ class S {
     );
   }
 
+  /// `Use my current location`
+  String get use_my_current_location {
+    return Intl.message(
+      'Use my current location',
+      name: 'use_my_current_location',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid phone number`
+  String get invalid_phone_number {
+    return Intl.message(
+      'Invalid phone number',
+      name: 'invalid_phone_number',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Location Required`
   String get location_required {
     return Intl.message(
