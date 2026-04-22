@@ -522,4 +522,60 @@ void main() {
       ],
     );
   });
+
+  group('Multi-type section submission', () {
+    blocTest<PublicLinkAnsweringBloc, PublicLinkAnsweringState>(
+      'preserves shapes for grid, gps, file, phone, rating when submitting',
+      build: () {
+        final section = Section(id: 30, title: 'Mixed', questions: [
+          Question(id: 1, type: QuestionType.radio, label: 'R',
+              questionOptions: [
+            QuestionOption(id: 10, value: 'a', label: 'A'),
+          ]),
+          Question(id: 2, type: QuestionType.phoneNumber, label: 'P'),
+          Question(id: 3, type: QuestionType.rating, label: 'Rate'),
+          Question(id: 4, type: QuestionType.file, label: 'File'),
+          Question(id: 5, type: QuestionType.gps, label: 'Loc'),
+          Question(id: 6, type: QuestionType.singleSelectGrid, label: 'G'),
+        ]);
+        return PublicLinkAnsweringBloc(
+          shortCode: 'abc',
+          starter: (
+                  {required String shortCode,
+                  required String gender,
+                  required String ageGroup,
+                  ({double latitude, double longitude})? location}) async =>
+              PublicLinkStartResult(
+                responseId: 99,
+                firstSection: section,
+                conditionalLogics: const [],
+              ),
+          sectionSubmitter: (
+                  {required String shortCode,
+                  required int responseId,
+                  required int sectionId,
+                  required List<({int questionId, dynamic value})>
+                      answers}) async =>
+              const PublicLinkSectionResult(isComplete: true, status: 'SUBMITTED'),
+        )..add(const StartAnswering(gender: 'MALE', ageGroup: 'AGE_18_29'));
+      },
+      act: (bloc) async {
+        // Let the asynchronous StartAnswering transition complete.
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(const AnswerChanged(questionId: 1, value: 'a'));
+        bloc.add(const AnswerChanged(questionId: 2, value: '+966501234567'));
+        bloc.add(const AnswerChanged(questionId: 3, value: 4));
+        bloc.add(const AnswerChanged(questionId: 4, value: '/uploads/x.jpg'));
+        bloc.add(const AnswerChanged(
+            questionId: 5,
+            value: {'latitude': 24.72169, 'longitude': 46.75702}));
+        bloc.add(const AnswerChanged(
+            questionId: 6, value: {'a': 'yes'}));
+        bloc.add(const SubmitCurrentSection());
+      },
+      verify: (bloc) {
+        expect(bloc.state, isA<PublicLinkAnsweringCompleted>());
+      },
+    );
+  });
 }
