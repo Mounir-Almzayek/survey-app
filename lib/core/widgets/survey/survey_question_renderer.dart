@@ -149,6 +149,16 @@ class SurveyQuestionRenderer extends StatelessWidget {
           isVisible: isVisible,
           isEditable: isEditable,
         );
+      case QuestionType.phoneNumber:
+        // Placeholder: will be replaced by SurveyPhoneField in Task 7.
+        return SurveyTextField(
+          question: question,
+          value: value as String?,
+          onChanged: (val) => onAnswerChange(val),
+          errorText: errorText,
+          isVisible: isVisible,
+          isEditable: isEditable,
+        );
     }
   }
 }

@@ -33,17 +33,33 @@ enum QuestionType {
   slider,
   gps,
   multiSelectGrid,
-  singleSelectGrid;
+  singleSelectGrid,
+  phoneNumber;
 
-  String toJson() => name.toUpperCase();
+  String toJson() {
+    switch (this) {
+      case QuestionType.multiSelectGrid:
+        return 'MULTI_SELECT_GRID';
+      case QuestionType.singleSelectGrid:
+        return 'SINGLE_SELECT_GRID';
+      case QuestionType.phoneNumber:
+        return 'PHONE_NUMBER';
+      case QuestionType.textShort:
+        return 'TEXT_SHORT';
+      case QuestionType.textLong:
+        return 'TEXT_LONG';
+      default:
+        return name.toUpperCase();
+    }
+  }
 
   static QuestionType fromJson(dynamic value) {
     if (value == null) return QuestionType.textShort;
     final String val = value.toString().toUpperCase();
-    return QuestionType.values.firstWhere(
-      (e) => e.toJson() == val,
-      orElse: () => QuestionType.textShort,
-    );
+    for (final t in QuestionType.values) {
+      if (t.toJson() == val) return t;
+    }
+    return QuestionType.textShort;
   }
 }
 
