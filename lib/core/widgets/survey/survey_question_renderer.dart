@@ -136,6 +136,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
       case QuestionType.gps:
         return SurveyGpsField(
           question: question,
+          value: value is Map ? value : null,
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
