@@ -57,20 +57,20 @@ class AppEnvironment {
 
   /// Default map centre (Riyadh) when no value is known.
   static ({double latitude, double longitude}) get mapDefaultLatLng {
-    double parseOr(String? s, double fallback) {
-      if (s == null) return fallback;
-      return double.tryParse(s.trim()) ?? fallback;
-    }
+    double parseOr(String? s, double fallback) =>
+        s == null ? fallback : double.tryParse(s.trim()) ?? fallback;
 
-    final lat = dotenv.isInitialized
-        ? parseOr(dotenv.env['MAP_DEFAULT_LAT'], 24.72169)
-        : 24.72169;
-    final lng = dotenv.isInitialized
-        ? parseOr(dotenv.env['MAP_DEFAULT_LNG'], 46.75702)
-        : 46.75702;
-    return (latitude: lat, longitude: lng);
+    if (!dotenv.isInitialized) {
+      return (latitude: _defaultMapLat, longitude: _defaultMapLng);
+    }
+    return (
+      latitude: parseOr(dotenv.env['MAP_DEFAULT_LAT'], _defaultMapLat),
+      longitude: parseOr(dotenv.env['MAP_DEFAULT_LNG'], _defaultMapLng),
+    );
   }
 
   static const String _defaultMapTileUrl =
       'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+  static const double _defaultMapLat = 24.72169;
+  static const double _defaultMapLng = 46.75702;
 }
