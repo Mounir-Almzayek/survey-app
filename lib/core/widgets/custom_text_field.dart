@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../styles/app_colors.dart';
@@ -16,6 +17,7 @@ class CustomTextField extends StatefulWidget {
   final bool enabled;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextField({
     super.key,
@@ -30,6 +32,7 @@ class CustomTextField extends StatefulWidget {
     this.enabled = true,
     this.prefixIcon,
     this.suffixIcon,
+    this.inputFormatters,
   });
 
   @override
@@ -71,6 +74,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           enabled: widget.enabled,
           obscureText: widget.isPassword ? _currentObscure : false,
           onChanged: widget.onChanged,
+          inputFormatters: widget.inputFormatters,
           style: TextStyle(
             fontSize: context.adaptiveFont(14.sp),
             color: AppColors.primaryText,
