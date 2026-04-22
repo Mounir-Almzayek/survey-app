@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import '../../models/survey/question_model.dart';
+import '../../validation/live_validation_controller.dart';
 import '../custom_text_field.dart';
 import 'survey_question_card.dart';
 
@@ -11,6 +14,8 @@ class SurveyTextField extends StatefulWidget {
   final bool isVisible;
   final bool isLongText;
   final bool isEditable;
+  final List<TextInputFormatter>? inputFormatters;
+  final LiveValidationController? validationController;
 
   const SurveyTextField({
     super.key,
@@ -21,6 +26,8 @@ class SurveyTextField extends StatefulWidget {
     this.isVisible = true,
     this.isLongText = false,
     this.isEditable = true,
+    this.inputFormatters,
+    this.validationController,
   });
 
   @override
@@ -29,11 +36,19 @@ class SurveyTextField extends StatefulWidget {
 
 class _SurveyTextFieldState extends State<SurveyTextField> {
   late TextEditingController _controller;
+  late FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.value);
+    _focusNode = FocusNode()..addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus) {
+      widget.validationController?.onBlur(_controller.text);
+    }
   }
 
   @override
@@ -46,8 +61,16 @@ class _SurveyTextFieldState extends State<SurveyTextField> {
 
   @override
   void dispose() {
+    _focusNode
+      ..removeListener(_onFocusChange)
+      ..dispose();
     _controller.dispose();
     super.dispose();
+  }
+
+  void _handleChanged(String v) {
+    widget.onChanged?.call(v);
+    widget.validationController?.onChanged(v);
   }
 
   @override
@@ -59,15 +82,20 @@ class _SurveyTextFieldState extends State<SurveyTextField> {
       errorText: widget.errorText,
       isVisible: widget.isVisible,
       validations: widget.question.questionValidations,
-      child: CustomTextField(
-        controller: _controller,
-        label: null,
-        hintText: widget.question.helpText,
-        onChanged: widget.isEditable ? widget.onChanged : null,
-        enabled: widget.isEditable,
-        keyboardType: widget.isLongText
-            ? TextInputType.multiline
-            : TextInputType.text,
+      liveController: widget.validationController,
+      child: Focus(
+        focusNode: _focusNode,
+        child: CustomTextField(
+          controller: _controller,
+          label: null,
+          hintText: widget.question.helpText,
+          onChanged: widget.isEditable ? _handleChanged : null,
+          enabled: widget.isEditable,
+          inputFormatters: widget.inputFormatters,
+          keyboardType: widget.isLongText
+              ? TextInputType.multiline
+              : TextInputType.text,
+        ),
       ),
     );
   }
