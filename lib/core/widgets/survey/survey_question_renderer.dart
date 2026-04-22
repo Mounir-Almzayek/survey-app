@@ -144,6 +144,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
       case QuestionType.multiSelectGrid:
         return SurveyGridField(
           question: question,
+          value: value is Map ? value : null,
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,

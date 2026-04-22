@@ -176,7 +176,14 @@ class SurveyValidator {
             (lat is num && lat.isNaN) ||
             (lng is num && lng.isNaN);
       }
-      return value.isEmpty;
+      if (value.isEmpty) return true;
+      // Grid shape: all entries empty string / empty list means empty.
+      return value.values.every((v) {
+        if (v == null) return true;
+        if (v is String) return v.trim().isEmpty;
+        if (v is List) return v.isEmpty;
+        return false;
+      });
     }
     return false;
   }
