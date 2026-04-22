@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../styles/app_colors.dart';
 import '../../models/survey/question_validation_model.dart';
 import '../../utils/responsive_layout.dart';
+import '../../validation/live_validation_controller.dart';
 
 class SurveyQuestionCard extends StatelessWidget {
   final String? label;
@@ -12,6 +13,7 @@ class SurveyQuestionCard extends StatelessWidget {
   final String? errorText;
   final bool isVisible;
   final List<QuestionValidation>? validations;
+  final LiveValidationController? liveController;
 
   const SurveyQuestionCard({
     super.key,
@@ -22,6 +24,7 @@ class SurveyQuestionCard extends StatelessWidget {
     this.errorText,
     this.isVisible = true,
     this.validations,
+    this.liveController,
   });
 
   @override
@@ -142,19 +145,35 @@ class SurveyQuestionCard extends StatelessWidget {
               }).toList(),
             ),
           ],
-          if (errorText != null) ...[
-            SizedBox(height: 8.h),
-            Text(
-              errorText!,
-              style: TextStyle(
-                fontSize: context.adaptiveFont(11.sp),
-                color: AppColors.destructive,
-                fontWeight: FontWeight.w500,
-              ),
+          if (liveController != null || errorText != null)
+            ListenableBuilder(
+              listenable: liveController ?? const _AlwaysNotifier(),
+              builder: (_, __) {
+                final shown = errorText ?? liveController?.error;
+                if (shown == null) return const SizedBox.shrink();
+                return Padding(
+                  padding: EdgeInsets.only(top: 8.h),
+                  child: Text(
+                    shown,
+                    style: TextStyle(
+                      fontSize: context.adaptiveFont(11.sp),
+                      color: AppColors.destructive,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                );
+              },
             ),
-          ],
         ],
       ),
     );
   }
+}
+
+class _AlwaysNotifier extends Listenable {
+  const _AlwaysNotifier();
+  @override
+  void addListener(VoidCallback _) {}
+  @override
+  void removeListener(VoidCallback _) {}
 }
