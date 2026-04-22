@@ -25,4 +25,21 @@ void main() {
       );
     });
   });
+
+  group('SurveyValidator.validatePhone', () {
+    test('valid SA mobile passes', () {
+      final err = SurveyValidator.validatePhone('+966501234567', locale: 'en');
+      expect(err, isNull);
+    });
+
+    test('invalid number returns an English message for en locale', () {
+      final err = SurveyValidator.validatePhone('+96612', locale: 'en');
+      expect(err, isNotNull);
+    });
+
+    test('empty value returns null (required-check handled elsewhere)', () {
+      final err = SurveyValidator.validatePhone(null, locale: 'en');
+      expect(err, isNull);
+    });
+  });
 }

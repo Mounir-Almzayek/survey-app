@@ -1,3 +1,6 @@
+import 'package:phone_numbers_parser/phone_numbers_parser.dart';
+
+import '../enums/survey_enums.dart';
 import '../models/survey/question_model.dart';
 
 class SurveyValidator {
@@ -143,6 +146,11 @@ class SurveyValidator {
       }
     }
 
+    if (question.type == QuestionType.phoneNumber) {
+      final phoneErr = validatePhone(valueStr, locale: locale);
+      if (phoneErr != null) errors.add(phoneErr);
+    }
+
     return errors;
   }
 
@@ -186,6 +194,18 @@ class SurveyValidator {
       });
     }
     return false;
+  }
+
+  /// Validates an E.164 phone string. Returns a localised error message or
+  /// `null` when the value is valid (or empty — required-checks are a
+  /// separate concern).
+  static String? validatePhone(String? value, {required String locale}) {
+    if (value == null || value.trim().isEmpty) return null;
+    try {
+      final parsed = PhoneNumber.parse(value);
+      if (parsed.isValid()) return null;
+    } catch (_) {/* fall through */}
+    return locale == 'ar' ? 'رقم الهاتف غير صحيح' : 'Invalid phone number';
   }
 
   /// Sanitizes value: Returns null if string is empty
