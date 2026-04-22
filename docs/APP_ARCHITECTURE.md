@@ -760,3 +760,21 @@ UI Update
 - ✅ **Maintainability** - كود منظم وواضح
 - ✅ **Testability** - سهل الاختبار
 - ✅ **Reusability** - مكونات قابلة لإعادة الاستخدام
+
+---
+
+## Conditional follow-up: "option triggers a date/time question"
+
+When a survey needs a DATETIME answer that is only required if the user picks
+a specific choice (e.g. "Schedule a visit" → ask *when*), authors should NOT
+introduce a new question type. Instead, compose:
+
+1. A RADIO/DROPDOWN question with an option whose `value` is, for example,
+   `"scheduled"`.
+2. A separate DATETIME question in the same section.
+3. A `ConditionalLogic` rule: `IF answer(Q1) == "scheduled" THEN SHOW Q2`.
+
+`SurveyBehaviorManager` (see `lib/core/utils/survey_behavior_manager.dart`)
+re-evaluates visibility and `is_required` on every answer change, so the
+DATETIME question appears inline the moment the trigger option is selected.
+This mirrors the web frontend and requires no app-side changes.
