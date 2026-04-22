@@ -12,6 +12,7 @@ import 'survey_rating_field.dart';
 import 'survey_slider_field.dart';
 import 'survey_gps_field.dart';
 import 'survey_grid_field.dart';
+import 'survey_phone_field.dart';
 
 class SurveyQuestionRenderer extends StatelessWidget {
   final Question question;
@@ -151,8 +152,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
           isEditable: isEditable,
         );
       case QuestionType.phoneNumber:
-        // TODO(Task 7): replace with SurveyPhoneField once the widget lands.
-        return SurveyTextField(
+        return SurveyPhoneField(
           question: question,
           value: value as String?,
           onChanged: (val) => onAnswerChange(val),

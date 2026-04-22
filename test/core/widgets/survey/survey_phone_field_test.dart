@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:king_abdulaziz_center_survey_app/core/enums/survey_enums.dart';
 import 'package:king_abdulaziz_center_survey_app/core/models/survey/question_model.dart';
 import 'package:king_abdulaziz_center_survey_app/core/widgets/survey/survey_phone_field.dart';
+import 'package:king_abdulaziz_center_survey_app/core/widgets/survey/survey_question_renderer.dart';
+import 'package:king_abdulaziz_center_survey_app/core/widgets/survey/survey_phone_field.dart' as phone_lib;
 
 Widget _wrap(Widget child) => MaterialApp(
       home: ScreenUtilInit(
@@ -46,5 +48,17 @@ void main() {
       final widget = tester.widget<TextFormField>(find.byType(TextFormField));
       expect(widget.controller?.text.startsWith('+'), isFalse);
     });
+  });
+
+  testWidgets('SurveyQuestionRenderer routes phoneNumber to SurveyPhoneField',
+      (tester) async {
+    await tester.pumpWidget(_wrap(SurveyQuestionRenderer(
+      question: const Question(
+          id: 2, type: QuestionType.phoneNumber, label: 'Phone'),
+      value: null,
+      onAnswerChange: (_) {},
+    )));
+    await tester.pumpAndSettle();
+    expect(find.byType(phone_lib.SurveyPhoneField), findsOneWidget);
   });
 }
