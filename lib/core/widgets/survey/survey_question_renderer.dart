@@ -106,6 +106,7 @@ class SurveyQuestionRenderer extends StatelessWidget {
       case QuestionType.file:
         return SurveyFileField(
           question: question,
+          value: value as String?,
           onChanged: (val) => onAnswerChange(val),
           errorText: errorText,
           isVisible: isVisible,
