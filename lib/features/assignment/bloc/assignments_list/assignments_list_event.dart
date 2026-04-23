@@ -4,5 +4,18 @@ abstract class AssignmentsListEvent {}
 
 class LoadAssignments extends AssignmentsListEvent {}
 
-/// Clears in-memory state (e.g. on logout) so the next account does not see old data.
 class ClearAssignmentsList extends AssignmentsListEvent {}
+
+class SearchAssignments extends AssignmentsListEvent {
+  final String query;
+  SearchAssignments(this.query);
+}
+
+class LoadSearchHistory extends AssignmentsListEvent {}
+
+class ClearSearchHistory extends AssignmentsListEvent {}
+
+class AddToHistory extends AssignmentsListEvent {
+  final String query;
+  AddToHistory(this.query);
+}

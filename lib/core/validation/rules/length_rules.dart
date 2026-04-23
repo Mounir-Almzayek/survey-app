@@ -13,14 +13,16 @@ class MinLengthRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
     final min = paramInt(params, 'min');
     if (min == null) return const RuleResult.valid();
-    return value.length >= min
+
+    final len = value is List ? value.length : coerceString(value).length;
+    return len >= min
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_min_length(min.toString()));
   }
@@ -34,14 +36,16 @@ class MaxLengthRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
     final max = paramInt(params, 'max');
     if (max == null) return const RuleResult.valid();
-    return value.length <= max
+
+    final len = value is List ? value.length : coerceString(value).length;
+    return len <= max
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_max_length(max.toString()));
   }
@@ -61,19 +65,22 @@ class LengthRangeRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
     final min = paramInt(params, 'min');
     final max = paramInt(params, 'max');
-    if (min != null && value.length < min) {
+
+    final len = value is List ? value.length : coerceString(value).length;
+
+    if (min != null && len < min) {
       return RuleResult.invalid(
         S.current.validation_min_length(min.toString()),
       );
     }
-    if (max != null && value.length > max) {
+    if (max != null && len > max) {
       return RuleResult.invalid(
         S.current.validation_max_length(max.toString()),
       );
@@ -96,12 +103,13 @@ class MinEightCharsRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    return value.length >= 8
+    final len = value is List ? value.length : coerceString(value).length;
+    return len >= 8
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_min_length('8'));
   }

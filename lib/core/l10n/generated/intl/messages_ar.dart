@@ -61,22 +61,38 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m19(minutes) => "سيكون الاستبيان متاحاً لمدة ${minutes} دقيقة";
 
-  static String m20(min, max) =>
+  static String m20(start, end) => "يجب أن يكون بين ${start} و ${end}";
+
+  static String m21(date) => "يجب أن يكون مطابقاً لـ ${date}";
+
+  static String m22(allowed) => "أنواع الملفات المسموح بها: ${allowed}";
+
+  static String m23(min, max) =>
       "طول النص يجب أن يكون بين ${min} و ${max} أحرف";
 
-  static String m21(max) => "يجب ألا يتجاوز النص ${max} حرفاً";
+  static String m24(date) => "يجب أن يكون التاريخ في أو قبل ${date}";
 
-  static String m22(max) => "يجب ألا تتجاوز ${max} أحرف";
+  static String m25(size) => "يجب ألا يتجاوز حجم الملف ${size} ميجابايت";
 
-  static String m23(max) => "أقصى قيمة مسموحة: ${max}";
+  static String m26(max) => "يجب ألا يتجاوز النص ${max} حرفاً";
 
-  static String m24(min) => "يجب ألا يقل النص عن ${min} حرفاً";
+  static String m27(max) => "يجب ألا تتجاوز ${max} أحرف";
 
-  static String m25(min) => "يجب إدخال ${min} أحرف على الأقل";
+  static String m28(count) => "يجب اختيار ${count} خيارات كحد أقصى";
 
-  static String m26(min) => "أقل قيمة مسموحة: ${min}";
+  static String m29(max) => "أقصى قيمة مسموحة: ${max}";
 
-  static String m27(min, max) => "القيمة يجب أن تكون بين ${min} و ${max}";
+  static String m30(date) => "يجب أن يكون التاريخ في أو بعد ${date}";
+
+  static String m31(min) => "يجب ألا يقل النص عن ${min} حرفاً";
+
+  static String m32(min) => "يجب إدخال ${min} أحرف على الأقل";
+
+  static String m33(count) => "يجب اختيار ${count} خيارات على الأقل";
+
+  static String m34(min) => "أقل قيمة مسموحة: ${min}";
+
+  static String m35(min, max) => "القيمة يجب أن تكون بين ${min} و ${max}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -350,6 +366,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("لا توجد استجابات"),
         "no_surveys_available": MessageLookupByLibrary.simpleMessage(
             "لا توجد استبيانات متاحة حالياً"),
+        "no_surveys_available_subtitle": MessageLookupByLibrary.simpleMessage(
+            "ليس لديك أي استطلاعات مسندة حالياً. تأكد من مزامنة البيانات."),
         "no_user_data": MessageLookupByLibrary.simpleMessage(
             "لم يتم العثور على بيانات المستخدم"),
         "no_user_name": MessageLookupByLibrary.simpleMessage(
@@ -415,6 +433,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "read_more": MessageLookupByLibrary.simpleMessage("قراءة المزيد"),
         "receive_custody":
             MessageLookupByLibrary.simpleMessage("استلام العهدة"),
+        "recent_searches":
+            MessageLookupByLibrary.simpleMessage("عمليات البحث الأخيرة"),
         "register_device": MessageLookupByLibrary.simpleMessage("تسجيل الجهاز"),
         "registration_method_cookie_based_description":
             MessageLookupByLibrary.simpleMessage(
@@ -465,6 +485,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ضع رمز QR داخل الإطار للمسح"),
         "screen_resolution": MessageLookupByLibrary.simpleMessage("دقة الشاشة"),
         "search": MessageLookupByLibrary.simpleMessage("بحث"),
+        "search_no_results_subtitle": MessageLookupByLibrary.simpleMessage(
+            "لم نجد أي استطلاع يطابق بحثك. جرب كلمات أخرى."),
         "sections_count": m17,
         "select_age_group":
             MessageLookupByLibrary.simpleMessage("اختر الفئة العمرية"),
@@ -550,6 +572,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("أحرف وأرقام ومسافات فقط"),
         "validation_arabic_only":
             MessageLookupByLibrary.simpleMessage("أدخل نصاً عربياً فقط"),
+        "validation_date_range": m20,
         "validation_decimal":
             MessageLookupByLibrary.simpleMessage("أدخل رقماً عشرياً"),
         "validation_decimal_2places": MessageLookupByLibrary.simpleMessage(
@@ -558,21 +581,28 @@ class MessageLookup extends MessageLookupByLibrary {
             "أدخل بريداً إلكترونياً صحيحاً"),
         "validation_english_only":
             MessageLookupByLibrary.simpleMessage("أدخل نصاً إنجليزياً فقط"),
+        "validation_equal_date": m21,
         "validation_integer": MessageLookupByLibrary.simpleMessage(
             "أدخل عدداً صحيحاً بدون فاصلة"),
-        "validation_length_range": m20,
+        "validation_invalid_file_type": m22,
+        "validation_length_range": m23,
         "validation_letters_and_spaces":
             MessageLookupByLibrary.simpleMessage("أحرف ومسافات فقط"),
         "validation_letters_only": MessageLookupByLibrary.simpleMessage(
             "أدخل أحرفاً فقط (بدون أرقام أو رموز)"),
-        "validation_max_length": m21,
-        "validation_max_letters": m22,
-        "validation_max_value": m23,
+        "validation_max_date": m24,
+        "validation_max_file_size": m25,
+        "validation_max_length": m26,
+        "validation_max_letters": m27,
+        "validation_max_selection": m28,
+        "validation_max_value": m29,
         "validation_min_8_chars":
             MessageLookupByLibrary.simpleMessage("يجب ألا تقل عن 8 محارف"),
-        "validation_min_length": m24,
-        "validation_min_letters": m25,
-        "validation_min_value": m26,
+        "validation_min_date": m30,
+        "validation_min_length": m31,
+        "validation_min_letters": m32,
+        "validation_min_selection": m33,
+        "validation_min_value": m34,
         "validation_no_spaces":
             MessageLookupByLibrary.simpleMessage("لا يُسمح بالمسافات"),
         "validation_no_special_chars":
@@ -585,7 +615,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "كلمة المرور: 8 محارف على الأقل، تتضمن حرفاً كبيراً وصغيراً ورقماً ورمزاً خاصاً"),
         "validation_url":
             MessageLookupByLibrary.simpleMessage("أدخل رابطاً صحيحاً"),
-        "validation_value_range": m27,
+        "validation_value_range": m35,
         "verification_code": MessageLookupByLibrary.simpleMessage("رمز التحقق"),
         "verification_code_resent": MessageLookupByLibrary.simpleMessage(
             "تم إعادة إرسال رمز التحقق بنجاح"),

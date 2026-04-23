@@ -1,6 +1,3 @@
-import 'package:phone_numbers_parser/phone_numbers_parser.dart';
-
-import '../enums/survey_enums.dart';
 import '../l10n/generated/l10n.dart';
 import '../models/survey/question_model.dart';
 import '../validation/rule_registry.dart';
@@ -14,19 +11,16 @@ class SurveyValidator {
     required String locale,
     bool isRequired = false,
   }) {
-    final valueStr = _normalizeValue(value);
-    if (!isRequired && valueStr.isEmpty) return const [];
+    if (isRequired && isValueEmpty(value)) {
+      return [S.current.field_required];
+    }
+    if (!isRequired && isValueEmpty(value)) return const [];
 
     final errors = RuleRegistry.validateAll(
       question: question,
-      normalizedValue: valueStr,
+      value: value,
       locale: locale,
     );
-
-    if (question.type == QuestionType.phoneNumber) {
-      final phoneErr = validatePhone(valueStr, locale: locale);
-      if (phoneErr != null) errors.add(phoneErr);
-    }
 
     return errors;
   }
@@ -61,39 +55,9 @@ class SurveyValidator {
     return false;
   }
 
-  /// Validates an E.164 phone string. Returns a localised error message or
-  /// `null` when the value is valid (or empty — required-checks are a
-  /// separate concern).
-  static String? validatePhone(String? value, {required String locale}) {
-    if (value == null || value.trim().isEmpty) return null;
-    try {
-      final parsed = PhoneNumber.parse(value);
-      if (parsed.isValid()) return null;
-    } catch (_) {
-      /* fall through */
-    }
-    // locale param retained for signature stability; S.current resolves
-    // to the active locale at call time.
-    return S.current.invalid_phone_number;
-  }
-
   /// Sanitizes value: Returns null if string is empty
   static dynamic sanitizeValue(dynamic value) {
     if (value is String && value.trim().isEmpty) return null;
     return value;
-  }
-
-  static String _normalizeValue(dynamic value) {
-    if (value == null) return '';
-    if (value is List) return value.join(',');
-    if (value is Map) {
-      var lat = value['latitude'];
-      var lng = value['longitude'];
-      if (lat is List && lat.isNotEmpty) lat = lat.first;
-      if (lng is List && lng.isNotEmpty) lng = lng.first;
-      if (lat != null && lng != null) return '$lat,$lng';
-      return value.toString();
-    }
-    return value.toString();
   }
 }

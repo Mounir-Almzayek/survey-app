@@ -11,6 +11,7 @@ import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
 import '../../../../core/services/device_bound_key_service.dart';
 import '../../../../core/services/device_local_metadata_service.dart';
+import '../../../core/routes/app_routes.dart';
 import '../bloc/device_info/device_info_bloc.dart';
 import '../bloc/device_info/device_info_state.dart';
 import '../bloc/validate_token/validate_token_bloc.dart';
@@ -154,7 +155,8 @@ class _DeviceRegistrationScreenState extends State<DeviceRegistrationScreen> {
                       locale.device_registered_success,
                 );
                 Future.delayed(const Duration(seconds: 2), () {
-                  if (context.mounted) context.pop();
+                  if (context.mounted)
+                    context.pushReplacement(Routes.loginPath);
                 });
               } else if (state is CompleteRegistrationFailure) {
                 UnifiedSnackbar.error(context, message: state.message);

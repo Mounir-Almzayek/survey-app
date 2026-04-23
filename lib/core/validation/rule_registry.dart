@@ -5,12 +5,16 @@ import '../models/survey/validation_model.dart';
 import 'rule.dart';
 import 'rule_lookup.dart';
 import 'rules/alphanumeric_rules.dart';
+import 'rules/date_rules.dart';
+import 'rules/file_rules.dart';
 import 'rules/format_rules.dart';
 import 'rules/length_rules.dart';
 import 'rules/letter_rules.dart';
 import 'rules/number_rules.dart';
 import 'rules/password_rules.dart';
+import 'rules/phone_rule.dart';
 import 'rules/script_rules.dart';
+import 'rules/selection_rules.dart';
 import 'rules/value_range_rules.dart';
 
 class RuleRegistry {
@@ -40,6 +44,15 @@ class RuleRegistry {
     23: EnglishOnlyRule(),
     24: MinEightCharsRule(),
     25: StrongPasswordRule(),
+    26: MinSelectedRule(),
+    27: MaxSelectedRule(),
+    28: MinDateRule(),
+    29: MaxDateRule(),
+    30: BetweenDatesRule(),
+    34: EqualDateRule(),
+    31: FileSizeRule(),
+    32: FileExtensionRule(),
+    33: PhoneNumberRule(),
   };
 
   /// Exposed for tests; production code should go through [lookup].
@@ -49,7 +62,7 @@ class RuleRegistry {
 
   static List<String> validateAll({
     required Question question,
-    required String normalizedValue,
+    required dynamic value,
     required String locale,
   }) {
     final errors = <String>[];
@@ -60,7 +73,7 @@ class RuleRegistry {
       final rule = RuleLookup.resolve(v, _byId, params: qv.values);
       if (rule == null) continue;
       final r = rule.validate(
-        value: normalizedValue,
+        value: value,
         params: qv.values,
         validation: v,
         locale: locale,

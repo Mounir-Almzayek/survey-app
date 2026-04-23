@@ -166,4 +166,29 @@ class AssignmentLocalRepository {
     await AssignmentStorage.setStringList(key, list);
     return true;
   }
+
+  /// Get recent search history
+  static Future<List<String>> getSearchHistory() async {
+    return await AssignmentStorage.getStringList(AssignmentStorageKeys.searchHistory) ?? [];
+  }
+
+  /// Add a query to search history (max 10, unique, newest first)
+  static Future<void> addToSearchHistory(String query) async {
+    final trimmed = query.trim();
+    if (trimmed.isEmpty) return;
+
+    final history = await getSearchHistory();
+    final updated = [trimmed, ...history.where((q) => q != trimmed)];
+    
+    if (updated.length > 10) {
+      updated.removeRange(10, updated.length);
+    }
+
+    await AssignmentStorage.setStringList(AssignmentStorageKeys.searchHistory, updated);
+  }
+
+  /// Clear search history
+  static Future<void> clearSearchHistory() async {
+    await AssignmentStorage.remove(AssignmentStorageKeys.searchHistory);
+  }
 }

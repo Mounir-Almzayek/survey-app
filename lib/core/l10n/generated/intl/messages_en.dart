@@ -62,22 +62,38 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m19(minutes) =>
       "Survey will be available for ${minutes} minutes";
 
-  static String m20(min, max) =>
+  static String m20(start, end) => "Must be between ${start} and ${end}";
+
+  static String m21(date) => "Must be exactly ${date}";
+
+  static String m22(allowed) => "Allowed file types: ${allowed}";
+
+  static String m23(min, max) =>
       "Length must be between ${min} and ${max} characters";
 
-  static String m21(max) => "Must not exceed ${max} characters";
+  static String m24(date) => "Date must be on or before ${date}";
 
-  static String m22(max) => "At most ${max} letters";
+  static String m25(size) => "File size must not exceed ${size} MB";
 
-  static String m23(max) => "Maximum value: ${max}";
+  static String m26(max) => "Must not exceed ${max} characters";
 
-  static String m24(min) => "Must be at least ${min} characters";
+  static String m27(max) => "At most ${max} letters";
 
-  static String m25(min) => "At least ${min} letters";
+  static String m28(count) => "Select at most ${count} options";
 
-  static String m26(min) => "Minimum value: ${min}";
+  static String m29(max) => "Maximum value: ${max}";
 
-  static String m27(min, max) => "Value must be between ${min} and ${max}";
+  static String m30(date) => "Date must be on or after ${date}";
+
+  static String m31(min) => "Must be at least ${min} characters";
+
+  static String m32(min) => "At least ${min} letters";
+
+  static String m33(count) => "Select at least ${count} options";
+
+  static String m34(min) => "Minimum value: ${min}";
+
+  static String m35(min, max) => "Value must be between ${min} and ${max}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -352,6 +368,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No responses found"),
         "no_surveys_available": MessageLookupByLibrary.simpleMessage(
             "No surveys available at the moment"),
+        "no_surveys_available_subtitle": MessageLookupByLibrary.simpleMessage(
+            "You don\'t have any assigned surveys currently. Make sure to sync data."),
         "no_user_data":
             MessageLookupByLibrary.simpleMessage("No user data found"),
         "no_user_name":
@@ -414,6 +432,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "read_more": MessageLookupByLibrary.simpleMessage("Read more"),
         "receive_custody":
             MessageLookupByLibrary.simpleMessage("Receive Custody"),
+        "recent_searches":
+            MessageLookupByLibrary.simpleMessage("Recent Searches"),
         "register_device":
             MessageLookupByLibrary.simpleMessage("Register Device"),
         "registration_method_cookie_based_description":
@@ -464,6 +484,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "screen_resolution":
             MessageLookupByLibrary.simpleMessage("Screen Resolution"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "search_no_results_subtitle": MessageLookupByLibrary.simpleMessage(
+            "No surveys matched your search. Try different keywords."),
         "sections_count": m17,
         "select_age_group":
             MessageLookupByLibrary.simpleMessage("Select Age Group"),
@@ -551,6 +573,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Letters, numbers, and spaces only"),
         "validation_arabic_only":
             MessageLookupByLibrary.simpleMessage("Arabic text only"),
+        "validation_date_range": m20,
         "validation_decimal":
             MessageLookupByLibrary.simpleMessage("Enter a decimal number"),
         "validation_decimal_2places": MessageLookupByLibrary.simpleMessage(
@@ -559,21 +582,28 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Enter a valid email address"),
         "validation_english_only":
             MessageLookupByLibrary.simpleMessage("English text only"),
+        "validation_equal_date": m21,
         "validation_integer": MessageLookupByLibrary.simpleMessage(
             "Enter a whole number (no decimals)"),
-        "validation_length_range": m20,
+        "validation_invalid_file_type": m22,
+        "validation_length_range": m23,
         "validation_letters_and_spaces":
             MessageLookupByLibrary.simpleMessage("Letters and spaces only"),
         "validation_letters_only": MessageLookupByLibrary.simpleMessage(
             "Letters only (no digits or symbols)"),
-        "validation_max_length": m21,
-        "validation_max_letters": m22,
-        "validation_max_value": m23,
+        "validation_max_date": m24,
+        "validation_max_file_size": m25,
+        "validation_max_length": m26,
+        "validation_max_letters": m27,
+        "validation_max_selection": m28,
+        "validation_max_value": m29,
         "validation_min_8_chars":
             MessageLookupByLibrary.simpleMessage("At least 8 characters"),
-        "validation_min_length": m24,
-        "validation_min_letters": m25,
-        "validation_min_value": m26,
+        "validation_min_date": m30,
+        "validation_min_length": m31,
+        "validation_min_letters": m32,
+        "validation_min_selection": m33,
+        "validation_min_value": m34,
         "validation_no_spaces":
             MessageLookupByLibrary.simpleMessage("Spaces are not allowed"),
         "validation_no_special_chars": MessageLookupByLibrary.simpleMessage(
@@ -586,7 +616,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Password must be 8+ characters with uppercase, lowercase, digit, and symbol"),
         "validation_url":
             MessageLookupByLibrary.simpleMessage("Enter a valid URL"),
-        "validation_value_range": m27,
+        "validation_value_range": m35,
         "verification_code":
             MessageLookupByLibrary.simpleMessage("Verification Code"),
         "verification_code_resent": MessageLookupByLibrary.simpleMessage(

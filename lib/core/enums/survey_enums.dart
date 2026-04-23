@@ -4,13 +4,15 @@ import '../l10n/generated/l10n.dart';
 enum SurveyStatus {
   draft,
   published,
-  archived;
+  archived,
+  testMode;
 
   String toJson() => name.toUpperCase();
 
   static SurveyStatus fromJson(dynamic value) {
     if (value == null) return SurveyStatus.draft;
     final String val = value.toString().toUpperCase();
+    if (val == 'TEST_MODE') return SurveyStatus.testMode;
     return SurveyStatus.values.firstWhere(
       (e) => e.name.toUpperCase() == val,
       orElse: () => SurveyStatus.draft,

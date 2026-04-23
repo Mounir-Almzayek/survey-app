@@ -31,15 +31,33 @@ abstract class Rule {
   /// so this guard is cheap insurance.
   bool get appliesToTextInput => true;
 
-  /// Run the rule against a normalized string [value]. [params] is
-  /// `qv.values` from the backend (e.g. `{"min": 3}`); the rule pulls the
-  /// fields it needs via the helpers in `param_helpers.dart`.
+  /// Run the rule against a value. [params] is `qv.values` from the backend
+  /// (e.g. `{"min": 3}`); the rule pulls the fields it needs via the helpers
+  /// in `param_helpers.dart`.
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   });
+
+  /// Helper to get a string representation for rules that expect text.
+  String coerceString(dynamic value) {
+    if (value == null) return '';
+    if (value is String) return value;
+    if (value is List) return value.join(',');
+    if (value is Map) {
+      final lat = value['latitude'];
+      final lng = value['longitude'];
+      if (lat != null && lng != null) {
+        final la = lat is List ? lat.firstOrNull : lat;
+        final lo = lng is List ? lng.firstOrNull : lng;
+        if (la != null && lo != null) return '$la,$lo';
+      }
+      return value.toString();
+    }
+    return value.toString();
+  }
 
   /// Optional input formatters installed by the field widget for this rule.
   /// Default: no formatters (keystroke-time rejection is opt-in per rule).

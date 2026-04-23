@@ -104,6 +104,15 @@ class RuleLookup {
     'English Text Only': 23,
     'Minimum 8 Characters': 24,
     'Strong Password': 25,
+    'Minimum Selection': 26,
+    'Maximum Selection': 27,
+    'Minimum Date/Time': 28,
+    'Maximum Date/Time': 29,
+    'Between Dates/Times': 30,
+    'Equal Date/Time': 34,
+    'Max File Size': 31,
+    'Allowed Extensions': 32,
+    'Phone Number': 33,
   };
 
   /// Disambiguates fingerprint collisions using the validation's declared

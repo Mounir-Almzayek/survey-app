@@ -406,6 +406,9 @@
   "target_categories": "Target Categories",
   "retry_all": "Retry All",
   "clear_all": "Clear All",
+  "recent_searches": "Recent Searches",
+  "search_no_results_subtitle": "No surveys matched your search. Try different keywords.",
+  "no_surveys_available_subtitle": "You don't have any assigned surveys currently. Make sure to sync data.",
   "view_completed_responses": "View Completed Responses",
   "to": "To",
   "from": "From",
@@ -554,5 +557,72 @@
   "validation_arabic_only": "Arabic text only",
   "validation_english_only": "English text only",
   "validation_min_8_chars": "At least 8 characters",
-  "validation_strong_password": "Password must be 8+ characters with uppercase, lowercase, digit, and symbol"
+  "validation_strong_password": "Password must be 8+ characters with uppercase, lowercase, digit, and symbol",
+  "validation_min_selection": "Select at least {count} options",
+  "@validation_min_selection": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_selection": "Select at most {count} options",
+  "@validation_max_selection": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_min_date": "Date must be on or after {date}",
+  "@validation_min_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_date": "Date must be on or before {date}",
+  "@validation_max_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_file_size": "File size must not exceed {size} MB",
+  "@validation_max_file_size": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_invalid_file_type": "Allowed file types: {allowed}",
+  "@validation_invalid_file_type": {
+    "placeholders": {
+      "allowed": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_date_range": "Must be between {start} and {end}",
+  "@validation_date_range": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_equal_date": "Must be exactly {date}",
+  "@validation_equal_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

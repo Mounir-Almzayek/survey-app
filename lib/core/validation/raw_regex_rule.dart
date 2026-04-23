@@ -18,11 +18,12 @@ class RawRegexRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
+    final s = coerceString(value);
     final raw = validation.validation ?? '';
     if (raw.isEmpty) return const RuleResult.valid();
 
@@ -37,7 +38,7 @@ class RawRegexRule extends Rule {
 
     try {
       final re = RegExp(pattern, unicode: true, dotAll: true);
-      if (re.hasMatch(value)) return const RuleResult.valid();
+      if (re.hasMatch(s)) return const RuleResult.valid();
     } catch (_) {
       return const RuleResult.valid();
     }

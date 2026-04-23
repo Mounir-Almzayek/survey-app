@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import '../../styles/app_colors.dart';
 import '../../models/survey/question_validation_model.dart';
 import '../../utils/responsive_layout.dart';
@@ -113,14 +114,28 @@ class SurveyQuestionCard extends StatelessWidget {
                 String displayText = title;
 
                 if (values.isNotEmpty) {
-                  final min = values['min'];
-                  final max = values['max'];
-                  if (min != null && max != null) {
-                    displayText = '$title: $min – $max';
-                  } else if (min != null) {
-                    displayText = '$title: $min+';
-                  } else if (max != null) {
-                    displayText = '$title: ≤$max';
+                  // Standardize value retrieval for various rule types
+                  final dynamic vMin = values['min'] ?? values['start'];
+                  final dynamic vMax = values['max'] ?? values['end'];
+                  final dynamic vVal = values['value'];
+
+                  String? sMin = vMin?.toString();
+                  String? sMax = vMax?.toString();
+                  String? sVal = vVal?.toString();
+
+                  // Format if they look like dates/times
+                  sMin = _formatIfDate(sMin, locale);
+                  sMax = _formatIfDate(sMax, locale);
+                  sVal = _formatIfDate(sVal, locale);
+
+                  if (sMin != null && sMax != null) {
+                    displayText = '$title: $sMin – $sMax';
+                  } else if (sMin != null) {
+                    displayText = '$title: $sMin+';
+                  } else if (sMax != null) {
+                    displayText = '$title: ≤$sMax';
+                  } else if (sVal != null) {
+                    displayText = '$title: $sVal';
                   }
                 }
 
@@ -167,6 +182,29 @@ class SurveyQuestionCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String? _formatIfDate(String? value, String locale) {
+    if (value == null || value.isEmpty) return null;
+
+    // Check if it's a date/time string
+    // YYYY-MM-DD
+    if (RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value)) {
+      final dt = DateTime.tryParse(value);
+      if (dt != null) return DateFormat.yMd(locale).format(dt);
+    }
+    // HH:mm:ss or HH:mm
+    if (RegExp(r'^\d{1,2}:\d{2}(:\d{2})?$').hasMatch(value)) {
+      final dt = DateTime.tryParse("1970-01-01 $value");
+      if (dt != null) return DateFormat.jm(locale).format(dt);
+    }
+    // YYYY-MM-DD HH:mm:ss
+    if (RegExp(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$').hasMatch(value)) {
+      final dt = DateTime.tryParse(value);
+      if (dt != null) return DateFormat.yMd(locale).add_jm().format(dt);
+    }
+
+    return value;
   }
 }
 

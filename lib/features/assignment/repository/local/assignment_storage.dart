@@ -11,6 +11,7 @@ abstract class AssignmentStorageKeys {
   static String completed(int surveyId) => 'completed_responses_$surveyId';
   static const String optimisticQuotaIncrementedIds =
       'optimistic_quota_incremented_response_ids';
+  static const String searchHistory = 'recent_survey_searches';
 }
 
 /// Assignment local storage via Hive (same service used by auth, profile, etc.).

@@ -23,12 +23,13 @@ class NumberRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_number);
@@ -48,12 +49,13 @@ class PositiveNumberRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_positive_number);
@@ -73,12 +75,13 @@ class IntegerRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_integer);
@@ -98,12 +101,13 @@ class DecimalNumberRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_decimal);
@@ -123,12 +127,13 @@ class Decimal2PlacesRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_decimal_2places);

@@ -406,6 +406,9 @@
   "target_categories": "الفئات المستهدفة",
   "retry_all": "إعادة محاولة الكل",
   "clear_all": "إخلاء الكل",
+  "recent_searches": "عمليات البحث الأخيرة",
+  "search_no_results_subtitle": "لم نجد أي استطلاع يطابق بحثك. جرب كلمات أخرى.",
+  "no_surveys_available_subtitle": "ليس لديك أي استطلاعات مسندة حالياً. تأكد من مزامنة البيانات.",
   "view_completed_responses": "عرض الاستجابات المكتملة",
   "to": "ل",
   "from": "من",
@@ -555,5 +558,72 @@
   "validation_arabic_only": "أدخل نصاً عربياً فقط",
   "validation_english_only": "أدخل نصاً إنجليزياً فقط",
   "validation_min_8_chars": "يجب ألا تقل عن 8 محارف",
-  "validation_strong_password": "كلمة المرور: 8 محارف على الأقل، تتضمن حرفاً كبيراً وصغيراً ورقماً ورمزاً خاصاً"
+  "validation_strong_password": "كلمة المرور: 8 محارف على الأقل، تتضمن حرفاً كبيراً وصغيراً ورقماً ورمزاً خاصاً",
+  "validation_min_selection": "يجب اختيار {count} خيارات على الأقل",
+  "@validation_min_selection": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_selection": "يجب اختيار {count} خيارات كحد أقصى",
+  "@validation_max_selection": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_min_date": "يجب أن يكون التاريخ في أو بعد {date}",
+  "@validation_min_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_date": "يجب أن يكون التاريخ في أو قبل {date}",
+  "@validation_max_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_max_file_size": "يجب ألا يتجاوز حجم الملف {size} ميجابايت",
+  "@validation_max_file_size": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_invalid_file_type": "أنواع الملفات المسموح بها: {allowed}",
+  "@validation_invalid_file_type": {
+    "placeholders": {
+      "allowed": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_date_range": "يجب أن يكون بين {start} و {end}",
+  "@validation_date_range": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "validation_equal_date": "يجب أن يكون مطابقاً لـ {date}",
+  "@validation_equal_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

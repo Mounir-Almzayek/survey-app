@@ -28,12 +28,13 @@ class ArabicOnlyRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok ? const RuleResult.valid() : RuleResult.invalid(S.current.validation_arabic_only);
   }
 
@@ -52,12 +53,13 @@ class EnglishOnlyRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok ? const RuleResult.valid() : RuleResult.invalid(S.current.validation_english_only);
   }
 

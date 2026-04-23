@@ -2820,6 +2820,36 @@ class S {
     );
   }
 
+  /// `Recent Searches`
+  String get recent_searches {
+    return Intl.message(
+      'Recent Searches',
+      name: 'recent_searches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No surveys matched your search. Try different keywords.`
+  String get search_no_results_subtitle {
+    return Intl.message(
+      'No surveys matched your search. Try different keywords.',
+      name: 'search_no_results_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You don't have any assigned surveys currently. Make sure to sync data.`
+  String get no_surveys_available_subtitle {
+    return Intl.message(
+      'You don\'t have any assigned surveys currently. Make sure to sync data.',
+      name: 'no_surveys_available_subtitle',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `View Completed Responses`
   String get view_completed_responses {
     return Intl.message(
@@ -3547,6 +3577,86 @@ class S {
       name: 'validation_strong_password',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Select at least {count} options`
+  String validation_min_selection(String count) {
+    return Intl.message(
+      'Select at least $count options',
+      name: 'validation_min_selection',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Select at most {count} options`
+  String validation_max_selection(String count) {
+    return Intl.message(
+      'Select at most $count options',
+      name: 'validation_max_selection',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Date must be on or after {date}`
+  String validation_min_date(String date) {
+    return Intl.message(
+      'Date must be on or after $date',
+      name: 'validation_min_date',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `Date must be on or before {date}`
+  String validation_max_date(String date) {
+    return Intl.message(
+      'Date must be on or before $date',
+      name: 'validation_max_date',
+      desc: '',
+      args: [date],
+    );
+  }
+
+  /// `File size must not exceed {size} MB`
+  String validation_max_file_size(String size) {
+    return Intl.message(
+      'File size must not exceed $size MB',
+      name: 'validation_max_file_size',
+      desc: '',
+      args: [size],
+    );
+  }
+
+  /// `Allowed file types: {allowed}`
+  String validation_invalid_file_type(String allowed) {
+    return Intl.message(
+      'Allowed file types: $allowed',
+      name: 'validation_invalid_file_type',
+      desc: '',
+      args: [allowed],
+    );
+  }
+
+  /// `Must be between {start} and {end}`
+  String validation_date_range(String start, String end) {
+    return Intl.message(
+      'Must be between $start and $end',
+      name: 'validation_date_range',
+      desc: '',
+      args: [start, end],
+    );
+  }
+
+  /// `Must be exactly {date}`
+  String validation_equal_date(String date) {
+    return Intl.message(
+      'Must be exactly $date',
+      name: 'validation_equal_date',
+      desc: '',
+      args: [date],
     );
   }
 }

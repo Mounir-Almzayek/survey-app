@@ -27,15 +27,16 @@ class MinLettersRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
+    final s = coerceString(value);
     final min = paramInt(params, 'min');
     if (min == null) return const RuleResult.valid();
     final pattern = (validation.validation ?? '').replaceAll('min', '$min');
-    final ok = _match(pattern, value);
+    final ok = _match(pattern, s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_min_letters(min.toString()));
@@ -50,15 +51,16 @@ class MaxLettersRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
+    final s = coerceString(value);
     final max = paramInt(params, 'max');
     if (max == null) return const RuleResult.valid();
     final pattern = (validation.validation ?? '').replaceAll('max', '$max');
-    final ok = _match(pattern, value);
+    final ok = _match(pattern, s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_max_letters(max.toString()));
@@ -82,12 +84,13 @@ class LettersOnlyRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_letters_only);
@@ -107,12 +110,13 @@ class LettersAndSpacesRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_letters_and_spaces);

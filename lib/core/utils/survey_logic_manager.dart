@@ -1,3 +1,4 @@
+import 'dart:convert';
 import '../enums/survey_enums.dart';
 import 'survey_validator.dart';
 
@@ -19,68 +20,97 @@ class SurveyLogicManager {
     // 2. If actual value is null, other operators always fail (matches Web logic)
     if (actualValue == null) return false;
 
-    // 3. Normalize values for consistent comparison (JS-like strings)
-    final String actualStr = _jsLikeString(actualValue);
-    final String ruleStr = _jsLikeString(ruleValue);
+    // 3. Normalize values for comparison
+    // We use a serialized version for string comparisons, but keep raw for numeric
+    final String aStr = _serialize(actualValue);
+    final String rStr = _serialize(ruleValue);
+
+    // 4. Numeric conversion (matches backend logic)
+    // Try numeric conversion
+    final aNum = double.tryParse(aStr.replaceAll(RegExp(r'[^0-9.]'), ''));
+    final rNum = double.tryParse(rStr.replaceAll(RegExp(r'[^0-9.]'), ''));
+    final isNumeric = aNum != null && rNum != null;
+
+    // Try date conversion for inequality operators
+    DateTime? aDate;
+    DateTime? rDate;
+    if (!isNumeric) {
+      aDate = _tryParseDate(aStr);
+      rDate = _tryParseDate(rStr);
+    }
+    final isDate = aDate != null && rDate != null;
 
     switch (operator) {
       case ConditionOperator.eq:
-        return actualStr == ruleStr;
+        if (isNumeric) return aNum == rNum;
+        return aStr == rStr;
       case ConditionOperator.neq:
-        return actualStr != ruleStr;
-      case ConditionOperator.inList:
-        final List<dynamic> expectedList = ruleValue is List
-            ? ruleValue
-            : [ruleValue];
-        // Check if the actual value (as a single unit) exists in the expected list
-        return expectedList.any((e) => _jsLikeString(e) == actualStr);
-      case ConditionOperator.notIn:
-        final List<dynamic> expectedList = ruleValue is List
-            ? ruleValue
-            : [ruleValue];
-        return !expectedList.any((e) => _jsLikeString(e) == actualStr);
+        if (isNumeric) return aNum != rNum;
+        return aStr != rStr;
       case ConditionOperator.gt:
-        final cmp = _compare(actualValue, ruleValue);
-        return cmp != null && cmp > 0;
+        if (isNumeric) return aNum > rNum;
+        if (isDate) return aDate.isAfter(rDate);
+        return aStr.compareTo(rStr) > 0;
       case ConditionOperator.lt:
-        final cmp = _compare(actualValue, ruleValue);
-        return cmp != null && cmp < 0;
+        if (isNumeric) return aNum < rNum;
+        if (isDate) return aDate.isBefore(rDate);
+        return aStr.compareTo(rStr) < 0;
       case ConditionOperator.gte:
-        final cmp = _compare(actualValue, ruleValue);
-        return cmp != null && cmp >= 0;
+        if (isNumeric) return aNum >= rNum;
+        if (isDate) return aDate.isAfter(rDate) || aDate.isAtSameMomentAs(rDate);
+        return aStr.compareTo(rStr) >= 0;
       case ConditionOperator.lte:
-        final cmp = _compare(actualValue, ruleValue);
-        return cmp != null && cmp <= 0;
+        if (isNumeric) return aNum <= rNum;
+        if (isDate) return aDate.isBefore(rDate) || aDate.isAtSameMomentAs(rDate);
+        return aStr.compareTo(rStr) <= 0;
       case ConditionOperator.contains:
-        // For lists (Checkboxes), check if any element matches or the string exists
-        if (actualValue is List) {
-          return actualValue.any(
-            (item) => _jsLikeString(
-              item,
-            ).toLowerCase().contains(ruleStr.toLowerCase()),
-          );
-        }
-        return actualStr.toLowerCase().contains(ruleStr.toLowerCase());
+        // Case-insensitive string inclusion (matches backend)
+        return aStr.toLowerCase().contains(rStr.toLowerCase());
+      case ConditionOperator.inList:
+        final List<String> inList = ruleValue is List
+            ? ruleValue.map((v) => _serialize(v)).toList()
+            : rStr.split(',').map((v) => v.trim()).toList();
+        return inList.contains(aStr);
+      case ConditionOperator.notIn:
+        final List<String> notInList = ruleValue is List
+            ? ruleValue.map((v) => _serialize(v)).toList()
+            : rStr.split(',').map((v) => v.trim()).toList();
+        return !notInList.contains(aStr);
       default:
         return false;
     }
   }
 
-  /// Mimics JavaScript's String() behavior for consistent logic with Web
-  static String _jsLikeString(dynamic value) {
+  /// Serializes value to match backend storage (Prisma/DB)
+  static String _serialize(dynamic value) {
     if (value == null) return "";
-    if (value is List) return value.join(","); // JS: [1,2].toString() -> "1,2"
-    return value.toString();
+    if (value is bool) return value ? "true" : "false";
+    if (value is List || value is Map) {
+      try {
+        return jsonEncode(value);
+      } catch (_) {
+        return value.toString();
+      }
+    }
+    return value.toString().trim();
   }
 
-  static double? _compare(dynamic actual, dynamic rule) {
-    try {
-      final a = double.tryParse(actual.toString());
-      final r = double.tryParse(rule.toString());
-      if (a == null || r == null) return null;
-      return a - r;
-    } catch (_) {
-      return null;
+  /// Parses date/time strings for comparison logic
+  static DateTime? _tryParseDate(String v) {
+    final trimmed = v.trim();
+    if (trimmed.isEmpty) return null;
+
+    final full = DateTime.tryParse(trimmed);
+    if (full != null) return full;
+
+    if (RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(trimmed)) {
+      return DateTime.tryParse(trimmed);
     }
+
+    if (RegExp(r'^\d{1,2}:\d{2}(:\d{2})?$').hasMatch(trimmed)) {
+      return DateTime.tryParse("1970-01-01 $trimmed");
+    }
+
+    return null;
   }
 }

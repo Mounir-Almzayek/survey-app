@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 import '../styles/app_colors.dart';
 import '../l10n/generated/l10n.dart';
@@ -26,6 +27,35 @@ class CustomDatePickerField extends StatelessWidget {
     this.pickTime = false,
     this.onlyTime = false,
   });
+
+  String _formatDisplayDate(BuildContext context) {
+    if (selectedDate == null || selectedDate!.isEmpty) {
+      return S.of(context).select_date;
+    }
+
+    try {
+      final locale = Localizations.localeOf(context).languageCode;
+      DateTime? dt;
+      
+      if (onlyTime) {
+        dt = DateTime.tryParse("1970-01-01 $selectedDate");
+      } else {
+        dt = DateTime.tryParse(selectedDate!);
+      }
+
+      if (dt == null) return selectedDate!;
+
+      if (onlyTime) {
+        return DateFormat.jm(locale).format(dt);
+      } else if (pickTime) {
+        return DateFormat.yMd(locale).add_jm().format(dt);
+      } else {
+        return DateFormat.yMd(locale).format(dt);
+      }
+    } catch (_) {
+      return selectedDate!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +91,7 @@ class CustomDatePickerField extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    selectedDate?.isNotEmpty == true
-                        ? selectedDate!
-                        : S.of(context).select_date,
+                    _formatDisplayDate(context),
                     style: TextStyle(
                       fontSize: context.adaptiveFont(14.sp),
                       color: selectedDate?.isNotEmpty == true
@@ -148,11 +176,25 @@ class CustomDatePickerField extends StatelessWidget {
     if (context.mounted) {
       DateTime finalDateTime = pickedDate;
       if (pickTime || onlyTime) {
-        final TimeOfDay initialTime = (selectedDate != null && onlyTime)
-            ? TimeOfDay(
-                hour: int.tryParse(selectedDate!.split(':')[0]) ?? 0,
-                minute: int.tryParse(selectedDate!.split(':')[1]) ?? 0)
-            : TimeOfDay.fromDateTime(DateTime.now());
+        TimeOfDay initialTime = TimeOfDay.fromDateTime(DateTime.now());
+        if (selectedDate != null && selectedDate!.isNotEmpty) {
+          try {
+            if (onlyTime) {
+              final parts = selectedDate!.split(':');
+              initialTime = TimeOfDay(
+                hour: int.parse(parts[0]),
+                minute: int.parse(parts[1]),
+              );
+            } else if (pickTime) {
+              final dt = DateTime.tryParse(selectedDate!);
+              if (dt != null) {
+                initialTime = TimeOfDay.fromDateTime(dt);
+              }
+            }
+          } catch (_) {
+            // Fallback to now
+          }
+        }
 
         final TimeOfDay? pickedTime = await showTimePicker(
           context: context,

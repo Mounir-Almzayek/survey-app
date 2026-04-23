@@ -26,14 +26,14 @@ class MinValueRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
     final min = paramDouble(params, 'min');
     if (min == null) return const RuleResult.valid();
-    final parsed = _toNumber(value);
+    final parsed = _toNumber(coerceString(value));
     if (parsed == null || parsed < min) {
       return RuleResult.invalid(S.current.validation_min_value(_fmt(min)));
     }
@@ -49,14 +49,14 @@ class MaxValueRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
     final max = paramDouble(params, 'max');
     if (max == null) return const RuleResult.valid();
-    final parsed = _toNumber(value);
+    final parsed = _toNumber(coerceString(value));
     if (parsed == null || parsed > max) {
       return RuleResult.invalid(S.current.validation_max_value(_fmt(max)));
     }
@@ -72,14 +72,14 @@ class ValueRangeRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
     final min = paramDouble(params, 'min');
     final max = paramDouble(params, 'max');
-    final parsed = _toNumber(value);
+    final parsed = _toNumber(coerceString(value));
     // Non-numeric input under a Value Range rule falls back to the
     // narrowest applicable message — range if both bounds, else the
     // single-sided bound message.

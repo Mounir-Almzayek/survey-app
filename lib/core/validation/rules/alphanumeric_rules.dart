@@ -18,12 +18,13 @@ class AlphanumericRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_alphanumeric);
@@ -38,12 +39,13 @@ class AlphanumericWithSpacesRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_alphanumeric_with_spaces);
@@ -58,12 +60,13 @@ class NoSpecialCharsRule extends Rule {
 
   @override
   RuleResult validate({
-    required String value,
+    required dynamic value,
     required Map<String, dynamic> params,
     required Validation validation,
     required String locale,
   }) {
-    final ok = _match(validation.validation ?? '', value);
+    final s = coerceString(value);
+    final ok = _match(validation.validation ?? '', s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_no_special_chars);
