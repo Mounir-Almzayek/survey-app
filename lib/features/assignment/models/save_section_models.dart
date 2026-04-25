@@ -17,6 +17,11 @@ class SaveSectionRequest {
   final double? longitude;
   final bool isSynced;
 
+  /// Wall-clock time captured when this request DTO was built. Sent as
+  /// `created_at` so the server records the moment of user action even when
+  /// the request is replayed from the offline queue much later.
+  final DateTime createdAt;
+
   SaveSectionRequest({
     required this.sectionId,
     this.lastReachedSectionId,
@@ -24,7 +29,8 @@ class SaveSectionRequest {
     this.latitude,
     this.longitude,
     this.isSynced = false,
-  });
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
 
   SaveSectionRequest copyWith({
     int? sectionId,
@@ -33,6 +39,7 @@ class SaveSectionRequest {
     double? latitude,
     double? longitude,
     bool? isSynced,
+    DateTime? createdAt,
   }) {
     return SaveSectionRequest(
       sectionId: sectionId ?? this.sectionId,
@@ -41,6 +48,7 @@ class SaveSectionRequest {
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -50,6 +58,7 @@ class SaveSectionRequest {
       'answers': answers.map((e) => e.toJson()).toList(),
       if (latitude != null && longitude != null)
         'location': {'latitude': latitude, 'longitude': longitude},
+      'created_at': createdAt.toUtc().toIso8601String(),
     };
   }
 
@@ -63,6 +72,7 @@ class SaveSectionRequest {
   }
 
   factory SaveSectionRequest.fromJson(Map<String, dynamic> json) {
+    final rawCreatedAt = json['created_at'];
     return SaveSectionRequest(
       sectionId: json['section_id'] as int? ?? 0,
       lastReachedSectionId: json['last_reached_section_id'] as int?,
@@ -79,6 +89,7 @@ class SaveSectionRequest {
           [],
       latitude: json['location']?['latitude'] as double?,
       longitude: json['location']?['longitude'] as double?,
+      createdAt: rawCreatedAt is String ? DateTime.parse(rawCreatedAt) : null,
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart' show visibleForTesting;
+
 import '../../../data/network/api_request.dart';
 import '../models/public_link.dart';
 import '../models/public_link_start_result.dart';
@@ -70,15 +72,11 @@ class PublicLinksOnlineRepository {
     required String ageGroup,
     ({double latitude, double longitude})? location,
   }) async {
-    final body = <String, dynamic>{
-      'gender': gender,
-      'age_group': ageGroup,
-      if (location != null)
-        'location': {
-          'latitude': location.latitude,
-          'longitude': location.longitude,
-        },
-    };
+    final body = buildStartBody(
+      gender: gender,
+      ageGroup: ageGroup,
+      location: location,
+    );
 
     final apiRequest = APIRequest(
       path: '/public-link/$shortCode/start',
@@ -92,6 +90,30 @@ class PublicLinksOnlineRepository {
     return PublicLinkStartResult.fromJson(data as Map<String, dynamic>);
   }
 
+  /// Build the request body for the public-link start endpoint. The
+  /// `created_at` field is captured at call time so a server that supports
+  /// it can record the moment of user action; backends that don't yet
+  /// recognise the field strip it silently (Zod default).
+  @visibleForTesting
+  static Map<String, dynamic> buildStartBody({
+    required String gender,
+    required String ageGroup,
+    ({double latitude, double longitude})? location,
+    DateTime? createdAt,
+  }) {
+    final ts = (createdAt ?? DateTime.now()).toUtc().toIso8601String();
+    return <String, dynamic>{
+      'gender': gender,
+      'age_group': ageGroup,
+      if (location != null)
+        'location': {
+          'latitude': location.latitude,
+          'longitude': location.longitude,
+        },
+      'created_at': ts,
+    };
+  }
+
   /// Submit answers for one section and retrieve the next section or a
   /// completion signal (unauthenticated).
   /// POST /public-link/:short_code/responses/:response_id/sections/:section_id
@@ -101,11 +123,7 @@ class PublicLinksOnlineRepository {
     required int sectionId,
     required List<({int questionId, dynamic value})> answers,
   }) async {
-    final body = <String, dynamic>{
-      'answers': answers
-          .map((a) => {'question_id': a.questionId, 'value': a.value})
-          .toList(),
-    };
+    final body = buildSectionSubmitBody(answers: answers);
 
     final apiRequest = APIRequest(
       path: '/public-link/$shortCode/responses/$responseId/sections/$sectionId',
@@ -117,6 +135,23 @@ class PublicLinksOnlineRepository {
     final response = await apiRequest.send();
     final data = response.data['data'] ?? response.data;
     return PublicLinkSectionResult.fromJson(data as Map<String, dynamic>);
+  }
+
+  /// Build the request body for the public-link section-submit endpoint.
+  /// `created_at` is captured at call time. See [buildStartBody] for
+  /// backend-compatibility notes.
+  @visibleForTesting
+  static Map<String, dynamic> buildSectionSubmitBody({
+    required List<({int questionId, dynamic value})> answers,
+    DateTime? createdAt,
+  }) {
+    final ts = (createdAt ?? DateTime.now()).toUtc().toIso8601String();
+    return <String, dynamic>{
+      'answers': answers
+          .map((a) => {'question_id': a.questionId, 'value': a.value})
+          .toList(),
+      'created_at': ts,
+    };
   }
 
   /// Create a short-lived public link for proxy location capture.

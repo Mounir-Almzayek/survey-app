@@ -100,7 +100,7 @@ class AssignmentRepository {
         status: ResponseStatus.draft,
         gender: request.gender,
         ageGroup: request.ageGroup,
-        startedAt: DateTime.now(),
+        startedAt: request.createdAt,
       ),
     );
   }

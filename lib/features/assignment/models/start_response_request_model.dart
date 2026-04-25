@@ -8,37 +8,44 @@ class StartResponseRequest extends Equatable {
   final AgeGroup ageGroup;
   final Map<String, double>? location;
 
-  const StartResponseRequest({
+  /// Wall-clock time captured when this request DTO was built. Sent as
+  /// `created_at` so the server can record the moment of user action even
+  /// when the request is replayed from the offline queue much later.
+  final DateTime createdAt;
+
+  StartResponseRequest({
     required this.surveyId,
     required this.gender,
     required this.ageGroup,
     this.location,
-  });
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
 
-  /// Create a copy with updated values
   StartResponseRequest copyWith({
     int? surveyId,
     Gender? gender,
     AgeGroup? ageGroup,
     Map<String, double>? location,
+    DateTime? createdAt,
   }) {
     return StartResponseRequest(
       surveyId: surveyId ?? this.surveyId,
       gender: gender ?? this.gender,
       ageGroup: ageGroup ?? this.ageGroup,
       location: location ?? this.location,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
-  /// Convert to JSON for API request
   Map<String, dynamic> toJson() {
     return {
       'gender': gender.toJson(),
       'age_group': ageGroup.toJson(),
       if (location != null) 'location': location,
+      'created_at': createdAt.toUtc().toIso8601String(),
     };
   }
 
   @override
-  List<Object?> get props => [surveyId, gender, ageGroup, location];
+  List<Object?> get props => [surveyId, gender, ageGroup, location, createdAt];
 }
