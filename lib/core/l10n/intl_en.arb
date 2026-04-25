@@ -143,6 +143,8 @@
   "close": "Close",
   "use_my_current_location": "Use my current location",
   "invalid_phone_number": "Invalid phone number",
+  "must_be_saudi_number": "Must be a valid Saudi mobile number",
+  "other_specify_hint": "Specify...",
   "location_required": "Location Required",
   "getting_location": "Getting your location…",
   "verify_custody": "Verify Custody",

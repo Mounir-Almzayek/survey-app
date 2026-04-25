@@ -143,6 +143,8 @@
   "close": "إغلاق",
   "use_my_current_location": "استخدام موقعي الحالي",
   "invalid_phone_number": "رقم الهاتف غير صحيح",
+  "must_be_saudi_number": "يجب إدخال رقم سعودي",
+  "other_specify_hint": "حدِّد...",
   "location_required": "الموقع مطلوب",
   "getting_location": "جاري الحصول على موقعك…",
   "verify_custody": "التحقق من العهدة",

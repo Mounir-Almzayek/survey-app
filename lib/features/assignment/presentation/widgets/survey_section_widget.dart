@@ -20,6 +20,10 @@ class SurveySectionWidget extends StatefulWidget {
 
 class _SurveySectionWidgetState extends State<SurveySectionWidget> {
   final Map<int, String?> _errors = {};
+  // Bumped on every Next press so live-validation controllers can flip
+  // pristine, touched-then-cleared fields into "submit attempted" mode and
+  // reveal cached errors (matching the public-link flow's behaviour).
+  int _submitAttemptCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +88,7 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
                             navState.currentSectionIndex,
                           ),
                           errorText: _errors[question.id],
+                          submitAttemptCount: _submitAttemptCount,
                           onAnswerChange: (value) {
                             // Sanitize value: Empty strings should be null
                             final sanitizedValue =
@@ -428,6 +433,7 @@ class _SurveySectionWidgetState extends State<SurveySectionWidget> {
     setState(() {
       _errors.clear();
       _errors.addAll(newErrors);
+      _submitAttemptCount++;
     });
 
     return !hasError;

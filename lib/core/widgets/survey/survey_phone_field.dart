@@ -4,6 +4,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 import '../../models/survey/question_model.dart';
 import '../../styles/app_colors.dart';
+import '../../validation/live_validation_controller.dart';
 import 'survey_question_card.dart';
 
 /// Phone number input with country selector + validation.
@@ -20,6 +21,7 @@ class SurveyPhoneField extends StatefulWidget {
   final bool isVisible;
   final bool isEditable;
   final String defaultCountryCode;
+  final LiveValidationController? validationController;
 
   const SurveyPhoneField({
     super.key,
@@ -30,6 +32,7 @@ class SurveyPhoneField extends StatefulWidget {
     this.isVisible = true,
     this.isEditable = true,
     this.defaultCountryCode = 'SA',
+    this.validationController,
   });
 
   @override
@@ -93,11 +96,9 @@ class _SurveyPhoneFieldState extends State<SurveyPhoneField> {
       } catch (_) {/* fall through */}
     }
     final trimmed = national.trim();
-    if (trimmed.isEmpty) {
-      widget.onChanged(null);
-    } else {
-      widget.onChanged('+$_dialCode$trimmed');
-    }
+    final emitted = trimmed.isEmpty ? null : '+$_dialCode$trimmed';
+    widget.onChanged(emitted);
+    widget.validationController?.onChanged(emitted);
   }
 
   @override
@@ -109,6 +110,7 @@ class _SurveyPhoneFieldState extends State<SurveyPhoneField> {
       errorText: widget.errorText,
       isVisible: widget.isVisible,
       validations: widget.question.questionValidations,
+      liveController: widget.validationController,
       child: AbsorbPointer(
         absorbing: !widget.isEditable,
         child: Opacity(

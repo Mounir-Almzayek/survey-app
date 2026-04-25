@@ -109,7 +109,10 @@ class _SurveyQuestionRendererState extends State<SurveyQuestionRenderer> {
         return SurveyNumberField(
           question: q,
           value: widget.value?.toString(),
-          onChanged: (val) => widget.onAnswerChange(num.tryParse(val)),
+          // Keep the raw string — `num.tryParse` would round "5.20" to 5.2
+          // and break validations like "Decimal (2 places)" that the user
+          // can otherwise satisfy correctly. Backend accepts numeric strings.
+          onChanged: widget.onAnswerChange,
           errorText: widget.errorText,
           isVisible: widget.isVisible,
           isEditable: widget.isEditable,
@@ -217,6 +220,7 @@ class _SurveyQuestionRendererState extends State<SurveyQuestionRenderer> {
           errorText: widget.errorText,
           isVisible: widget.isVisible,
           isEditable: widget.isEditable,
+          validationController: _controllerFor(q),
         );
     }
   }

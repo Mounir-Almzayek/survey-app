@@ -271,6 +271,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Invalid email address"),
         "invalid_phone_number":
             MessageLookupByLibrary.simpleMessage("Invalid phone number"),
+        "must_be_saudi_number":
+            MessageLookupByLibrary.simpleMessage(
+                "Must be a valid Saudi mobile number"),
+        "other_specify_hint":
+            MessageLookupByLibrary.simpleMessage("Specify..."),
         "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
             "Invalid QR code. Please try again."),
         "language": MessageLookupByLibrary.simpleMessage("Language"),

@@ -1410,6 +1410,26 @@ class S {
     );
   }
 
+  /// `Must be a valid Saudi mobile number`
+  String get must_be_saudi_number {
+    return Intl.message(
+      'Must be a valid Saudi mobile number',
+      name: 'must_be_saudi_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Specify...`
+  String get other_specify_hint {
+    return Intl.message(
+      'Specify...',
+      name: 'other_specify_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Location Required`
   String get location_required {
     return Intl.message(

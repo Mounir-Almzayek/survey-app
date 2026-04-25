@@ -1,5 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:king_abdulaziz_center_survey_app/core/enums/survey_enums.dart';
+import 'package:king_abdulaziz_center_survey_app/core/l10n/generated/l10n.dart';
 import 'package:king_abdulaziz_center_survey_app/core/models/survey/validation_model.dart';
 import 'package:king_abdulaziz_center_survey_app/core/validation/raw_regex_rule.dart';
 import 'package:king_abdulaziz_center_survey_app/core/validation/rule_lookup.dart';
@@ -8,6 +10,9 @@ import 'package:king_abdulaziz_center_survey_app/core/validation/rule_registry.d
 import '_fixtures/seeded_validations.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async => await S.load(const Locale('en')));
+
   final byId = RuleRegistry.rulesForTest;
 
   test('tier 1: ID match wins when id is in the registry', () {

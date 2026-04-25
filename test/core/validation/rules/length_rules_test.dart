@@ -1,9 +1,14 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:king_abdulaziz_center_survey_app/core/l10n/generated/l10n.dart';
 import 'package:king_abdulaziz_center_survey_app/core/validation/rules/length_rules.dart';
 
 import '../_fixtures/seeded_validations.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async => await S.load(const Locale('en')));
+
   group('MinLengthRule (id 6)', () {
     final r = MinLengthRule();
     test('accepts when length >= min', () {
@@ -13,7 +18,6 @@ void main() {
       final res = r.validate(value: 'ab', params: {'min': 3}, validation: vMinLength, locale: 'ar');
       expect(res.isValid, false);
       expect(res.message, contains('3'));
-      expect(res.message, contains(vMinLength.arContent!));
     });
     test('no-op when min missing from params', () {
       expect(r.validate(value: '', params: {}, validation: vMinLength, locale: 'en').isValid, true);

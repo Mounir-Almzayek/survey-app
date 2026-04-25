@@ -1,6 +1,9 @@
+import '../enums/survey_enums.dart';
 import '../l10n/generated/l10n.dart';
 import '../models/survey/question_model.dart';
+import '../models/survey/validation_model.dart';
 import '../validation/rule_registry.dart';
+import '../validation/rules/phone_rule.dart';
 
 class SurveyValidator {
   /// Validates a question value against its validation rules.
@@ -16,6 +19,14 @@ class SurveyValidator {
     }
     if (!isRequired && isValueEmpty(value)) return const [];
 
+    // Phone questions don't get a `questionValidations` row from the backend
+    // — phone format is implied by the question type. Run the Saudi check
+    // here so it fires regardless of survey configuration.
+    if (question.type == QuestionType.phoneNumber) {
+      final phoneError = validatePhone(value, locale: locale);
+      if (phoneError != null) return [phoneError];
+    }
+
     final errors = RuleRegistry.validateAll(
       question: question,
       value: value,
@@ -23,6 +34,18 @@ class SurveyValidator {
     );
 
     return errors;
+  }
+
+  /// Standalone phone validator. Returns null when the value is a valid Saudi
+  /// mobile (or empty); returns the localized error message otherwise.
+  static String? validatePhone(dynamic value, {required String locale}) {
+    final result = PhoneNumberRule().validate(
+      value: value,
+      params: const {},
+      validation: _phoneSyntheticValidation,
+      locale: locale,
+    );
+    return result.isValid ? null : result.message;
   }
 
   /// Public version of empty check for UI use
@@ -61,3 +84,15 @@ class SurveyValidator {
     return value;
   }
 }
+
+/// PhoneNumberRule needs a Validation object purely to satisfy its signature
+/// — for type-implied phone checks the rule does its own work and ignores the
+/// regex/title fields.
+final Validation _phoneSyntheticValidation = Validation(
+  id: 33,
+  type: ValidationType.questions,
+  validation: null,
+  enTitle: 'Phone Number',
+  arTitle: 'رقم هاتف',
+  isActive: true,
+);

@@ -1,9 +1,14 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:king_abdulaziz_center_survey_app/core/l10n/generated/l10n.dart';
 import 'package:king_abdulaziz_center_survey_app/core/validation/rules/number_rules.dart';
 
 import '../_fixtures/seeded_validations.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async => await S.load(const Locale('en')));
+
   group('NumberRule (id 1)', () {
     final r = NumberRule();
     test('accepts integer', () {
@@ -15,14 +20,13 @@ void main() {
     test('accepts Arabic-Indic digits', () {
       expect(r.validate(value: '١٢٣', params: {}, validation: vNumber, locale: 'ar').isValid, true);
     });
-    test('rejects letters — uses arContent', () {
+    test('rejects letters — returns localized error message', () {
       final res = r.validate(value: 'abc', params: {}, validation: vNumber, locale: 'ar');
       expect(res.isValid, false);
-      expect(res.message, vNumber.arContent);
+      expect(res.message, isNotEmpty);
     });
-    test('formatters: digits+sign with decimal', () {
-      final fs = r.formatters({});
-      expect(fs.length, 1);
+    test('formatters: none — warn via live validation, do not block', () {
+      expect(r.formatters({}), isEmpty);
     });
   });
 
@@ -37,8 +41,8 @@ void main() {
     test('rejects negative', () {
       expect(r.validate(value: '-5', params: {}, validation: vPositiveNumber, locale: 'en').isValid, false);
     });
-    test('formatters: digits-only (no sign, no decimal)', () {
-      expect(r.formatters({}).length, 1);
+    test('formatters: none — warn via live validation, do not block', () {
+      expect(r.formatters({}), isEmpty);
     });
   });
 
@@ -73,8 +77,8 @@ void main() {
     test('rejects 3 decimal places', () {
       expect(r.validate(value: '12.345', params: {}, validation: vDecimal2, locale: 'en').isValid, false);
     });
-    test('formatters: digits+sign(decimal) AND decimal-places cap', () {
-      expect(r.formatters({}).length, 2);
+    test('formatters: none — warn via live validation, do not block', () {
+      expect(r.formatters({}), isEmpty);
     });
   });
 }

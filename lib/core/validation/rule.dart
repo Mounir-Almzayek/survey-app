@@ -41,6 +41,24 @@ abstract class Rule {
     required String locale,
   });
 
+  /// Canonical regex pattern, used as a fallback when the backend sends a
+  /// Validation row with a null/empty regex. Without this, an empty pattern
+  /// becomes `RegExp('')` which matches anything — so every rule silently
+  /// passes whenever the backend column is blank.
+  ///
+  /// Param-bearing rules (Min/Max Length, Min/Max Letters) embed `min`/`max`
+  /// placeholders that need substitution at evaluation time — handle that in
+  /// the rule's `validate` rather than here.
+  String get defaultRegex => '';
+
+  /// Picks the regex to evaluate: backend-supplied if present and non-empty,
+  /// otherwise the rule's own [defaultRegex].
+  String resolveRegex(Validation validation) {
+    final backend = validation.validation;
+    if (backend != null && backend.isNotEmpty) return backend;
+    return defaultRegex;
+  }
+
   /// Helper to get a string representation for rules that expect text.
   String coerceString(dynamic value) {
     if (value == null) return '';

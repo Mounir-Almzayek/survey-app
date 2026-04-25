@@ -4,7 +4,9 @@
       "Bash(flutter test *)",
       "Bash(flutter analyze *)",
       "Bash(flutter pub *)",
-      "Bash(dart run *)"
+      "Bash(dart run *)",
+      "Bash(git -C C:/Users/Mounir/Documents/FlutterProject/king_abdulaziz_center_survey_app log --stat --oneline -3)",
+      "Bash(xargs grep *)"
     ]
   }
 }

@@ -94,6 +94,15 @@ class _SurveyAnsweringPageState extends State<SurveyAnsweringPage> {
                     ? S.of(context).demographic_quota_full_for_category
                     : state.message;
                 UnifiedSnackbar.error(context, message: message);
+                // Bounce the user back to the assignments list when the survey
+                // has hit its cap or the demographic slot is full — staying on
+                // the answering screen with no way forward looks broken.
+                if (state.isMaxResponsesReached ||
+                    state.isDemographicQuotaFull) {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
+                }
                 return;
               }
               if (state is start.StartResponseSuccess) {

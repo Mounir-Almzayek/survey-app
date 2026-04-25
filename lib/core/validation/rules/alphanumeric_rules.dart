@@ -17,6 +17,9 @@ class AlphanumericRule extends Rule {
   String get debugName => 'Alphanumeric';
 
   @override
+  String get defaultRegex => r'^[؀-ۿa-zA-Z0-9٠-٩]+$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -24,7 +27,7 @@ class AlphanumericRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_alphanumeric);
@@ -38,6 +41,9 @@ class AlphanumericWithSpacesRule extends Rule {
   String get debugName => 'Alphanumeric with Spaces';
 
   @override
+  String get defaultRegex => r'^[؀-ۿa-zA-Z0-9٠-٩\s]+$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -45,7 +51,7 @@ class AlphanumericWithSpacesRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_alphanumeric_with_spaces);
@@ -59,6 +65,9 @@ class NoSpecialCharsRule extends Rule {
   String get debugName => 'No Special Characters';
 
   @override
+  String get defaultRegex => r'^[؀-ۿa-zA-Z0-9٠-٩\s]+$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -66,7 +75,7 @@ class NoSpecialCharsRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_no_special_chars);

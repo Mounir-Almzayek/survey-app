@@ -10,6 +10,12 @@ class QuestionOption extends Equatable {
   final int? order;
   final bool? isDefault;
 
+  /// Marks this option as the "Other" slot — when selected, the UI prompts
+  /// for free-text input and the answer value carries that text instead of
+  /// the option's literal `value`. Defaults to false; matches the web's
+  /// `is_other` column on `question_option`.
+  final bool isOther;
+
   const QuestionOption({
     required this.id,
     this.questionId,
@@ -17,6 +23,7 @@ class QuestionOption extends Equatable {
     this.value,
     this.order,
     this.isDefault,
+    this.isOther = false,
   });
 
   factory QuestionOption.fromJson(Map<String, dynamic> json) {
@@ -29,6 +36,7 @@ class QuestionOption extends Equatable {
       isDefault: json['is_default'] is bool
           ? json['is_default'] as bool
           : null,
+      isOther: json['is_other'] is bool ? json['is_other'] as bool : false,
     );
   }
 
@@ -40,9 +48,11 @@ class QuestionOption extends Equatable {
       'value': value,
       'order': order,
       'is_default': isDefault,
+      'is_other': isOther,
     };
   }
 
   @override
-  List<Object?> get props => [id, questionId, label, value, order, isDefault];
+  List<Object?> get props =>
+      [id, questionId, label, value, order, isDefault, isOther];
 }

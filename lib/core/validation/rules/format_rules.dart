@@ -1,8 +1,5 @@
-import 'package:flutter/services.dart';
-
 import '../../l10n/generated/l10n.dart';
 import '../../models/survey/validation_model.dart';
-import '../input_formatters/no_spaces_formatter.dart';
 import '../rule.dart';
 
 
@@ -21,6 +18,10 @@ class EmailRule extends Rule {
   String get debugName => 'Email';
 
   @override
+  String get defaultRegex =>
+      r'^[a-zA-Z0-9٠-٩._%+-]+@[a-zA-Z0-9٠-٩.-]+\.[a-zA-Z]{2,}$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -28,7 +29,7 @@ class EmailRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok ? const RuleResult.valid() : RuleResult.invalid(S.current.validation_email);
   }
 }
@@ -40,6 +41,10 @@ class UrlRule extends Rule {
   String get debugName => 'URL';
 
   @override
+  String get defaultRegex =>
+      r'^(https?://)?([\da-z٠-٩.-]+)\.([a-z.]{2,6})([/\w .-]*)*/?$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -47,7 +52,7 @@ class UrlRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok ? const RuleResult.valid() : RuleResult.invalid(S.current.validation_url);
   }
 }
@@ -59,6 +64,9 @@ class NoSpacesRule extends Rule {
   String get debugName => 'No Spaces';
 
   @override
+  String get defaultRegex => r'^\S+$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -66,11 +74,7 @@ class NoSpacesRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok ? const RuleResult.valid() : RuleResult.invalid(S.current.validation_no_spaces);
   }
-
-  @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
-      [NoSpacesFormatter()];
 }

@@ -270,6 +270,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "عنوان بريد إلكتروني غير صحيح"),
         "invalid_phone_number":
             MessageLookupByLibrary.simpleMessage("رقم الهاتف غير صحيح"),
+        "must_be_saudi_number":
+            MessageLookupByLibrary.simpleMessage("يجب إدخال رقم سعودي"),
+        "other_specify_hint":
+            MessageLookupByLibrary.simpleMessage("حدِّد..."),
         "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
             "رمز QR غير صالح. يرجى المحاولة مرة أخرى."),
         "language": MessageLookupByLibrary.simpleMessage("اللغة"),

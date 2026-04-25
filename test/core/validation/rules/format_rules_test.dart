@@ -1,9 +1,14 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:king_abdulaziz_center_survey_app/core/l10n/generated/l10n.dart';
 import 'package:king_abdulaziz_center_survey_app/core/validation/rules/format_rules.dart';
 
 import '../_fixtures/seeded_validations.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async => await S.load(const Locale('en')));
+
   group('EmailRule (id 15)', () {
     final r = EmailRule();
     test('accepts valid email', () {
@@ -41,8 +46,8 @@ void main() {
     test('rejects input with space', () {
       expect(r.validate(value: 'abc 123', params: {}, validation: vNoSpaces, locale: 'en').isValid, false);
     });
-    test('formatters: NoSpacesFormatter', () {
-      expect(r.formatters({}).length, 1);
+    test('formatters: none — warn via live validation, do not block', () {
+      expect(r.formatters({}), isEmpty);
     });
   });
 }

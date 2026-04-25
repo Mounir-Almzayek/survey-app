@@ -1,9 +1,14 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:king_abdulaziz_center_survey_app/core/l10n/generated/l10n.dart';
 import 'package:king_abdulaziz_center_survey_app/core/validation/rules/letter_rules.dart';
 
 import '../_fixtures/seeded_validations.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async => await S.load(const Locale('en')));
+
   group('MinLettersRule (id 9)', () {
     final r = MinLettersRule();
     test('accepts 3+ Latin letters with min=3', () {
@@ -28,8 +33,10 @@ void main() {
     test('rejects 6 letters with max=5', () {
       expect(r.validate(value: 'abcdef', params: {'max': 5}, validation: vMaxLetters, locale: 'en').isValid, false);
     });
-    test('formatters: length-limit AND letter whitelist', () {
-      expect(r.formatters({'max': 5}).length, 2);
+    test('formatters: length cap only — no per-character whitelist', () {
+      // Per-character filtering moved to live validation (warn-don't-block).
+      // The length limiter survives because it's a hard width-of-input cap.
+      expect(r.formatters({'max': 5}).length, 1);
     });
   });
 
@@ -44,8 +51,8 @@ void main() {
     test('rejects with digits', () {
       expect(r.validate(value: 'abc1', params: {}, validation: vLettersOnly, locale: 'en').isValid, false);
     });
-    test('formatters: letter whitelist', () {
-      expect(r.formatters({}).length, 1);
+    test('formatters: none — warn via live validation, do not block', () {
+      expect(r.formatters({}), isEmpty);
     });
   });
 
@@ -57,8 +64,8 @@ void main() {
     test('rejects with digits', () {
       expect(r.validate(value: 'hi 1', params: {}, validation: vLettersAndSpaces, locale: 'en').isValid, false);
     });
-    test('formatters: letter-and-space whitelist', () {
-      expect(r.formatters({}).length, 1);
+    test('formatters: none — warn via live validation, do not block', () {
+      expect(r.formatters({}), isEmpty);
     });
   });
 }

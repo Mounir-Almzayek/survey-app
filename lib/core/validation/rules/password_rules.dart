@@ -18,6 +18,10 @@ class StrongPasswordRule extends Rule {
   String get debugName => 'Strong Password';
 
   @override
+  String get defaultRegex =>
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9٠-٩])(?=.*[!@#$%^&*]).{8,}$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -25,7 +29,7 @@ class StrongPasswordRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok ? const RuleResult.valid() : RuleResult.invalid(S.current.validation_strong_password);
   }
 }

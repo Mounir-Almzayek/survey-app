@@ -1,8 +1,5 @@
-import 'package:flutter/services.dart';
-
 import '../../l10n/generated/l10n.dart';
 import '../../models/survey/validation_model.dart';
-import '../input_formatters/char_whitelist_formatter.dart';
 import '../rule.dart';
 
 
@@ -20,11 +17,9 @@ class ArabicOnlyRule extends Rule {
   @override
   String get debugName => 'Arabic Text Only';
 
-  // Char whitelist — wider than the validation regex (accepts any
-  // Arabic block char, digit, ASCII punctuation) because the formatter
-  // can't enforce the "must contain >=1 Arabic letter" lookahead.
-  static final RegExp _char =
-      RegExp('[؀-ۿ٠-٩\\s‌‍\\x21-\\x7E]');
+  @override
+  String get defaultRegex =>
+      '^(?=.*[؀-ۿ])[؀-ۿ٠-٩\\s‌‍\\x21-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7E]+\$';
 
   @override
   RuleResult validate({
@@ -34,13 +29,9 @@ class ArabicOnlyRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok ? const RuleResult.valid() : RuleResult.invalid(S.current.validation_arabic_only);
   }
-
-  @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
-      [CharWhitelistFormatter(_char)];
 }
 
 class EnglishOnlyRule extends Rule {
@@ -49,7 +40,8 @@ class EnglishOnlyRule extends Rule {
   @override
   String get debugName => 'English Text Only';
 
-  static final RegExp _char = RegExp(r'[\x00-\x7F]');
+  @override
+  String get defaultRegex => r'^[\x00-\x7F]+$';
 
   @override
   RuleResult validate({
@@ -59,11 +51,7 @@ class EnglishOnlyRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok ? const RuleResult.valid() : RuleResult.invalid(S.current.validation_english_only);
   }
-
-  @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) =>
-      [CharWhitelistFormatter(_char)];
 }

@@ -1,5 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:king_abdulaziz_center_survey_app/core/enums/survey_enums.dart';
+import 'package:king_abdulaziz_center_survey_app/core/l10n/generated/l10n.dart';
 import 'package:king_abdulaziz_center_survey_app/core/models/survey/question_model.dart';
 import 'package:king_abdulaziz_center_survey_app/core/models/survey/question_validation_model.dart';
 import 'package:king_abdulaziz_center_survey_app/core/validation/live_validation_controller.dart';
@@ -15,6 +17,8 @@ Question _required({required List<QuestionValidation> qvs}) => Question(
     );
 
 void main() {
+  setUpAll(() async => await S.load(const Locale('en')));
+
   testWidgets('error is null on pristine field', (tester) async {
     final c = LiveValidationController(
       question: _required(qvs: [

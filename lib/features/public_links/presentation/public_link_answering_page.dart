@@ -151,8 +151,7 @@ class _PublicLinkAnsweringViewState extends State<_PublicLinkAnsweringView> {
               state: s,
               surveyTitle: widget.surveyTitle,
             ),
-          PublicLinkAnsweringCompleted c => AnsweringCompletionView(
-              rejectionReason: c.rejectionReason,
+          PublicLinkAnsweringCompleted _ => AnsweringCompletionView(
               goodbyeMessage: widget.goodbyeMessage,
             ),
           PublicLinkAnsweringError e => AnsweringErrorView(

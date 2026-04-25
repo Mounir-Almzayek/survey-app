@@ -1,10 +1,5 @@
-import 'package:flutter/services.dart';
-
 import '../../l10n/generated/l10n.dart';
 import '../../models/survey/validation_model.dart';
-import '../input_formatters/decimal_places_formatter.dart';
-import '../input_formatters/digits_and_sign_formatter.dart';
-import '../input_formatters/digits_only_formatter.dart';
 import '../rule.dart';
 
 bool _match(String pattern, String value) {
@@ -22,6 +17,9 @@ class NumberRule extends Rule {
   String get debugName => 'Number';
 
   @override
+  String get defaultRegex => r'^[-+]?[0-9٠-٩]+(\.[0-9٠-٩]+)?$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -29,16 +27,11 @@ class NumberRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_number);
   }
-
-  @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
-    DigitsAndSignFormatter(allowDecimal: true),
-  ];
 }
 
 class PositiveNumberRule extends Rule {
@@ -48,6 +41,9 @@ class PositiveNumberRule extends Rule {
   String get debugName => 'Positive Number';
 
   @override
+  String get defaultRegex => r'^\+?[1-9١-٩][0-9٠-٩]*$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -55,16 +51,11 @@ class PositiveNumberRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_positive_number);
   }
-
-  @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
-    DigitsOnlyFormatter(),
-  ];
 }
 
 class IntegerRule extends Rule {
@@ -74,6 +65,9 @@ class IntegerRule extends Rule {
   String get debugName => 'Integer';
 
   @override
+  String get defaultRegex => r'^[-+]?[0-9٠-٩]+$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -81,16 +75,11 @@ class IntegerRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_integer);
   }
-
-  @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
-    DigitsAndSignFormatter(allowDecimal: false),
-  ];
 }
 
 class DecimalNumberRule extends Rule {
@@ -100,6 +89,9 @@ class DecimalNumberRule extends Rule {
   String get debugName => 'Decimal Number';
 
   @override
+  String get defaultRegex => r'^[-+]?[0-9٠-٩]+(\.[0-9٠-٩]+)?$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -107,16 +99,11 @@ class DecimalNumberRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_decimal);
   }
-
-  @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
-    DigitsAndSignFormatter(allowDecimal: true),
-  ];
 }
 
 class Decimal2PlacesRule extends Rule {
@@ -126,6 +113,9 @@ class Decimal2PlacesRule extends Rule {
   String get debugName => 'Decimal Number (2 Decimal Places)';
 
   @override
+  String get defaultRegex => r'^[-+]?[0-9٠-٩]+\.[0-9٠-٩]{2}$';
+
+  @override
   RuleResult validate({
     required dynamic value,
     required Map<String, dynamic> params,
@@ -133,15 +123,9 @@ class Decimal2PlacesRule extends Rule {
     required String locale,
   }) {
     final s = coerceString(value);
-    final ok = _match(validation.validation ?? '', s);
+    final ok = _match(resolveRegex(validation), s);
     return ok
         ? const RuleResult.valid()
         : RuleResult.invalid(S.current.validation_decimal_2places);
   }
-
-  @override
-  List<TextInputFormatter> formatters(Map<String, dynamic> params) => [
-    DigitsAndSignFormatter(allowDecimal: true),
-    DecimalPlacesFormatter(2),
-  ];
 }

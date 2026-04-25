@@ -33,6 +33,19 @@ class SurveyQuestionCard extends StatelessWidget {
     if (!isVisible) return const SizedBox.shrink();
     final locale = Localizations.localeOf(context).languageCode;
 
+    // Rebuild on live-validation changes so the card border (and error text)
+    // reflect typing-time errors, not only submit-time ones. Falls back to a
+    // dummy listenable when there's no live controller.
+    return ListenableBuilder(
+      listenable: liveController ?? const _AlwaysNotifier(),
+      builder: (context, _) {
+        final shownError = errorText ?? liveController?.error;
+        return _buildCard(context, locale, shownError);
+      },
+    );
+  }
+
+  Widget _buildCard(BuildContext context, String locale, String? shownError) {
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: 8.h,
@@ -52,7 +65,7 @@ class SurveyQuestionCard extends StatelessWidget {
           ),
         ],
         border: Border.all(
-          color: errorText != null
+          color: shownError != null
               ? AppColors.destructive
               : AppColors.border.withOpacity(0.8),
           width: 1,
@@ -160,24 +173,17 @@ class SurveyQuestionCard extends StatelessWidget {
               }).toList(),
             ),
           ],
-          if (liveController != null || errorText != null)
-            ListenableBuilder(
-              listenable: liveController ?? const _AlwaysNotifier(),
-              builder: (_, __) {
-                final shown = errorText ?? liveController?.error;
-                if (shown == null) return const SizedBox.shrink();
-                return Padding(
-                  padding: EdgeInsets.only(top: 8.h),
-                  child: Text(
-                    shown,
-                    style: TextStyle(
-                      fontSize: context.adaptiveFont(11.sp),
-                      color: AppColors.destructive,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                );
-              },
+          if (shownError != null)
+            Padding(
+              padding: EdgeInsets.only(top: 8.h),
+              child: Text(
+                shownError,
+                style: TextStyle(
+                  fontSize: context.adaptiveFont(11.sp),
+                  color: AppColors.destructive,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
         ],
       ),
