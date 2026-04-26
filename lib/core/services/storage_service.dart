@@ -1,6 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageService {
+  /// Bumped whenever cached Hive boxes have an incompatible shape.
+  /// On startup, [SchemaMigrationService] compares this against the persisted
+  /// `schema_version` SharedPreference and runs a wipe + sanitize when they differ.
+  static const int currentSchemaVersion = 2;
+
   static late SharedPreferences _prefs;
 
   static Future<void> init() async {
