@@ -105,16 +105,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Active Responses"),
         "active_surveys": MessageLookupByLibrary.simpleMessage("Active"),
         "active_tasks": MessageLookupByLibrary.simpleMessage("Active Tasks"),
-        "age_100_plus": MessageLookupByLibrary.simpleMessage("100+"),
-        "age_18_29": MessageLookupByLibrary.simpleMessage("18-29"),
-        "age_30_39": MessageLookupByLibrary.simpleMessage("30-39"),
-        "age_40_49": MessageLookupByLibrary.simpleMessage("40-49"),
-        "age_50_59": MessageLookupByLibrary.simpleMessage("50-59"),
-        "age_60_69": MessageLookupByLibrary.simpleMessage("60-69"),
-        "age_70_79": MessageLookupByLibrary.simpleMessage("70-79"),
-        "age_80_89": MessageLookupByLibrary.simpleMessage("80-89"),
-        "age_90_99": MessageLookupByLibrary.simpleMessage("90-99"),
-        "age_group": MessageLookupByLibrary.simpleMessage("Age Group"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("Allow location access"),
         "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
@@ -177,8 +167,6 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to delete this survey draft?"),
         "delete_draft_title":
             MessageLookupByLibrary.simpleMessage("Delete Draft"),
-        "demographic_quota_full_for_category": MessageLookupByLibrary.simpleMessage(
-            "The quota for this category is already filled. Please choose another gender and age group."),
         "demographics_title":
             MessageLookupByLibrary.simpleMessage("Respondent Demographics"),
         "device_already_registered": MessageLookupByLibrary.simpleMessage(
@@ -248,9 +236,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "from": MessageLookupByLibrary.simpleMessage("From"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
         "gb": MessageLookupByLibrary.simpleMessage("GB"),
-        "gender": MessageLookupByLibrary.simpleMessage("Gender"),
-        "gender_female": MessageLookupByLibrary.simpleMessage("Female"),
-        "gender_male": MessageLookupByLibrary.simpleMessage("Male"),
         "generate_link": MessageLookupByLibrary.simpleMessage("Generate Link"),
         "get_started": MessageLookupByLibrary.simpleMessage("Get Started"),
         "getting_location":
@@ -271,11 +256,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Invalid email address"),
         "invalid_phone_number":
             MessageLookupByLibrary.simpleMessage("Invalid phone number"),
-        "must_be_saudi_number":
-            MessageLookupByLibrary.simpleMessage(
-                "Must be a valid Saudi mobile number"),
-        "other_specify_hint":
-            MessageLookupByLibrary.simpleMessage("Specify..."),
         "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
             "Invalid QR code. Please try again."),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
@@ -339,6 +319,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Maximum Touch Points"),
         "minutes": MessageLookupByLibrary.simpleMessage("minutes"),
         "minutes_count": m12,
+        "must_be_saudi_number": MessageLookupByLibrary.simpleMessage(
+            "Must be a valid Saudi mobile number"),
         "nationality": MessageLookupByLibrary.simpleMessage("Nationality"),
         "nearly_complete":
             MessageLookupByLibrary.simpleMessage("Nearly Complete"),
@@ -391,6 +373,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "operating_system":
             MessageLookupByLibrary.simpleMessage("Operating System"),
         "or": MessageLookupByLibrary.simpleMessage("or"),
+        "other_specify_hint":
+            MessageLookupByLibrary.simpleMessage("Specify..."),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "password_reset_success":
             MessageLookupByLibrary.simpleMessage("Password reset successful"),
@@ -492,11 +476,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "search_no_results_subtitle": MessageLookupByLibrary.simpleMessage(
             "No surveys matched your search. Try different keywords."),
         "sections_count": m17,
-        "select_age_group":
-            MessageLookupByLibrary.simpleMessage("Select Age Group"),
         "select_date": MessageLookupByLibrary.simpleMessage("Select Date"),
         "select_file": MessageLookupByLibrary.simpleMessage("Select File"),
-        "select_gender": MessageLookupByLibrary.simpleMessage("Select Gender"),
         "select_language":
             MessageLookupByLibrary.simpleMessage("Select Language"),
         "send_code": MessageLookupByLibrary.simpleMessage("Send Code"),

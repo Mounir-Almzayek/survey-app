@@ -104,16 +104,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("الاستجابات النشطة"),
         "active_surveys": MessageLookupByLibrary.simpleMessage("نشطة"),
         "active_tasks": MessageLookupByLibrary.simpleMessage("المهام النشطة"),
-        "age_100_plus": MessageLookupByLibrary.simpleMessage("100+"),
-        "age_18_29": MessageLookupByLibrary.simpleMessage("18-29"),
-        "age_30_39": MessageLookupByLibrary.simpleMessage("30-39"),
-        "age_40_49": MessageLookupByLibrary.simpleMessage("40-49"),
-        "age_50_59": MessageLookupByLibrary.simpleMessage("50-59"),
-        "age_60_69": MessageLookupByLibrary.simpleMessage("60-69"),
-        "age_70_79": MessageLookupByLibrary.simpleMessage("70-79"),
-        "age_80_89": MessageLookupByLibrary.simpleMessage("80-89"),
-        "age_90_99": MessageLookupByLibrary.simpleMessage("90-99"),
-        "age_group": MessageLookupByLibrary.simpleMessage("الفئة العمرية"),
         "allow_location_access":
             MessageLookupByLibrary.simpleMessage("السماح بالوصول إلى الموقع"),
         "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
@@ -176,9 +166,6 @@ class MessageLookup extends MessageLookupByLibrary {
             "هل أنت متأكد من رغبتك في حذف مسودة الاستطلاع هذه؟"),
         "delete_draft_title":
             MessageLookupByLibrary.simpleMessage("حذف المسودة"),
-        "demographic_quota_full_for_category":
-            MessageLookupByLibrary.simpleMessage(
-                "اكتملت حصة هذه الفئة. اختر فئة أخرى (جنس / فئة عمرية)."),
         "demographics_title":
             MessageLookupByLibrary.simpleMessage("بيانات المستجيب"),
         "device_already_registered":
@@ -248,9 +235,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "from": MessageLookupByLibrary.simpleMessage("من"),
         "gallery": MessageLookupByLibrary.simpleMessage("المعرض"),
         "gb": MessageLookupByLibrary.simpleMessage("جيجابايت"),
-        "gender": MessageLookupByLibrary.simpleMessage("الجنس"),
-        "gender_female": MessageLookupByLibrary.simpleMessage("أنثى"),
-        "gender_male": MessageLookupByLibrary.simpleMessage("ذكر"),
         "generate_link": MessageLookupByLibrary.simpleMessage("توليد الرابط"),
         "get_started": MessageLookupByLibrary.simpleMessage("ابدأ الآن"),
         "getting_location":
@@ -270,10 +254,6 @@ class MessageLookup extends MessageLookupByLibrary {
             "عنوان بريد إلكتروني غير صحيح"),
         "invalid_phone_number":
             MessageLookupByLibrary.simpleMessage("رقم الهاتف غير صحيح"),
-        "must_be_saudi_number":
-            MessageLookupByLibrary.simpleMessage("يجب إدخال رقم سعودي"),
-        "other_specify_hint":
-            MessageLookupByLibrary.simpleMessage("حدِّد..."),
         "invalid_qr_code": MessageLookupByLibrary.simpleMessage(
             "رمز QR غير صالح. يرجى المحاولة مرة أخرى."),
         "language": MessageLookupByLibrary.simpleMessage("اللغة"),
@@ -336,6 +316,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("نقاط اللمس القصوى"),
         "minutes": MessageLookupByLibrary.simpleMessage("دقيقة"),
         "minutes_count": m12,
+        "must_be_saudi_number":
+            MessageLookupByLibrary.simpleMessage("يجب إدخال رقم سعودي"),
         "nationality": MessageLookupByLibrary.simpleMessage("الجنسية"),
         "nearly_complete": MessageLookupByLibrary.simpleMessage("شبه مكتمل"),
         "network_error": MessageLookupByLibrary.simpleMessage("خطأ في الشبكة"),
@@ -388,6 +370,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "operating_system":
             MessageLookupByLibrary.simpleMessage("نظام التشغيل"),
         "or": MessageLookupByLibrary.simpleMessage("أو"),
+        "other_specify_hint": MessageLookupByLibrary.simpleMessage("حدِّد..."),
         "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
         "password_reset_success": MessageLookupByLibrary.simpleMessage(
             "تمت إعادة تعيين كلمة المرور بنجاح"),
@@ -492,11 +475,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "search_no_results_subtitle": MessageLookupByLibrary.simpleMessage(
             "لم نجد أي استطلاع يطابق بحثك. جرب كلمات أخرى."),
         "sections_count": m17,
-        "select_age_group":
-            MessageLookupByLibrary.simpleMessage("اختر الفئة العمرية"),
         "select_date": MessageLookupByLibrary.simpleMessage("اختر التاريخ"),
         "select_file": MessageLookupByLibrary.simpleMessage("اختر ملف"),
-        "select_gender": MessageLookupByLibrary.simpleMessage("اختر الجنس"),
         "select_language": MessageLookupByLibrary.simpleMessage("اختر اللغة"),
         "send_code": MessageLookupByLibrary.simpleMessage("إرسال الرمز"),
         "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),

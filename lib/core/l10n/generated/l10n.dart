@@ -1900,16 +1900,6 @@ class S {
     );
   }
 
-  /// `The quota for this category is already filled. Please choose another gender and age group.`
-  String get demographic_quota_full_for_category {
-    return Intl.message(
-      'The quota for this category is already filled. Please choose another gender and age group.',
-      name: 'demographic_quota_full_for_category',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Expires At`
   String get expires_at {
     return Intl.message(
@@ -2910,36 +2900,6 @@ class S {
     );
   }
 
-  /// `Gender`
-  String get gender {
-    return Intl.message(
-      'Gender',
-      name: 'gender',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Male`
-  String get gender_male {
-    return Intl.message(
-      'Male',
-      name: 'gender_male',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Female`
-  String get gender_female {
-    return Intl.message(
-      'Female',
-      name: 'gender_female',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Supervisor`
   String get supervisor {
     return Intl.message(
@@ -2995,126 +2955,6 @@ class S {
     return Intl.message(
       'Progress',
       name: 'progress',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Age Group`
-  String get age_group {
-    return Intl.message(
-      'Age Group',
-      name: 'age_group',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Select Gender`
-  String get select_gender {
-    return Intl.message(
-      'Select Gender',
-      name: 'select_gender',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Select Age Group`
-  String get select_age_group {
-    return Intl.message(
-      'Select Age Group',
-      name: 'select_age_group',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `18-29`
-  String get age_18_29 {
-    return Intl.message(
-      '18-29',
-      name: 'age_18_29',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `30-39`
-  String get age_30_39 {
-    return Intl.message(
-      '30-39',
-      name: 'age_30_39',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `40-49`
-  String get age_40_49 {
-    return Intl.message(
-      '40-49',
-      name: 'age_40_49',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `50-59`
-  String get age_50_59 {
-    return Intl.message(
-      '50-59',
-      name: 'age_50_59',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `60-69`
-  String get age_60_69 {
-    return Intl.message(
-      '60-69',
-      name: 'age_60_69',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `70-79`
-  String get age_70_79 {
-    return Intl.message(
-      '70-79',
-      name: 'age_70_79',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `80-89`
-  String get age_80_89 {
-    return Intl.message(
-      '80-89',
-      name: 'age_80_89',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `90-99`
-  String get age_90_99 {
-    return Intl.message(
-      '90-99',
-      name: 'age_90_99',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `100+`
-  String get age_100_plus {
-    return Intl.message(
-      '100+',
-      name: 'age_100_plus',
       desc: '',
       args: [],
     );
