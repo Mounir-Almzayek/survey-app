@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
-import '../../../../core/enums/survey_enums.dart';
 
-/// Model for starting a survey response request
+/// Model for starting a survey response request.
+///
+/// As of the QuotaTarget migration the body carries only [location] and
+/// [createdAt]; quota matching now happens at FINAL_SUBMIT on the server.
 class StartResponseRequest extends Equatable {
   final int surveyId;
-  final Gender gender;
-  final AgeGroup ageGroup;
   final Map<String, double>? location;
 
   /// Wall-clock time captured when this request DTO was built. Sent as
@@ -15,37 +15,27 @@ class StartResponseRequest extends Equatable {
 
   StartResponseRequest({
     required this.surveyId,
-    required this.gender,
-    required this.ageGroup,
     this.location,
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
   StartResponseRequest copyWith({
     int? surveyId,
-    Gender? gender,
-    AgeGroup? ageGroup,
     Map<String, double>? location,
     DateTime? createdAt,
   }) {
     return StartResponseRequest(
       surveyId: surveyId ?? this.surveyId,
-      gender: gender ?? this.gender,
-      ageGroup: ageGroup ?? this.ageGroup,
       location: location ?? this.location,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'gender': gender.toJson(),
-      'age_group': ageGroup.toJson(),
-      if (location != null) 'location': location,
-      'created_at': createdAt.toUtc().toIso8601String(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    if (location != null) 'location': location,
+    'created_at': createdAt.toUtc().toIso8601String(),
+  };
 
   @override
-  List<Object?> get props => [surveyId, gender, ageGroup, location, createdAt];
+  List<Object?> get props => [surveyId, location, createdAt];
 }
