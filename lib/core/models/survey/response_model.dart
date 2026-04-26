@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import '../../enums/survey_enums.dart';
 import 'answer_item_model.dart';
 import 'response_log_model.dart';
 import 'survey_model.dart';
+import '../../enums/survey_enums.dart' show ResponseStatus;
 
 class Response extends Equatable {
   final int id;
@@ -13,8 +13,7 @@ class Response extends Equatable {
   final DateTime? startedAt;
   final DateTime? endedAt;
   final int? durationSec;
-  final Gender? gender;
-  final AgeGroup? ageGroup;
+  final int? quotaTargetId;
   final String? rejectionReason;
   final String? ipAddress;
   final DateTime? createdAt;
@@ -34,8 +33,7 @@ class Response extends Equatable {
     this.startedAt,
     this.endedAt,
     this.durationSec,
-    this.gender,
-    this.ageGroup,
+    this.quotaTargetId,
     this.rejectionReason,
     this.ipAddress,
     this.createdAt,
@@ -46,7 +44,55 @@ class Response extends Equatable {
     this.survey,
   });
 
+  Response copyWith({
+    int? id,
+    int? surveyId,
+    int? assignmentId,
+    int? publicLinkId,
+    ResponseStatus? status,
+    DateTime? startedAt,
+    DateTime? endedAt,
+    int? durationSec,
+    int? quotaTargetId,
+    bool clearQuotaTargetId = false,
+    String? rejectionReason,
+    String? ipAddress,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+    List<ResponseLog>? responseLogs,
+    List<AnswerItem>? answerItems,
+    Survey? survey,
+  }) {
+    return Response(
+      id: id ?? this.id,
+      surveyId: surveyId ?? this.surveyId,
+      assignmentId: assignmentId ?? this.assignmentId,
+      publicLinkId: publicLinkId ?? this.publicLinkId,
+      status: status ?? this.status,
+      startedAt: startedAt ?? this.startedAt,
+      endedAt: endedAt ?? this.endedAt,
+      durationSec: durationSec ?? this.durationSec,
+      quotaTargetId: clearQuotaTargetId ? null : (quotaTargetId ?? this.quotaTargetId),
+      rejectionReason: rejectionReason ?? this.rejectionReason,
+      ipAddress: ipAddress ?? this.ipAddress,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      responseLogs: responseLogs ?? this.responseLogs,
+      answerItems: answerItems ?? this.answerItems,
+      survey: survey ?? this.survey,
+    );
+  }
+
   factory Response.fromJson(Map<String, dynamic> json) {
+    int? parseOptionalInt(dynamic v) {
+      if (v == null) return null;
+      if (v is int) return v;
+      if (v is num) return v.round();
+      return int.tryParse(v.toString());
+    }
+
     return Response(
       id: json['id'],
       surveyId: json['survey_id'],
@@ -62,10 +108,7 @@ class Response extends Equatable {
           ? DateTime.tryParse(json['ended_at'].toString())
           : null,
       durationSec: json['duration_sec'],
-      gender: json['gender'] != null ? Gender.fromJson(json['gender']) : null,
-      ageGroup: json['age_group'] != null
-          ? AgeGroup.fromJson(json['age_group'])
-          : null,
+      quotaTargetId: parseOptionalInt(json['quota_target_id']),
       rejectionReason: json['rejection_reason'],
       ipAddress: json['ip_address'],
       createdAt: json['created_at'] != null
@@ -97,8 +140,7 @@ class Response extends Equatable {
       'started_at': startedAt?.toIso8601String(),
       'ended_at': endedAt?.toIso8601String(),
       'duration_sec': durationSec,
-      'gender': gender?.toJson(),
-      'age_group': ageGroup?.toJson(),
+      if (quotaTargetId != null) 'quota_target_id': quotaTargetId,
       'rejection_reason': rejectionReason,
       'ip_address': ipAddress,
       'created_at': createdAt?.toIso8601String(),
@@ -120,8 +162,7 @@ class Response extends Equatable {
     startedAt,
     endedAt,
     durationSec,
-    gender,
-    ageGroup,
+    quotaTargetId,
     rejectionReason,
     ipAddress,
     createdAt,
