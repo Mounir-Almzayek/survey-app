@@ -1,8 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/enums/survey_enums.dart';
+import '../../../../core/models/survey/survey_model.dart';
 import '../../../../core/queue/services/request_queue_manager.dart';
 import '../../../assignment/repository/assignment_local_repository.dart';
 import '../../models/survey_stats_model.dart';
-import '../../../../core/models/survey/survey_model.dart';
 import 'home_stats_event.dart';
 import 'home_stats_state.dart';
 
@@ -28,7 +29,6 @@ class HomeStatsBloc extends Bloc<HomeStatsEvent, HomeStatsState> {
       int draftResponses = 0;
 
       for (var survey in localSurveys) {
-        // Categorize by availability
         final start = survey.availabilityStartAt;
         final end = survey.availabilityEndAt;
 
@@ -40,68 +40,30 @@ class HomeStatsBloc extends Bloc<HomeStatsEvent, HomeStatsState> {
           activeSurveys++;
         }
 
-        // Count drafts
         draftResponses += survey.localResponseIds?.length ?? 0;
       }
 
-      // 2. Get pending sync count from RequestQueueManager
+      // 2. Pending sync count
       final queueStatus = await RequestQueueManager().getStatus();
       final pendingSyncResponses = queueStatus.queueLength;
 
-      // 3. Get total synced responses from persistent counter
+      // 3. Persistent synced count
       final syncedResponses =
           await AssignmentLocalRepository.getSyncedResponsesCount();
 
-      // 4. Calculate Quota and Demographic Stats
-      List<Survey> surveysWithQuotas = [];
-      Map<String, double> genderProgress = {};
-      Map<String, double> ageGroupProgress = {};
+      // 4. Per-survey quota breakdown (replaces gender/age aggregation)
+      final surveysWithQuotas = <Survey>[];
+      final breakdownBySurveyId = <int, List<QuotaBreakdownEntry>>{};
 
-      // Temporary counters for aggregation
-      Map<String, int> genderTargets = {};
-      Map<String, int> genderCollected = {};
-      Map<String, int> ageTargets = {};
-      Map<String, int> ageCollected = {};
+      for (final survey in localSurveys) {
+        final assignments = survey.assignments;
+        if (assignments == null || assignments.isEmpty) continue;
+        final quotas = assignments.first.researcherQuotas;
+        if (quotas == null || quotas.isEmpty) continue;
 
-      for (var survey in localSurveys) {
-        if (survey.assignments != null &&
-            survey.assignments!.isNotEmpty &&
-            survey.assignments!.first.researcherQuotas != null &&
-            survey.assignments!.first.researcherQuotas!.isNotEmpty) {
-          surveysWithQuotas.add(survey);
-
-          for (var quota in survey.assignments!.first.researcherQuotas!) {
-            // Gender Stats
-            String genderKey = quota.gender.name; // assuming Enum has name
-            genderTargets[genderKey] =
-                (genderTargets[genderKey] ?? 0) + quota.target;
-            genderCollected[genderKey] =
-                (genderCollected[genderKey] ?? 0) + quota.progress;
-
-            // Age Group Stats
-            String ageKey = quota.ageGroup.name; // assuming Enum has name
-            ageTargets[ageKey] = (ageTargets[ageKey] ?? 0) + quota.target;
-            ageCollected[ageKey] = (ageCollected[ageKey] ?? 0) + quota.progress;
-          }
-        }
+        surveysWithQuotas.add(survey);
+        breakdownBySurveyId[survey.id] = _buildBreakdown(survey);
       }
-
-      // Calculate Percentages
-      genderTargets.forEach((key, target) {
-        if (target > 0) {
-          genderProgress[key] = (genderCollected[key] ?? 0) / target;
-        } else {
-          genderProgress[key] = 0.0;
-        }
-      });
-
-      ageTargets.forEach((key, target) {
-        if (target > 0) {
-          ageGroupProgress[key] = (ageCollected[key] ?? 0) / target;
-        } else {
-          ageGroupProgress[key] = 0.0;
-        }
-      });
 
       final stats = SurveyStatsModel(
         totalSurveys: localSurveys.length,
@@ -112,13 +74,40 @@ class HomeStatsBloc extends Bloc<HomeStatsEvent, HomeStatsState> {
         pendingSyncResponses: pendingSyncResponses,
         syncedResponses: syncedResponses,
         surveysWithQuotas: surveysWithQuotas,
-        genderProgress: genderProgress,
-        ageGroupProgress: ageGroupProgress,
+        breakdownBySurveyId: breakdownBySurveyId,
       );
 
       emit(HomeStatsLoaded(stats));
     } catch (e) {
       emit(HomeStatsError(e.toString()));
     }
+  }
+
+  /// Build the breakdown rows for a single survey.
+  /// TEST_MODE surveys contribute zero rows (server returns 0; mirror locally).
+  static List<QuotaBreakdownEntry> _buildBreakdown(Survey survey) {
+    if (survey.status == SurveyStatus.testMode) return const [];
+    final assignment = survey.assignments?.firstOrNull;
+    if (assignment == null) return const [];
+    final quotas = assignment.researcherQuotas;
+    if (quotas == null || quotas.isEmpty) return const [];
+
+    final entries = <QuotaBreakdownEntry>[];
+    for (final q in quotas) {
+      if (q.quotaTargetId == null) continue;
+      entries.add(QuotaBreakdownEntry(
+        quotaTargetId: q.quotaTargetId,
+        displayLabel: q.displayLabel,
+        progress: q.progress,
+        target: q.target,
+        progressPercent: q.completionPercentage,
+      ));
+    }
+    entries.sort((a, b) {
+      final cmp = b.progressPercent.compareTo(a.progressPercent);
+      if (cmp != 0) return cmp;
+      return a.displayLabel.compareTo(b.displayLabel);
+    });
+    return entries;
   }
 }
