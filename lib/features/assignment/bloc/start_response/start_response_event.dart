@@ -12,16 +12,6 @@ class UpdateRequest extends StartResponseEvent {
   UpdateRequest(this.request);
 }
 
-class UpdateGender extends StartResponseEvent {
-  final Gender gender;
-  UpdateGender(this.gender);
-}
-
-class UpdateAgeGroup extends StartResponseEvent {
-  final AgeGroup ageGroup;
-  UpdateAgeGroup(this.ageGroup);
-}
-
 class UpdateLocation extends StartResponseEvent {
   final Map<String, double>? location;
   UpdateLocation(this.location);
