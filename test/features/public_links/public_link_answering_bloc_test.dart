@@ -98,8 +98,6 @@ PublicLinkAnsweringBloc _bloc({
 
 Future<PublicLinkStartResult> _successStarter({
   required String shortCode,
-  required String gender,
-  required String ageGroup,
   ({double latitude, double longitude})? location,
 }) async =>
     _startResult;
@@ -122,8 +120,6 @@ Future<PublicLinkSectionResult> _completeSectionSubmitter({
 
 Future<PublicLinkStartResult> _starterWithDefaults({
   required String shortCode,
-  required String gender,
-  required String ageGroup,
   ({double latitude, double longitude})? location,
 }) async =>
     _startResultWithDefaults;
@@ -150,7 +146,7 @@ void main() {
     blocTest<PublicLinkAnsweringBloc, PublicLinkAnsweringState>(
       'StartAnswering success emits Starting then Section',
       build: () => _bloc(starter: _successStarter),
-      act: (b) => b.add(const StartAnswering(gender: 'MALE', ageGroup: 'AGE_18_29')),
+      act: (b) => b.add(const StartAnswering()),
       expect: () => [
         const PublicLinkAnsweringStarting(),
         isA<PublicLinkAnsweringSection>()
@@ -165,10 +161,10 @@ void main() {
     blocTest<PublicLinkAnsweringBloc, PublicLinkAnsweringState>(
       'StartAnswering offline error emits Error(offline)',
       build: () => _bloc(
-        starter: ({required shortCode, required gender, required ageGroup, location}) async =>
+        starter: ({required shortCode, location}) async =>
             throw _offlineError(),
       ),
-      act: (b) => b.add(const StartAnswering(gender: 'MALE', ageGroup: 'AGE_18_29')),
+      act: (b) => b.add(const StartAnswering()),
       expect: () => [
         const PublicLinkAnsweringStarting(),
         isA<PublicLinkAnsweringError>()
@@ -361,7 +357,7 @@ void main() {
     blocTest<PublicLinkAnsweringBloc, PublicLinkAnsweringState>(
       'StartAnswering pre-fills default option values into answers',
       build: () => _bloc(starter: _starterWithDefaults),
-      act: (b) => b.add(const StartAnswering(gender: 'FEMALE', ageGroup: 'AGE_30_39')),
+      act: (b) => b.add(const StartAnswering()),
       expect: () => [
         const PublicLinkAnsweringStarting(),
         isA<PublicLinkAnsweringSection>()
@@ -504,7 +500,7 @@ void main() {
       build: () {
         var attempt = 0;
         return _bloc(
-          starter: ({required shortCode, required gender, required ageGroup, location}) async {
+          starter: ({required shortCode, location}) async {
             attempt++;
             if (attempt == 1) throw _offlineError();
             return _startResult;
@@ -512,7 +508,7 @@ void main() {
         );
       },
       act: (b) async {
-        b.add(const StartAnswering(gender: 'MALE', ageGroup: 'AGE_18_29'));
+        b.add(const StartAnswering());
         await Future.delayed(const Duration(milliseconds: 10));
         b.add(const events.Retry());
       },
@@ -544,8 +540,6 @@ void main() {
           shortCode: 'abc',
           starter: (
                   {required String shortCode,
-                  required String gender,
-                  required String ageGroup,
                   ({double latitude, double longitude})? location}) async =>
               PublicLinkStartResult(
                 responseId: 99,
@@ -559,7 +553,7 @@ void main() {
                   required List<({int questionId, dynamic value})>
                       answers}) async =>
               const PublicLinkSectionResult(isComplete: true, status: 'SUBMITTED'),
-        )..add(const StartAnswering(gender: 'MALE', ageGroup: 'AGE_18_29'));
+        )..add(const StartAnswering());
       },
       act: (bloc) async {
         // Let the asynchronous StartAnswering transition complete.
