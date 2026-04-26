@@ -19,7 +19,7 @@ Mirror the backend's quota-resolution logic on-device so that local quota counts
 
 ## Non-Goals
 
-- **Backend changes.** Backend ownership is separate. The new researcher/public-link endpoint shapes and the `SurveyQuotaCriterionBinding` field are assumed shipped. The mobile spec depends on `bindings: [{ source_question_id, scope_criterion_id }]` being added to `GET /researcher/assignment` and `GET /researcher/assignment/survey/:surveyId` responses (see Open Backend Coordination below).
+- **Backend changes.** This is a mobile-only change. The new researcher/public-link endpoint shapes (already shipped) are consumed as-is. Crucially, the backend's `SurveyQuotaCriterionBinding` table is **not** exposed to researcher endpoints, so the mobile must **infer the question→criterion bindings on-device** (see "Binding inference" in Design Decisions). No new API fields are required.
 - **NUMBER / DATE quota criteria matching on the client.** Production data is ENUM-only. The local matcher supports ENUM matching by `categoryValue === answer`. Any NUMBER/DATE criterion locally returns `null` (no match), the server matches authoritatively at FINAL_SUBMIT, and the client reconciles on refetch — graceful degradation, no breakage.
 - **Localized `display_label`.** Server-built label is Arabic-only by design (single `label` field on `ScopeCriterionCategory`, no `Accept-Language` handling). The app renders it as-is in both English and Arabic UIs. If localization becomes a requirement later, it's a backend change.
 - **Backfill of pre-migration data.** Cached surveys/profile and `ResponseMetadata` are wiped on first launch with the new schema version; queued start requests are sanitized of `gender`/`age_group` keys. Any in-progress local responses keep their data; their `gender`/`ageGroup` fields are silently ignored by the new parser.
@@ -55,17 +55,40 @@ Mirror the backend's quota-resolution logic on-device so that local quota counts
 - `display_label` builder: `survey-system/src/routes/researcher/researcher-survey-response-counts.ts:159-161`
 - Schema (QuotaTarget, ScopeCriterion, bindings): `survey-system/prisma/schema/sampling-scope.prisma:46-122`, `survey-system/prisma/schema/survey.prisma:46-77`
 
-## Open Backend Coordination
-
-This spec depends on one backend addition that is not yet in the API:
-
-> **`GET /researcher/assignment` and `GET /researcher/assignment/survey/:surveyId` must return `bindings: [{ source_question_id, scope_criterion_id }]` per survey** (or per assignment), populated from `SurveyQuotaCriterionBinding` rows.
-
-Rationale: the local matcher needs the question→criterion mapping to know which answer feeds which scope criterion. Today this data is only exposed on admin endpoints. Until the field ships, the mobile-side matcher cannot run; the rest of this spec (model migration, dialog removal, UI changes) can land independently. The matcher hookup gates on this field's presence.
-
 ## Design decisions (locked)
 
-### 1. Local matching algorithm (mirrors `resolveQuotaTarget`)
+### 1. Binding inference (compensates for missing API field)
+
+The backend's `SurveyQuotaCriterionBinding` table is not exposed on researcher endpoints, and we are not changing the backend. The mobile **infers** each `(source_question_id → scope_criterion_id)` binding once per survey, immediately after fetching, using two structural facts that already arrive in the response: the survey's `questions[*].question_options[*].value` set, and the researcher quotas' `coordinates[*].categoryValue` set.
+
+Pure static method on a new `BindingInferer` class in `lib/features/assignment/services/binding_inferer.dart`:
+
+```dart
+class BindingInferer {
+  static List<ScopeCriterionBinding> infer({
+    required Survey survey,
+    required Assignment assignment,
+  });
+}
+```
+
+Procedure:
+
+1. Build `criterionMap: Map<int scopeCriterionId, Set<String> categoryValues>` by walking `assignment.researcherQuotas[*].coordinates`.
+2. Collect candidate questions: every question across `survey.sections[*].questions[*]` that has at least one entry in `question_options`.
+3. For each `(criterionId, categoryValues)` in `criterionMap`:
+   - Filter candidate questions to those whose `question_options[*].value` set is a **superset** of `categoryValues`.
+   - If exactly one candidate matches → emit `ScopeCriterionBinding(sourceQuestionId: candidate.id, scopeCriterionId: criterionId)`.
+   - If 0 or >1 candidates → no binding for this criterion (the matcher will hit a missing-binding case → return `null` → server reconciles on refetch).
+4. Return the list of inferred bindings.
+
+**Where it runs:** in `AssignmentRepository.listAssignments()` and `getSurveyDetails(surveyId)`, immediately after parsing the API response and before persisting to the local cache. The inferred bindings ride on the cached `Survey.bindings` field. Inference is one-time per fetch; the matcher reads the cached field at submit time.
+
+**Why this works for production data:** the seeded scope criteria (Region, Admin Class, Gender, Age Group) all have disjoint category-value sets — `{baha, jouf, ...}`, `{capital-seat, town, village, ...}`, `{male, female}`, `{18-29, 30-39, ...}`. Each criterion's question (e.g. an "اختر الجنس" radio with options male/female) has a value set that is a superset of exactly one criterion's categories. A new criterion that overlaps existing values would yield 0 or >1 candidates → no inferred binding for that criterion → matcher returns `null` → server matches authoritatively → refetch reconciles. **No silent miscount path** — ambiguity always falls through to deferral.
+
+**Datatype handling:** `BindingInferer` only matches against questions that expose `question_options` (i.e. ENUM-shaped questions). NUMBER and DATE criteria are bound to numeric/date input questions which have no `question_options` array, so no candidate matches → no binding is inferred → matcher returns `null`. Same graceful-degradation result as the explicit ENUM-only constraint on the matcher (Decision 2).
+
+### 2. Local matching algorithm (mirrors `resolveQuotaTarget`)
 
 Pure static method on a new `QuotaMatcher` class in `lib/features/assignment/services/quota_matcher.dart`:
 
@@ -94,7 +117,7 @@ Procedure:
 
 **Datatype scope:** ENUM only. NUMBER/DATE criteria fall through to `null` and reconcile from the server on refetch.
 
-### 2. Where the matcher runs
+### 3. Where the matcher runs
 
 In `AssignmentRepository.saveSectionAnswers()` and `enqueueSaveSectionAnswers()`, **only when the section save sets `isComplete = true`**:
 
@@ -114,7 +137,7 @@ if (result.isComplete && response.quotaTargetId == null) {
 
 Same code path online and offline — matcher runs locally regardless. The result lives on `Response.quotaTargetId` until reconciliation.
 
-### 3. Reconciliation strategy
+### 4. Reconciliation strategy
 
 Server is source of truth. Refetch points:
 
@@ -126,7 +149,7 @@ Server is source of truth. Refetch points:
 
 A divergence between local prediction and server truth (rare; typically only when a NUMBER/DATE criterion is involved or the binding data is stale) resolves at refetch — server values overwrite local.
 
-### 4. Local quota increment
+### 5. Local quota increment
 
 Replace the existing `_incrementLocalQuotaForCompletedResponse(responseId)` body with a `quotaTargetId`-driven version:
 
@@ -154,7 +177,7 @@ void _incrementLocalQuotaForCompletedResponse(int responseId) {
 
 The TEST_MODE early-return guarantees test surveys always show 0 used locally, matching server behavior.
 
-### 5. Cache migration on schema bump
+### 6. Cache migration on schema bump
 
 Bump `currentSchemaVersion` to `2`. On first launch with the new version, before any survey/profile read:
 
@@ -168,13 +191,13 @@ Bump `currentSchemaVersion` to `2`. On first launch with the new version, before
 
 **Failure handling:** any exception during migration is logged; the app continues booting without bumping `schema_version`, so the next launch retries. Migration is idempotent.
 
-### 6. Demographics removal (UI)
+### 7. Demographics removal (UI)
 
 - `DemographicsDialog` deleted entirely. No replacement.
 - `SurveyAnsweringScreen` and `PublicLinkAnsweringPage` start the survey directly with `location` only.
 - All `UpdateGender` / `UpdateAgeGroup` events, the `isDemographicQuotaFull` state flag, and the pre-start quota-full snackbar are removed from `start_response_bloc` and `public_link_answering_bloc`.
 
-### 7. Home stats — Summary + Breakdown
+### 8. Home stats — Summary + Breakdown
 
 Replace cross-survey gender/age aggregation with:
 
@@ -183,7 +206,7 @@ Replace cross-survey gender/age aggregation with:
 
 `SurveyStatsModel.genderProgress` and `.ageGroupProgress` deleted. `DemographicCharts` widget deleted.
 
-### 8. Response details
+### 9. Response details
 
 `ResponseDetails` gains `quotaTargetId: int?`, `displayLabel: String?`, `coordinates: List<QuotaCoordinate>?`. The presentation layer renders one row "الكوتا: <displayLabel>" when `quotaTargetId != null`, or "الكوتا: غير محدد" when `null`. Coordinates are not surfaced in the UI in v1; the display label is sufficient.
 
@@ -217,7 +240,13 @@ class ScopeCriterionBinding {
 }
 ```
 
-Lives on `Survey` as `List<ScopeCriterionBinding> bindings` (parsed from the new API field — see Open Backend Coordination).
+Lives on `Survey` as `List<ScopeCriterionBinding> bindings`. **Populated by `BindingInferer` immediately after the survey is fetched** (see `BindingInferer` below); not part of the API wire shape. Survey JSON serialization round-trips the field so the inferred bindings persist in Hive cache between sessions.
+
+### `BindingInferer` (new service)
+
+Path: `lib/features/assignment/services/binding_inferer.dart`
+
+Pure static `infer(...)` per Decision 1. Walks the survey's questions and the assignment's quota coordinates to produce a list of `ScopeCriterionBinding` entries. Has no I/O dependencies — takes plain models in, returns a list out. Fully unit-testable.
 
 ### `ResearcherQuota` (modified)
 
@@ -263,14 +292,15 @@ Inline body drops `gender` and `age_group`. Shape: `{ location?, created_at }`.
 
 Path: `lib/features/assignment/services/quota_matcher.dart`
 
-Pure static `match(...)` per Decision 1. No external dependencies; takes plain models in, returns `int?` out. Fully unit-testable.
+Pure static `match(...)` per Decision 2. No external dependencies; takes plain models in, returns `int?` out. Fully unit-testable.
 
 ### `AssignmentRepository` (modified)
 
 Path: `lib/features/assignment/repository/assignment_repository.dart`
 
+- `listAssignments` and `getSurveyDetails`: after parsing each survey, run `BindingInferer.infer(survey, assignment)` and assign the result to `survey.bindings` **before** caching. Inference happens once per fetch.
 - `saveSectionAnswers` and `enqueueSaveSectionAnswers`: invoke matcher when `isComplete` and `Response.quotaTargetId == null`; write result; increment locally if non-null.
-- `_incrementLocalQuotaForCompletedResponse`: rewritten per Decision 4 to key off `quotaTargetId` instead of gender/ageGroup.
+- `_incrementLocalQuotaForCompletedResponse`: rewritten per Decision 5 to key off `quotaTargetId` instead of gender/ageGroup.
 - New method `refreshAllAssignments()`: thin wrapper around `listAssignments()` that also replaces the local cache. Called from queue-drain hook.
 - All references to `saveResponseMetadata`, `getResponseMetadata`, and `ResponseMetadata` deleted.
 
@@ -340,7 +370,7 @@ Add a row: "الكوتا: <displayLabel>" when `quotaTargetId != null`, or "ال
 
 Path: `lib/core/services/schema_migration_service.dart`
 
-Single class with `Future<void> runIfNeeded()` per Decision 5. Called from `splash_routing_bloc` (or equivalent early startup hook) before any survey/profile read.
+Single class with `Future<void> runIfNeeded()` per Decision 6. Called from `splash_routing_bloc` (or equivalent early startup hook) before any survey/profile read.
 
 ### Cleanup deletions
 
@@ -354,6 +384,19 @@ Hive adapter registrations removed for `ResponseMetadata`.
 `Gender` and `AgeGroup` enums in `lib/core/enums/survey_enums.dart` deleted along with their `localized()` extensions, plus the unused l10n keys (`gender`, `gender_male`, `gender_female`, `select_gender`, `age_group`, `age_18_29`, `age_30_39`, `age_40_49`, `age_50_59`, `age_60_plus`, `select_age_group`, `demographic_quota_full_for_category`).
 
 ## Testing
+
+### Unit — `BindingInferer`
+File: `test/features/assignment/services/binding_inferer_test.dart`
+
+- single criterion (Gender, values `{male, female}`) + single matching question with options `{male, female}` → one inferred binding
+- single criterion + question with options that are a strict superset (e.g. `{male, female, other}`) → still inferred (superset rule)
+- single criterion with no question that has a superset option set → no binding for that criterion
+- two questions match the same criterion (ambiguous) → no binding emitted for that criterion
+- multi-criterion survey (Region + Gender + Age) → three bindings, each to its unique question
+- question with no `question_options` (NUMBER/text input) is ignored
+- empty `researcherQuotas` (no criteria to infer) → empty bindings list
+- a criterion present in coordinates but with no candidate question at all → that criterion is omitted from the result (matcher will return null when it encounters it)
+- determinism: same input → same output (sort order matters for consumers)
 
 ### Unit — `QuotaMatcher`
 File: `test/features/assignment/services/quota_matcher_test.dart`
@@ -386,6 +429,8 @@ File: `test/features/responses/models/response_details_test.dart`
 ### Unit — Repository
 File: `test/features/assignment/repository/assignment_repository_test.dart`
 
+- `listAssignments` runs `BindingInferer.infer` on every fetched survey and writes the result to `survey.bindings` before caching
+- `getSurveyDetails` runs `BindingInferer.infer` on the fetched survey and writes the result to `survey.bindings` before caching
 - `saveSectionAnswers` with `isComplete=true` invokes matcher exactly once
 - matcher returns int → local quota progress/collected/responsesCount each `+1`
 - matcher returns null → local quota unchanged, Response keeps `quotaTargetId=null`
@@ -438,7 +483,8 @@ File: `test/core/services/schema_migration_service_test.dart`
 
 ## Risks
 
-- **Backend bindings field not yet shipped.** Without it the matcher cannot run. Mitigation: land all non-matcher work first (model migration, dialog removal, UI changes, schema migration); merge the matcher hookup once the backend ships.
-- **Stale local prediction vs server truth.** The local matcher knows only ENUM matching against the researcher's assigned coordinates. Any case the server resolves but the client doesn't (NUMBER/DATE, or coordinates outside the researcher's quotas) shows up as a transient `null` locally and reconciles on refetch — minor UX latency, no incorrect count persisted.
+- **Binding inference is heuristic, not authoritative.** It depends on each scope criterion's category-value set being uniquely contained in exactly one question's option-value set. Production data satisfies this (Region, Admin Class, Gender, Age Group all have disjoint values). If a future configuration breaks it (e.g. two questions share an option set, or a criterion's values are a subset of another's), the inferer emits 0 or >1 candidates → no binding for that criterion → the matcher returns `null` → server matches authoritatively at FINAL_SUBMIT → refetch reconciles. **No silent miscount path** — every ambiguity defers to the server.
+- **Stale local prediction vs server truth.** The local matcher knows only ENUM matching against the researcher's assigned coordinates. Any case the server resolves but the client doesn't (NUMBER/DATE criterion, criterion bound to a question outside the survey's `question_options`-bearing set, or a target outside the researcher's quotas) shows up as a transient `null` locally and reconciles on refetch — minor UX latency, no incorrect count persisted.
 - **Cache wipe on first launch** loses the cached surveys; users must be online to see their assignments. Acceptable per Q6 (smart wipe chosen over migration).
 - **Tests for the home breakdown sort order** must use stable progressPercent values to avoid flakiness with ties; tie-break by `displayLabel` string comparison.
+- **Survey re-fetch overwrites locally-cached `survey.bindings`.** Fine — the inferer is idempotent and runs again on every fetch, producing the same result given the same survey + quotas. Cached bindings persist between sessions only as a perf optimization; correctness comes from re-running on every fetch.
