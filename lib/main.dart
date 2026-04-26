@@ -4,12 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'core/auth/session_invalidation_coordinator.dart';
 import 'core/l10n/generated/l10n.dart';
 import 'core/routes/app_pages.dart';
-import 'core/services/hive_service.dart';
-import 'core/services/storage_service.dart';
 import 'core/services/app_info_service.dart';
+import 'core/services/hive_service.dart';
+import 'core/services/schema_migration_service.dart';
+import 'core/services/storage_service.dart';
 // import 'core/services/firebase_service.dart';
 import 'core/queue/services/request_queue_manager.dart';
 import 'core/queue/presentation/queue_status_listener.dart';
@@ -36,6 +38,11 @@ void main() async {
   // Initialize services
   await StorageService.init();
   await HiveService.init();
+
+  // Run schema migration before anything reads the cache.
+  final prefs = await SharedPreferences.getInstance();
+  await SchemaMigrationService(prefs: prefs).runIfNeeded();
+
   await AppInfoService.instance.initialize();
   // await FirebaseService.init();
   await RequestQueueManager().init();
