@@ -10,9 +10,7 @@ import '../widgets/survey_section_widget.dart';
 
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../../core/widgets/unified_snackbar.dart';
-import '../widgets/demographics_dialog.dart';
 
-import '../../../../core/enums/survey_enums.dart';
 import '../../../device_location/service/location_service.dart';
 import '../../bloc/start_response/start_response_bloc.dart' as start;
 
@@ -124,51 +122,33 @@ class SurveyAnsweringScreen extends StatelessWidget {
           isNewResponse: state.responseId == null,
           onStart: () async {
             if (state.responseId == null) {
-              // Show demographics dialog to collect required data
-              final result = await showDialog<Map<String, dynamic>>(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => DemographicsDialog(survey: state.survey),
+              // Try to capture location (non-blocking, optional).
+              Map<String, double>? locationMap;
+              try {
+                final deviceLocation =
+                    await LocationService.getCurrentLocation();
+                locationMap = {
+                  'latitude': deviceLocation.latitude,
+                  'longitude': deviceLocation.longitude,
+                };
+              } catch (_) {
+                // Location not available; continue without it.
+              }
+
+              if (!context.mounted) return;
+              context.read<start.StartResponseBloc>().add(
+                start.UpdateSurveyId(state.survey!.id),
               );
-
-              if (result != null && context.mounted) {
-                final gender = result['gender'] as Gender;
-                final ageGroup = result['ageGroup'] as AgeGroup;
-                // Always get location if available
-                Map<String, double>? locationMap;
-
-                // Try to get location (non-blocking)
-                try {
-                  final deviceLocation =
-                      await LocationService.getCurrentLocation();
-                  locationMap = {
-                    'latitude': deviceLocation.latitude,
-                    'longitude': deviceLocation.longitude,
-                  };
-                } catch (_) {
-                  // Location not available, continue without it
-                }
-
+              if (locationMap != null) {
                 context.read<start.StartResponseBloc>().add(
-                  start.UpdateSurveyId(state.survey!.id),
-                );
-                context.read<start.StartResponseBloc>().add(
-                  start.UpdateGender(gender),
-                );
-                context.read<start.StartResponseBloc>().add(
-                  start.UpdateAgeGroup(ageGroup),
-                );
-                if (locationMap != null) {
-                  context.read<start.StartResponseBloc>().add(
-                    start.UpdateLocation(locationMap),
-                  );
-                }
-                context.read<start.StartResponseBloc>().add(
-                  start.StartSurveyResponse(),
+                  start.UpdateLocation(locationMap),
                 );
               }
+              context.read<start.StartResponseBloc>().add(
+                start.StartSurveyResponse(),
+              );
             } else {
-              // Already have an ID (resume), just move forward
+              // Already have an ID (resume), just move forward.
               context.read<SurveyNavigationBloc>().add(StartSurvey());
             }
           },

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/l10n/generated/l10n.dart';
 import '../../../core/widgets/unified_snackbar.dart';
-import '../../../features/assignment/presentation/widgets/demographics_dialog.dart';
 import '../../../features/assignment/state/survey_in_progress_notifier.dart';
 import '../../../features/device_location/service/location_service.dart';
 import '../bloc/answering/public_link_answering_bloc.dart';
@@ -96,24 +95,7 @@ class _PublicLinkAnsweringViewState extends State<_PublicLinkAnsweringView> {
   Future<void> _bootstrap() async {
     if (!mounted) return;
 
-    // 1. Collect demographics
-    final result = await showDialog<Map<String, dynamic>>(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const DemographicsDialog(),
-    );
-
-    if (!mounted) return;
-
-    if (result == null) {
-      Navigator.of(context).pop();
-      return;
-    }
-
-    final gender = result['gender'].toJson() as String;
-    final ageGroup = result['ageGroup'].toJson() as String;
-
-    // 2. Location (if required)
+    // Location (if required by the public link)
     ({double latitude, double longitude})? location;
     if (widget.requireLocation) {
       try {
@@ -132,10 +114,10 @@ class _PublicLinkAnsweringViewState extends State<_PublicLinkAnsweringView> {
 
     if (!mounted) return;
 
-    // 3. Kick off the backend /start call
+    // Kick off the backend /start call (no demographics — server matches at FINAL_SUBMIT).
     context.read<PublicLinkAnsweringBloc>().add(
-          StartAnswering(gender: gender, ageGroup: ageGroup, location: location),
-        );
+      StartAnswering(location: location),
+    );
   }
 
   @override
