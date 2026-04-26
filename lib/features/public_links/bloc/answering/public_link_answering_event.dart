@@ -4,20 +4,16 @@ sealed class PublicLinkAnsweringEvent extends Equatable {
   const PublicLinkAnsweringEvent();
 }
 
-/// Kick off the survey by collecting demographics and calling /start.
+/// Kick off the survey by calling /start. The body carries only an
+/// optional location now — quota matching happens server-side at
+/// FINAL_SUBMIT.
 class StartAnswering extends PublicLinkAnsweringEvent {
-  final String gender;
-  final String ageGroup;
   final ({double latitude, double longitude})? location;
 
-  const StartAnswering({
-    required this.gender,
-    required this.ageGroup,
-    this.location,
-  });
+  const StartAnswering({this.location});
 
   @override
-  List<Object?> get props => [gender, ageGroup, location];
+  List<Object?> get props => [location];
 }
 
 /// User typed / selected an answer for a question.

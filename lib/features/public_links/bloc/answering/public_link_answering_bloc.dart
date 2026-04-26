@@ -18,8 +18,6 @@ import 'public_link_answering_state.dart';
 
 typedef PublicLinkStarter = Future<PublicLinkStartResult> Function({
   required String shortCode,
-  required String gender,
-  required String ageGroup,
   ({double latitude, double longitude})? location,
 });
 
@@ -70,8 +68,6 @@ class PublicLinkAnsweringBloc
     try {
       final result = await _starter(
         shortCode: shortCode,
-        gender: event.gender,
-        ageGroup: event.ageGroup,
         location: event.location,
       );
       // A survey with no sections is finished the moment we start it —
