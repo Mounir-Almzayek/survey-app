@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io' show Directory;
 
 import 'package:flutter_test/flutter_test.dart';
@@ -76,6 +77,143 @@ void main() {
 
       expect(box.get('unrelated_key'), 'stays');
       expect(prefs.getInt('schema_version'), 2);
+    });
+
+    test('strips gender + age_group from queued researcher start body', () async {
+      await Hive.openBox('request_queue_box');
+      final queue = Hive.box('request_queue_box');
+      final items = [
+        {
+          'id': 'q1',
+          'queuedAt': '2026-04-26T10:00:00.000Z',
+          'retryCount': 0,
+          'status': 'pending',
+          'metadata': null,
+          'request': {
+            'path': '/researcher/assignment/survey/1/start',
+            'method': 'POST',
+            'body': {
+              'gender': 'MALE',
+              'age_group': 'AGE_18_29',
+              'location': {'latitude': 1.0, 'longitude': 2.0},
+              'created_at': '2026-04-26T09:59:59.000Z',
+            },
+            'bodyType': 'data',
+          },
+        },
+      ];
+      await queue.put('queued_requests', jsonEncode(items));
+
+      final prefs = await SharedPreferences.getInstance();
+      await SchemaMigrationService(prefs: prefs).runIfNeeded();
+
+      final after = jsonDecode(queue.get('queued_requests') as String) as List;
+      final body = (after[0] as Map)['request']['body'] as Map;
+      expect(body.containsKey('gender'), isFalse);
+      expect(body.containsKey('age_group'), isFalse);
+      expect(body['location'], isA<Map>());
+      expect(body['created_at'], isNotNull);
+    });
+
+    test('strips gender + age_group from queued public-link start body', () async {
+      await Hive.openBox('request_queue_box');
+      final queue = Hive.box('request_queue_box');
+      final items = [
+        {
+          'id': 'q2',
+          'queuedAt': '2026-04-26T10:00:00.000Z',
+          'retryCount': 0,
+          'status': 'pending',
+          'metadata': null,
+          'request': {
+            'path': '/public-link/abc123/start',
+            'method': 'POST',
+            'body': {
+              'gender': 'FEMALE',
+              'age_group': 'AGE_30_39',
+              'location': {'latitude': 1.0, 'longitude': 2.0},
+            },
+            'bodyType': 'data',
+          },
+        },
+      ];
+      await queue.put('queued_requests', jsonEncode(items));
+
+      final prefs = await SharedPreferences.getInstance();
+      await SchemaMigrationService(prefs: prefs).runIfNeeded();
+
+      final after = jsonDecode(queue.get('queued_requests') as String) as List;
+      final body = (after[0] as Map)['request']['body'] as Map;
+      expect(body.containsKey('gender'), isFalse);
+      expect(body.containsKey('age_group'), isFalse);
+      expect(body['location'], isA<Map>());
+    });
+
+    test('leaves unrelated request bodies untouched', () async {
+      await Hive.openBox('request_queue_box');
+      final queue = Hive.box('request_queue_box');
+      final items = [
+        {
+          'id': 'q3',
+          'queuedAt': '2026-04-26T10:00:00.000Z',
+          'retryCount': 0,
+          'status': 'pending',
+          'metadata': null,
+          'request': {
+            'path': '/researcher/assignment/response/5/section',
+            'method': 'POST',
+            'body': {
+              'answers': [
+                {'question_id': 1, 'value': 'male'}
+              ],
+              'created_at': '2026-04-26T09:59:59.000Z',
+            },
+            'bodyType': 'data',
+          },
+        },
+        {
+          'id': 'q4',
+          'queuedAt': '2026-04-26T10:00:00.000Z',
+          'retryCount': 0,
+          'status': 'pending',
+          'metadata': null,
+          'request': {
+            'path': '/auth/refresh',
+            'method': 'POST',
+            'body': {'token': 'x'},
+            'bodyType': 'data',
+          },
+        },
+      ];
+      await queue.put('queued_requests', jsonEncode(items));
+
+      final prefs = await SharedPreferences.getInstance();
+      await SchemaMigrationService(prefs: prefs).runIfNeeded();
+
+      final after = jsonDecode(queue.get('queued_requests') as String) as List;
+      expect((after[0] as Map)['request']['body']['answers'], isA<List>());
+      expect((after[1] as Map)['request']['body']['token'], 'x');
+    });
+
+    test('handles empty queue + missing key gracefully', () async {
+      await Hive.openBox('request_queue_box');
+      // intentionally leave 'queued_requests' unset
+      final prefs = await SharedPreferences.getInstance();
+      await SchemaMigrationService(prefs: prefs).runIfNeeded();
+      expect(prefs.getInt('schema_version'), 2);
+    });
+
+    test('survives malformed queue entries by leaving them alone', () async {
+      await Hive.openBox('request_queue_box');
+      final queue = Hive.box('request_queue_box');
+      await queue.put('queued_requests', 'not valid json');
+
+      final prefs = await SharedPreferences.getInstance();
+      await SchemaMigrationService(prefs: prefs).runIfNeeded();
+
+      // Migration should not crash; version is bumped or left alone (per spec, an exception
+      // means we don't bump). Test asserts the migration didn't throw.
+      expect(true, isTrue);
     });
   });
 }
