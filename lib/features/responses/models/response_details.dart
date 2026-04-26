@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import 'package:king_abdulaziz_center_survey_app/core/models/survey/quota_coordinate.dart';
+
 import 'response_status.dart';
 
 /// Answer details as returned by ResponseService.getDetails
@@ -44,6 +46,10 @@ class ResponseDetails extends Equatable {
   final int? surveyId;
   final String? surveyTitle;
 
+  final int? quotaTargetId;
+  final String? displayLabel;
+  final List<QuotaCoordinate>? coordinates;
+
   final List<ResponseAnswerDetail> answers;
 
   const ResponseDetails({
@@ -58,11 +64,22 @@ class ResponseDetails extends Equatable {
     required this.ipAddress,
     required this.surveyId,
     required this.surveyTitle,
+    this.quotaTargetId,
+    this.displayLabel,
+    this.coordinates,
     required this.answers,
   });
 
   factory ResponseDetails.fromJson(Map<String, dynamic> json) {
     final surveyJson = json['survey'];
+    final coordsRaw = json['coordinates'];
+    final coords = coordsRaw is List
+        ? coordsRaw
+            .whereType<Map<String, dynamic>>()
+            .map(QuotaCoordinate.fromJson)
+            .toList()
+        : null;
+
     return ResponseDetails(
       id: json['id'] as int,
       status: ResponseStatusX.fromString(json['status'] as String? ?? 'DRAFT'),
@@ -83,6 +100,9 @@ class ResponseDetails extends Equatable {
       surveyTitle: surveyJson is Map<String, dynamic>
           ? surveyJson['title'] as String?
           : null,
+      quotaTargetId: (json['quota_target_id'] as num?)?.toInt(),
+      displayLabel: json['display_label'] as String?,
+      coordinates: coords,
       answers: (json['answers'] as List<dynamic>? ?? [])
           .map((a) => ResponseAnswerDetail.fromJson(a as Map<String, dynamic>))
           .toList(),
@@ -102,6 +122,9 @@ class ResponseDetails extends Equatable {
     ipAddress,
     surveyId,
     surveyTitle,
+    quotaTargetId,
+    displayLabel,
+    coordinates,
     answers,
   ];
 }
