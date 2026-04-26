@@ -13,9 +13,25 @@ import '../models/assignment_response_model.dart';
 import '../models/save_section_models.dart';
 import '../models/start_response_model.dart';
 import '../models/start_response_request_model.dart';
+import '../services/binding_inferer.dart';
+import '../../../core/models/survey/survey_model.dart';
 import 'assignment_local_repository.dart';
 
 class AssignmentRepository {
+  /// Run the binding inferer on a single Survey + its first Assignment, and
+  /// return a copy with `bindings` populated. Used by [listAssignments] and
+  /// [getSurveyDetails] before caching, so the offline matcher always has
+  /// the inferred binding data even on cold starts.
+  static Survey _attachInferredBindings(Survey survey) {
+    final assignments = survey.assignments;
+    if (assignments == null || assignments.isEmpty) return survey;
+    final inferred = BindingInferer.infer(
+      survey: survey,
+      assignment: assignments.first,
+    );
+    return survey.copyWith(bindings: inferred);
+  }
+
   static Future<ListAssignmentsResponse> listAssignments() async {
     final request = APIRequest(
       path: '/researcher/assignment/',
@@ -23,8 +39,15 @@ class AssignmentRepository {
     );
 
     final response = await request.send();
-    return ListAssignmentsResponse.fromJson(
+    final parsed = ListAssignmentsResponse.fromJson(
       response.data as Map<String, dynamic>,
+    );
+    // Attach inferred bindings so cached surveys carry them on cold start.
+    final enriched = parsed.surveys.map(_attachInferredBindings).toList();
+    return ListAssignmentsResponse(
+      success: parsed.success,
+      message: parsed.message,
+      surveys: enriched,
     );
   }
 
@@ -37,8 +60,12 @@ class AssignmentRepository {
     );
 
     final response = await request.send();
-    return GetSurveyAssignmentResponse.fromJson(
+    final parsed = GetSurveyAssignmentResponse.fromJson(
       response.data as Map<String, dynamic>,
+    );
+    return GetSurveyAssignmentResponse(
+      success: parsed.success,
+      survey: _attachInferredBindings(parsed.survey),
     );
   }
 
