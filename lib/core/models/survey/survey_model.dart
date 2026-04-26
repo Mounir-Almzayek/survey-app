@@ -105,12 +105,6 @@ class Survey extends Equatable {
     return current >= max;
   }
 
-  /// Deprecated: demographic-keyed quota checks are replaced by quotaTargetId
-  /// resolution. This stub keeps the file compiling during the QuotaTarget
-  /// migration (Tasks 8–25 remove all callers); it always returns false.
-  // ignore: unused_element_parameter
-  bool isDemographicQuotaFull(Gender gender, AgeGroup ageGroup) => false;
-
   Survey copyWith({
     int? id,
     int? createdByUserId,

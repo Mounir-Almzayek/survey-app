@@ -194,9 +194,7 @@ class _SurveyAnalysisChartSectionState
                           if (value.toInt() >= 0 &&
                               value.toInt() < quotas.length) {
                             final q = quotas[value.toInt()];
-                            final label = _shortLabel(
-                              q.localizedDemographicDescription(s),
-                            );
+                            final label = _shortLabel(q.displayLabel);
                             return SideTitleWidget(
                               meta: meta,
                               child: RotatedBox(
@@ -284,8 +282,8 @@ class _SurveyAnalysisChartSectionState
     );
   }
 
-  String _shortLabel(String demographicDescription) {
-    if (demographicDescription.length <= 18) return demographicDescription;
-    return '${demographicDescription.substring(0, 16)}…';
+  String _shortLabel(String displayLabel) {
+    if (displayLabel.length <= 18) return displayLabel;
+    return '${displayLabel.substring(0, 16)}…';
   }
 }

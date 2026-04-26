@@ -15,14 +15,6 @@ class PublicLinkAnsweringInitial extends PublicLinkAnsweringState {
   List<Object?> get props => [];
 }
 
-class PublicLinkAnsweringCollectingDemographics
-    extends PublicLinkAnsweringState {
-  const PublicLinkAnsweringCollectingDemographics();
-
-  @override
-  List<Object?> get props => [];
-}
-
 class PublicLinkAnsweringStarting extends PublicLinkAnsweringState {
   const PublicLinkAnsweringStarting();
 

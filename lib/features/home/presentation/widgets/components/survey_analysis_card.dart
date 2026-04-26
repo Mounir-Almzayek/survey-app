@@ -132,7 +132,7 @@ class SurveyAnalysisCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  quota.localizedDemographicDescription(s),
+                  quota.displayLabel,
                   style: TextStyle(
                     fontSize: context.adaptiveFont(14.sp),
                     fontWeight: FontWeight.w600,

@@ -126,7 +126,6 @@ class _PublicLinkAnsweringViewState extends State<_PublicLinkAnsweringView> {
       builder: (context, state) {
         return switch (state) {
           PublicLinkAnsweringInitial() ||
-          PublicLinkAnsweringCollectingDemographics() ||
           PublicLinkAnsweringStarting() =>
             AnsweringLoadingView(surveyTitle: widget.surveyTitle),
           PublicLinkAnsweringSection s => AnsweringSectionView(
