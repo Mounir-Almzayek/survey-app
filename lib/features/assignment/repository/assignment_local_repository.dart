@@ -1,13 +1,10 @@
 import 'dart:convert';
 
-import '../../../core/enums/survey_enums.dart';
 import '../../../core/models/survey/survey_model.dart';
-import '../models/response_metadata.dart';
 import '../models/save_section_models.dart';
 import 'local/assignment_storage.dart';
 import 'local/completed_responses_store.dart';
 import 'local/response_draft_store.dart';
-import 'local/response_metadata_store.dart';
 import 'local/survey_cache_store.dart';
 import 'local/sync_and_id_store.dart';
 
@@ -28,27 +25,6 @@ class AssignmentLocalRepository {
       oldId,
       newId,
     );
-    await ResponseMetadataStore.remap(oldId, newId);
-  }
-
-  /// Save demographic metadata for a response (links responseId to who we're collecting for).
-  static Future<void> saveResponseMetadata(
-    int responseId,
-    int surveyId,
-    Gender gender,
-    AgeGroup ageGroup,
-  ) async {
-    await ResponseMetadataStore.save(responseId, surveyId, gender, ageGroup);
-  }
-
-  /// Get demographic metadata for a response, or null if not found.
-  static Future<ResponseMetadata?> getResponseMetadata(int responseId) async {
-    return ResponseMetadataStore.get(responseId);
-  }
-
-  /// Remove response metadata (e.g. when response is discarded).
-  static Future<void> removeResponseMetadata(int responseId) async {
-    await ResponseMetadataStore.remove(responseId);
   }
 
   /// Get the persistent count of total synced responses

@@ -7,7 +7,6 @@ abstract class AssignmentStorageKeys {
   static const String negativeIdCounter = 'negative_response_id_counter';
 
   static String draft(int responseId) => 'response_draft_$responseId';
-  static String metadata(int responseId) => 'response_metadata_$responseId';
   static String completed(int surveyId) => 'completed_responses_$surveyId';
   static String accumulatedAnswers(int responseId) =>
       'response_answers_$responseId';
@@ -49,7 +48,6 @@ class AssignmentStorage {
             key == AssignmentStorageKeys.negativeIdCounter ||
             key == AssignmentStorageKeys.optimisticQuotaIncrementedIds ||
             key.startsWith('response_draft_') ||
-            key.startsWith('response_metadata_') ||
             key.startsWith('completed_responses_')) {
           await HiveService.deleteData(key);
         }
