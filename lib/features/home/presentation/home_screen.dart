@@ -27,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Keys for dashboard sections tracking
   final _analysisKey = GlobalKey(debugLabel: 'analysis');
-  final _demographicsKey = GlobalKey(debugLabel: 'demographics');
   final _metricsKey = GlobalKey(debugLabel: 'metrics');
   final _syncKey = GlobalKey(debugLabel: 'sync');
 
@@ -167,11 +166,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: Icons.analytics_outlined,
                       ),
                       DashboardSectionNode(
-                        key: _demographicsKey,
-                        label: s.demographics_title,
-                        icon: Icons.people_outline,
-                      ),
-                      DashboardSectionNode(
                         key: _metricsKey,
                         label: s.statistics,
                         icon: Icons.speed_outlined,
@@ -206,7 +200,6 @@ class _HomeScreenState extends State<HomeScreen> {
       return SurveyStatsWidget(
         stats: state.stats,
         analysisKey: _analysisKey,
-        demographicsKey: _demographicsKey,
         metricsKey: _metricsKey,
         syncKey: _syncKey,
       );

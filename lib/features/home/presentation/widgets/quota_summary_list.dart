@@ -4,11 +4,18 @@ import '../../../../core/l10n/generated/l10n.dart';
 import '../../../../core/models/survey/survey_model.dart';
 import '../../../../core/styles/app_colors.dart';
 import '../../../../core/utils/responsive_layout.dart';
+import '../../models/survey_stats_model.dart';
+import 'quota_breakdown_list.dart';
 
 class QuotaSummaryList extends StatelessWidget {
   final List<Survey> surveys;
+  final Map<int, List<QuotaBreakdownEntry>> breakdownBySurveyId;
 
-  const QuotaSummaryList({super.key, required this.surveys});
+  const QuotaSummaryList({
+    super.key,
+    required this.surveys,
+    this.breakdownBySurveyId = const {},
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +29,7 @@ class QuotaSummaryList extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w),
           child: Text(
-            s.target_categories, // Reuse "Target Categories" or add "Quota Summary" key
+            s.target_categories,
             style: TextStyle(
               fontSize: context.adaptiveFont(16.sp),
               fontWeight: FontWeight.bold,
@@ -37,15 +44,22 @@ class QuotaSummaryList extends StatelessWidget {
           itemCount: surveys.length,
           separatorBuilder: (context, index) => SizedBox(height: 12.h),
           itemBuilder: (context, index) {
-            return _buildSurveyQuotaCard(context, surveys[index]);
+            return _buildSurveyQuotaCard(
+              context,
+              surveys[index],
+              breakdownBySurveyId[surveys[index].id] ?? const [],
+            );
           },
         ),
       ],
     );
   }
 
-  Widget _buildSurveyQuotaCard(BuildContext context, Survey survey) {
-    // Calculate total progress for the survey
+  Widget _buildSurveyQuotaCard(
+    BuildContext context,
+    Survey survey,
+    List<QuotaBreakdownEntry> breakdown,
+  ) {
     int totalTarget = 0;
     int totalProgress = 0;
 
@@ -58,7 +72,7 @@ class QuotaSummaryList extends StatelessWidget {
       }
     }
 
-    double percent = totalTarget > 0 ? totalProgress / totalTarget : 0.0;
+    final percent = totalTarget > 0 ? totalProgress / totalTarget : 0.0;
 
     return Container(
       padding: EdgeInsets.all(16.r),
@@ -120,6 +134,25 @@ class QuotaSummaryList extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
+          if (breakdown.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            const Divider(height: 1),
+            ExpansionTile(
+              tilePadding: EdgeInsets.zero,
+              childrenPadding: EdgeInsets.zero,
+              title: Text(
+                'عرض التفاصيل',
+                style: TextStyle(
+                  fontSize: context.adaptiveFont(12.sp),
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              children: [
+                QuotaBreakdownList(entries: breakdown, topN: 5),
+              ],
+            ),
+          ],
         ],
       ),
     );
