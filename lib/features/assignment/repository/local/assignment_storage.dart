@@ -9,6 +9,8 @@ abstract class AssignmentStorageKeys {
   static String draft(int responseId) => 'response_draft_$responseId';
   static String metadata(int responseId) => 'response_metadata_$responseId';
   static String completed(int surveyId) => 'completed_responses_$surveyId';
+  static String accumulatedAnswers(int responseId) =>
+      'response_answers_$responseId';
   static const String optimisticQuotaIncrementedIds =
       'optimistic_quota_incremented_response_ids';
   static const String searchHistory = 'recent_survey_searches';

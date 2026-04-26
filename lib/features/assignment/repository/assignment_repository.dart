@@ -14,6 +14,7 @@ import '../models/save_section_models.dart';
 import '../models/start_response_model.dart';
 import '../models/start_response_request_model.dart';
 import '../services/binding_inferer.dart';
+import '../services/quota_matcher.dart';
 import '../../../core/models/survey/survey_model.dart';
 import 'assignment_local_repository.dart';
 
@@ -125,8 +126,6 @@ class AssignmentRepository {
         id: dummyId,
         surveyId: request.surveyId,
         status: ResponseStatus.draft,
-        gender: request.gender,
-        ageGroup: request.ageGroup,
         startedAt: request.createdAt,
       ),
     );
@@ -148,112 +147,182 @@ class AssignmentRepository {
     await AssignmentLocalRepository.remapIds(dummyId, realId);
   }
 
-  /// Updates the cached survey's researcher quotas when a response is completed:
-  /// finds the response's demographic from metadata and increments the matching quota locally.
+  /// Walk cached surveys to find which one owns this response. Used to
+  /// pick the right surveyId for refetch + survey lookup. Returns null
+  /// when the response isn't linked to any cached survey (e.g. cache
+  /// cleared).
+  static Future<int?> _findSurveyIdForResponse(int responseId) async {
+    final surveys = await AssignmentLocalRepository.getSurveys();
+    for (final s in surveys) {
+      if (s.localResponseIds?.contains(responseId) == true) {
+        return s.id;
+      }
+    }
+    return null;
+  }
+
+  /// Resolve and persist the `quotaTargetId` for a finalized response.
+  /// Called when a section save reports `isComplete=true`. Idempotent —
+  /// if a quotaTargetId is already saved for this response, returns it
+  /// without re-running the matcher (mirrors the backend guard).
+  static Future<int?> _resolveAndSaveQuotaTargetId(int responseId) async {
+    final existing =
+        await AssignmentLocalRepository.getResolvedQuotaTargetId(responseId);
+    if (existing != null) return existing;
+
+    // Find the survey owning this response.
+    final surveys = await AssignmentLocalRepository.getSurveys();
+    Survey? owningSurvey;
+    for (final s in surveys) {
+      if (s.localResponseIds?.contains(responseId) == true) {
+        owningSurvey = s;
+        break;
+      }
+    }
+    if (owningSurvey == null) return null;
+
+    final assignments = owningSurvey.assignments;
+    if (assignments == null || assignments.isEmpty) return null;
+    final assignment = assignments.first;
+
+    final answers =
+        await AssignmentLocalRepository.getAccumulatedAnswers(responseId);
+    final matched = QuotaMatcher.match(
+      survey: owningSurvey,
+      assignment: assignment,
+      answers: answers,
+    );
+    if (matched == null) return null;
+
+    await AssignmentLocalRepository.saveResolvedQuotaTargetId(
+      responseId,
+      matched,
+    );
+    return matched;
+  }
+
+  /// Increment the local quota for a completed response, keyed by the
+  /// `quotaTargetId` resolved at finalize. Mirrors the backend's per-target
+  /// progress count. TEST_MODE surveys never increment locally — the
+  /// server returns 0 for those, so refetch will reconcile.
   static Future<void> _incrementLocalQuotaForCompletedResponse(
     int responseId,
   ) async {
-    final meta = await AssignmentLocalRepository.getResponseMetadata(responseId);
-    if (meta == null) return;
+    final quotaTargetId =
+        await AssignmentLocalRepository.getResolvedQuotaTargetId(responseId);
+    if (quotaTargetId == null) return;
 
-    final survey = await AssignmentLocalRepository.getSurveyById(meta.surveyId);
-    if (survey == null ||
-        survey.assignments == null ||
-        survey.assignments!.isEmpty) {
-      return;
+    // Find the survey for this response. We rely on the linked surveys
+    // cache (the response's surveyId is recorded when the response is
+    // started or remapped).
+    final surveys = await AssignmentLocalRepository.getSurveys();
+    Survey? owningSurvey;
+    for (final s in surveys) {
+      if (s.localResponseIds?.contains(responseId) == true) {
+        owningSurvey = s;
+        break;
+      }
     }
+    if (owningSurvey == null) return;
+    if (owningSurvey.status == SurveyStatus.testMode) return;
 
-    for (var a = 0; a < survey.assignments!.length; a++) {
-      final assignment = survey.assignments![a];
+    final assignments = owningSurvey.assignments;
+    if (assignments == null || assignments.isEmpty) return;
+
+    for (var ai = 0; ai < assignments.length; ai++) {
+      final assignment = assignments[ai];
       final quotas = assignment.researcherQuotas;
       if (quotas == null || quotas.isEmpty) continue;
 
-      final matchIndex = quotas.indexWhere(
-        (q) => q.gender == meta.gender && q.ageGroup == meta.ageGroup,
-      );
-      if (matchIndex == -1) continue;
+      final qi = quotas.indexWhere((q) => q.quotaTargetId == quotaTargetId);
+      if (qi == -1) continue;
 
-      // Verify the category exists in the researcher's profile for this survey
-      final profile = await ProfileLocalRepository.getResearcherProfile();
-      ResearcherAssignmentModel? profileAssignmentForSurvey;
-      int? profileQuotaIndex;
-      if (profile != null) {
-        final list = profile.assignments
-            .where((a) => a.surveyId == meta.surveyId)
-            .toList();
-        if (list.isEmpty) return;
-        profileAssignmentForSurvey = list.first;
-        final genderStr = meta.gender.toJson().toUpperCase();
-        final ageGroupStr = meta.ageGroup.toJson().toUpperCase();
-        profileQuotaIndex = profileAssignmentForSurvey.quotas.indexWhere((q) =>
-            q.gender.toUpperCase() == genderStr &&
-            q.ageGroup.toUpperCase() == ageGroupStr);
-        if (profileQuotaIndex == -1) return;
-      }
-
-      final quota = quotas[matchIndex];
-      final newProgress = quota.progress + 1;
-      final newCollected = quota.collected + 1;
-      final newPercent = quota.target > 0
-          ? (newProgress / quota.target * 100).round().clamp(0, 100)
+      final q = quotas[qi];
+      final newProgress = q.progress + 1;
+      final newCollected = q.collected + 1;
+      final newPercent = q.target > 0
+          ? (newProgress / q.target * 100).round().clamp(0, 100)
           : 0;
+      final newRemaining = q.serverRemaining != null
+          ? (q.serverRemaining! - 1).clamp(0, 1 << 30)
+          : null;
 
-      final updatedQuota = quota.copyWith(
+      final updated = q.copyWith(
         progress: newProgress,
         collected: newCollected,
         progressPercent: newPercent,
-        clearServerRemaining: true,
+        responsesCountInCategory: (q.responsesCountInCategory ?? 0) + 1,
+        serverRemaining: newRemaining,
+        clearServerRemaining: newRemaining == null,
       );
-      final newQuotas = List<ResearcherQuota>.from(quotas)
-        ..[matchIndex] = updatedQuota;
-      final updatedAssignment = assignment.copyWith(researcherQuotas: newQuotas);
-      final newAssignments = List<Assignment>.from(survey.assignments!)
-        ..[a] = updatedAssignment;
-      final updatedSurvey = survey.copyWith(assignments: newAssignments);
-      await AssignmentLocalRepository.updateSurvey(updatedSurvey);
 
-      // Increment progress (collected) in the profile model locally when category matches
-      if (profile != null &&
-          profileAssignmentForSurvey != null &&
-          profileQuotaIndex != null) {
-        final pq = profileAssignmentForSurvey.quotas[profileQuotaIndex];
-        final newProfileCollected = pq.collected + 1;
-        final newProfileProgressPercent = pq.target > 0
-            ? (newProfileCollected / pq.target * 100).round().clamp(0, 100)
-            : 0;
-        final updatedProfileQuota = ResearcherQuotaModel(
-          gender: pq.gender,
-          ageGroup: pq.ageGroup,
-          target: pq.target,
-          collected: newProfileCollected,
-          progressPercent: newProfileProgressPercent,
-          remaining: pq.remaining != null ? pq.remaining! - 1 : null,
-          responsesCount: pq.responsesCount,
-        );
-        final newProfileQuotas =
-            List<ResearcherQuotaModel>.from(profileAssignmentForSurvey.quotas)
-              ..[profileQuotaIndex] = updatedProfileQuota;
-        final updatedProfileAssignment = ResearcherAssignmentModel(
-          id: profileAssignmentForSurvey.id,
-          surveyId: profileAssignmentForSurvey.surveyId,
-          surveyTitle: profileAssignmentForSurvey.surveyTitle,
-          status: profileAssignmentForSurvey.status,
-          type: profileAssignmentForSurvey.type,
-          quotas: newProfileQuotas,
-        );
-        final newProfileAssignments = profile.assignments
-            .map((a) =>
-                a.surveyId == meta.surveyId
-                    ? updatedProfileAssignment
-                    : a)
-            .toList();
-        final updatedProfile = ResearcherProfileResponseModel(
-          user: profile.user,
-          researcher: profile.researcher,
-          supervisor: profile.supervisor,
-          assignments: newProfileAssignments,
-        );
-        await ProfileLocalRepository.saveResearcherProfile(updatedProfile);
+      final newQuotas = List<ResearcherQuota>.from(quotas)..[qi] = updated;
+      final newAssignment =
+          assignment.copyWith(researcherQuotas: newQuotas);
+      final newAssignments = List<Assignment>.from(assignments)
+        ..[ai] = newAssignment;
+      final newSurvey = owningSurvey.copyWith(assignments: newAssignments);
+      await AssignmentLocalRepository.updateSurvey(newSurvey);
+
+      // Mirror into the profile cache.
+      final profile = await ProfileLocalRepository.getResearcherProfile();
+      if (profile != null) {
+        final pAssignmentIdx = profile.assignments
+            .indexWhere((a) => a.surveyId == owningSurvey!.id);
+        if (pAssignmentIdx != -1) {
+          final pAssignment = profile.assignments[pAssignmentIdx];
+          final pqIdx = pAssignment.quotas
+              .indexWhere((pq) => pq.quotaTargetId == quotaTargetId);
+          if (pqIdx != -1) {
+            final pq = pAssignment.quotas[pqIdx];
+            final newPCollected = pq.collected + 1;
+            final newPProgress = pq.progress + 1;
+            final newPPercent = pq.target > 0
+                ? (newPCollected / pq.target * 100).round().clamp(0, 100)
+                : 0;
+            final newPRemaining = pq.serverRemaining != null
+                ? (pq.serverRemaining! - 1).clamp(0, 1 << 30)
+                : null;
+
+            final updatedPQ = ResearcherQuotaModel(
+              id: pq.id,
+              quotaId: pq.quotaId,
+              assignmentId: pq.assignmentId,
+              quotaTargetId: pq.quotaTargetId,
+              target: pq.target,
+              progress: newPProgress,
+              collected: newPCollected,
+              serverRemaining: newPRemaining,
+              responsesCount: (pq.responsesCount ?? 0) + 1,
+              progressPercent: newPPercent,
+              displayLabel: pq.displayLabel,
+              coordinates: pq.coordinates,
+              createdAt: pq.createdAt,
+              updatedAt: pq.updatedAt,
+            );
+            final newPQuotas =
+                List<ResearcherQuotaModel>.from(pAssignment.quotas)
+                  ..[pqIdx] = updatedPQ;
+            final newPAssignment = ResearcherAssignmentModel(
+              id: pAssignment.id,
+              surveyId: pAssignment.surveyId,
+              surveyTitle: pAssignment.surveyTitle,
+              status: pAssignment.status,
+              type: pAssignment.type,
+              quotas: newPQuotas,
+            );
+            final newPAssignments =
+                List<ResearcherAssignmentModel>.from(profile.assignments)
+                  ..[pAssignmentIdx] = newPAssignment;
+            final updatedProfile = ResearcherProfileResponseModel(
+              user: profile.user,
+              researcher: profile.researcher,
+              supervisor: profile.supervisor,
+              assignments: newPAssignments,
+            );
+            await ProfileLocalRepository.saveResearcherProfile(updatedProfile);
+          }
+        }
       }
       return;
     }
@@ -299,6 +368,13 @@ class AssignmentRepository {
       );
     }
 
+    // Accumulate this section's answers so the matcher (run at finalize)
+    // sees all answers across all sections.
+    await AssignmentLocalRepository.appendAnswersForResponse(
+      responseId,
+      saveRequest.answers,
+    );
+
     final request = getSaveSectionAnswersRequest(
       responseId: responseId,
       saveRequest: saveRequest,
@@ -320,13 +396,15 @@ class AssignmentRepository {
       // Increment persistent sync counter if this was the final section
       if (result.isComplete) {
         await AssignmentLocalRepository.incrementSyncedResponsesCount();
+        await _resolveAndSaveQuotaTargetId(responseId);
         await _incrementLocalQuotaForCompletedResponse(responseId);
-        final meta = await AssignmentLocalRepository.getResponseMetadata(
-          responseId,
-        );
-        if (meta != null) {
-          await refreshCachedSurveyFromApi(meta.surveyId);
+        // Refetch from server so any divergence between local prediction and
+        // server-side authoritative match resolves.
+        final surveyId = await _findSurveyIdForResponse(responseId);
+        if (surveyId != null) {
+          await refreshCachedSurveyFromApi(surveyId);
         }
+        await AssignmentLocalRepository.clearAccumulatedAnswers(responseId);
       }
     }
 
@@ -344,13 +422,22 @@ class AssignmentRepository {
     final localRequest = saveRequest.copyWith(isSynced: false);
     await AssignmentLocalRepository.saveResponseDraft(responseId, localRequest);
 
-    // 2. If this save completes the survey offline, increment local quota now (optimistic)
+    // 2. Accumulate this section's answers so the matcher (run at finalize)
+    // sees all answers across all sections.
+    await AssignmentLocalRepository.appendAnswersForResponse(
+      responseId,
+      saveRequest.answers,
+    );
+
+    // 3. If this save completes the survey offline, resolve quotaTargetId
+    // and increment local quota now (optimistic).
     if (isCompletingSurvey) {
+      await _resolveAndSaveQuotaTargetId(responseId);
       await _incrementLocalQuotaForCompletedResponse(responseId);
       await AssignmentLocalRepository.markOptimisticQuotaIncremented(responseId);
     }
 
-    // 3. Add to queue manager
+    // 4. Add to queue manager
     final apiRequest = getSaveSectionAnswersRequest(
       responseId: responseId,
       saveRequest: saveRequest,
@@ -376,14 +463,14 @@ class AssignmentRepository {
               final alreadyIncremented = await AssignmentLocalRepository
                   .consumeOptimisticQuotaIncrement(responseId);
               if (!alreadyIncremented) {
+                await _resolveAndSaveQuotaTargetId(responseId);
                 await _incrementLocalQuotaForCompletedResponse(responseId);
               }
-              final meta = await AssignmentLocalRepository.getResponseMetadata(
-                responseId,
-              );
-              if (meta != null) {
-                await refreshCachedSurveyFromApi(meta.surveyId);
+              final surveyId = await _findSurveyIdForResponse(responseId);
+              if (surveyId != null) {
+                await refreshCachedSurveyFromApi(surveyId);
               }
+              await AssignmentLocalRepository.clearAccumulatedAnswers(responseId);
             }
           }
         } catch (_) {}

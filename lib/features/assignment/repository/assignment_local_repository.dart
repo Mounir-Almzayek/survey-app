@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../../core/enums/survey_enums.dart';
 import '../../../core/models/survey/survey_model.dart';
 import '../models/response_metadata.dart';
@@ -190,5 +192,72 @@ class AssignmentLocalRepository {
   /// Clear search history
   static Future<void> clearSearchHistory() async {
     await AssignmentStorage.remove(AssignmentStorageKeys.searchHistory);
+  }
+
+  /// Append answers from a section save into a per-response map of
+  /// `questionId → value.toString()`. Used by `QuotaMatcher` at finalize
+  /// to see all answers across all sections without changing the API
+  /// payload shape.
+  static Future<void> appendAnswersForResponse(
+    int responseId,
+    List<AnswerRequest> answers,
+  ) async {
+    final key = AssignmentStorageKeys.accumulatedAnswers(responseId);
+    final raw = await AssignmentStorage.getString(key);
+    Map<String, dynamic> existing = {};
+    if (raw != null && raw.isNotEmpty) {
+      try {
+        existing = Map<String, dynamic>.from(jsonDecode(raw) as Map);
+      } catch (_) {
+        existing = {};
+      }
+    }
+    for (final a in answers) {
+      final v = a.value;
+      if (v == null) continue;
+      existing[a.questionId.toString()] = v.toString();
+    }
+    await AssignmentStorage.setString(key, jsonEncode(existing));
+  }
+
+  /// Read the accumulated `questionId → value` map for a response.
+  /// Returns an empty map when no answers have been accumulated yet.
+  static Future<Map<int, String>> getAccumulatedAnswers(int responseId) async {
+    final key = AssignmentStorageKeys.accumulatedAnswers(responseId);
+    final raw = await AssignmentStorage.getString(key);
+    if (raw == null || raw.isEmpty) return const {};
+    try {
+      final m = Map<String, dynamic>.from(jsonDecode(raw) as Map);
+      return {for (final e in m.entries) int.parse(e.key): e.value.toString()};
+    } catch (_) {
+      return const {};
+    }
+  }
+
+  /// Clear the accumulated answers for a response (e.g. on completion sync
+  /// or discard).
+  static Future<void> clearAccumulatedAnswers(int responseId) async {
+    await AssignmentStorage.remove(
+      AssignmentStorageKeys.accumulatedAnswers(responseId),
+    );
+  }
+
+  /// Persist the resolved `quotaTargetId` for a response so subsequent
+  /// reads (e.g. queue sync callback) can find the same id without
+  /// re-running the matcher.
+  static Future<void> saveResolvedQuotaTargetId(
+    int responseId,
+    int quotaTargetId,
+  ) async {
+    await AssignmentStorage.setInt(
+      'response_quota_target_$responseId',
+      quotaTargetId,
+    );
+  }
+
+  /// Read the previously-saved resolved quotaTargetId. Returns null when
+  /// nothing was saved (matcher returned null or matcher never ran).
+  static Future<int?> getResolvedQuotaTargetId(int responseId) async {
+    return AssignmentStorage.getInt('response_quota_target_$responseId');
   }
 }
