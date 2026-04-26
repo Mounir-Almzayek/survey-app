@@ -97,19 +97,11 @@ class Survey extends Equatable {
     return current >= max;
   }
 
-  /// True when a [ResearcherQuota] exists for this demographic and
-  /// [ResearcherQuota.isQuotaFull] is true (uses API `remaining` when present).
-  bool isDemographicQuotaFull(Gender gender, AgeGroup ageGroup) {
-    final quotas = assignments != null && assignments!.isNotEmpty
-        ? assignments!.first.researcherQuotas
-        : null;
-    if (quotas == null || quotas.isEmpty) return false;
-    final i = quotas.indexWhere(
-      (q) => q.gender == gender && q.ageGroup == ageGroup,
-    );
-    if (i == -1) return false;
-    return quotas[i].isQuotaFull;
-  }
+  /// Deprecated: demographic-keyed quota checks are replaced by quotaTargetId
+  /// resolution. This stub keeps the file compiling during the QuotaTarget
+  /// migration (Tasks 8–25 remove all callers); it always returns false.
+  // ignore: unused_element_parameter
+  bool isDemographicQuotaFull(Gender gender, AgeGroup ageGroup) => false;
 
   Survey copyWith({
     int? id,

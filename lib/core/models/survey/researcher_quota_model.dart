@@ -1,24 +1,40 @@
 import 'package:equatable/equatable.dart';
-import '../../enums/survey_enums.dart';
-import '../../l10n/generated/l10n.dart';
 import 'assignment_model.dart';
+import 'quota_coordinate.dart';
 
-/// ResearcherQuota Model - For quota tracking
+/// ResearcherQuota — one cell of a researcher's assigned quota plan.
+///
+/// The bucket is identified by [quotaTargetId] (NULL when no target is
+/// resolved yet). [coordinates] describe the bucket's `(criterion, category)`
+/// axes; [displayLabel] is a server-built human-readable summary in Arabic.
 class ResearcherQuota extends Equatable {
   /// Backend quota row id (may mirror [id] when API sends `quota_id`).
   final int quotaId;
   final int id;
   final int assignmentId;
-  final Gender gender;
-  final AgeGroup ageGroup;
+
+  /// Identifier of the matching `QuotaTarget`. `null` when no target is yet
+  /// resolved for this row (e.g., placeholder before assignment).
+  final int? quotaTargetId;
+
   final int target;
   final int progress;
   final int collected;
   final num progressPercent;
+
   /// When set, reflects the API `remaining` value (authoritative over [target]-[progress]).
   final int? serverRemaining;
-  /// Optional per-demographic count from API (`responses_count`).
+
+  /// Optional per-bucket count from API (`responses_count`).
   final int? responsesCountInCategory;
+
+  /// Server-built display label, joined from coordinate labels with `" • "`.
+  /// Always rendered as-is (Arabic).
+  final String displayLabel;
+
+  /// Coordinates that identify this quota bucket.
+  final List<QuotaCoordinate> coordinates;
+
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -29,14 +45,15 @@ class ResearcherQuota extends Equatable {
     this.quotaId = 0,
     required this.id,
     required this.assignmentId,
-    required this.gender,
-    required this.ageGroup,
+    this.quotaTargetId,
     required this.target,
     this.progress = 0,
     this.collected = 0,
     this.progressPercent = 0,
     this.serverRemaining,
     this.responsesCountInCategory,
+    this.displayLabel = '',
+    this.coordinates = const [],
     required this.createdAt,
     required this.updatedAt,
     this.assignment,
@@ -46,8 +63,8 @@ class ResearcherQuota extends Equatable {
     int? quotaId,
     int? id,
     int? assignmentId,
-    Gender? gender,
-    AgeGroup? ageGroup,
+    int? quotaTargetId,
+    bool clearQuotaTargetId = false,
     int? target,
     int? progress,
     int? collected,
@@ -56,6 +73,8 @@ class ResearcherQuota extends Equatable {
     bool clearServerRemaining = false,
     int? responsesCountInCategory,
     bool clearResponsesCountInCategory = false,
+    String? displayLabel,
+    List<QuotaCoordinate>? coordinates,
     DateTime? createdAt,
     DateTime? updatedAt,
     Assignment? assignment,
@@ -64,8 +83,7 @@ class ResearcherQuota extends Equatable {
       quotaId: quotaId ?? this.quotaId,
       id: id ?? this.id,
       assignmentId: assignmentId ?? this.assignmentId,
-      gender: gender ?? this.gender,
-      ageGroup: ageGroup ?? this.ageGroup,
+      quotaTargetId: clearQuotaTargetId ? null : (quotaTargetId ?? this.quotaTargetId),
       target: target ?? this.target,
       progress: progress ?? this.progress,
       collected: collected ?? this.collected,
@@ -74,6 +92,8 @@ class ResearcherQuota extends Equatable {
       responsesCountInCategory: clearResponsesCountInCategory
           ? null
           : (responsesCountInCategory ?? this.responsesCountInCategory),
+      displayLabel: displayLabel ?? this.displayLabel,
+      coordinates: coordinates ?? this.coordinates,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       assignment: assignment ?? this.assignment,
@@ -87,6 +107,7 @@ class ResearcherQuota extends Equatable {
     final progressVal = json['progress'] as int? ?? json['used'] as int? ?? 0;
     final collectedVal =
         json['collected'] as int? ?? json['used'] as int? ?? progressVal;
+
     int? parseOptionalInt(dynamic v) {
       if (v == null) return null;
       if (v is int) return v;
@@ -94,21 +115,27 @@ class ResearcherQuota extends Equatable {
       return int.tryParse(v.toString());
     }
 
-    final serverRem = parseOptionalInt(json['remaining']);
-    final respCount = parseOptionalInt(json['responses_count']);
+    final coordsRaw = json['coordinates'];
+    final coords = coordsRaw is List
+        ? coordsRaw
+            .whereType<Map<String, dynamic>>()
+            .map(QuotaCoordinate.fromJson)
+            .toList()
+        : <QuotaCoordinate>[];
 
     return ResearcherQuota(
       quotaId: quotaIdVal,
       id: idVal,
       assignmentId: json['assignment_id'] as int? ?? 0,
-      gender: Gender.fromJson(json['gender']),
-      ageGroup: AgeGroup.fromJson(json['age_group']),
+      quotaTargetId: parseOptionalInt(json['quota_target_id']),
       target: targetVal,
       progress: progressVal,
       collected: collectedVal,
       progressPercent: (json['progress_percent'] as num?) ?? 0,
-      serverRemaining: serverRem,
-      responsesCountInCategory: respCount,
+      serverRemaining: parseOptionalInt(json['remaining']),
+      responsesCountInCategory: parseOptionalInt(json['responses_count']),
+      displayLabel: (json['display_label'] as String?) ?? '',
+      coordinates: coords,
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'].toString())
           : DateTime.now(),
@@ -116,30 +143,29 @@ class ResearcherQuota extends Equatable {
           ? DateTime.parse(json['updated_at'].toString())
           : DateTime.now(),
       assignment: json['assignment'] != null
-          ? Assignment.fromJson(json['assignment'])
+          ? Assignment.fromJson(json['assignment'] as Map<String, dynamic>)
           : null,
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'quota_id': quotaId,
-      'id': id,
-      'assignment_id': assignmentId,
-      'gender': gender.toJson(),
-      'age_group': ageGroup.toJson(),
-      'target': target,
-      'progress': progress,
-      'collected': collected,
-      'progress_percent': progressPercent,
-      if (serverRemaining != null) 'remaining': serverRemaining,
-      if (responsesCountInCategory != null)
-        'responses_count': responsesCountInCategory,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
-      'assignment': assignment?.toJson(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'quota_id': quotaId,
+    'id': id,
+    'assignment_id': assignmentId,
+    if (quotaTargetId != null) 'quota_target_id': quotaTargetId,
+    'target': target,
+    'progress': progress,
+    'collected': collected,
+    'progress_percent': progressPercent,
+    if (serverRemaining != null) 'remaining': serverRemaining,
+    if (responsesCountInCategory != null)
+      'responses_count': responsesCountInCategory,
+    'display_label': displayLabel,
+    'coordinates': coordinates.map((c) => c.toJson()).toList(),
+    'created_at': createdAt.toIso8601String(),
+    'updated_at': updatedAt.toIso8601String(),
+    'assignment': assignment?.toJson(),
+  };
 
   /// Remaining slots: prefers API [serverRemaining] when present.
   int get remaining {
@@ -149,43 +175,23 @@ class ResearcherQuota extends Equatable {
     return diff < 0 ? 0 : diff;
   }
 
-  /// True when this demographic bucket cannot accept more responses (server-first).
+  /// True when this bucket cannot accept more responses (server-first).
   bool get isQuotaFull {
     if (target <= 0) return false;
     if (serverRemaining != null) return serverRemaining! <= 0;
     return progress >= target;
   }
 
-  /// Check if quota is completed
   bool get isCompleted => isQuotaFull;
 
   /// Get completion percentage (prefers API [progressPercent] when non-zero).
   double get completionPercentage {
     if (target <= 0) return 0;
-    if (progressPercent > 0) {
-      return progressPercent.toDouble().clamp(0, 100);
-    }
+    if (progressPercent > 0) return progressPercent.toDouble().clamp(0, 100);
     return ((progress / target) * 100).clamp(0, 100);
   }
 
-  /// Check if quota is nearly complete (>= 80%)
   bool get isNearlyComplete => completionPercentage >= 80;
-
-  /// Get quota status description
-  String get statusDescription {
-    if (isCompleted) return 'Completed';
-    if (isNearlyComplete) return 'Nearly Complete';
-    if (progress > 0) return 'In Progress';
-    return 'Not Started';
-  }
-
-  /// Get localized quota status description
-  String localizedStatusDescription(S s) {
-    if (isCompleted) return s.completed;
-    if (isNearlyComplete) return s.nearly_complete;
-    if (progress > 0) return s.in_progress;
-    return s.not_started;
-  }
 
   /// Opacity (0.0–1.0) for primary color in progress UI based on state.
   double get progressDisplayAlpha {
@@ -195,35 +201,20 @@ class ResearcherQuota extends Equatable {
     return 0.45;
   }
 
-  /// Get demographic description
-  String get demographicDescription {
-    String genderText = gender == Gender.male ? 'Male' : 'Female';
-    String ageText = ageGroup
-        .toJson()
-        .replaceAll('AGE_', '')
-        .replaceAll('_', '-')
-        .replaceAll('PLUS', '+');
-    return '$genderText ($ageText)';
-  }
-
-  /// Get localized demographic description
-  String localizedDemographicDescription(S s) {
-    return '${gender.localized(s)} (${ageGroup.localized(s)})';
-  }
-
   @override
   List<Object?> get props => [
     quotaId,
     id,
     assignmentId,
-    gender,
-    ageGroup,
+    quotaTargetId,
     target,
     progress,
     collected,
     progressPercent,
     serverRemaining,
     responsesCountInCategory,
+    displayLabel,
+    coordinates,
     createdAt,
     updatedAt,
     assignment,
