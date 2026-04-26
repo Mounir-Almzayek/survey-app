@@ -66,17 +66,14 @@ class PublicLinksOnlineRepository {
   /// Start a public-link response (unauthenticated).
   /// POST /public-link/:short_code/start
   /// Returns [responseId], the [firstSection], and [conditionalLogics].
+  ///
+  /// As of the QuotaTarget migration the body no longer carries gender or
+  /// age group; quota matching happens server-side at FINAL_SUBMIT.
   static Future<PublicLinkStartResult> startPublicLinkResponse({
     required String shortCode,
-    required String gender,
-    required String ageGroup,
     ({double latitude, double longitude})? location,
   }) async {
-    final body = buildStartBody(
-      gender: gender,
-      ageGroup: ageGroup,
-      location: location,
-    );
+    final body = buildStartBody(location: location);
 
     final apiRequest = APIRequest(
       path: '/public-link/$shortCode/start',
@@ -91,20 +88,15 @@ class PublicLinksOnlineRepository {
   }
 
   /// Build the request body for the public-link start endpoint. The
-  /// `created_at` field is captured at call time so a server that supports
-  /// it can record the moment of user action; backends that don't yet
-  /// recognise the field strip it silently (Zod default).
+  /// `created_at` field is captured at call time so the server can record
+  /// the moment of user action even when the request is replayed later.
   @visibleForTesting
   static Map<String, dynamic> buildStartBody({
-    required String gender,
-    required String ageGroup,
     ({double latitude, double longitude})? location,
     DateTime? createdAt,
   }) {
     final ts = (createdAt ?? DateTime.now()).toUtc().toIso8601String();
     return <String, dynamic>{
-      'gender': gender,
-      'age_group': ageGroup,
       if (location != null)
         'location': {
           'latitude': location.latitude,
