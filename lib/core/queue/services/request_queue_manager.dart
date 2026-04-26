@@ -177,6 +177,9 @@ class RequestQueueManager {
           _queueStatusController.add(
             QueueStatus(isOnline: _isOnline, queueLength: 0),
           );
+          // Reconcile local quota counts with server-truth after the queue
+          // drains. Fire-and-forget — failure tolerated, next foreground retries.
+          unawaited(AssignmentRepository.refreshAllAssignments());
           return;
         }
 

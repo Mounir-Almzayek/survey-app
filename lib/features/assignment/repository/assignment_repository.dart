@@ -81,6 +81,22 @@ class AssignmentRepository {
     } catch (_) {}
   }
 
+  /// Refetch all surveys + assignments and replace the local cache.
+  /// Called after the offline queue drains so the local quota counts get
+  /// reconciled against server-truth (which has just processed the
+  /// queued submissions and matched their quota_target_ids
+  /// authoritatively at FINAL_SUBMIT).
+  static Future<void> refreshAllAssignments() async {
+    try {
+      final r = await listAssignments();
+      if (r.success) {
+        await AssignmentLocalRepository.saveSurveys(r.surveys);
+      }
+    } catch (_) {
+      // Tolerate transient failures; next foreground refresh retries.
+    }
+  }
+
   static Future<StartResponseResponse> startResponse(
     StartResponseRequest request,
   ) async {
