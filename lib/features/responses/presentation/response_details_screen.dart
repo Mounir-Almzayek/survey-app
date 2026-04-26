@@ -36,6 +36,26 @@ class ResponseDetailsScreen extends StatelessWidget {
                           .headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Text(
+                        'الكوتا: ',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          d.quotaTargetId == null
+                              ? 'غير محدد'
+                              : (d.displayLabel ?? 'غير محدد'),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 16),
                   for (final answer in d.answers) ...[
                     Text(
