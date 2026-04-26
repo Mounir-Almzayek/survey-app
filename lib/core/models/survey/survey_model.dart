@@ -5,6 +5,7 @@ import 'conditional_logic_model.dart';
 import 'report_configuration_model.dart';
 import 'assignment_model.dart';
 import 'researcher_quota_model.dart';
+import 'scope_criterion_binding.dart';
 
 class Survey extends Equatable {
   final int id;
@@ -35,6 +36,12 @@ class Survey extends Equatable {
   final List<ReportConfiguration>? reportConfigurations;
   final List<Assignment>? assignments;
 
+  /// Inferred (question_id → scope_criterion_id) bindings used by
+  /// QuotaMatcher. Populated by BindingInferer in AssignmentRepository
+  /// after fetch; persisted in the local cache so the matcher works even
+  /// when the next session starts offline.
+  final List<ScopeCriterionBinding> bindings;
+
   const Survey({
     required this.id,
     this.createdByUserId,
@@ -61,6 +68,7 @@ class Survey extends Equatable {
     this.conditionalLogics,
     this.reportConfigurations,
     this.assignments,
+    this.bindings = const [],
   });
 
   /// Returns true if survey is published and currently within availability window.
@@ -128,6 +136,7 @@ class Survey extends Equatable {
     List<ConditionalLogic>? conditionalLogics,
     List<ReportConfiguration>? reportConfigurations,
     List<Assignment>? assignments,
+    List<ScopeCriterionBinding>? bindings,
   }) {
     return Survey(
       id: id ?? this.id,
@@ -156,10 +165,18 @@ class Survey extends Equatable {
       conditionalLogics: conditionalLogics ?? this.conditionalLogics,
       reportConfigurations: reportConfigurations ?? this.reportConfigurations,
       assignments: assignments ?? this.assignments,
+      bindings: bindings ?? this.bindings,
     );
   }
 
   factory Survey.fromJson(Map<String, dynamic> json) {
+    final bindingsRaw = json['bindings'];
+    final bindings = bindingsRaw is List
+        ? bindingsRaw
+            .whereType<Map<String, dynamic>>()
+            .map(ScopeCriterionBinding.fromJson)
+            .toList()
+        : <ScopeCriterionBinding>[];
     return Survey(
       id: json['id'] as int? ?? 0,
       createdByUserId: json['created_by_user_id'] as int?,
@@ -208,11 +225,14 @@ class Survey extends Equatable {
       assignments: (json['assignments'] as List?)
           ?.map((e) => Assignment.fromJson(e as Map<String, dynamic>))
           .toList(),
+      bindings: bindings,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      if (bindings.isNotEmpty)
+        'bindings': bindings.map((b) => b.toJson()).toList(),
       'id': id,
       'created_by_user_id': createdByUserId,
       'title': title,
@@ -269,5 +289,6 @@ class Survey extends Equatable {
     conditionalLogics,
     reportConfigurations,
     assignments,
+    bindings,
   ];
 }
