@@ -113,5 +113,61 @@ void main() {
       final b = BindingInferer.infer(survey: survey, assignment: assignment);
       expect(a, b);
     });
+
+    test('case-insensitive: question option "MALE" matches category "male"', () {
+      final survey = makeSurveyWithSingleQuestion(
+        questionId: 9,
+        optionValues: const ['MALE', 'FEMALE'],
+      );
+      final assignment = makeAssignmentWithCoordinates([
+        coord(scopeCriterionId: 3, criterionName: 'Gender', categoryId: 11, value: 'male'),
+        coord(scopeCriterionId: 3, criterionName: 'Gender', categoryId: 12, value: 'female'),
+      ]);
+      final bindings = BindingInferer.infer(survey: survey, assignment: assignment);
+      expect(bindings.length, 1);
+    });
+
+    test('whitespace tolerance: trims option values', () {
+      final survey = makeSurveyWithSingleQuestion(
+        questionId: 9,
+        optionValues: const ['  male  ', '  female  '],
+      );
+      final assignment = makeAssignmentWithCoordinates([
+        coord(scopeCriterionId: 3, criterionName: 'Gender', categoryId: 11, value: 'male'),
+        coord(scopeCriterionId: 3, criterionName: 'Gender', categoryId: 12, value: 'female'),
+      ]);
+      expect(BindingInferer.infer(survey: survey, assignment: assignment).length, 1);
+    });
+
+    test('partial overlap: question with 1 of 2 category values still binds when unique', () {
+      // Researcher quota covers {male, female}, but question only lists {male}.
+      // Score is 1 vs nothing else → unique top → bind.
+      final survey = makeSurveyWithSingleQuestion(
+        questionId: 9,
+        optionValues: const ['male'],
+      );
+      final assignment = makeAssignmentWithCoordinates([
+        coord(scopeCriterionId: 3, criterionName: 'Gender', categoryId: 11, value: 'male'),
+        coord(scopeCriterionId: 3, criterionName: 'Gender', categoryId: 12, value: 'female'),
+      ]);
+      expect(BindingInferer.infer(survey: survey, assignment: assignment).length, 1);
+    });
+
+    test('a question used for one criterion is not reused for another', () {
+      // Both criteria see this question as the best (or only) match.
+      // First criterion (sorted by id) consumes it; second gets nothing.
+      final survey = makeSurveyWithSingleQuestion(
+        questionId: 9,
+        optionValues: const ['x', 'y'],
+      );
+      final assignment = makeAssignmentWithCoordinates([
+        coord(scopeCriterionId: 1, criterionName: 'A', categoryId: 100, value: 'x'),
+        coord(scopeCriterionId: 2, criterionName: 'B', categoryId: 200, value: 'y'),
+      ]);
+      final bindings = BindingInferer.infer(survey: survey, assignment: assignment);
+      // Either criterion 1 or 2 binds, but not both (sorted ascending so 1 wins).
+      expect(bindings.length, 1);
+      expect(bindings.first.scopeCriterionId, 1);
+    });
   });
 }
