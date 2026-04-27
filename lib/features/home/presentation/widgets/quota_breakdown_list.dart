@@ -53,41 +53,98 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final percent = (entry.progressPercent.toDouble().clamp(0, 100)) / 100;
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 6.h),
-      child: Row(
+    final segments = _splitLabel(entry.displayLabel);
+    final theme = Theme.of(context);
+    final tagColor = theme.colorScheme.primary;
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 6.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 5,
-            child: Text(
+          // Coordinate segments. Renders as wrapping rows of small tags
+          // separated by a thin dot. Adapts to any N segments — the Wrap
+          // widget flows them onto as many lines as the content needs, so
+          // labels with 2, 4, 6, or more coordinates all read cleanly.
+          if (segments.isEmpty)
+            Text(
               entry.displayLabel,
-              style: Theme.of(context).textTheme.bodySmall,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
+              style: theme.textTheme.bodySmall,
+              softWrap: true,
+            )
+          else
+            Wrap(
+              spacing: 6.w,
+              runSpacing: 4.h,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                for (var i = 0; i < segments.length; i++) ...[
+                  if (i > 0)
+                    Container(
+                      width: 3.w,
+                      height: 3.w,
+                      decoration: BoxDecoration(
+                        color: tagColor.withOpacity(0.45),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  Text(
+                    segments[i],
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      height: 1.3,
+                      fontWeight: FontWeight.w500,
+                      color: theme.textTheme.bodyMedium?.color,
+                    ),
+                  ),
+                ],
+              ],
             ),
-          ),
-          SizedBox(width: 8.w),
-          Expanded(
-            flex: 3,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(2),
-              child: LinearProgressIndicator(
-                value: percent.toDouble(),
-                minHeight: 6.h,
+          SizedBox(height: 10.h),
+          // Progress bar + count
+          Row(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(3),
+                  child: LinearProgressIndicator(
+                    value: percent.toDouble(),
+                    minHeight: 6.h,
+                    backgroundColor: tagColor.withOpacity(0.10),
+                    valueColor: AlwaysStoppedAnimation<Color>(tagColor),
+                  ),
+                ),
               ),
-            ),
-          ),
-          SizedBox(width: 8.w),
-          SizedBox(
-            width: 50.w,
-            child: Text(
-              '${entry.progress}/${entry.target}',
-              textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+              SizedBox(width: 12.w),
+              Text(
+                '${entry.progress}/${entry.target}',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: theme.textTheme.bodyMedium?.color,
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
+  }
+
+  /// Split the server-built display label on the bullet separator.
+  /// The server joins coordinate labels with `" • "` (space-bullet-space),
+  /// but we tolerate any whitespace around the bullet to be robust.
+  /// Returns segments in their original order.
+  static List<String> _splitLabel(String label) {
+    if (label.isEmpty) return const [];
+    return label
+        .split('•')
+        .map((p) => p.trim())
+        .where((p) => p.isNotEmpty)
+        .toList(growable: false);
   }
 }

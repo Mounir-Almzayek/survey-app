@@ -52,6 +52,43 @@ void main() {
     expect(find.text('X 7'), findsOneWidget);
   });
 
+  testWidgets('renders every segment of a multi-coordinate display_label', (tester) async {
+    final entries = [
+      const QuotaBreakdownEntry(
+        quotaTargetId: 1,
+        displayLabel: 'منطقة الباحة • مدينة مقر إمارة المنطقة • ذكر • 18-29',
+        progress: 4,
+        target: 10,
+        progressPercent: 40,
+      ),
+    ];
+    await tester.pumpWidget(_wrap(QuotaBreakdownList(entries: entries, topN: 5)));
+    await tester.pumpAndSettle();
+    // Each coordinate segment becomes its own Text widget so the layout
+    // wraps gracefully regardless of how many coordinates the server sends.
+    expect(find.text('منطقة الباحة'), findsOneWidget);
+    expect(find.text('مدينة مقر إمارة المنطقة'), findsOneWidget);
+    expect(find.text('ذكر'), findsOneWidget);
+    expect(find.text('18-29'), findsOneWidget);
+    expect(find.text('4/10'), findsOneWidget);
+  });
+
+  testWidgets('handles large N (6 coordinates) without truncation', (tester) async {
+    final entries = [
+      const QuotaBreakdownEntry(
+        quotaTargetId: 1,
+        displayLabel: 'A • B • C • D • E • F',
+        progress: 0,
+        target: 10,
+        progressPercent: 0,
+      ),
+    ];
+    await tester.pumpWidget(_wrap(QuotaBreakdownList(entries: entries, topN: 5)));
+    await tester.pumpAndSettle();
+    expect(find.text('A'), findsOneWidget);
+    expect(find.text('F'), findsOneWidget);
+  });
+
   testWidgets('hides toggle when entries count <= topN', (tester) async {
     final entries = List.generate(
       3,
